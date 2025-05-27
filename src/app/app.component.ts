@@ -1,12 +1,15 @@
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, linkedSignal, model } from "@angular/core";
+import { FontControlComponent } from "../core/font-control/font-control.component";
+import { FormsModule } from "@angular/forms";
+import { familiasDisponibles } from "../core/font-style/font-configs";
 
 @Component({
-  selector: 'app-root',
-  imports: [RouterOutlet],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  selector: "app-root",
+  templateUrl: "./app.component.html",
+  imports: [FontControlComponent, FormsModule],
 })
 export class AppComponent {
-  title = 'novedades';
+  readonly families = familiasDisponibles;
+  readonly family = model(this.families[2]);
+  readonly estilo = linkedSignal(() => (this.family() ? "" : ""));
 }
