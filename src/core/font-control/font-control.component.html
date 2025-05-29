@@ -1,0 +1,28 @@
+<div class="border-1 p-4 rounded-lg border-black/10 dark:border-white/10 dark:bg-gray-300/5 bg-gray-300/5">
+  <form>
+    <h3 class="text-2xl mb-4">{{ fontFamily().name }}</h3>
+    @for(property of propiedades(); track property.name) { @if(property.type==="single") {
+    <ng-container
+      *ngTemplateOutlet="sliderField; context: { parte: property.parte, group: formGroup() }"></ng-container>
+    } @else{ @for(parte of property .partes; track parte.fieldName) {
+    <ng-container *ngTemplateOutlet="sliderField; context: { parte: parte, group: property.control }"></ng-container>
+    } }}
+  </form>
+</div>
+<ng-template #sliderField let-parte="parte" let-group="group">
+  <app-slider-field
+    [formGroup]="group"
+    [fieldName]="parte.fieldName"
+    [min]="parte.min"
+    (dblclick)="group.controls[parte.fieldName].reset()"
+    [max]="parte.max"
+    [step]="parte.step"
+    [stops]="parte.stops"
+    [showLabel]="true"
+    [labelLength]="labelLength()"
+    [label]="parte.caption"
+    [showValue]="true"
+    [unit]="parte.unit"
+    [valueLength]="valueTextLength()">
+  </app-slider-field>
+</ng-template>

@@ -1,0 +1,11 @@
+<div class="flex w-full flex-row items-center justify-between gap-[1ch]">
+  @if(showLabel()) {
+  <app-field-label [for]="fieldName()" [text]="label()" [length]="labelLength()"></app-field-label>
+  }
+
+  <app-slider [fieldName]="fieldName()" [min]="min()" [max]="max()" [step]="step()" [stops]="stops()"></app-slider>
+
+  @if(showValue()) {
+  <app-field-value [value]="value" [length]="valueLength()" [unit]="unit()"> </app-field-value>
+  }
+</div>

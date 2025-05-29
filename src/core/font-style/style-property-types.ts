@@ -1,15 +1,15 @@
 type SingleStylePropertyDefinition = {
   readonly type: "single";
+  readonly unit?: string;
 };
+
 type MultiStylePropertyDefinition = {
   readonly type: "multi";
-  readonly identifier: string;
 };
 
 export type StylePropertyDefinition = {
   readonly caption: string;
   readonly name: stylePropertyName;
-  readonly suffix?: string;
 } & (SingleStylePropertyDefinition | MultiStylePropertyDefinition);
 
 export type stylePropertyName =
@@ -20,40 +20,25 @@ export type stylePropertyName =
   | "font-stretch"
   | "font-family";
 
-export class StyleProperty {
-  readonly definition: StylePropertyDefinition;
+export function stylePropertyValue(
+  definition: StylePropertyDefinition,
+  value: number | { [key: string]: number }
+): StylePropertyValue {
+  if (definition.type === "single") {
+    return {
+      name: definition.name,
+      value: `${value as number}${definition.unit ?? ""}`,
+    };
+  }
 
-  constructor(definition: StylePropertyDefinition) {
-    this.definition = definition;
-  }
-  propertyValue(value: number): StylePropertyValue {
-    if (this.definition.type === "single") {
-      return {
-        type: this.definition.type,
-        name: this.definition.name,
-        value: `${value}${this.definition.suffix ?? ""}`,
-      };
-    }
-    if (this.definition.type === "multi") {
-      return {
-        type: this.definition.type,
-        name: this.definition.name,
-        identifier: this.definition.identifier,
-        value: `${this.definition.identifier} ${value}`,
-      };
-    }
-    throw new Error("Invalid property type");
-  }
+  throw new Error("Invalid property type");
 }
 
-type SingleStylePropertyValue = {
-  readonly type: "single";
-};
-type MultiStylePropertyValue = {
-  readonly type: "multi";
-  readonly identifier: string;
-};
+export function variationValue(identifier: string, value: { [key: string]: number }): string {
+  return `${identifier} ${value[identifier] ?? 0}`;
+}
+
 export type StylePropertyValue = {
-  readonly name: string;
+  readonly name: stylePropertyName;
   readonly value: string;
-} & (SingleStylePropertyValue | MultiStylePropertyValue);
+};
