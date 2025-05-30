@@ -17,6 +17,8 @@ export class SliderComponent {
   @Input() step? = 1;
   @Input() stops?: number[] = [];
 
+  @Input() accent?: boolean = false;
+
   protected get useTicks() {
     return this.stops?.length ?? 0 > 0;
   }

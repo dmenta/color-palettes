@@ -4,14 +4,27 @@
     [for]="fieldName"
     [text]="label"
     [length]="labelLength"
-    class="select-none"
+    [class.opacity-70]="defaultValue !== undefined && control.value === defaultValue"
+    class="select-none transition-all duration-300"
     (dblclick)="control.reset()"></app-field-label>
   }
 
-  <app-slider [fieldName]="fieldName" [min]="min" [max]="max" [step]="step" [stops]="stops"></app-slider>
+  <app-slider
+    [fieldName]="fieldName"
+    [min]="min"
+    [max]="max"
+    [step]="step"
+    [stops]="stops"
+    [accent]="defaultValue !== undefined && control.value !== defaultValue"></app-slider>
 
   @if(showValue) {
-  <app-field-value [value]="control.value" [length]="valueLength" [decimals]="decimales" [unit]="unit">
+  <app-field-value
+    [value]="control.value"
+    [length]="valueLength"
+    [decimals]="decimales"
+    [unit]="unit"
+    [class.opacity-70]="defaultValue !== undefined && control.value === defaultValue"
+    class="select-none transition-all duration-300">
   </app-field-value>
   }
 </div>

@@ -7,7 +7,13 @@
     [min]="min"
     [max]="max"
     [step]="step"
-    class="flex h-[.75rem] w-full cursor-pointer appearance-none flex-row items-center focus:outline-none [&::-webkit-slider-thumb]:mt-[-0.25rem] [&::-webkit-slider-thumb]:h-[.75rem] [&::-webkit-slider-thumb]:w-[.75rem] [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-orange-600/80 focus:[&::-webkit-slider-thumb]:outline-offset-1 focus:[&::-webkit-slider-thumb]:outline-2 focus:[&::-webkit-slider-thumb]:outline-orange-400/80 dark:[&::-webkit-slider-thumb]:bg-blue-400/80 dark:focus:[&::-webkit-slider-thumb]:outline-blue-600/80 [&::-webkit-slider-runnable-track]:h-[.25rem] [&::-webkit-slider-runnable-track]:rounded-full [&::-webkit-slider-runnable-track]:bg-black/20 dark:[&::-webkit-slider-runnable-track]:bg-white/30"
+    [class]="{
+      '[&::-webkit-slider-thumb]:bg-sky-600/80': accent,
+      'focus:[&::-webkit-slider-thumb]:outline-sky-400/80': accent,
+      'dark:[&::-webkit-slider-thumb]:bg-orange-400/100': accent,
+      'dark:focus:[&::-webkit-slider-thumb]:outline-orange-600/80': accent,
+    }"
+    class="flex h-[.75rem] w-full [&::-webkit-slider-thumb]:transition-all [&::-webkit-slider-thumb]:duration-150 [&::-webkit-slider-thumb]:bg-orange-400/80 focus:[&::-webkit-slider-thumb]:outline-orange-300/80 dark:[&::-webkit-slider-thumb]:bg-blue-400/80 dark:focus:[&::-webkit-slider-thumb]:outline-blue-600/80 cursor-pointer appearance-none flex-row items-center focus:outline-none [&::-webkit-slider-thumb]:mt-[-0.25rem] [&::-webkit-slider-thumb]:h-[.75rem] [&::-webkit-slider-thumb]:w-[.75rem] [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full focus:[&::-webkit-slider-thumb]:outline-offset-1 focus:[&::-webkit-slider-thumb]:outline-2 [&::-webkit-slider-runnable-track]:h-[.25rem] [&::-webkit-slider-runnable-track]:rounded-full [&::-webkit-slider-runnable-track]:bg-black/20 dark:[&::-webkit-slider-runnable-track]:bg-white/30"
     [attr.list]="useTicks ? fieldName + '-datalist' : null" />
   @if(useTicks) {
   <app-data-list [id]="fieldName + '-datalist'" [values]="stops"> </app-data-list>
@@ -24,3 +30,6 @@
     class="flex h-[.75rem] w-full cursor-pointer appearance-none flex-row items-center focus:outline-none [&::-webkit-slider-thumb]:mt-[-0.25rem] [&::-webkit-slider-thumb]:h-[.75rem] [&::-webkit-slider-thumb]:w-[.75rem] [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-orange-600/80 focus:[&::-webkit-slider-thumb]:outline-offset-1 focus:[&::-webkit-slider-thumb]:outline-2 focus:[&::-webkit-slider-thumb]:outline-orange-400/80 dark:[&::-webkit-slider-thumb]:bg-blue-400/80 dark:focus:[&::-webkit-slider-thumb]:outline-blue-600/80 [&::-webkit-slider-runnable-track]:h-[.25rem] [&::-webkit-slider-runnable-track]:rounded-full [&::-webkit-slider-runnable-track]:bg-black/20 dark:[&::-webkit-slider-runnable-track]:bg-white/30" />
 </div>
 }
+<!--
+  
+-->

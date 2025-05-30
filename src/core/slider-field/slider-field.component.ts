@@ -23,6 +23,8 @@ export class SliderFieldComponent {
   @Input() valueLength?: number;
   @Input() unit?: string = "";
 
+  @Input() defaultValue?: number;
+
   private _showLabel: boolean = false;
 
   @Input() get showLabel() {
