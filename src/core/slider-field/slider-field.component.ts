@@ -1,4 +1,4 @@
-import { Component, input, Optional } from "@angular/core";
+import { Component, Input, Optional } from "@angular/core";
 import { SliderComponent } from "../slider/slider.component";
 import { FieldLabelComponent } from "./field-label.component";
 import { FieldValueComponent } from "./field-value.component";
@@ -13,22 +13,55 @@ import { FormGroupDirective, ReactiveFormsModule } from "@angular/forms";
   },
 })
 export class SliderFieldComponent {
-  readonly fieldName = input.required<string>();
-  readonly min = input<number>(0);
-  readonly max = input<number>(10);
-  readonly step = input<number>(1);
-  readonly stops = input<number[]>([]);
+  @Input({ required: true }) fieldName: string = "";
+  @Input() min?: number = 0;
+  @Input() max?: number = 10;
+  @Input() step?: number = 1;
+  @Input() stops?: number[] = [];
+  @Input() labelLength?: number;
+  @Input() label: string = "";
+  @Input() valueLength?: number;
+  @Input() unit?: string = "";
 
-  readonly labelLength = input<number | null | undefined>(undefined);
-  readonly label = input("", { transform: (value?: string) => value?.trim() ?? "" });
-  readonly showLabel = input(false, { transform: (value?: boolean) => value ?? false });
+  private _showLabel: boolean = false;
 
-  readonly valueLength = input<number | null | undefined>(undefined);
-  readonly unit = input("", { transform: (value?: string) => value?.trim() ?? "" });
-  readonly showValue = input(false, { transform: (value?: boolean) => value ?? false });
+  @Input() get showLabel() {
+    return this._showLabel && (this.labelLength ?? 1) > 0;
+  }
+  set showLabel(value: boolean) {
+    this._showLabel = value;
+  }
 
-  get value() {
-    return this._parentFormGroupDirective?.control.controls[this.fieldName()].value;
+  private _showValue: boolean = false;
+
+  @Input() get showValue() {
+    return this._showValue && (this.valueLength ?? 1) > 0;
+  }
+  set showValue(value: boolean) {
+    this._showValue = value;
+  }
+
+  get decimales() {
+    let decimales = 0;
+    if ((this.step ?? 1) !== 1 && !Number.isInteger(this.step)) {
+      const stepStr = this.step!.toString();
+      decimales = stepStr.split(".")[1].length;
+    }
+    if ((this.min ?? 0) !== 0 && !Number.isInteger(this.min)) {
+      const minStr = this.min!.toString();
+      decimales = Math.max(decimales, minStr.split(".")[1].length);
+    }
+
+    if ((this.max ?? 10) !== 10 && !Number.isInteger(this.max)) {
+      const maxStr = this.max!.toString();
+      decimales = Math.max(decimales, maxStr.split(".")[1].length);
+    }
+
+    return decimales;
+  }
+
+  get control() {
+    return this._parentFormGroupDirective?.control.controls[this.fieldName];
   }
 
   constructor(@Optional() private _parentFormGroupDirective: FormGroupDirective) {}

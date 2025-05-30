@@ -5,7 +5,7 @@ import { sliderOptions } from "../slider/slider-types";
 
 export type formWithGroups<T> = { [key: string]: FormControl<T> | FormGroup<keyControl<T>> };
 
-type keyControl<T> = { [key: string]: FormControl<T> };
+export type keyControl<T> = { [key: string]: FormControl<T> };
 
 type propiedadSingle = {
   type: "single";
@@ -18,7 +18,7 @@ type propiedadMulti = {
   control: FormGroup<keyControl<number>>;
 };
 
-type propiedad = {
+export type propiedad = {
   name: string;
   value$: Observable<string | null>;
 } & (propiedadSingle | propiedadMulti);
@@ -27,6 +27,7 @@ type parte = sliderOptions & {
   fieldName: string;
   caption: string;
   unit?: string;
+  control?: FormControl<number>;
 };
 
 export function createPropiedad(axe: FontStyleAxeSingle | FontStyleAxeMulti): propiedad {
@@ -50,9 +51,7 @@ function createPropiedadSingleValue(axe: FontStyleAxeSingle): propiedad {
     },
     value$: control.valueChanges.pipe(
       startWith(axe.range.defaultValue),
-      map((value) =>
-        value === axe.range.defaultValue ? null : `${axe.propiedad.name}: ${axe.propertyValue(value).value}`
-      )
+      map((value) => `${axe.propiedad.name}: ${axe.propertyValue(value).value}`)
     ),
     control: control,
   };
@@ -68,9 +67,7 @@ function createPropiedadMultiValue(axe: FontStyleAxeMulti): propiedad {
       control: control,
       value$: control.valueChanges.pipe(
         startWith(part.range.defaultValue),
-        map((value) =>
-          value === part.range.defaultValue ? null : part.propertyValue({ [part.variation.identifier]: value })
-        )
+        map((value) => part.propertyValue({ [part.variation.identifier]: value }))
       ),
     };
   });
@@ -80,13 +77,7 @@ function createPropiedadMultiValue(axe: FontStyleAxeMulti): propiedad {
     type: "multi",
     partes: partes,
     value$: combineLatest(partes.map((p) => p.value$)).pipe(
-      map((values) => {
-        const valores = values.filter((v) => v !== null && v !== undefined);
-        if (valores.length === 0) {
-          return null;
-        }
-        return `${axe.propiedad.name}: ${valores.join(", ")}`;
-      })
+      map((values) => `${axe.propiedad.name}: ${values.join(", ")}`)
     ),
     control: partes.reduce((group, part) => {
       group.addControl(part.fieldName, part.control);

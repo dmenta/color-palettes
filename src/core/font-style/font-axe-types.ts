@@ -77,7 +77,7 @@ function createFontAxeSingle(
 export function createFontVariationAxe(variations: fontVariationDefinition[]): FontStyleAxeMulti {
   const property = {
     type: "multi",
-    caption: "Variation",
+    caption: "Variations",
     name: "font-variation-settings",
   } as StylePropertyDefinition;
 

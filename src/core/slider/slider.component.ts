@@ -1,4 +1,4 @@
-import { Component, computed, input, Optional } from "@angular/core";
+import { Component, Input, Optional } from "@angular/core";
 import { FormGroupDirective, ReactiveFormsModule } from "@angular/forms";
 import { DataListComponent } from "./data-list.component";
 
@@ -11,19 +11,21 @@ import { DataListComponent } from "./data-list.component";
   },
 })
 export class SliderComponent {
-  readonly fieldName = input.required<string>();
-  readonly min = input<number>(0);
-  readonly max = input<number>(10);
-  readonly step = input<number>(1);
-  readonly stops = input<number[]>([]);
+  @Input({ required: true }) fieldName: string = "";
+  @Input() min? = 0;
+  @Input() max? = 10;
+  @Input() step? = 1;
+  @Input() stops?: number[] = [];
 
-  protected readonly useTicks = computed(() => this.stops()?.length ?? 0 > 0);
+  protected get useTicks() {
+    return this.stops?.length ?? 0 > 0;
+  }
 
   get formGroup() {
     return this._parentFormGroupDirective?.control;
   }
   get control() {
-    return this._parentFormGroupDirective?.control.controls[this.fieldName()];
+    return this._parentFormGroupDirective?.control.controls[this.fieldName];
   }
 
   constructor(@Optional() private _parentFormGroupDirective: FormGroupDirective) {}

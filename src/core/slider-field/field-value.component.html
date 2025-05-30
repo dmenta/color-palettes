@@ -1,10 +1,16 @@
-<div class="flex flex-row justify-end" [style.minWidth.ch]="length()">
+<div class="flex flex-row justify-end text-sm opacity-95" [style.minWidth.ch]="length">
+  @if(this.value!==null){
   <span class="field-value-number">
-    {{ displayValue() }}
+    {{ this.value | number : "1." + decimals + "-" + decimals }}
   </span>
   <span class="field-value-unit">
-    @if(showUnit()){
-    {{ unit() }}
+    @if(showUnit){
+    {{ unit }}
     }</span
   >
+  }@else{
+  <span class="field-value-number">
+    {{ nullValueText }}
+  </span>
+  }
 </div>

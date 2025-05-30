@@ -1,28 +1,39 @@
 <div class="border-1 p-4 rounded-lg border-black/10 dark:border-white/10 dark:bg-gray-300/5 bg-gray-300/5">
-  <form>
-    <h3 class="text-2xl mb-4">{{ fontFamily().name }}</h3>
-    @for(property of propiedades(); track property.name) { @if(property.type==="single") {
-    <ng-container
-      *ngTemplateOutlet="sliderField; context: { parte: property.parte, group: formGroup() }"></ng-container>
-    } @else{ @for(parte of property .partes; track parte.fieldName) {
-    <ng-container *ngTemplateOutlet="sliderField; context: { parte: parte, group: property.control }"></ng-container>
+  <form [formGroup]="formGroup">
+    <h3 class="text-2xl mb-4 flex items-center justify-between">
+      {{ fontFamily?.name }}
+      <button
+        aria-label="Reset"
+        type="button"
+        class="bg-black/10 hover:bg-black/20 dark:bg-gray-300/10 dark:hover:bg-gray-300/20 aspect-square w-10 rounded-lg inline-block active:scale-90 transition-all duration-150"
+        (click)="formGroup.reset()">
+        <span class="material-symbols-rounded align-text-top" aria-hidden="true">reset_settings</span>
+      </button>
+    </h3>
+
+    @for(property of propiedades; track property.name) { @if(property.type==="single") { @if(formGroup; as group){
+    <app-slider-field
+      [formGroup]="group"
+      [fieldName]="property.parte.fieldName"
+      [min]="property.parte.min"
+      [max]="property.parte.max"
+      [step]="property.parte.step"
+      [stops]="property.parte.stops"
+      [showLabel]="true"
+      [labelLength]="labelLength"
+      [label]="property.parte.caption"
+      [showValue]="true"
+      [unit]="property.parte.unit"
+      [valueLength]="valueLength">
+    </app-slider-field>
+
+    } } @else{ @if(variations; as variations) {
+    <app-font-variation-control
+      [fieldName]="property.name"
+      [variations]="variations"
+      [labelLength]="labelLength"
+      [valueLength]="valueLength"
+      (styleChanged)="variationsChanged($event)"></app-font-variation-control>
     } }}
   </form>
 </div>
-<ng-template #sliderField let-parte="parte" let-group="group">
-  <app-slider-field
-    [formGroup]="group"
-    [fieldName]="parte.fieldName"
-    [min]="parte.min"
-    (dblclick)="group.controls[parte.fieldName].reset()"
-    [max]="parte.max"
-    [step]="parte.step"
-    [stops]="parte.stops"
-    [showLabel]="true"
-    [labelLength]="labelLength()"
-    [label]="parte.caption"
-    [showValue]="true"
-    [unit]="parte.unit"
-    [valueLength]="valueTextLength()">
-  </app-slider-field>
-</ng-template>

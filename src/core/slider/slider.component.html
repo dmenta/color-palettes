@@ -1,14 +1,26 @@
+@if(formGroup && fieldName.length > 0) {
 <div class="inline-block h-fit w-full" [formGroup]="formGroup">
   <input
     type="range"
-    [formControlName]="fieldName()"
-    [id]="fieldName()"
-    [min]="min()"
-    [max]="max()"
-    [step]="step()"
+    [formControlName]="fieldName"
+    [id]="fieldName"
+    [min]="min"
+    [max]="max"
+    [step]="step"
     class="flex h-[.75rem] w-full cursor-pointer appearance-none flex-row items-center focus:outline-none [&::-webkit-slider-thumb]:mt-[-0.25rem] [&::-webkit-slider-thumb]:h-[.75rem] [&::-webkit-slider-thumb]:w-[.75rem] [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-orange-600/80 focus:[&::-webkit-slider-thumb]:outline-offset-1 focus:[&::-webkit-slider-thumb]:outline-2 focus:[&::-webkit-slider-thumb]:outline-orange-400/80 dark:[&::-webkit-slider-thumb]:bg-blue-400/80 dark:focus:[&::-webkit-slider-thumb]:outline-blue-600/80 [&::-webkit-slider-runnable-track]:h-[.25rem] [&::-webkit-slider-runnable-track]:rounded-full [&::-webkit-slider-runnable-track]:bg-black/20 dark:[&::-webkit-slider-runnable-track]:bg-white/30"
-    [attr.list]="useTicks() ? fieldName() + '-datalist' : null" />
-  @if(useTicks()) {
-  <app-data-list [id]="fieldName() + '-datalist'" [values]="stops()"> </app-data-list>
+    [attr.list]="useTicks ? fieldName + '-datalist' : null" />
+  @if(useTicks) {
+  <app-data-list [id]="fieldName + '-datalist'" [values]="stops"> </app-data-list>
   }
 </div>
+} @else{
+<div class="inline-block h-fit w-full">
+  <p class="text-red-500 text-sm">Slider component requires a formGroup and fieldName.</p>
+  <input
+    type="range"
+    [min]="min"
+    [max]="max"
+    [step]="step"
+    class="flex h-[.75rem] w-full cursor-pointer appearance-none flex-row items-center focus:outline-none [&::-webkit-slider-thumb]:mt-[-0.25rem] [&::-webkit-slider-thumb]:h-[.75rem] [&::-webkit-slider-thumb]:w-[.75rem] [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-orange-600/80 focus:[&::-webkit-slider-thumb]:outline-offset-1 focus:[&::-webkit-slider-thumb]:outline-2 focus:[&::-webkit-slider-thumb]:outline-orange-400/80 dark:[&::-webkit-slider-thumb]:bg-blue-400/80 dark:focus:[&::-webkit-slider-thumb]:outline-blue-600/80 [&::-webkit-slider-runnable-track]:h-[.25rem] [&::-webkit-slider-runnable-track]:rounded-full [&::-webkit-slider-runnable-track]:bg-black/20 dark:[&::-webkit-slider-runnable-track]:bg-white/30" />
+</div>
+}

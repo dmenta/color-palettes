@@ -1,15 +1,20 @@
-import { Component, computed, input } from "@angular/core";
+import { DecimalPipe } from "@angular/common";
+import { Component, Input } from "@angular/core";
 
 @Component({
   selector: "app-field-value",
+  imports: [DecimalPipe],
   templateUrl: "./field-value.component.html",
 })
 export class FieldValueComponent {
-  readonly value = input.required<number | null | undefined>();
-  readonly unit = input(undefined, { transform: (value?: string) => value?.trim() ?? "" });
-  readonly length = input<number | null | undefined>(undefined);
-  readonly nullValueText = input("", { transform: (value?: string) => value?.trim() ?? "" });
+  @Input({ required: true }) value: number | null = null;
+  @Input() unit?: string;
+  @Input() length?: number | null;
+  @Input() nullValueText?: string = "";
 
-  protected readonly displayValue = computed(() => this.value()?.toString() ?? this.nullValueText());
-  protected readonly showUnit = computed(() => this.value());
+  @Input() decimals?: number = 0;
+
+  protected get showUnit() {
+    return (this.unit?.length ?? 0) > 0;
+  }
 }

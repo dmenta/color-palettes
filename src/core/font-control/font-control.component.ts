@@ -1,47 +1,76 @@
-import { Component, computed, input, output } from "@angular/core";
-import { combineLatest, debounce, debounceTime, map, switchMap } from "rxjs";
-import { fontFamily } from "../font-style/font-axe-types";
-import { FormGroup, ReactiveFormsModule } from "@angular/forms";
+import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, Output } from "@angular/core";
+import { debounceTime, map, startWith } from "rxjs";
+import { fontFamily, FontStyleAxeMulti } from "../font-style/font-axe-types";
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { SliderFieldComponent } from "../slider-field/slider-field.component";
-import { NgTemplateOutlet } from "@angular/common";
-import { createPropiedad, formWithGroups } from "./font-control-propiedades";
-import { toObservable } from "@angular/core/rxjs-interop";
+import { createPropiedad, propiedad } from "./font-control-propiedades";
+import { FontVariationControlComponent } from "./font-variation-control.component";
 
 @Component({
   selector: "app-font-control",
-  imports: [ReactiveFormsModule, SliderFieldComponent, NgTemplateOutlet],
+  imports: [ReactiveFormsModule, SliderFieldComponent, FontVariationControlComponent],
   templateUrl: "./font-control.component.html",
+  changeDetection: ChangeDetectionStrategy.Default,
 })
 export class FontControlComponent {
-  onChange() {
-    console.log("FontControlComponent.onChange");
+  variationsChanged(propiedad: string) {
+    this.formGroup.controls[this.variations!.propiedad.name].setValue(propiedad);
   }
-  readonly fontFamily = input.required<fontFamily>();
-  readonly labelLength = input(4, { transform: (value: number) => Math.max(1, value ?? 5) });
-  readonly valueTextLength = input(5, { transform: (value: number) => Math.max(1, value ?? 5) });
-  readonly styleChanged = output<string>();
+  private _family: fontFamily | null = null;
 
-  propiedades = computed(() => this.fontFamily().propiedades.map((axe) => createPropiedad(axe)));
+  @Input({ required: true }) set fontFamily(value: fontFamily) {
+    this._family = value;
+    if (value) {
+      this.initialize(value);
+    }
+  }
+  get fontFamily(): fontFamily | null {
+    return this._family;
+  }
+  @Input() labelLength?: number = 5;
+  @Input() valueLength?: number = 4;
+  @Output() styleChanged = new EventEmitter<string>();
 
-  formGroup = computed(() =>
-    this.propiedades().reduce((group, propiedad) => {
-      group.addControl(propiedad.name, propiedad.control);
-      return group;
-    }, new FormGroup<formWithGroups<number>>({}))
-  );
+  private fb: FormBuilder = inject(FormBuilder);
+  formGroup: FormGroup = this.fb.group({});
 
-  constructor() {
-    toObservable(this.propiedades)
+  propiedades: propiedad[] = [];
+
+  variations: FontStyleAxeMulti | null = null;
+
+  private initialize(family: fontFamily) {
+    this.variations = family.propiedades.find((prop) => prop.type === "multi") as FontStyleAxeMulti | null;
+
+    this.propiedades = family.propiedades.map((prop) => createPropiedad(prop));
+    this.formGroup = this.fb.nonNullable.group(
+      this.propiedades.reduce((acc, propiedad) => {
+        if (propiedad.type === "single") {
+          acc[propiedad.name] = this.fb.nonNullable.control<number>(propiedad.parte.defaultValue);
+        } else {
+          acc[propiedad.name] = this.fb.nonNullable.control<string>("");
+        }
+        return acc;
+      }, {} as { [key: string]: FormControl<number> | FormControl<string> })
+    );
+
+    this.formGroup.valueChanges
       .pipe(
-        switchMap((propiedades) => combineLatest(propiedades.map((propiedad) => propiedad.value$))),
         debounceTime(10),
-        map((values) => [
-          `font-family: '${this.fontFamily().name}'`,
-          ...values.filter((v) => v !== null && v !== undefined),
-        ])
+        startWith(this.formGroup.value),
+        map((values) => {
+          const styles = this.fontFamily!.propiedades.map((axe) => {
+            const value = values[axe.propiedad.name];
+            if (axe.type === "single") {
+              return `${axe.propiedad.name}: ${axe.propertyValue(value).value}`;
+            } else {
+              return (value ?? "") === "" ? null : value;
+            }
+          });
+          return [`font-family: '${this.fontFamily!.name}'`, ...styles].join("; ");
+        })
       )
-      .subscribe((values) => {
-        this.styleChanged.emit(values.join("; "));
+      .subscribe((style) => {
+        this.styleChanged.emit(style);
       });
   }
 }

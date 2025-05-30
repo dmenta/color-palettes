@@ -1,0 +1,32 @@
+<div class="border-1 my-4 p-4 rounded-lg border-black/10 dark:border-white/10 dark:bg-gray-300/5 bg-gray-300/5">
+  @if(variations; as variantes) {
+  <form [formGroup]="formGroup">
+    <h4 class="text-xl mb-4 flex items-center justify-between">
+      {{ variantes.propiedad.caption }}
+      <button
+        aria-label="Reset"
+        type="button"
+        class="bg-black/10 hover:bg-black/20 dark:bg-gray-300/10 dark:hover:bg-gray-300/20 aspect-square w-10 rounded-lg inline-block active:scale-90 transition-all duration-150"
+        (click)="reset()">
+        <span class="material-symbols-rounded align-text-top" aria-hidden="true">reset_settings</span>
+      </button>
+    </h4>
+    @for(parte of variantes.parts; track parte.variation.identifier) {
+    <app-slider-field
+      [fieldName]="parte.variation.identifier"
+      [min]="parte.range.min"
+      (dblclick)="formGroup.controls[parte.variation.identifier].reset()"
+      [max]="parte.range.max"
+      [step]="parte.range.step"
+      [stops]="parte.range.stops"
+      [showLabel]="true"
+      [labelLength]="labelLength"
+      [label]="parte.variation.caption"
+      [showValue]="true"
+      [unit]=""
+      [valueLength]="valueLength">
+    </app-slider-field
+    >}
+  </form>
+  }
+</div>
