@@ -13,6 +13,7 @@ export interface FontStyleAxeSingle extends FontStyleAxe {
   readonly unit: string;
   propertyValue: (value: number) => StylePropertyValue;
 }
+
 export interface FontStyleAxeBoolean<T extends string | number = string | number> extends FontStyleAxe {
   readonly type: "boolean";
   readonly onValue: T;
@@ -20,6 +21,7 @@ export interface FontStyleAxeBoolean<T extends string | number = string | number
   defaultValue?: boolean;
   propertyValue: (value: boolean) => StylePropertyValue;
 }
+
 export interface FontStyleAxeMulti extends FontStyleAxe {
   readonly type: "multi";
   readonly parts: (FontVariationAxe | FontVariationBoolean)[];
@@ -44,10 +46,10 @@ interface FontVariationBoolean {
   range: booleanRange;
   propertyValue: (value: { [key: string]: number }) => string;
 }
-interface FontStyleAxe<T extends string | number = string | number> {
+type FontStyleAxe<T extends string | number = string | number> = {
   propiedad: Pick<StylePropertyDefinition<T>, "name" | "caption">;
   readonly type: "single" | "multi" | "boolean";
-}
+};
 
 export function sizeConfig(range: numericRange, initialValue: number) {
   const sizePropertyDefinition = {
@@ -126,6 +128,7 @@ function createFontAxeBoolean<T extends string | number = string | number>(
     },
   } as FontStyleAxeBoolean<T>;
 }
+
 export function createFontVariationAxe<T extends string | number = string | number>(
   variations: fontVariationDefinition[]
 ): FontStyleAxeMulti {
@@ -159,7 +162,7 @@ export function createFontVariationAxe<T extends string | number = string | numb
   };
 }
 
-function createFontVariationPartAxe(definition: fontVariationDefinition): FontVariationAxe {
+function createFontVariationPartAxe(definition: fontVariationDefinition) {
   const sliderOptions = createSliderOptions(
     { min: definition.min, max: definition.max },
     definition.initialValue,
@@ -174,10 +177,10 @@ function createFontVariationPartAxe(definition: fontVariationDefinition): FontVa
     },
     range: sliderOptions,
     propertyValue: (value: { [key: string]: number }) => variationValue(definition.variation, value),
-  };
+  } as FontVariationAxe;
 }
 
-function createFontBooleanVariationPart(definition: fontBooleanVariationDefinition): FontVariationBoolean {
+function createFontBooleanVariationPart(definition: fontBooleanVariationDefinition) {
   return {
     type: "discreto",
     variation: {
@@ -191,7 +194,7 @@ function createFontBooleanVariationPart(definition: fontBooleanVariationDefiniti
     },
     propertyValue: (value: { [key: string]: number }) =>
       `${definition.variation} ${value[definition.variation] ? definition.max : definition.min}`,
-  };
+  } as FontVariationBoolean;
 }
 
 const variationCaptions: { [key: string]: string } = {

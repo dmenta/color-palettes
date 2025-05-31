@@ -33,9 +33,11 @@ export class FontControlComponent {
   toggleVisible() {
     this.visible.update((current) => !current);
   }
+
   visible = model(true);
 
   limpio = signal(true);
+
   variationsChanged(propiedad: string) {
     this.formGroup.controls[this.variations!.propiedad.name].setValue(propiedad);
   }
