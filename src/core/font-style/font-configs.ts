@@ -1,4 +1,4 @@
-import { createFontVariationAxe, fontFamily, sizeConfig, weightConfig } from "./font-axe-types";
+import { createFontVariationAxe, fontFamily, italicConfig, sizeConfig, weightConfig } from "./font-axe-types";
 import { fontVariations } from "./font-variation";
 
 export const familiasDisponibles = [
@@ -7,6 +7,7 @@ export const familiasDisponibles = [
     propiedades: [
       sizeConfig({ min: 12, max: 24 }, 16),
       weightConfig({ min: 200, max: 1000 }, 400),
+      italicConfig(false),
       createFontVariationAxe([
         { variation: fontVariations.width, min: 75, max: 125, step: 2.5, initialValue: 100 },
         { variation: fontVariations.lowercase, min: 440, max: 540, step: 2.5, initialValue: 500 },
@@ -18,6 +19,7 @@ export const familiasDisponibles = [
     propiedades: [
       sizeConfig({ min: 12, max: 24 }, 16),
       weightConfig({ min: 100, max: 900 }, 400),
+      italicConfig(false),
       createFontVariationAxe([{ variation: fontVariations.width, min: 75, max: 100, step: 2.5, initialValue: 100 }]),
     ],
   },
@@ -26,6 +28,28 @@ export const familiasDisponibles = [
     propiedades: [
       sizeConfig({ min: 12, max: 24 }, 16),
       weightConfig({ min: 100, max: 900 }, 400),
+      italicConfig(false),
+      createFontVariationAxe([{ variation: fontVariations.width, min: 62.5, max: 100, step: 2.5, initialValue: 100 }]),
+    ],
+  },
+  {
+    name: "Fraunces",
+    propiedades: [
+      sizeConfig({ min: 12, max: 120 }, 16),
+      weightConfig({ min: 100, max: 900 }, 400),
+      italicConfig(false),
+      createFontVariationAxe([
+        { variation: fontVariations.softness, min: 0, max: 100, step: 2.5, initialValue: 0 },
+        { variation: fontVariations.wonky, min: 0, max: 1, step: 1, initialValue: 0 },
+      ]),
+    ],
+  },
+  {
+    name: "Noto Serif",
+    propiedades: [
+      sizeConfig({ min: 12, max: 36 }, 16),
+      weightConfig({ min: 100, max: 900 }, 400),
+      italicConfig(false),
       createFontVariationAxe([{ variation: fontVariations.width, min: 62.5, max: 100, step: 2.5, initialValue: 100 }]),
     ],
   },

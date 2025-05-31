@@ -12,6 +12,13 @@ export type fontVariationDefinition = {
   stops?: number[];
 };
 
+export type fontBooleanVariationDefinition = {
+  variation: variationIdentifier;
+  min: number;
+  max: number;
+  initialValue: number;
+};
+
 export const fontVariations = {
   width: "'wdth'" as variationIdentifier,
   slant: "'slnt'" as variationIdentifier,
@@ -24,7 +31,10 @@ export const fontVariations = {
   thickStroke: "'XOPQ'" as variationIdentifier,
   counterWidth: "'XTRA'" as variationIdentifier,
   figureHeight: "'YTFI'" as variationIdentifier,
+  softness: "'SOFT'" as variationIdentifier,
+  wonky: "'WONK'" as variationIdentifier,
 };
+// "WONK" <wonky>;
 
 export type variationIdentifier =
   | "'wdth'"
@@ -37,4 +47,6 @@ export type variationIdentifier =
   | "'YOPQ'"
   | "'XOPQ'"
   | "'XTRA'"
-  | "'YTFI'";
+  | "'YTFI'"
+  | "'SOFT'"
+  | "'WONK'";

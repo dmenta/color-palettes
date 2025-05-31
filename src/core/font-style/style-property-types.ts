@@ -7,10 +7,16 @@ type MultiStylePropertyDefinition = {
   readonly type: "multi";
 };
 
-export type StylePropertyDefinition = {
+type StyleBooleanPropertyDefinition<T extends string | number = string | number> = {
+  readonly type: "boolean";
+  onValue: T;
+  offValue: T;
+};
+
+export type StylePropertyDefinition<T extends string | number = string | number> = {
   readonly caption: string;
   readonly name: stylePropertyName;
-} & (SingleStylePropertyDefinition | MultiStylePropertyDefinition);
+} & (SingleStylePropertyDefinition | MultiStylePropertyDefinition | StyleBooleanPropertyDefinition<T>);
 
 export type stylePropertyName =
   | "font-size"
@@ -20,9 +26,9 @@ export type stylePropertyName =
   | "font-stretch"
   | "font-family";
 
-export function stylePropertyValue(
-  definition: StylePropertyDefinition,
-  value: number | { [key: string]: number }
+export function stylePropertyValue<T extends string | number = string | number>(
+  definition: StylePropertyDefinition<T>,
+  value: number | { [key: string]: T }
 ): StylePropertyValue {
   if (definition.type === "single") {
     return {
@@ -37,7 +43,6 @@ export function stylePropertyValue(
 export function variationValue(identifier: string, value: { [key: string]: number }): string {
   return `${identifier} ${value[identifier] ?? 0}`;
 }
-
 export type StylePropertyValue = {
   readonly name: stylePropertyName;
   readonly value: string;

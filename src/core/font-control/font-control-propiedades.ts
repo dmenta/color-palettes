@@ -1,7 +1,7 @@
 import { FormControl, FormGroup } from "@angular/forms";
 import { Observable, startWith, map, combineLatest } from "rxjs";
-import { FontStyleAxeSingle, FontStyleAxeMulti } from "../font-style/font-axe-types";
-import { sliderOptions } from "../slider/slider-types";
+import { FontStyleAxeSingle, FontStyleAxeMulti, FontStyleAxeBoolean } from "../font-style/font-axe-types";
+import { sliderOptions } from "../components/slider/slider-types";
 
 export type formWithGroups<T> = { [key: string]: FormControl<T> | FormGroup<keyControl<T>> };
 
@@ -9,35 +9,52 @@ export type keyControl<T> = { [key: string]: FormControl<T> };
 
 type propiedadSingle = {
   type: "single";
-  parte: parte;
+  parte: parteNumber;
   control: FormControl<number>;
+};
+
+type propiedadBoolean<T extends string | number> = {
+  type: "boolean";
+  parte: parteBoolean<T>;
+  control: FormControl<boolean>;
 };
 type propiedadMulti = {
   type: "multi";
-  partes: parte[];
-  control: FormGroup<keyControl<number>>;
+  partes: (parteNumber | parteBoolean<string | number>)[];
+  control: FormGroup<keyControl<number> | keyControl<boolean>>;
 };
 
-export type propiedad = {
+export type propiedad<T extends string | number> = {
   name: string;
-  value$: Observable<string | null>;
-} & (propiedadSingle | propiedadMulti);
+} & (propiedadSingle | propiedadMulti | propiedadBoolean<T>);
 
-type parte = sliderOptions & {
+type parteNumber = sliderOptions & {
   fieldName: string;
   caption: string;
   unit?: string;
   control?: FormControl<number>;
 };
 
-export function createPropiedad(axe: FontStyleAxeSingle | FontStyleAxeMulti): propiedad {
+type parteBoolean<T extends string | number> = {
+  fieldName: string;
+  caption: string;
+  off: T;
+  on: T;
+  defaultValue: boolean;
+  control?: FormControl<boolean>;
+};
+export function createPropiedad<T extends string | number>(
+  axe: FontStyleAxeBoolean<T> | FontStyleAxeSingle | FontStyleAxeMulti
+): propiedad<T> {
   if (axe.type === "single") {
-    return createPropiedadSingleValue(axe);
+    return createPropiedadSingleValue(axe) as propiedad<T>;
+  } else if (axe.type === "multi") {
+    return createPropiedadMultiValue(axe) as propiedad<T>;
   } else {
-    return createPropiedadMultiValue(axe);
+    return createPropiedadBooleanValue(axe) as propiedad<T>;
   }
 }
-function createPropiedadSingleValue(axe: FontStyleAxeSingle): propiedad {
+function createPropiedadSingleValue(axe: FontStyleAxeSingle): propiedad<number> {
   const control = new FormControl(axe.range.defaultValue, { nonNullable: true });
 
   return {
@@ -48,40 +65,58 @@ function createPropiedadSingleValue(axe: FontStyleAxeSingle): propiedad {
       caption: axe.propiedad.caption,
       ...axe.range,
       unit: axe.unit,
-    },
-    value$: control.valueChanges.pipe(
-      startWith(axe.range.defaultValue),
-      map((value) => `${axe.propiedad.name}: ${axe.propertyValue(value).value}`)
-    ),
+    } as parteNumber,
     control: control,
   };
 }
 
-function createPropiedadMultiValue(axe: FontStyleAxeMulti): propiedad {
+function createPropiedadBooleanValue<T extends string | number>(axe: FontStyleAxeBoolean<T>): propiedad<T> {
+  const control = new FormControl(axe.defaultValue ?? false, { nonNullable: true });
+
+  if (axe.type !== "boolean") {
+    throw new Error("Axe must be of type 'boolean'");
+  }
+  return {
+    name: axe.propiedad.name,
+    type: "boolean",
+    parte: {
+      fieldName: axe.propiedad.name,
+      caption: axe.propiedad.caption,
+      off: axe.offValue,
+      on: axe.onValue,
+      defaultValue: axe.defaultValue ?? false,
+    } as parteBoolean<T>,
+    control: control,
+  };
+}
+function createPropiedadMultiValue(axe: FontStyleAxeMulti): propiedad<string> {
   const partes = axe.parts.map((part) => {
-    const control = new FormControl(part.range.defaultValue, { nonNullable: true });
-    return {
-      fieldName: part.variation.identifier,
-      caption: part.variation.caption,
-      ...part.range,
-      control: control,
-      value$: control.valueChanges.pipe(
-        startWith(part.range.defaultValue),
-        map((value) => part.propertyValue({ [part.variation.identifier]: value }))
-      ),
-    };
+    if (part.type === "continuo") {
+      const control = new FormControl(part.range.defaultValue, { nonNullable: true });
+      return {
+        fieldName: part.variation.identifier,
+        caption: part.variation.caption,
+        ...part.range,
+        control: control,
+      };
+    } else {
+      const control = new FormControl<boolean>(part.range.defaultValue, { nonNullable: true });
+      return {
+        fieldName: part.variation.identifier,
+        caption: part.variation.caption,
+        ...part.range,
+        control: control,
+      };
+    }
   });
 
   return {
     name: axe.propiedad.name,
     type: "multi",
-    partes: partes,
-    value$: combineLatest(partes.map((p) => p.value$)).pipe(
-      map((values) => `${axe.propiedad.name}: ${values.join(", ")}`)
-    ),
+    partes: partes as (parteNumber | parteBoolean<string | number>)[],
     control: partes.reduce((group, part) => {
       group.addControl(part.fieldName, part.control);
       return group;
-    }, new FormGroup<keyControl<number>>({})),
+    }, new FormGroup<keyControl<number> | keyControl<boolean>>({})),
   };
 }
