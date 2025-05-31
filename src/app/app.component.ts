@@ -9,7 +9,7 @@ import { familiasDisponibles } from "../core/font-style/font-configs";
   imports: [FontControlComponent, FormsModule],
 })
 export class AppComponent {
-  readonly families = familiasDisponibles;
-  readonly family = model(this.families[2]);
+  readonly families = familiasDisponibles.sort((a, b) => a.name.localeCompare(b.name));
+  readonly family = model(this.families[0]);
   readonly estilo = signal("");
 }
