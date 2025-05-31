@@ -34,7 +34,6 @@ export const fontVariations = {
   softness: "'SOFT'" as variationIdentifier,
   wonky: "'WONK'" as variationIdentifier,
 };
-// "WONK" <wonky>;
 
 export type variationIdentifier =
   | "'wdth'"

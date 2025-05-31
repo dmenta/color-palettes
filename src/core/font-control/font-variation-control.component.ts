@@ -1,15 +1,5 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  inject,
-  Input,
-  model,
-  Optional,
-  Output,
-  signal,
-} from "@angular/core";
-import { debounceTime, distinctUntilChanged, filter, map, startWith } from "rxjs";
+import { ChangeDetectionStrategy, Component, inject, Input, model, Optional } from "@angular/core";
+import { distinctUntilChanged, filter, map, startWith } from "rxjs";
 import { FontStyleAxeMulti } from "../font-style/font-axe-types";
 import {
   FormBuilder,
@@ -37,9 +27,13 @@ import { ToggleCheckComponent } from "../components/toggle-check.component";
   changeDetection: ChangeDetectionStrategy.Default,
 })
 export class FontVariationControlComponent {
+  _inicial = {};
+
+  get sinCambios() {
+    return JSON.stringify(this._inicial) === JSON.stringify(this.formGroup.value);
+  }
   reset() {
     this.formGroup.reset();
-    this.limpio.set(true);
     this.setVisible(true);
   }
   setVisible(visible: boolean) {
@@ -57,7 +51,6 @@ export class FontVariationControlComponent {
   @Input({ required: true }) set variations(value: FontStyleAxeMulti) {
     this._variations = value;
     if (value) {
-      this.estadoInicial.set(null);
       this.initialize(value);
     }
   }
@@ -70,9 +63,6 @@ export class FontVariationControlComponent {
 
   fb: FormBuilder = inject(FormBuilder);
   formGroup: FormGroup = this.fb.group({});
-
-  limpio = signal(true);
-  estadoInicial = signal<string | null>(null);
 
   get control() {
     return this._parentFormGroupDirective?.control.controls[this.fieldName];
@@ -104,9 +94,10 @@ export class FontVariationControlComponent {
       }, {} as { [key: string]: FormControl<number> | FormControl<boolean> })
     );
 
+    this._inicial = this.formGroup.value;
+
     this.formGroup.valueChanges
       .pipe(
-        debounceTime(10),
         startWith(this.formGroup.value),
         map((values) => {
           const valores = this.variations!.parts.map((part) => {
@@ -127,15 +118,6 @@ export class FontVariationControlComponent {
       )
       .subscribe((style) => {
         this.control.setValue(style ?? "", { emitEvent: true });
-
-        const inicial = this.estadoInicial();
-        if (inicial === null) {
-          this.estadoInicial.set(style);
-          this.setVisible(true);
-          this.limpio.set(true);
-        } else {
-          this.limpio.set(inicial === style);
-        }
       });
   }
 }

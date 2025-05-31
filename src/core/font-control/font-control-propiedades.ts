@@ -1,5 +1,4 @@
 import { FormControl, FormGroup } from "@angular/forms";
-import { Observable, startWith, map, combineLatest } from "rxjs";
 import { FontStyleAxeSingle, FontStyleAxeMulti, FontStyleAxeBoolean } from "../font-style/font-axe-types";
 import { sliderOptions } from "../components/slider/slider-types";
 

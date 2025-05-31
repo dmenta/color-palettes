@@ -43,6 +43,7 @@ export function stylePropertyValue<T extends string | number = string | number>(
 export function variationValue(identifier: string, value: { [key: string]: number }): string {
   return `${identifier} ${value[identifier] ?? 0}`;
 }
+
 export type StylePropertyValue = {
   readonly name: stylePropertyName;
   readonly value: string;
