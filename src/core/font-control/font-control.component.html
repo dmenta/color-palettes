@@ -1,21 +1,16 @@
-<div class="border-1 p-4 rounded-lg border-black/10 dark:border-white/10 dark:bg-gray-300/5 bg-gray-300/5">
+<div class="border-1 px-4 py-2 rounded-lg border-black/10 dark:border-white/10 dark:bg-gray-300/5 bg-gray-300/5">
   <form [formGroup]="formGroup">
-    <h3 class="text-2xl mb-4 flex items-center justify-between">
+    <h4 class="text-lg mb-4 flex items-center justify-between">
       {{ fontFamily?.name }}
       <div>
-        <app-visibility-button [visible]="visible()" [disabled]="limpio()" (toggle)="toggleVisible()">
-        </app-visibility-button>
-        <app-reset-button
-          [disabled]="limpio()"
-          (reset)="reset()"
-          class="scale-75 disabled:opacity-50 disabled:pointer-events-none bg-black/10 hover:bg-black/20 dark:bg-gray-300/10 dark:hover:bg-gray-300/20 aspect-square w-10 rounded-lg inline-block active:scale-90 transition-all duration-150">
-        </app-reset-button>
+        <app-visibility-button [visible]="visible()" [disabled]="limpio()" (toggle)="toggleVisible()" />
+        <app-reset-button [disabled]="limpio()" (reset)="reset()" />
       </div>
-    </h3>
+    </h4>
 
-    @for(property of propiedades; track property.name) { @if(formGroup; as group){ @if(property.type==="single") {
+    @for(property of propiedades; track property.name) { @switch (property.type) { @case ("single") {
     <app-slider-field
-      [formGroup]="group"
+      [formGroup]="formGroup"
       [fieldName]="property.parte.fieldName"
       [class.hidden]="!visible() && property.parte.defaultValue === formGroup.controls[property.parte.fieldName].value"
       [min]="property.parte.min"
@@ -28,27 +23,24 @@
       [showValue]="true"
       [unit]="property.parte.unit"
       [defaultValue]="property.parte.defaultValue"
-      [valueLength]="valueLength">
-    </app-slider-field>
-    }@else if(property.type==="boolean") {
-    <div
-      class="flex items-center gap-2 my-2"
-      [class.hidden]="!visible() && property.parte.defaultValue === group.controls[property.parte.fieldName].value">
-      <app-toggle-check
-        [defaultValue]="property.parte.defaultValue"
-        [fieldName]="property.parte.fieldName"
-        [label]="property.parte.caption">
-      </app-toggle-check>
-    </div>
-
-    }@else if(property.type==="multi" && variations!==null) {
+      [valueLength]="valueLength" />
+    } @case ("multi") { @if(variations; as variaciones){
     <div class="pt-2">
       <app-font-variation-control
         [fieldName]="property.name"
-        [variations]="variations"
+        [variations]="variaciones"
         [labelLength]="labelLength"
-        [valueLength]="valueLength"></app-font-variation-control>
+        [valueLength]="valueLength" />
     </div>
-    } } }
+    } } @case ("boolean") {
+    <div
+      class="flex items-center gap-2 my-2"
+      [class.hidden]="!visible() && property.parte.defaultValue === formGroup.controls[property.parte.fieldName].value">
+      <app-toggle-check
+        [defaultValue]="property.parte.defaultValue"
+        [fieldName]="property.parte.fieldName"
+        [label]="property.parte.caption" />
+    </div>
+    } }}
   </form>
 </div>

@@ -1,16 +1,11 @@
-<div class="border-1 my-4 p-4 rounded-lg border-black/10 dark:border-white/10 dark:bg-gray-300/5 bg-gray-300/5">
+<div class="border-1 my-2 px-4 py-2 rounded-lg border-black/10 dark:border-white/10 dark:bg-gray-300/5 bg-gray-300/5">
   @if(variations; as variantes) {
   <form [formGroup]="formGroup">
-    <h4 class="text-xl mb-4 flex items-center justify-between">
+    <h4 class="text-lg mb-4 flex items-center justify-between">
       {{ variantes.propiedad.caption }}
       <div>
-        <app-visibility-button [visible]="visible()" [disabled]="sinCambios" (toggle)="toggleVisible()">
-        </app-visibility-button>
-        <app-reset-button
-          [disabled]="sinCambios"
-          (reset)="reset()"
-          class="scale-75 disabled:opacity-50 disabled:pointer-events-none bg-black/10 hover:bg-black/20 dark:bg-gray-300/10 dark:hover:bg-gray-300/20 aspect-square w-10 rounded-lg inline-block active:scale-90 transition-all duration-150">
-        </app-reset-button>
+        <app-visibility-button [visible]="visible()" [disabled]="sinCambios" (toggle)="toggleVisible()" />
+        <app-reset-button [disabled]="sinCambios" (reset)="reset()" />
       </div>
     </h4>
 
@@ -29,17 +24,15 @@
       [showValue]="true"
       [unit]=""
       [defaultValue]="parte.range.defaultValue"
-      [valueLength]="valueLength">
-    </app-slider-field
-    >} @else {
+      [valueLength]="valueLength" />
+    } @else {
     <div
-      class="flex items-center gap-2 my-2"
+      class="flex items-center gap-2 my-1"
       [class.hidden]="!visible() && parte.range.defaultValue === formGroup.controls[parte.variation.identifier].value">
       <app-toggle-check
         [defaultValue]="parte.range.defaultValue"
         [fieldName]="parte.variation.identifier"
-        [label]="parte.variation.caption">
-      </app-toggle-check>
+        [label]="parte.variation.caption" />
     </div>
     } }
   </form>

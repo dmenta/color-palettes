@@ -9,7 +9,7 @@ export const familiasDisponibles = [
       weightConfig({ min: 200, max: 1000 }, 400),
       italicConfig(false),
       createFontVariationAxe([
-        { variation: fontVariations.width, min: 75, max: 125, step: 2, initialValue: 100 },
+        { variation: fontVariations.width, min: 75, max: 125, step: 2.5, initialValue: 100 },
         { variation: fontVariations.lowercase, min: 440, max: 540, step: 2, initialValue: 500 },
       ]),
     ],
@@ -20,7 +20,7 @@ export const familiasDisponibles = [
       sizeConfig({ min: 12, max: 72 }, 36),
       weightConfig({ min: 100, max: 900 }, 400),
       italicConfig(false),
-      createFontVariationAxe([{ variation: fontVariations.width, min: 75, max: 100, step: 2, initialValue: 100 }]),
+      createFontVariationAxe([{ variation: fontVariations.width, min: 75, max: 100, step: 2.5, initialValue: 100 }]),
     ],
   },
   {
@@ -29,7 +29,7 @@ export const familiasDisponibles = [
       sizeConfig({ min: 12, max: 24 }, 16),
       weightConfig({ min: 100, max: 900 }, 400),
       italicConfig(false),
-      createFontVariationAxe([{ variation: fontVariations.width, min: 62.5, max: 100, step: 2, initialValue: 100 }]),
+      createFontVariationAxe([{ variation: fontVariations.width, min: 62.5, max: 100, step: 2.5, initialValue: 100 }]),
     ],
   },
   {
@@ -50,7 +50,7 @@ export const familiasDisponibles = [
       sizeConfig({ min: 12, max: 36 }, 16),
       weightConfig({ min: 100, max: 900 }, 400),
       italicConfig(false),
-      createFontVariationAxe([{ variation: fontVariations.width, min: 62.5, max: 100, step: 2, initialValue: 100 }]),
+      createFontVariationAxe([{ variation: fontVariations.width, min: 62.5, max: 100, step: 2.5, initialValue: 100 }]),
     ],
   },
   {
@@ -59,7 +59,7 @@ export const familiasDisponibles = [
       sizeConfig({ min: 12, max: 36 }, 16),
       weightConfig({ min: 300, max: 900 }, 400),
       italicConfig(false),
-      createFontVariationAxe([{ variation: fontVariations.width, min: 87, max: 112, step: 2, initialValue: 100 }]),
+      createFontVariationAxe([{ variation: fontVariations.width, min: 87, max: 112, step: 2.5, initialValue: 100 }]),
     ],
   },
 
@@ -69,7 +69,7 @@ export const familiasDisponibles = [
       sizeConfig({ min: 12, max: 72 }, 36),
       weightConfig({ min: 100, max: 1000 }, 400),
       createFontVariationAxe([
-        { variation: fontVariations.width, min: 25, max: 151, step: 2, initialValue: 100 },
+        { variation: fontVariations.width, min: 25, max: 151, step: 2.5, initialValue: 100 },
         { variation: fontVariations.grade, min: -200, max: 150, step: 5, initialValue: 0 },
         { variation: fontVariations.slant, min: -10, max: 0, step: 1, initialValue: 0 },
         { variation: fontVariations.lowercase, min: 416, max: 570, step: 5, initialValue: 514 },

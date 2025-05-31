@@ -1,14 +1,26 @@
-<div class="flex w-full flex-row items-base justify-between gap-[1ch]">
-  @if(showLabel) {
-  <app-field-label
-    [for]="fieldName"
-    [text]="label"
-    [length]="labelLength"
-    [class.opacity-70]="defaultValue !== undefined && control.value === defaultValue"
-    class="select-none transition-all duration-300"
-    (dblclick)="control.reset()"></app-field-label>
-  }
-
+<div class="w-full mb-3">
+  <div class="flex w-full flex-row items-base justify-between -my-1.5">
+    @if(showLabel) {
+    <app-field-label
+      [for]="fieldName"
+      [text]="label"
+      [length]="labelLength"
+      [class.opacity-70]="defaultValue !== undefined && control.value === defaultValue"
+      class="select-none transition-all duration-300"
+      (dblclick)="control.reset()"></app-field-label>
+    }
+    <div class="w-full"></div>
+    @if(showValue) {
+    <app-field-value
+      [value]="control.value"
+      [length]="valueLength"
+      [decimals]="decimales"
+      [unit]="unit"
+      [class.opacity-70]="defaultValue !== undefined && control.value === defaultValue"
+      class="select-none transition-all duration-300">
+    </app-field-value>
+    }
+  </div>
   <app-slider
     [fieldName]="fieldName"
     [min]="min"
@@ -16,15 +28,4 @@
     [step]="step"
     [stops]="stops"
     [accent]="defaultValue !== undefined && control.value !== defaultValue"></app-slider>
-
-  @if(showValue) {
-  <app-field-value
-    [value]="control.value"
-    [length]="valueLength"
-    [decimals]="decimales"
-    [unit]="unit"
-    [class.opacity-70]="defaultValue !== undefined && control.value === defaultValue"
-    class="select-none transition-all duration-300">
-  </app-field-value>
-  }
 </div>
