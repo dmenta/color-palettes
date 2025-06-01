@@ -1,0 +1,48 @@
+.app-select {
+  appearance: base-select;
+
+  &::picker-icon {
+    font-family: var(--material-icons-font);
+    font-variation-settings: var(--material-icons-variation-settings);
+    content: "arrow_drop_down";
+    opacity: 0.8;
+    font-size: 1.5em;
+    line-height: 1lh;
+  }
+
+  &:open::picker-icon {
+    content: "arrow_drop_up";
+  }
+
+  option {
+    padding-inline: calc(var(--spacing) * 3);
+    background-color: none;
+    padding-block: calc(var(--spacing) * 1);
+    color: light-dark(var(--color-gray-800), var(--color-gray-50));
+    font-size: var(--text-sm);
+
+    &::checkmark {
+      display: none;
+    }
+
+    &:hover {
+      background-color: light-dark(var(--color-gray-100), var(--color-gray-700));
+    }
+    &:focus {
+      background-color: light-dark(var(--color-gray-200), var(--color-gray-600));
+      outline: none;
+    }
+
+    &:checked {
+      color: light-dark(white, white);
+      background-color: light-dark(var(--color-sky-500), var(--color-sky-700));
+    }
+  }
+}
+::picker(select) {
+  appearance: base-select;
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
+  outline: none;
+  background-color: light-dark(white, var(--color-gray-800));
+  border-color: color-mix(in srgb, light-dark(black, white), transparent 80%);
+}

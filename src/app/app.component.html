@@ -1,24 +1,22 @@
+<app-icon-toggle-button
+  class="absolute right-1 top-1"
+  [value]="darkModeService.darkMode()"
+  (toggle)="darkModeService.setDarkMode($event)"></app-icon-toggle-button>
 <div class="flex flex-row gap-2 justify-between items-start h-svh overflow-y-hidden">
   <div class="space-y-2 p-2 min-w-[380px]">
     <div>
-      <select
-        [(ngModel)]="family"
-        class="appearance-default w-full border-1 border-black/20 dark:border-white/20 rounded p-1 dark:bg-gray-900 dark:text-gray-100 bg-gray-100 text-gray-900 outline-none">
-        @for(item of families; track item.name) {
-        <option [ngValue]="item">{{ item.name }}</option>
-        }
-      </select>
+      <app-select [items]="families" displayKey="name" [(ngModel)]="family"></app-select>
     </div>
     <div>
       <app-font-control
         [fontFamily]="family()"
-        [labelLength]="8"
+        [labelLength]="18"
         [valueLength]="6"
-        (styleChanged)="estilo.set($event)"></app-font-control>
+        (styleChanged)="onStyleChanged($event)"></app-font-control>
     </div>
   </div>
-
   <div [style]="estilo()" class="p-4 w-[60ch] mx-auto transition-all duration-75 h-svh">
+    @if(estilo()!==""){
     <p>
       No one shall be subjected to arbitrary arrest, detention or exile. Everyone is entitled in full equality to a fair
       and public hearing by an independent and impartial tribunal, in the determination of his rights and obligations
@@ -43,5 +41,6 @@
       Quisquam et incidunt, fugit quaerat dolorum, ipsa inventore iste ab minus neque earum libero iusto vitae hic
       eligendi error non perferendis ratione laboriosam esse dolores! Nemo molestias nostrum sed harum.
     </p>
+    }
   </div>
 </div>

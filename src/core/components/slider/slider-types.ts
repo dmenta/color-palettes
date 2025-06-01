@@ -1,10 +1,10 @@
-export function createSliderOptions(range: numericRange, initialValue: number = 0, step: number, stops: number[]) {
+export function createSliderOptions(range: numericRange, defaultValue: number = 0, step: number, stops: number[]) {
   range = ensureMinMax(range);
-  initialValue = ensureInitialValue(range, initialValue);
+  defaultValue = ensureDefaultValue(range, defaultValue);
   step = ensureStep(range, step);
   stops = ensureStops(range, stops);
 
-  return { ...range, defaultValue: initialValue, step, stops } as sliderOptions;
+  return { ...range, defaultValue: defaultValue, step, stops } as sliderOptions;
 }
 
 export type numericRange = {
@@ -31,8 +31,8 @@ function rangeSize(range: numericRange): number {
   return Math.abs(range.max - range.min);
 }
 
-function ensureInitialValue(range: numericRange, initialValue: number) {
-  return Math.max(Math.min(initialValue, range.max), range.min);
+function ensureDefaultValue(range: numericRange, defaultValue: number) {
+  return Math.max(Math.min(defaultValue, range.max), range.min);
 }
 
 function ensureMinMax(range: numericRange) {

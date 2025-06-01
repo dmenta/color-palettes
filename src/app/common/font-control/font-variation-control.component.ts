@@ -1,6 +1,5 @@
-import { ChangeDetectionStrategy, Component, inject, Input, model, Optional } from "@angular/core";
-import { distinctUntilChanged, filter, map, startWith } from "rxjs";
-import { FontStyleAxeMulti } from "../font-style/font-axe-types";
+import { Component, computed, inject, Input, model, Optional, signal } from "@angular/core";
+import { distinctUntilChanged, filter, map, startWith, tap } from "rxjs";
 import {
   FormBuilder,
   FormControl,
@@ -9,29 +8,40 @@ import {
   ReactiveFormsModule,
   Validators,
 } from "@angular/forms";
-import { SliderFieldComponent } from "../components/slider-field/slider-field.component";
-import { VisibilityButtonComponent } from "../components/visibility-button.component";
-import { ResetButtonComponent } from "../components/reset-button.component";
-import { ToggleCheckComponent } from "../components/toggle-check.component";
+import { SliderFieldComponent } from "../../../core/components/slider-field/slider-field.component";
+import { ToggleCheckComponent } from "../../../core/components/toggle-check/toggle-check.component";
+import { IconToggleButtonComponent } from "../../../core/components/buttons/icon-toggle-button.component";
+import { IconButtonComponent } from "../../../core/components/buttons/icon-button.component";
+import { ShowHideComponent } from "../../../core/components/show-hide/show-hide.component";
+import { FontStyleAxeMulti } from "../font-style/font-axe-types";
+import { CollapsiblePanelComponent } from "../../../core/components/collapsible-panel/collapsible-panel.component";
 
 @Component({
   selector: "app-font-variation-control",
   imports: [
     ReactiveFormsModule,
     SliderFieldComponent,
-    VisibilityButtonComponent,
-    ResetButtonComponent,
     ToggleCheckComponent,
+    CollapsiblePanelComponent,
+    IconToggleButtonComponent,
+    IconButtonComponent,
+    ShowHideComponent,
   ],
   templateUrl: "./font-variation-control.component.html",
-  changeDetection: ChangeDetectionStrategy.Default,
 })
 export class FontVariationControlComponent {
-  _inicial = {};
+  estadoInicial = signal<string | null>(null);
+  estadoActual = signal<string | null>(null);
 
-  get sinCambios() {
-    return JSON.stringify(this._inicial) === JSON.stringify(this.formGroup.value);
-  }
+  sinCambios = computed(() => {
+    const inicial = this.estadoInicial();
+    const actual = this.estadoActual();
+    if (inicial === null || actual === null) {
+      return true;
+    }
+    return inicial === actual;
+  });
+
   reset() {
     this.formGroup.reset();
     this.setVisible(true);
@@ -42,6 +52,8 @@ export class FontVariationControlComponent {
   toggleVisible() {
     this.visible.update((current) => !current);
   }
+
+  collapsed = signal(false);
   visible = model(true);
 
   private _variations: FontStyleAxeMulti | null = null;
@@ -71,6 +83,9 @@ export class FontVariationControlComponent {
   constructor(@Optional() private _parentFormGroupDirective: FormGroupDirective) {}
 
   private initialize(axe: FontStyleAxeMulti) {
+    this.estadoActual.set(null);
+    this.estadoInicial.set(null);
+
     this.control.valueChanges
       .pipe(
         distinctUntilChanged(),
@@ -80,7 +95,7 @@ export class FontVariationControlComponent {
 
     this.formGroup = this.fb.group(
       axe.parts.reduce((acc, part) => {
-        if (part.type === "discreto") {
+        if (part.type === "boolean") {
           acc[part.variation.identifier] = this.fb.control(part.range.defaultValue, {
             nonNullable: true,
           });
@@ -94,14 +109,17 @@ export class FontVariationControlComponent {
       }, {} as { [key: string]: FormControl<number> | FormControl<boolean> })
     );
 
-    this._inicial = this.formGroup.value;
+    this.estadoInicial.set(JSON.stringify(this.formGroup.value));
 
     this.formGroup.valueChanges
       .pipe(
+        tap((values) => {
+          this.estadoActual.set(JSON.stringify(values));
+        }),
         startWith(this.formGroup.value),
         map((values) => {
           const valores = this.variations!.parts.map((part) => {
-            if (part.type === "discreto") {
+            if (part.type === "boolean") {
               const value = values[part.variation.identifier];
               return `${part.variation.identifier} ${value ? part.range.max : part.range.min}`;
             } else {
@@ -111,7 +129,7 @@ export class FontVariationControlComponent {
             }
           }).filter((v) => v !== null);
           if (valores.length > 0) {
-            return `${this.variations?.propiedad.name}: ${valores.join(", ")};`;
+            return `${this.variations?.name}: ${valores.join(", ")};`;
           }
           return null;
         })

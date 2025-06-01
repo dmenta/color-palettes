@@ -1,0 +1,49 @@
+@if(variations; as variantes) {
+<app-collapsible-panel>
+  <ng-content header>
+    <h4 class="text-lg flex items-center justify-between">
+      {{ variantes.caption }}
+      <div class="space-x-1">
+        <app-icon-toggle-button
+          [value]="visible()"
+          [disabled]="sinCambios()"
+          (toggle)="toggleVisible()"
+          trueIcon="visibility"
+          falseIcon="visibility_off"></app-icon-toggle-button>
+        <app-icon-button [disabled]="sinCambios()" (click)="reset()">reset_settings</app-icon-button>
+      </div>
+    </h4>
+  </ng-content>
+  <ng-content>
+    <form [formGroup]="formGroup" class="text-sm">
+      @for(parte of variantes.parts; track parte.variation.identifier) { @if(parte.type==="single"){
+      <app-show-hide
+        [show]="visible() || parte.range.defaultValue !== formGroup.controls[parte.variation.identifier].value">
+        <app-slider-field
+          [fieldName]="parte.variation.identifier"
+          [min]="parte.range.min"
+          (dblclick)="formGroup.controls[parte.variation.identifier].reset()"
+          [max]="parte.range.max"
+          [step]="parte.range.step"
+          [stops]="parte.range.stops"
+          [showLabel]="true"
+          [labelLength]="labelLength"
+          [label]="parte.variation.caption"
+          [showValue]="true"
+          [unit]=""
+          [defaultValue]="parte.range.defaultValue"
+          [valueLength]="valueLength" />
+      </app-show-hide>
+      } @else {
+      <app-show-hide [show]="visible() || formGroup.controls[parte.variation.identifier].value">
+        <div class="flex items-center gap-2 my-1">
+          <app-toggle-check [formControlName]="parte.variation.identifier">{{
+            parte.variation.caption
+          }}</app-toggle-check>
+        </div>
+      </app-show-hide>
+      } }
+    </form>
+  </ng-content>
+</app-collapsible-panel>
+}

@@ -1,0 +1,54 @@
+<form [formGroup]="formGroup" class="text-sm">
+  <app-collapsible-panel>
+    <ng-content header>
+      <h4 class="text-lg flex items-center justify-between">
+        Font
+        <div class="space-x-1">
+          <app-icon-toggle-button
+            [value]="visible()"
+            [disabled]="sinCambios()"
+            (toggle)="toggleVisible()"
+            trueIcon="visibility"
+            falseIcon="visibility_off"></app-icon-toggle-button>
+          <app-icon-button [disabled]="sinCambios()" (click)="reset()">reset_settings</app-icon-button>
+        </div>
+      </h4>
+    </ng-content>
+    <ng-content>
+      @for(property of propiedades; track property.name) { @switch (property.type) { @case ("single") {
+      <app-show-hide
+        [show]="visible() || property.parte.defaultValue !== formGroup.controls[property.parte.fieldName].value">
+        <app-slider-field
+          [formGroup]="formGroup"
+          [fieldName]="property.parte.fieldName"
+          [min]="property.parte.min"
+          [max]="property.parte.max"
+          [step]="property.parte.step"
+          [stops]="property.parte.stops"
+          [showLabel]="true"
+          [labelLength]="labelLength"
+          [label]="property.parte.caption"
+          [showValue]="true"
+          [unit]="property.parte.unit"
+          [defaultValue]="property.parte.defaultValue"
+          [valueLength]="valueLength" />
+      </app-show-hide>
+      } @case ("boolean") {
+      <app-show-hide [show]="visible() || formGroup.controls[property.parte.fieldName].value">
+        <div class="flex items-center gap-2 my-1">
+          <app-toggle-check [formControlName]="property.parte.fieldName">{{ property.parte.caption }}</app-toggle-check>
+        </div>
+      </app-show-hide>
+      } }}
+    </ng-content>
+  </app-collapsible-panel>
+  @if(variations; as variaciones){
+  <div class="pt-2">
+    <app-font-variation-control
+      [fieldName]="variations.name"
+      [variations]="variaciones"
+      [labelLength]="labelLength"
+      [valueLength]="valueLength" />
+  </div>
+  }
+</form>

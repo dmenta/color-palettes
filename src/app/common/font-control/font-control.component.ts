@@ -1,13 +1,16 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, model, Output, signal } from "@angular/core";
-import { debounceTime, map } from "rxjs";
-import { fontFamily, FontStyleAxeMulti } from "../font-style/font-axe-types";
+import { Component, computed, EventEmitter, inject, Input, model, Output, signal } from "@angular/core";
+import { debounceTime, map, tap } from "rxjs";
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
-import { SliderFieldComponent } from "../components/slider-field/slider-field.component";
+import { SliderFieldComponent } from "../../../core/components/slider-field/slider-field.component";
 import { createPropiedad, propiedad } from "./font-control-propiedades";
 import { FontVariationControlComponent } from "./font-variation-control.component";
-import { VisibilityButtonComponent } from "../components/visibility-button.component";
-import { ResetButtonComponent } from "../components/reset-button.component";
-import { ToggleCheckComponent } from "../components/toggle-check.component";
+import { ToggleCheckComponent } from "../../../core/components/toggle-check/toggle-check.component";
+import { CollapsiblePanelComponent } from "../../../core/components/collapsible-panel/collapsible-panel.component";
+import { IconToggleButtonComponent } from "../../../core/components/buttons/icon-toggle-button.component";
+import { IconButtonComponent } from "../../../core/components/buttons/icon-button.component";
+import { ShowHideComponent } from "../../../core/components/show-hide/show-hide.component";
+import { toSignal } from "@angular/core/rxjs-interop";
+import { fontFamily, FontStyleAxeMulti } from "../font-style/font-axe-types";
 
 @Component({
   selector: "app-font-control",
@@ -15,14 +18,24 @@ import { ToggleCheckComponent } from "../components/toggle-check.component";
     ReactiveFormsModule,
     SliderFieldComponent,
     FontVariationControlComponent,
-    VisibilityButtonComponent,
-    ResetButtonComponent,
     ToggleCheckComponent,
+    CollapsiblePanelComponent,
+    IconToggleButtonComponent,
+    IconButtonComponent,
+    ShowHideComponent,
   ],
   templateUrl: "./font-control.component.html",
-  changeDetection: ChangeDetectionStrategy.Default,
 })
 export class FontControlComponent {
+  expandCollapse(event: MouseEvent) {
+    this.collapsed.update((current) => !current);
+
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
+  collapsed = signal(false);
+
   reset() {
     this.formGroup.reset();
     this.setVisible(true);
@@ -39,7 +52,7 @@ export class FontControlComponent {
   limpio = signal(true);
 
   variationsChanged(propiedad: string) {
-    this.formGroup.controls[this.variations!.propiedad.name].setValue(propiedad);
+    this.formGroup.controls[this.variations!.name].setValue(propiedad);
   }
   private _family: fontFamily | null = null;
 
@@ -60,14 +73,26 @@ export class FontControlComponent {
   private fb: FormBuilder = inject(FormBuilder);
   formGroup: FormGroup = this.fb.group({});
 
-  propiedades: propiedad<string | number>[] = [];
+  propiedades: propiedad[] = [];
 
   variations: FontStyleAxeMulti | null = null;
 
   estadoInicial = signal<string | null>(null);
+  estadoActual = signal<string | null>(null);
+  sinCambios = computed(() => {
+    const inicial = this.estadoInicial();
+    const actual = this.estadoActual();
+    if (inicial === null || actual === null) {
+      return true;
+    }
+    return inicial === actual;
+  });
 
   private initialize(family: fontFamily) {
     this.variations = family.propiedades.find((prop) => prop.type === "multi") as FontStyleAxeMulti | null;
+
+    this.estadoActual.set(null);
+    this.estadoInicial.set(null);
 
     this.propiedades = family.propiedades.map((prop) => createPropiedad(prop));
     this.formGroup = this.fb.nonNullable.group(
@@ -89,28 +114,26 @@ export class FontControlComponent {
     this.formGroup.valueChanges
       .pipe(
         debounceTime(10),
+        tap((values) => {
+          this.estadoActual.set(JSON.stringify(values));
+        }),
         map((values) => {
           const styles = this.fontFamily!.propiedades.map((axe) => {
-            const value = values[axe.propiedad.name];
+            const value = values[axe.name];
             if (axe.type === "single") {
-              return `${axe.propiedad.name}: ${axe.propertyValue(value).value}`;
+              return `${axe.name}: ${axe.propertyValue(value).value}`;
             } else if (axe.type === "multi") {
               return (value ?? "") === "" ? null : value;
             } else {
-              return `${axe.propiedad.name}: ${axe.propertyValue(value).value}`;
+              return `${axe.name}: ${axe.propertyValue(value).value}`;
             }
           });
           return [`font-family: '${this.fontFamily!.name}'`, "font-optical-sizing: auto", ...styles].join("; ");
         })
       )
       .subscribe((style) => {
-        const inicial = this.estadoInicial();
-        if (inicial === null) {
-          this.estadoInicial.set(style);
-          this.setVisible(true);
-          this.limpio.set(true);
-        } else {
-          this.limpio.set(inicial === style);
+        if (this.sinCambios()) {
+          this.estadoInicial.set(JSON.stringify(this.formGroup.value));
         }
 
         this.styleChanged.emit(style);

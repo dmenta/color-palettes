@@ -12,6 +12,8 @@
 
 :root {
   --body-font-family: "Nunito Sans", sans-serif;
+  --material-icons-font: "Material Symbols Rounded", sans-serif;
+  --material-icons-variation-settings: "opsz" 40, "wght" 500, "FILL" 0, "GRAD" 0;
 }
 
 body {

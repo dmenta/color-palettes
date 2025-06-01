@@ -7,7 +7,7 @@ export type fontVariationDefinition = {
   variation: variationIdentifier;
   min: number;
   max: number;
-  initialValue: number;
+  defaultValue: number;
   step: number;
   stops?: number[];
 };
@@ -16,7 +16,7 @@ export type fontBooleanVariationDefinition = {
   variation: variationIdentifier;
   min: number;
   max: number;
-  initialValue: number;
+  defaultValue: number;
 };
 
 export const fontVariations = {
