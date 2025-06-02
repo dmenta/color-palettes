@@ -34,6 +34,16 @@ export class ToggleCheckComponent implements ControlValueAccessor {
   private _disabled = false;
 
   @Input()
+  get label() {
+    return this._label;
+  }
+  set label(value: string) {
+    this._label = value;
+  }
+
+  private _label: string = "";
+
+  @Input()
   get value(): boolean {
     return this._value;
   }

@@ -1,0 +1,11 @@
+<h4 class="text-lg flex items-center justify-between">
+  Variations
+  <div class="space-x-1">
+    <app-icon-toggle-button
+      [(value)]="visible"
+      [disabled]="!modificado()"
+      trueIcon="visibility"
+      falseIcon="visibility_off"></app-icon-toggle-button>
+    <app-icon-button [disabled]="!modificado()" (click)="onReset($event)">reset_settings</app-icon-button>
+  </div>
+</h4>

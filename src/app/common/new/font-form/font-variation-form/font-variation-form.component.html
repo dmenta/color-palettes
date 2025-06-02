@@ -1,0 +1,35 @@
+@if(multiValueConfig; as config) {
+<app-collapsible-panel>
+  <app-font-form-title
+    header
+    [modificado]="modificado()"
+    [visible]="visible()"
+    (visibleChange)="visible.set($event)"
+    (reset)="reset()" />
+  <form [formGroup]="formGroup" class="text-sm">
+    @for(config of config.multiValueParts; track config.identifier) {
+    <app-show-hide [show]="visible() || config.defaultValue !== formGroup.controls[config.identifier].value">
+      @switch(config.type) { @case('range') {
+      <app-slider-field
+        [fieldName]="config.identifier"
+        [min]="config.min"
+        [max]="config.max"
+        [defaultValue]="config.defaultValue"
+        [step]="config.step"
+        [stops]="config.stops"
+        [label]="config.displayName"
+        [showLabel]="true"
+        [labelLength]="labelLength"
+        [showValue]="true"
+        [valueLength]="valueLength" />
+      } @case('boolean') {
+      <app-toggle-check
+        [formControlName]="config.identifier"
+        [label]="config.displayName"
+        [value]="config.defaultValue" />
+      } }
+    </app-show-hide>
+    }
+  </form>
+</app-collapsible-panel>
+}

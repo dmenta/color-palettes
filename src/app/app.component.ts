@@ -1,15 +1,15 @@
-import { Component, inject, model, signal } from "@angular/core";
-import { FontControlComponent } from "./common/font-control/font-control.component";
+import { Component, computed, inject, model, Signal, signal } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { familiasDisponibles } from "./common/font-style/font-configs";
-import { IconToggleButtonComponent } from "../core/components/buttons/icon-toggle-button.component";
-import { SelectComponent } from "../core/components/select/select.component";
 import { DarkModeService } from "../core/service/dark-mode.service";
+import { MultiValuePropertyFormComponent } from "./common/new/font-form/font-variation-form/font-variation-form.component";
+import { fontFamilies, FontFamily } from "./common/new/font-configuration/fonts";
+import { MultivaluePropertyConfiguration } from "./common/new/font-configuration/multivalue-property";
 
 @Component({
   selector: "app-root",
   templateUrl: "./app.component.html",
-  imports: [FontControlComponent, FormsModule, IconToggleButtonComponent, SelectComponent],
+  imports: [FormsModule, MultiValuePropertyFormComponent],
 })
 export class AppComponent {
   darkModeService = inject(DarkModeService);
@@ -17,7 +17,19 @@ export class AppComponent {
     console.log("Style changed to:", style);
     this.estilo.set(style);
   }
-  readonly families = familiasDisponibles.sort((a, b) => a.name.localeCompare(b.name));
-  readonly family = model(this.families[4]);
+  readonly families: FontFamily[] = fontFamilies;
+  readonly family = model<FontFamily | null>(null);
+
+  multiValueConfigs = computed(() => {
+    const familia = this.family();
+    if (!familia) {
+      return [];
+    }
+    return familia.propiedades.filter((prop) => prop.type === "multi") as MultivaluePropertyConfiguration[];
+  });
   readonly estilo = signal("");
+
+  ngOnInit() {
+    this.family.set(this.families[0]);
+  }
 }
