@@ -5,6 +5,20 @@ import { Component, Input } from "@angular/core";
   templateUrl: "./data-list.component.html",
 })
 export class DataListComponent {
+  private _values: number[] = [];
   @Input() id?: string | null;
-  @Input() values?: number[] = [];
+  @Input() set values(newValues: number[]) {
+    this._values = newValues
+      .sort((a, b) => a - b)
+      .reduce((acc, val) => {
+        if (!acc.includes(val)) {
+          acc.push(val);
+        }
+        return acc;
+      }, [] as number[]);
+  }
+
+  get values(): number[] {
+    return this._values;
+  }
 }

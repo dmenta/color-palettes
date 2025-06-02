@@ -1,15 +1,15 @@
-import { Component, computed, inject, Input, output, signal } from "@angular/core";
+import { Component, computed, inject, input, Input, output, signal } from "@angular/core";
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { CollapsiblePanelComponent } from "../../../../../core/components/collapsible-panel/collapsible-panel.component";
 import { ShowHideComponent } from "../../../../../core/components/show-hide/show-hide.component";
 import { ToggleCheckComponent } from "../../../../../core/components/toggle-check/toggle-check.component";
 import { SliderFieldComponent } from "../../../../../core/components/slider-field/slider-field.component";
 import { FontFormTitleComponent } from "../font-form-title/font-form-title.component";
-import { MultivaluePropertyConfiguration } from "../../font-configuration/multivalue-property";
-import { distinctUntilChanged, map, startWith, tap } from "rxjs";
+import { SingleValueProperty } from "../../font-configuration/singlevalue-property";
+import { tap, startWith, map } from "rxjs";
 
 @Component({
-  selector: "app-font-variation-form",
+  selector: "app-font-singles-form",
   imports: [
     ReactiveFormsModule,
     CollapsiblePanelComponent,
@@ -18,18 +18,19 @@ import { distinctUntilChanged, map, startWith, tap } from "rxjs";
     SliderFieldComponent,
     FontFormTitleComponent,
   ],
-  templateUrl: "./font-variation-form.component.html",
+  templateUrl: "./font-singles-form.componente.html",
 })
-export class MultiValuePropertyFormComponent {
-  private _multiValueConfig: MultivaluePropertyConfiguration | null = null;
-  @Input() set multiValueConfig(value: MultivaluePropertyConfiguration | null) {
-    this._multiValueConfig = value;
+export class SingleValuePropertiesFormComponent {
+  title = input<string>("");
+  private _propertyConfigs: SingleValueProperty[] = [];
+  @Input() set propertyConfigs(value: SingleValueProperty[]) {
+    this._propertyConfigs = value;
     if (value) {
       this.initialize(value);
     }
   }
-  get multiValueConfig(): MultivaluePropertyConfiguration | null {
-    return this._multiValueConfig;
+  get propertyConfigs(): SingleValueProperty[] {
+    return this._propertyConfigs;
   }
 
   fb: FormBuilder = inject(FormBuilder);
@@ -55,22 +56,22 @@ export class MultiValuePropertyFormComponent {
     this.formGroup.reset();
   }
 
-  styleChanged = output<string | null>();
+  styleChanged = output<string[]>();
   visible = signal(true);
   collapsed = signal(false);
 
-  private initialize(multiPartConfig: MultivaluePropertyConfiguration) {
+  private initialize(configs: SingleValueProperty[]) {
     this.estadoActual.set(null);
     this.estadoInicial.set(null);
 
     this.formGroup = this.fb.group(
-      multiPartConfig.multiValueParts.reduce((acc, config) => {
+      configs.reduce((acc, config) => {
         if (config.type === "boolean") {
-          acc[config.identifier] = this.fb.nonNullable.control(config.defaultValue);
+          acc[config.name] = this.fb.nonNullable.control(config.defaultValue);
           return acc;
         }
         if (config.type === "range") {
-          acc[config.identifier] = this.fb.nonNullable.control(config.defaultValue);
+          acc[config.name] = this.fb.nonNullable.control(config.defaultValue);
         }
         return acc;
       }, {} as { [key: string]: FormControl<number> | FormControl<boolean> })
@@ -80,12 +81,11 @@ export class MultiValuePropertyFormComponent {
 
     this.formGroup.valueChanges
       .pipe(
-        distinctUntilChanged((prev, curr) => JSON.stringify(prev) === JSON.stringify(curr)),
         tap((values) => {
           this.estadoActual.set(JSON.stringify(values));
         }),
         startWith(this.formGroup.value),
-        map((values) => this.multiValueConfig!.propertyValue(values))
+        map((values) => this.propertyConfigs.map((config) => config.propertyValue(values)).filter((v) => v !== null))
       )
       .subscribe((value) => {
         this.styleChanged.emit(value);

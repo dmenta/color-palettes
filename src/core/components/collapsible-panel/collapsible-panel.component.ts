@@ -6,7 +6,7 @@ import { IconComponent } from "../icon/icon.component";
   selector: "app-collapsible-panel",
   imports: [ShowHideComponent, IconComponent],
   template: `<div
-    class="border-1  rounded-md border-black/10 dark:border-white/10 dark:bg-gray-800/50 bg-gray-300/5 shadow-md/10 shadow-gray-500">
+    class="border-1   rounded-md border-black/10 dark:border-white/10 dark:bg-gray-800/50 bg-gray-300/5 shadow-md/10 shadow-gray-500">
     <div
       (click)="expandCollapse($event)"
       class="flex flex-row items-center justify-left cursor-pointer gap-1
@@ -23,8 +23,8 @@ import { IconComponent } from "../icon/icon.component";
       </div>
     </div>
     <app-show-hide [show]="!collapsed()">
-      <div class="px-4 py-4 border-t-1 border-black/20 dark:border-white/10">
-        <ng-content>Hola</ng-content>
+      <div class="px-4 py-4 border-t-1 border-black/20 dark:border-white/10 ">
+        <ng-content></ng-content>
       </div>
     </app-show-hide>
   </div>`,

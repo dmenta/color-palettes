@@ -9,8 +9,8 @@ import { IconToggleButtonComponent } from "../../../../../core/components/button
   templateUrl: "./font-form-title.component.html",
 })
 export class FontFormTitleComponent {
+  title = input<string>("");
   modificado = input(false);
-
   visible = model(true);
 
   reset = output<MouseEvent>();

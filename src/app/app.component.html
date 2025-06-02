@@ -1,4 +1,54 @@
-@if(multiValueConfigs().length > 0) {
-<h2>Multi Value Configs</h2>
-<app-font-variation-form [labelLength]="18" [valueLength]="6" [multiValueConfig]="multiValueConfigs()[0]" />
-}
+<app-icon-toggle-button
+  class="absolute right-1 top-1"
+  [value]="darkModeService.darkMode()"
+  (toggle)="darkModeService.setDarkMode($event)"></app-icon-toggle-button>
+<div class="flex flex-row gap-2 justify-between items-start h-svh overflow-y-hidden">
+  <div class="space-y-2 p-2 min-w-[380px]">
+    <div>
+      <app-select [items]="families" displayKey="name" [(ngModel)]="family"></app-select>
+    </div>
+    <div>
+      <app-font-singles-form
+        [title]="family().name"
+        [labelLength]="18"
+        [valueLength]="6"
+        [propertyConfigs]="singleValueConfigs()"
+        (styleChanged)="estilosSingle.set($event)" />
+      @for(config of multiValueConfigs(); track config.name) {
+      <app-font-variation-form
+        [labelLength]="18"
+        [valueLength]="6"
+        [multiValueConfig]="config"
+        (styleChanged)="estiloMultiChange(config.name, $event)" />
+      }
+    </div>
+  </div>
+  <div [style]="estilos()" class="p-4 w-[60ch] mx-auto transition-all duration-75 h-svh">
+    @if(estilos()!==""){
+    <p>
+      No one shall be subjected to arbitrary arrest, detention or exile. Everyone is entitled in full equality to a fair
+      and public hearing by an independent and impartial tribunal, in the determination of his rights and obligations
+      and of any criminal charge against him. No one shall be subjected to arbitrary interference with his privacy,
+      family, home or correspondence, nor to attacks upon his honour and reputation. Everyone has the right to the
+      protection of the law against such interference or attacks.
+    </p>
+    <p class="mt-4">
+      1232454.5453 5446.45645 Lorem ipsum dolor sit amet, consectetur adipisicing elit. Expedita recusandae, assumenda
+      omnis id, repellat FUGA CUM EUM ODIO ASPERIORES HIC TEMPORIBUS corrupti suscipit ducimus totam blanditiis? Nulla
+      eaque debitis iusto?
+    </p>
+    <p class="mt-4">
+      Voluptates quaerat dicta dolorem natus delectus blanditiis illo possimus neque doloremque, quam rem, numquam, ad
+      nemo ipsam in. Quaerat consectetur quia quas id atque facilis nihil ea labore voluptatum. Recusandae?
+    </p>
+    <p class="mt-4">
+      Sit provident, repellat quos perferendis itaque illo iusto consequuntur omnis harum unde veniam reprehenderit ex,
+      sapiente sunt dolor cum odit non molestias nesciunt odio quas animi! Modi magni facilis reiciendis!
+    </p>
+    <p class="mt-4">
+      Quisquam et incidunt, fugit quaerat dolorum, ipsa inventore iste ab minus neque earum libero iusto vitae hic
+      eligendi error non perferendis ratione laboriosam esse dolores! Nemo molestias nostrum sed harum.
+    </p>
+    }
+  </div>
+</div>

@@ -2,31 +2,29 @@
 <app-collapsible-panel>
   <app-font-form-title
     header
+    [title]="config.displayName"
     [modificado]="modificado()"
     [visible]="visible()"
     (visibleChange)="visible.set($event)"
     (reset)="reset()" />
   <form [formGroup]="formGroup" class="text-sm">
-    @for(config of config.multiValueParts; track config.identifier) {
-    <app-show-hide [show]="visible() || config.defaultValue !== formGroup.controls[config.identifier].value">
-      @switch(config.type) { @case('range') {
+    @for(part of config.multiValueParts; track part.identifier) {
+    <app-show-hide [show]="visible() || part.defaultValue !== formGroup.controls[part.identifier].value">
+      @switch(part.type) { @case('range') {
       <app-slider-field
-        [fieldName]="config.identifier"
-        [min]="config.min"
-        [max]="config.max"
-        [defaultValue]="config.defaultValue"
-        [step]="config.step"
-        [stops]="config.stops"
-        [label]="config.displayName"
+        [fieldName]="part.identifier"
+        [min]="part.min"
+        [max]="part.max"
+        [defaultValue]="part.defaultValue"
+        [step]="part.step"
+        [stops]="part.stops"
+        [label]="part.displayName"
         [showLabel]="true"
         [labelLength]="labelLength"
         [showValue]="true"
         [valueLength]="valueLength" />
       } @case('boolean') {
-      <app-toggle-check
-        [formControlName]="config.identifier"
-        [label]="config.displayName"
-        [value]="config.defaultValue" />
+      <app-toggle-check [formControlName]="part.identifier" [label]="part.displayName" [value]="part.defaultValue" />
       } }
     </app-show-hide>
     }

@@ -48,8 +48,9 @@ export function createBooleanPropertyConfiguration(
   return createPropertyConfiguration(setting, createBooleanConfiguration(trueValue, falseValue, defaultValue));
 }
 
-export function createSingleFontProperty(configuration: PropertyConfiguration) {
+export function createSingleFontProperty(configuration: PropertyConfiguration): SingleValueProperty {
   return {
+    propertyType: "single",
     ...configuration,
     propertyValue: createPropertyValueFn(configuration),
   };
@@ -77,3 +78,8 @@ function createPropertyValueFn(config: PropertyConfiguration): (propValue: Prope
     throw new Error(`Unknown property type: ${config}`);
   };
 }
+
+export type SingleValueProperty = {
+  propertyType: "single";
+  propertyValue: (propValue: PropertySettingValue) => string | null;
+} & PropertyConfiguration;
