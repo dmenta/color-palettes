@@ -1,11 +1,11 @@
 import { Component, computed, inject, model, signal } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { DarkModeService } from "../core/service/dark-mode.service";
-import { MultiValuePropertyFormComponent } from "./common/new/font-form/font-variation-form/font-variation-form.component";
-import { createFontConfig, FontFamily } from "./common/new/font-configuration/fonts";
-import { MultivaluePropertyConfiguration } from "./common/new/font-configuration/multivalue-property";
-import { SingleValuePropertiesFormComponent } from "./common/new/font-form/font-single-form/font-singles-form.componente";
-import { SingleValueProperty } from "./common/new/font-configuration/singlevalue-property";
+import { MultiValuePropertyFormComponent } from "./common/font-control/font-form/font-variation-form/font-variation-form.component";
+import { createFontConfig, FontFamily } from "./common/font-control/font-configuration/fonts";
+import { MultivaluePropertyConfiguration } from "./common/font-control/font-configuration/multivalue-property";
+import { SingleValuePropertiesFormComponent } from "./common/font-control/font-form/font-single-form/font-singles-form.componente";
+import { SingleValueProperty } from "./common/font-control/font-configuration/singlevalue-property";
 import { SelectComponent } from "../core/components/select/select.component";
 import { IconToggleButtonComponent } from "../core/components/buttons/icon-toggle-button.component";
 
