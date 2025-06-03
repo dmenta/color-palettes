@@ -2,12 +2,14 @@ import { Component, computed, inject, model, signal } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { DarkModeService } from "../core/service/dark-mode.service";
 import { MultiValuePropertyFormComponent } from "./common/font-control/font-form/font-variation-form/font-variation-form.component";
-import { createFontConfig, FontFamily } from "./common/font-control/font-configuration/fonts";
+import { fontFamilies } from "./common/font-control/font-configuration/fonts";
 import { MultivaluePropertyConfiguration } from "./common/font-control/font-configuration/multivalue-property";
 import { SingleValuePropertiesFormComponent } from "./common/font-control/font-form/font-single-form/font-singles-form.componente";
-import { SingleValueProperty } from "./common/font-control/font-configuration/singlevalue-property";
+import { SingleValuePropertyConfiguration } from "./common/font-control/font-configuration/singlevalue-property";
 import { SelectComponent } from "../core/components/select/select.component";
 import { IconToggleButtonComponent } from "../core/components/buttons/icon-toggle-button.component";
+import { FontFamily } from "./common/font-control/font-configuration/font-family";
+import { TextoSimuladoComponent } from "./common/font-control/font-form/texto-simulado/texto-simulado.component";
 
 @Component({
   selector: "app-root",
@@ -18,6 +20,7 @@ import { IconToggleButtonComponent } from "../core/components/buttons/icon-toggl
     SelectComponent,
     MultiValuePropertyFormComponent,
     SingleValuePropertiesFormComponent,
+    TextoSimuladoComponent,
   ],
 })
 export class AppComponent {
@@ -44,10 +47,11 @@ export class AppComponent {
     });
   }
 
+  showOptions = signal(true);
   estilos = computed(() => {
     const family = this.family();
     if (!family) {
-      return [];
+      return null;
     }
 
     return [
@@ -57,7 +61,7 @@ export class AppComponent {
       ...this.estiloMulti().map((prop) => prop.value),
     ].join("; ");
   });
-  readonly families: FontFamily[] = createFontConfig();
+  readonly families: FontFamily[] = fontFamilies;
   readonly family = model<FontFamily>(this.families[0]);
 
   singleValueConfigs = computed(() => {
@@ -65,7 +69,7 @@ export class AppComponent {
     if (!familia) {
       return [];
     }
-    return familia.properties.filter((prop) => prop.propertyType === "single") as SingleValueProperty[];
+    return familia.properties.filter((prop) => prop.propertyType === "single") as SingleValuePropertyConfiguration[];
   });
 
   multiValueConfigs = computed(() => {

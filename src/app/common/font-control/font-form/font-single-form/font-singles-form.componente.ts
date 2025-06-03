@@ -5,7 +5,7 @@ import { ShowHideComponent } from "../../../../../core/components/show-hide/show
 import { ToggleCheckComponent } from "../../../../../core/components/toggle-check/toggle-check.component";
 import { SliderFieldComponent } from "../../../../../core/components/slider-field/slider-field.component";
 import { FontFormTitleComponent } from "../font-form-title/font-form-title.component";
-import { SingleValueProperty } from "../../font-configuration/singlevalue-property";
+import { SingleValuePropertyConfiguration } from "../../font-configuration/singlevalue-property";
 import { tap, startWith, map } from "rxjs";
 
 @Component({
@@ -22,14 +22,14 @@ import { tap, startWith, map } from "rxjs";
 })
 export class SingleValuePropertiesFormComponent {
   title = input<string>("");
-  private _propertyConfigs: SingleValueProperty[] = [];
-  @Input() set propertyConfigs(value: SingleValueProperty[]) {
+  private _propertyConfigs: SingleValuePropertyConfiguration[] = [];
+  @Input() set propertyConfigs(value: SingleValuePropertyConfiguration[]) {
     this._propertyConfigs = value;
     if (value) {
       this.initialize(value);
     }
   }
-  get propertyConfigs(): SingleValueProperty[] {
+  get propertyConfigs(): SingleValuePropertyConfiguration[] {
     return this._propertyConfigs;
   }
 
@@ -60,7 +60,7 @@ export class SingleValuePropertiesFormComponent {
   visible = signal(true);
   collapsed = signal(false);
 
-  private initialize(configs: SingleValueProperty[]) {
+  private initialize(configs: SingleValuePropertyConfiguration[]) {
     this.estadoActual.set(null);
     this.estadoInicial.set(null);
 

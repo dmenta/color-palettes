@@ -15,7 +15,7 @@ type fontPartDefinition = {
 };
 type fontMultivalueDefinition = { type: "multi"; parts: fontPartDefinition[] };
 
-export type propertyDefiniion = {
+export type FontPropertyDefiniion = {
   name: string;
   displayName: string;
 } & (rangeProperty | booleanProperty | multivalueProperty);
@@ -32,5 +32,5 @@ type multivalueProperty = {
 
 export type FontDefinition = {
   name: string;
-  properties: propertyDefiniion[];
+  properties: FontPropertyDefiniion[];
 };

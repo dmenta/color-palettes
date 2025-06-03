@@ -9,7 +9,7 @@ import { IconComponent } from "../icon/icon.component";
     class="border-1   rounded-md border-black/10 dark:border-white/10 dark:bg-gray-800/50 bg-gray-300/5 shadow-md/10 shadow-gray-500">
     <div
       (click)="expandCollapse($event)"
-      class="flex flex-row items-center justify-left cursor-pointer gap-1
+      class="flex flex-row items-center justify-left cursor-pointer gap-1 
       
        hover:bg-gray-300/10 dark:hover:bg-white/10 transition-colors duration-200  py-2 pr-4">
       <button type="button" class="px-2">

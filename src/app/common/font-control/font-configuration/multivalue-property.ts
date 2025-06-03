@@ -1,3 +1,4 @@
+import { FontPropertyDefiniion } from "./font-definition";
 import {
   BooleanConfiguration,
   createBooleanConfiguration,
@@ -31,7 +32,37 @@ export class MultiValueProperty {
     this.name = name;
     this.displayName = displayName;
   }
-  public addRangeMultiValuePartConfiguration(
+
+  createConfiguration(property: FontPropertyDefiniion) {
+    if (property.configuration.type !== "multi") {
+      throw new Error(`Expected property type 'multi', but got '${property.configuration.type}'`);
+    }
+
+    property.configuration.parts.forEach((part) => {
+      if (part.configuration.type === "range") {
+        this.addRangeMultiValuePartConfiguration(
+          part.part,
+          part.configuration.min,
+          part.configuration.max,
+          part.configuration.defaultValue,
+          part.configuration.step
+        );
+      } else if (part.configuration.type === "boolean") {
+        this.createBooleanMultiValuePartConfiguration(
+          part.part,
+          part.configuration.trueValue,
+          part.configuration.falseValue,
+          part.configuration.defaultValue
+        );
+      } else {
+        throw new Error(`Unknown part type: ${part}`);
+      }
+    });
+
+    return this.configuration();
+  }
+
+  private addRangeMultiValuePartConfiguration(
     multiValuePart: MultiValuePartSetting,
     min: number,
     max: number,
@@ -47,7 +78,7 @@ export class MultiValueProperty {
     );
   }
 
-  public createBooleanMultiValuePartConfiguration(
+  private createBooleanMultiValuePartConfiguration(
     multiValuePart: MultiValuePartSetting,
     trueValue: string,
     falseValue: string,
@@ -61,7 +92,7 @@ export class MultiValueProperty {
     );
   }
 
-  public createConfiguration(): MultivaluePropertyConfiguration {
+  private configuration(): MultivaluePropertyConfiguration {
     if (this.multiValueParts.length === 0) {
       throw new Error("No multi-value parts configured");
     }
@@ -104,7 +135,7 @@ export class MultiValueProperty {
     };
   }
 
-  createMultivaluePartValueFn(partValueConfig: MultiValuePartConfiguration): MultiValuePartSettingValueFn {
+  private createMultivaluePartValueFn(partValueConfig: MultiValuePartConfiguration): MultiValuePartSettingValueFn {
     return (values) => {
       if (values === undefined || values[partValueConfig.identifier] === undefined) {
         return null;
@@ -132,15 +163,6 @@ export type MultiValuePartSetting = {
   displayName: string;
 };
 
-export type MultiValuePartConfiguration = MultiValuePartSetting & (RangeConfiguration | BooleanConfiguration);
-
-export type MultiValuePartValueConfiguration = RangeConfiguration | BooleanConfiguration;
-
-export type MultiValuePartSettingValues = {
-  [key: string]: number | boolean;
-};
-type MultiValuePartSettingValueFn = (variationValue: MultiValuePartSettingValues) => string | null;
-
 export type MultivaluePropertyConfiguration = {
   propertyType: "multi";
   name: string;
@@ -148,3 +170,12 @@ export type MultivaluePropertyConfiguration = {
   multiValueParts: MultiValuePartConfiguration[];
   propertyValue: MultiValuePartSettingValueFn;
 };
+
+type MultiValuePartConfiguration = MultiValuePartSetting & (RangeConfiguration | BooleanConfiguration);
+
+type MultiValuePartValueConfiguration = RangeConfiguration | BooleanConfiguration;
+
+type MultiValuePartSettingValues = {
+  [key: string]: number | boolean;
+};
+type MultiValuePartSettingValueFn = (variationValue: MultiValuePartSettingValues) => string | null;

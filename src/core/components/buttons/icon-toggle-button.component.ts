@@ -9,6 +9,9 @@ import { IconButtonComponent } from "./icon-button.component";
       {{ value() ? trueIcon() : falseIcon() }}
     </app-icon-button>
   `,
+  host: {
+    class: "inline-block",
+  },
 })
 export class IconToggleButtonComponent {
   disabled = input<boolean>();

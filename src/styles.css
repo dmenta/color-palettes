@@ -27,3 +27,11 @@ body {
   line-height: inherit;
   font-variation-settings: "FILL" 0, "wght" 500, "GRAD" 0, "opsz" 40;
 }
+
+@theme {
+  --color-paper-1: #ccbb66;
+  --color-paper-2: #e0c57f;
+  --color-paper-3: #ebebeb;
+  --color-paper-4: #edd1b0;
+  --color-paper-5: #f0e4d7;
+}
