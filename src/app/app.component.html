@@ -1,34 +1,7 @@
 <div class="flex flex-row w-vw py-4 gap-4">
-  <div class="basis-96 px-2">
-    <div class="flex flex-row gap-2 items-center">
-      <div>
-        <app-icon-toggle-button
-          [(value)]="showOptions"
-          trueIcon="keyboard_double_arrow_left"
-          falseIcon="keyboard_double_arrow_right" />
-      </div>
-      <div class="w-full">
-        <app-select [items]="families" displayKey="name" [(ngModel)]="family"></app-select>
-      </div>
-    </div>
-    <div>
-      <app-font-singles-form
-        [title]="family().name"
-        [labelLength]="18"
-        [valueLength]="6"
-        [propertyConfigs]="singleValueConfigs()"
-        (styleChanged)="estilosSingle.set($event)" />
-      @for(config of multiValueConfigs(); track config.name) {
-      <app-font-variation-form
-        [labelLength]="18"
-        [valueLength]="6"
-        [multiValueConfig]="config"
-        (styleChanged)="estiloMultiChange(config.name, $event)" />
-      }
-    </div>
-  </div>
+  <app-font-sampler (estiloChanged)="estilo.set($event)"></app-font-sampler>
   <div class="w-full px-4">
-    <app-texto-simulado [estilos]="estilos()" />
+    <app-texto-simulado [estilos]="estilo()" />
   </div>
 </div>
 
