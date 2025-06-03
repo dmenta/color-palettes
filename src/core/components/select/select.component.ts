@@ -7,14 +7,18 @@ import {
   inject,
   Input,
   input,
+  NO_ERRORS_SCHEMA,
   Renderer2,
   ViewChild,
 } from "@angular/core";
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from "@angular/forms";
+import { FocusRingDirective } from "../../directives/focus-ring.directive";
+import { DisabledDirective } from "../../directives/disabled.directive";
 
 @Component({
   selector: "app-select",
-  imports: [CommonModule, FormsModule],
+  schemas: [NO_ERRORS_SCHEMA],
+  imports: [CommonModule, FormsModule, FocusRingDirective, DisabledDirective],
   templateUrl: "./select.component.html",
   styleUrls: ["./select.component.css"],
   providers: [

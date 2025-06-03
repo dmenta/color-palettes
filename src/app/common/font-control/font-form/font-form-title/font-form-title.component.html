@@ -1,11 +1,17 @@
 <h4 class="text-lg flex gap-2 items-center justify-between whitespace-nowrap">
   {{ title() }}
   <div class="space-x-1">
-    <app-icon-toggle-button
+    <button
+      app-icon-toggle-button
       [(value)]="visible"
       [disabled]="!modificado()"
       trueIcon="visibility"
-      falseIcon="visibility_off"></app-icon-toggle-button>
-    <app-icon-button [disabled]="!modificado()" (click)="onReset($event)">reset_settings</app-icon-button>
+      falseIcon="visibility_off">
+      <span app-icon trueicon>visibility</span>
+      <span app-icon falseicon>visibility_off</span>
+    </button>
+    <button app-icon-button [disabled]="!modificado()" (click)="onReset($event)">
+      <span app-icon>reset_settings</span>
+    </button>
   </div>
 </h4>

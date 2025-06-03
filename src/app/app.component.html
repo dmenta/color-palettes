@@ -5,7 +5,8 @@
   </div>
 </div>
 
-<app-icon-toggle-button
-  class="absolute right-0 top-0 z-10 bg-paper-4 dark:bg-gray-900 rounded-bl-md p-2 block"
+<button
+  class="absolute right-0 top-0 z-10 bg-paper-4 dark:bg-gray-900 p-2 block"
+  app-icon-toggle-button
   [value]="darkModeService.darkMode()"
-  (toggle)="darkModeService.setDarkMode($event)"></app-icon-toggle-button>
+  (toggle)="darkModeService.setDarkMode($event)"></button>

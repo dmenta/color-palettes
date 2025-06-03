@@ -1,27 +1,27 @@
-import { Component, input, output, model } from "@angular/core";
-import { IconButtonComponent } from "./icon-button.component";
+import { Component, model, output } from "@angular/core";
+import { IconButtonDirective } from "./icon-button.directive";
+import { IconDirective } from "../icon/icon.directive";
 
 @Component({
-  selector: "app-icon-toggle-button",
-  imports: [IconButtonComponent],
+  selector: "button[app-icon-toggle-button]",
+  imports: [IconDirective, IconButtonDirective],
   template: `
-    <app-icon-button [disabled]="disabled()" (click)="onToggle($event)">
-      {{ value() ? trueIcon() : falseIcon() }}
-    </app-icon-button>
+    @if(value()) {
+    <ng-content select="[trueicon]"><span app-icon>radio_button_checked</span></ng-content>
+    } @else {
+    <ng-content select="[falseicon]"><span app-icon>radio_button_unchecked</span></ng-content>
+    }
   `,
   host: {
-    class: "inline-block",
+    "(click)": "onClick($event)",
   },
+  hostDirectives: [IconButtonDirective],
 })
 export class IconToggleButtonComponent {
-  disabled = input<boolean>();
   value = model<boolean>(true);
   toggle = output<boolean>();
 
-  trueIcon = input<string>("radio_button_checked");
-  falseIcon = input<string>("radio_button_unchecked");
-
-  onToggle(event: MouseEvent) {
+  onClick(event: MouseEvent) {
     this.value.update((currentValue) => !currentValue);
     this.toggle.emit(this.value());
     event.stopPropagation();

@@ -1,22 +1,25 @@
 import { Component, signal } from "@angular/core";
 import { ShowHideComponent } from "./../show-hide/show-hide.component";
-import { IconComponent } from "../icon/icon.component";
+import { IconDirective } from "../icon/icon.directive";
+import { FocusRingDirective } from "../../directives/focus-ring.directive";
 
 @Component({
   selector: "app-collapsible-panel",
-  imports: [ShowHideComponent, IconComponent],
+  imports: [ShowHideComponent, IconDirective, FocusRingDirective],
   template: `<div
     class="border-1   rounded-md border-black/10 dark:border-white/10 dark:bg-gray-800/50 bg-gray-300/5 shadow-md/10 shadow-gray-500">
     <div
       (click)="expandCollapse($event)"
       class="flex flex-row items-center justify-left cursor-pointer gap-1 
       
-       hover:bg-gray-300/10 dark:hover:bg-white/10 transition-colors duration-200  py-2 pr-4">
-      <button type="button" class="px-2">
-        <app-icon
+       hover:bg-gray-300/10  dark:hover:bg-white/10 transition-colors duration-200  py-2 pr-4">
+      <button app-focus-ring type="button" class="rounded-lg px-2">
+        <span
+          app-icon
           class="text-gray-600 dark:text-gray-300 block  transition-transform"
           [class.rotate-90]="!collapsed()"
-          name="chevron_right" />
+          >chevron_right</span
+        >
       </button>
       <div class="select-none w-full">
         <ng-content select="[header]">Header</ng-content>

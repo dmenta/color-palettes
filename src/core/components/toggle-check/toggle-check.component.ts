@@ -1,9 +1,10 @@
 import { Component, ElementRef, forwardRef, HostBinding, inject, Input, Renderer2, ViewChild } from "@angular/core";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, ReactiveFormsModule } from "@angular/forms";
+import { FocusRingDirective } from "../../directives/focus-ring.directive";
 
 @Component({
   selector: "app-toggle-check",
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, FocusRingDirective],
   templateUrl: "./toggle-check.component.html",
   providers: [
     {

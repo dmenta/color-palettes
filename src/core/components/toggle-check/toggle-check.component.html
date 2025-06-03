@@ -5,7 +5,8 @@
   (focusin)="onFocusIn($event)"
   [style.flexDirection]="before ? 'row-reverse' : 'row'">
   <label
-    class="ring-gray-600/80 outline-0 dark:ring-gray-300/80 group-focus-within:ring-2 group-focus-within:ring-offset-1 relative block h-8 w-14 rounded-full bg-gray-300 transition-colors [-webkit-tap-highlight-color:_transparent] has-checked:bg-sky-500 dark:bg-gray-600 dark:has-checked:bg-sky-600">
+    app-focus-ring
+    class="relative block h-8 w-14 rounded-full bg-gray-300 transition-colors [-webkit-tap-highlight-color:_transparent] has-checked:bg-sky-500 dark:bg-gray-600 dark:has-checked:bg-sky-600">
     <input type="checkbox" [id]="id" class="peer sr-only" #valor (click)="clickCheckbox($event)" />
 
     <span

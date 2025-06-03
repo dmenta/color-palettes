@@ -1,6 +1,8 @@
 <div class="group w-full inline-block" (focusout)="onFocusOut($event)" (focusin)="onFocusIn($event)">
   <select
-    class="app-select rounded w-full inline-block py-1 pl-3 pr-1 border-1 transition-discrete ring-gray-400/80 outline-0 dark:ring-gray-600/80 group-focus-within:ring-2 group-focus-within:ring-offset-0 border-gray-400 dark:border-gray-600 transition-all duration-100 ease-in-out text-gray-700 group-focus-within:text-black dark:bg-gray-900 dark:text-gray-300 group-focus-within:dark:text-white"
+    app-focus-ring
+    app-disabled
+    class="app-select rounded w-full inline-block py-1 pl-3 pr-1 border-1 transition-discrete border-gray-400 dark:border-gray-600 transition-all duration-100 ease-in-out text-gray-700 group-focus-within:text-black dark:bg-gray-900 dark:text-gray-300 group-focus-within:dark:text-white"
     #valor
     (change)="onValueChange($event)">
     @for (item of items(); track item) {
