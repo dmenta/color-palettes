@@ -1,0 +1,22 @@
+<div class="w-96 space-y-4 px-4 box-border">
+  <div class="w-full">
+    <zz-select [items]="families" displayKey="name" [(ngModel)]="family"></zz-select>
+  </div>
+  <div>
+    <zz-font-singles-form
+      [title]="family().name"
+      [labelLength]="10"
+      [valueLength]="6"
+      [propertyConfigs]="gruposConfigs().single"
+      (styleChanged)="estilosSingle.set($event)" />
+  </div>
+  @for(config of gruposConfigs().multi; track config.name) {
+  <div>
+    <zz-font-variation-form
+      [labelLength]="10"
+      [valueLength]="6"
+      [multiValueConfig]="config"
+      (styleChanged)="estiloMultiChange(config.name, $event)" />
+  </div>
+  }
+</div>

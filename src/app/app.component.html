@@ -1,12 +1,14 @@
-<div class="flex flex-row w-vw py-4 gap-4">
-  <app-font-sampler (estiloChanged)="estilo.set($event)"></app-font-sampler>
-  <div class="w-full px-4">
-    <app-texto-simulado [estilos]="estilo()" />
+<div class="flex flex-row w-vw gap-4">
+  <zz-font-sampler class="py-4" (estiloChanged)="estilo.set($event)"></zz-font-sampler>
+  <div class="w-full overflow-auto h-screen py-4 px-2" [style]="estilo()">
+    <zz-texto-simulado
+      class="block max-w-[50ch] transition-all duration-150 ease-in-out mx-auto leading-[1.8em] space-y-[1lh]" />
   </div>
 </div>
 
-<button
-  class="absolute right-0 top-0 z-10 bg-paper-4 dark:bg-gray-900 p-2 block"
-  app-icon-toggle-button
-  [value]="darkModeService.darkMode()"
-  (toggle)="darkModeService.setDarkMode($event)"></button>
+<div class="absolute right-0 top-0 z-10 p-2 block" zz-background>
+  <button
+    zz-icon-toggle-button
+    [value]="darkModeService.darkMode()"
+    (toggle)="darkModeService.setDarkMode($event)"></button>
+</div>

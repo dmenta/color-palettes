@@ -1,0 +1,17 @@
+<h4 class="text-lg flex gap-2 items-center justify-between whitespace-nowrap">
+  {{ title() }}
+  <div class="space-x-1">
+    <button
+      zz-icon-toggle-button
+      [(value)]="visible"
+      [zzDisabled]="!modificado()"
+      trueIcon="visibility"
+      falseIcon="visibility_off">
+      <span zz-icon trueicon>visibility</span>
+      <span zz-icon falseicon>visibility_off</span>
+    </button>
+    <button zz-icon-button [zzDisabled]="!modificado()" (click)="onReset($event)">
+      <span zz-icon>reset_settings</span>
+    </button>
+  </div>
+</h4>

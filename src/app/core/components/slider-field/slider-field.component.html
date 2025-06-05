@@ -1,0 +1,34 @@
+<div class="w-full p-1 bg-transparent overflow-visible" zz-overflow-visible [formGroup]="formGroup">
+  <div class="flex flex-row items-base justify-between overflow-visible" zz-overflow-visible>
+    @if(showLabel) {
+    <label
+      [for]="fieldName"
+      [zz-text-length]="labelLength"
+      [class.opacity-80]="defaultValue !== undefined && control.value === defaultValue"
+      (dblclick)="control.reset()"
+      >{{ label }}</label
+    >
+    }@else{
+    <div></div>
+    } @if(showValue) {
+    <zz-field-value
+      [value]="control.value"
+      [length]="valueLength"
+      [decimals]="decimales"
+      [unit]="unit"
+      [class.opacity-70]="defaultValue !== undefined && control.value === defaultValue">
+    </zz-field-value>
+    }
+  </div>
+  <input
+    zz-slider
+    [zzStep]="step ?? 1"
+    [accent]="defaultValue !== undefined && control.value !== defaultValue"
+    type="range"
+    [formControlName]="fieldName"
+    [min]="min"
+    [max]="max"
+    [attr.aria-label]="'Input for ' + label"
+    [attr.list]="fieldName + '-list'" />
+  <zz-data-list [id]="fieldName + '-list'" [values]="stops ?? []"> </zz-data-list>
+</div>
