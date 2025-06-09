@@ -41,13 +41,13 @@ export class MultiValuePropertyFormComponent {
   @Input() labelLength?: number = 5;
   @Input() valueLength?: number = 4;
 
-  estadoInicial = signal<string | null>(null);
-  estadoActual = signal<string | null>(null);
+  estadoInicial = signal<string | undefined>(undefined);
+  estadoActual = signal<string | undefined>(undefined);
 
   modificado = computed(() => {
     const inicial = this.estadoInicial();
     const actual = this.estadoActual();
-    if (inicial === null || actual === null) {
+    if (inicial === undefined || actual === undefined) {
       return false;
     }
 
@@ -58,13 +58,13 @@ export class MultiValuePropertyFormComponent {
     this.formGroup.reset();
   }
 
-  styleChanged = output<string | null>();
+  styleChanged = output<string | undefined>();
   visible = signal(true);
   collapsed = signal(false);
 
   private initialize(multiPartConfig: MultivaluePropertyConfiguration) {
-    this.estadoActual.set(null);
-    this.estadoInicial.set(null);
+    this.estadoActual.set(undefined);
+    this.estadoInicial.set(undefined);
 
     this.formGroup = this.fb.group(
       multiPartConfig.multiValueParts.reduce((acc, config) => {
@@ -73,7 +73,7 @@ export class MultiValuePropertyFormComponent {
           return acc;
         }
         if (config.type === "range") {
-          acc[config.identifier] = this.fb.nonNullable.control(config.defaultValue);
+          acc[config.identifier] = this.fb.nonNullable.control(config.defaultValue ?? config.min);
         }
         return acc;
       }, {} as { [key: string]: FormControl<number> | FormControl<boolean> })

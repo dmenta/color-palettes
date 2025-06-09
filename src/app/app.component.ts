@@ -5,15 +5,31 @@ import { TextoSimuladoComponent } from "./font-control/font-form/texto-simulado/
 import { FontSamplerComponent } from "./font-control/font-sampler/font-sampler.component";
 import { IconToggleButtonComponent } from "./core/components/buttons/icon-toggle-button.component";
 import { BackgroundDirective } from "./core/directives/background.directive";
+import { CommonModule } from "@angular/common";
+import { WidthFullDirective } from "./core/directives/width.directive";
+import { BlockDirective, FlexDirective } from "./core/directives/display.directive";
+import { TransitionDefaultDirective } from "./core/directives/transition.directive";
 
 @Component({
   selector: "zz-root",
   templateUrl: "./app.component.html",
-  imports: [FormsModule, FontSamplerComponent, TextoSimuladoComponent, IconToggleButtonComponent, BackgroundDirective],
+  imports: [
+    CommonModule,
+    FormsModule,
+    FontSamplerComponent,
+    TextoSimuladoComponent,
+    IconToggleButtonComponent,
+    BackgroundDirective,
+    WidthFullDirective,
+    FlexDirective,
+    TransitionDefaultDirective,
+    BlockDirective,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
   darkModeService = inject(DarkModeService);
 
-  estilo = signal<string | null>(null);
+  estilo = signal<string | undefined>(undefined);
+  fontName = signal<string | undefined>(undefined);
 }

@@ -20,6 +20,13 @@ export const knownVariations: { [key: string]: MultiValuePartSetting } = {
   figureHeight: { identifier: "'YTFI'", displayName: "Figure Height" },
   softness: { identifier: "'SOFT'", displayName: "Softness" },
   wonky: { identifier: "'WONK'", displayName: "Wonky" },
+  elemGrid: { identifier: "'ELGR'", displayName: "Elemente Grid" },
+  elemShape: { identifier: "'ELSH'", displayName: "Elemente Shape" },
+  opticalSize: { identifier: "'opsz'", displayName: "Optical Size" },
+  fill: { identifier: "'FILL'", displayName: "Fill" },
+  casual: { identifier: "'CASL'", displayName: "Casual" },
+  cursive: { identifier: "'CRSV'", displayName: "Cursive" },
+  monospace: { identifier: "'MONO'", displayName: "Monospace" },
 };
 
 export class MultiValueProperty {
@@ -118,17 +125,17 @@ export class MultiValueProperty {
   private createMultivaluePropertyValueFn(name: string, multiValueParts: MultiValuePartConfiguration[]) {
     const partValueFn = this.createMultivaluePartValueFn;
 
-    return (values: MultiValuePartSettingValues): string | null => {
+    return (values: MultiValuePartSettingValues): string | undefined => {
       if (values === undefined) {
-        return null;
+        return undefined;
       }
 
       const multiValuePartValues = multiValueParts
         .map((multiValuePart) => partValueFn(multiValuePart)(values))
-        .filter((v) => v !== null);
+        .filter((v) => v !== undefined);
 
       if (multiValuePartValues.length === 0) {
-        return null;
+        return undefined;
       }
 
       return `${name}: ${multiValuePartValues.join(", ")}`;
@@ -138,7 +145,7 @@ export class MultiValueProperty {
   private createMultivaluePartValueFn(partValueConfig: MultiValuePartConfiguration): MultiValuePartSettingValueFn {
     return (values) => {
       if (values === undefined || values[partValueConfig.identifier] === undefined) {
-        return null;
+        return undefined;
       }
 
       const value = values[partValueConfig.identifier];
@@ -148,7 +155,7 @@ export class MultiValueProperty {
       }
 
       if (value === undefined || value === partValueConfig.defaultValue) {
-        return null;
+        return undefined;
       }
 
       if (partValueConfig.type === "range") {
@@ -178,4 +185,4 @@ type MultiValuePartValueConfiguration = RangeConfiguration | BooleanConfiguratio
 type MultiValuePartSettingValues = {
   [key: string]: number | boolean;
 };
-type MultiValuePartSettingValueFn = (variationValue: MultiValuePartSettingValues) => string | null;
+type MultiValuePartSettingValueFn = (variationValue: MultiValuePartSettingValues) => string | undefined;

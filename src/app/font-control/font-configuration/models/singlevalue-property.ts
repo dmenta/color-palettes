@@ -48,15 +48,17 @@ export class SingleValueProperty {
       ...configuration,
     };
   }
-  private createPropertyValueFn(config: PropertyConfiguration): (propValue: PropertySettingValue) => string | null {
-    return (propValue: PropertySettingValue): string | null => {
+  private createPropertyValueFn(
+    config: PropertyConfiguration
+  ): (propValue: PropertySettingValue) => string | undefined {
+    return (propValue: PropertySettingValue): string | undefined => {
       if (propValue === undefined) {
-        return null;
+        return undefined;
       }
 
       const value = propValue[config.name];
       if (value === undefined) {
-        return null;
+        return undefined;
       }
 
       if (config.type === "boolean") {
@@ -74,7 +76,7 @@ export class SingleValueProperty {
 
 export type SingleValuePropertyConfiguration = {
   propertyType: "single";
-  propertyValue: (propValue: PropertySettingValue) => string | null;
+  propertyValue: (propValue: PropertySettingValue) => string | undefined;
 } & PropertyConfiguration;
 
 type PropertySetting = {

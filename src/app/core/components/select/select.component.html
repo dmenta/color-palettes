@@ -1,7 +1,7 @@
 <select
-  zz-focus-ring
-  [zz-disabled]="disabled"
-  class="zz-select rounded w-full inline-block py-1 pl-3 pr-1 border-1 transition-discrete border-gray-400 dark:border-gray-600 transition-all duration-100 ease-in-out text-gray-700 group-focus-within:text-black dark:bg-gray-900 dark:text-gray-300 group-focus-within:dark:text-white"
+  zz-select
+  [zzdisabled]="disabled"
+  class="py-1 pl-3 pr-1 border-1 transition-discrete border-zinc-400 dark:border-zinc-600 transition-all duration-100 ease-in-out text-zinc-700 group-focus-within:text-black dark:bg-zinc-900 dark:text-zinc-300 group-focus-within:dark:text-white"
   #valor
   (focusout)="onFocusOut($event)"
   (change)="onValueChange($event)">

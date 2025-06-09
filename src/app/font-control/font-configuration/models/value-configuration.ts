@@ -2,7 +2,7 @@ export type RangeConfiguration = {
   type: "range";
   min: number;
   max: number;
-  defaultValue: number;
+  defaultValue?: number;
   step: number;
   stops: number[];
 };
@@ -21,18 +21,17 @@ export function createRangeConfiguration(
   step?: number,
   stops?: number[]
 ): RangeConfiguration {
-  defaultValue ??= min;
   step ??= 1;
 
   if (stops === undefined || stops.length === 0) {
-    stops = [min, defaultValue, max];
+    stops = defaultValue ? [min, defaultValue, max] : [min, max];
   }
 
   return {
     type: "range",
     min,
     max,
-    defaultValue,
+    defaultValue: defaultValue,
     step,
     stops,
   };

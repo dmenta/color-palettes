@@ -3,9 +3,9 @@ import { FieldValueComponent } from "./field-value.component";
 import { FormGroupDirective, ReactiveFormsModule } from "@angular/forms";
 import { SliderSlimDirective } from "../slider/slider.directive";
 import { TextLengthDirective } from "../../directives/text-length.directive";
-import { WidthFullDirective } from "../../directives/appearance-none.directive";
 import { DataListComponent } from "../slider/data-list.component";
 import { OverflowVisibleDirective } from "../../directives/overflow.directive";
+import { WidthFullDirective } from "../../directives/width.directive";
 
 @Component({
   selector: "zz-slider-field",

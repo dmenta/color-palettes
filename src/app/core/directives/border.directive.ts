@@ -14,7 +14,7 @@ export class BorderDirective {
     },
   });
 
-  color = input("color-mix(in srgb, currentColor, transparent 75%)", {
+  color = input("color-mix(in srgb, var(--text-color), transparent 70%)", {
     alias: "zz-border-color",
     transform: (value: string | undefined) => {
       const valor = (value ?? "").trim().replace(/ /g, "-").toLowerCase();

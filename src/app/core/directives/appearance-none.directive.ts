@@ -11,6 +11,16 @@ export class AppearanceNoneDirective {
 }
 
 @Directive({
+  selector: "[zz-appearance-base-select], zzAppearanceBaseSelect",
+})
+export class AppearanceBaseSelectDirective {
+  @HostBinding("style.appearance")
+  get estilos() {
+    return "base-select";
+  }
+}
+
+@Directive({
   selector: "[zz-select-none], zzSelectNone",
 })
 export class SelectNoneDirective {
@@ -21,16 +31,6 @@ export class SelectNoneDirective {
   @HostBinding("style.-webkit-user-select")
   get webkitUserSelect() {
     return "none";
-  }
-}
-
-@Directive({
-  selector: "[zz-width-full], zzWidthFull",
-})
-export class WidthFullDirective {
-  @HostBinding("style.width")
-  get width() {
-    return "100%";
   }
 }
 
@@ -50,6 +50,6 @@ export class Opacity50Directive {
 export class Opacity95Directive {
   @HostBinding("style.opacity")
   get opacity() {
-    return "0.95";
+    return "0.9";
   }
 }

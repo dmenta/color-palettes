@@ -13,13 +13,12 @@ import {
   ViewChild,
 } from "@angular/core";
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from "@angular/forms";
-import { FocusRingDirective } from "../../directives/focus-ring.directive";
-import { DisabledDirective } from "../../directives/disabled.directive";
+import { SelectDirective } from "./select.directive";
 
 @Component({
   selector: "zz-select",
   schemas: [NO_ERRORS_SCHEMA],
-  imports: [CommonModule, FormsModule, FocusRingDirective, DisabledDirective],
+  imports: [CommonModule, FormsModule, SelectDirective],
   templateUrl: "./select.component.html",
   styleUrls: ["./select.component.css"],
   providers: [
@@ -29,7 +28,6 @@ import { DisabledDirective } from "../../directives/disabled.directive";
       multi: true,
     },
   ],
-  hostDirectives: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SelectComponent<T extends object | string | number, K extends keyof T = keyof T>

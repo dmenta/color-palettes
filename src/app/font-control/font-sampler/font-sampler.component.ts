@@ -7,25 +7,32 @@ import { FontFamily } from "../font-configuration/models/font-family";
 import { fontFamilies } from "../font-configuration/models/fonts";
 import { MultivaluePropertyConfiguration } from "../font-configuration/models/multivalue-property";
 import { SingleValuePropertyConfiguration } from "../font-configuration/models/singlevalue-property";
+import { WidthFullDirective } from "../../core/directives/width.directive";
 
 @Component({
   selector: "zz-font-sampler",
   templateUrl: "./font-sampler.component.html",
-  imports: [FormsModule, SelectComponent, MultiValuePropertyFormComponent, SingleValuePropertiesFormComponent],
+  imports: [
+    FormsModule,
+    SelectComponent,
+    MultiValuePropertyFormComponent,
+    SingleValuePropertiesFormComponent,
+    WidthFullDirective,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FontSamplerComponent {
   estilosSingle = signal<string[]>([]);
   estiloMulti = signal<{ name: string; value: string }[]>([]);
 
-  estiloMultiChange(name: string, value: string | null) {
+  estiloMultiChange(name: string, value: string | undefined) {
     this.estiloMulti.update((current) => {
       const index = current.findIndex((item) => item.name === name);
-      if (value === null && index === -1) {
+      if (value === undefined && index === -1) {
         return current;
       }
 
-      if (value === null) {
+      if (value === undefined) {
         current.splice(index, 1);
       } else if (index !== -1) {
         current[index].value = value;
@@ -36,19 +43,16 @@ export class FontSamplerComponent {
       return [...current];
     });
   }
-  readonly estiloChanged = output<string | null>();
+  readonly estiloChanged = output<string | undefined>();
+  readonly fontFamilyChanged = output<string | undefined>();
+
   estilos = computed(() => {
     const family = this.family();
     if (!family) {
-      return null;
+      return undefined;
     }
 
-    return [
-      `font-family: ${family.name}`,
-      "font-optical-sizing: auto",
-      ...this.estilosSingle(),
-      ...this.estiloMulti().map((prop) => prop.value),
-    ].join("; ");
+    return [...this.estilosSingle(), ...this.estiloMulti().map((prop) => prop.value)].join("; ");
   });
   readonly families: FontFamily[] = fontFamilies;
   readonly family = model<FontFamily>(this.families[0]);
@@ -72,6 +76,13 @@ export class FontSamplerComponent {
   });
 
   constructor() {
+    effect(() => {
+      const family = this.family();
+      if (family) {
+        this.fontFamilyChanged.emit(family.name);
+      }
+    });
+
     effect(() => {
       const estilos = this.estilos();
       this.estiloChanged.emit(estilos);

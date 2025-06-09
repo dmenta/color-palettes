@@ -1,6 +1,6 @@
-<h4 class="text-lg flex gap-2 items-center justify-between whitespace-nowrap">
-  {{ title() }}
-  <div class="space-x-1">
+<h4 class="text-lg flex gap-2 items-center justify-between py-0.5">
+  <div class="truncate inline-block">{{ title() }}</div>
+  <div class="space-x-1 whitespace-nowrap w-fit">
     <button
       zz-icon-toggle-button
       [(value)]="visible"

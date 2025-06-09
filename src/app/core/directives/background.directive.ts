@@ -1,15 +1,14 @@
-import { Directive, HostBinding, signal } from "@angular/core";
+import { Directive, HostBinding, HostListener, input, signal } from "@angular/core";
 
 @Directive({
   selector: "[zz-background-base], zzBackgroundBase",
 })
 export abstract class BackgroundBaseDirective {
-  abstract light: string;
-  abstract dark: string;
+  abstract varname: string;
 
   @HostBinding("style.backgroundColor")
   get backgroundColor(): string {
-    return `light-dark(${this.light}, ${this.dark})`;
+    return `var(--${this.varname})`;
   }
 }
 
@@ -17,30 +16,93 @@ export abstract class BackgroundBaseDirective {
   selector: "[zz-background], zzBackground",
 })
 export class BackgroundDirective extends BackgroundBaseDirective {
-  light = "oklch(98.5% 0.002 247.839)";
-  dark = "oklch(21% 0.034 264.665)";
+  varname = "bg-application";
 }
 
 @Directive({
   selector: "[zz-container-background], zzContainerBackground",
 })
 export class ContainerBackgroundDirective extends BackgroundBaseDirective {
-  light = "oklch(87.2% 0.01 258.338 / 0.15)";
-  dark = "oklch(0.28 0.03 256.85 / .5)";
+  varname = "bg-container";
 }
 
 @Directive({
   selector: "[zz-button-background], zzButtonBackground",
 })
 export class ButtonBackgroundDirective extends BackgroundBaseDirective {
-  light = "#00000015";
-  dark = "oklch(87.2% 0.01 258.338 / .1)";
+  varname = "bg-button";
 }
 
+@Directive({
+  selector: "[zz-hover], zzHover",
+})
+export class HoverDirective {
+  hover = signal(false);
+
+  @HostListener("mouseenter")
+  onMouseEnter() {
+    this.hover.set(true);
+  }
+
+  @HostListener("mouseleave")
+  onMouseOut() {
+    this.hover.set(false);
+  }
+
+  @HostBinding("style.backgroundColor")
+  get backgroundColor(): string | undefined {
+    if (this.hover()) {
+      return "var(--bg-hover)";
+    }
+    return undefined;
+  }
+
+  @HostBinding("style.opacity")
+  get opacity() {
+    if (this.hover()) {
+      return "1";
+    }
+    return undefined;
+  }
+}
+
+@Directive({
+  selector: "[zz-button-hover], zzButtonHover",
+})
+export class ButtonHoverDirective {
+  hover = signal(false);
+
+  @HostListener("mouseenter")
+  onMouseEnter() {
+    this.hover.set(true);
+  }
+
+  @HostListener("mouseleave")
+  onMouseOut() {
+    this.hover.set(false);
+  }
+
+  @HostBinding("style.backgroundColor")
+  get backgroundColor(): string | undefined {
+    if (this.hover()) {
+      return "var(--bg-button-hover)";
+    }
+    return undefined;
+  }
+
+  @HostBinding("style.opacity")
+  get opacity() {
+    if (this.hover()) {
+      return "1";
+    }
+    return undefined;
+  }
+}
 // bg-black/10 hover:bg-black/20
 // dark:bg-gray-300/10  dark:hover:bg-gray-300/20
 //    class: `dark:bg-gray-800/50 bg-gray-300/5`,
 /*
+  
   --color-orange-300: oklch(83.7% 0.128 66.29);
   --color-orange-400: oklch(75% 0.183 55.934);
   --color-sky-400: oklch(74.6% 0.16 232.661);
@@ -58,21 +120,12 @@ export class ButtonBackgroundDirective extends BackgroundBaseDirective {
   --color-gray-700: oklch(37.3% 0.034 259.733);
   --color-gray-800: oklch(27.8% 0.033 256.848);
   --color-gray-900: oklch(21% 0.034 264.665);
-  --color-black: #000;
-  --color-white: #fff;
   --spacing: 0.25rem;
   --text-sm: 0.875rem;
   --text-sm--line-height: calc(1.25 / 0.875);
   --text-lg: 1.125rem;
   --text-lg--line-height: calc(1.75 / 1.125);
-  --radius-md: 0.375rem;
-  --radius-lg: 0.5rem;
-  --ease-in: cubic-bezier(0.4, 0, 1, 1);
-  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
-  --default-transition-duration: 150ms;
-  --default-transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  --default-font-family: var(--font-sans);
-  --default-mono-font-family: var(--font-mono);
   --color-paper-4: #edd1b0;
   --color-paper-5: #f0e4d7;
+
   */

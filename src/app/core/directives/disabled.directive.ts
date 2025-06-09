@@ -1,4 +1,4 @@
-import { Directive, HostBinding, input } from "@angular/core";
+import { Directive, ElementRef, HostBinding, HostListener, input, Renderer2 } from "@angular/core";
 
 @Directive({
   selector: "[zz-disabled], zzDisabled",

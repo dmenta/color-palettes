@@ -1,6 +1,6 @@
 ::ng-deep .zz-select {
-  appearance: base-select;
 }
+
 ::ng-deep .zz-select::picker-icon {
   font-family: var(--material-icons-font);
   font-variation-settings: var(--material-icons-variation-settings);
@@ -18,7 +18,7 @@
   padding-inline: calc(var(--spacing) * 3);
   background-color: none;
   padding-block: calc(var(--spacing) * 1);
-  color: light-dark(var(--color-gray-800), var(--color-gray-50));
+  color: light-dark(var(--color-zinc-800), var(--color-zinc-50));
   font-size: var(--text-sm);
 }
 ::ng-deep .zz-select option::checkmark {
@@ -26,10 +26,10 @@
 }
 
 ::ng-deep .zz-select option:hover {
-  background-color: light-dark(var(--color-gray-100), var(--color-gray-700));
+  background-color: light-dark(var(--color-zinc-100), var(--color-zinc-700));
 }
 ::ng-deep .zz-select option:focus {
-  background-color: light-dark(var(--color-gray-200), var(--color-gray-600));
+  background-color: light-dark(var(--color-zinc-200), var(--color-zinc-600));
   outline: none;
 }
 
@@ -42,6 +42,6 @@
   appearance: base-select;
   border-radius: 0 0 var(--radius-md) var(--radius-md);
   outline: none;
-  background-color: light-dark(white, var(--color-gray-800));
+  background-color: light-dark(white, var(--color-zinc-800));
   border-color: color-mix(in srgb, light-dark(black, white), transparent 80%);
 }

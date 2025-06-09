@@ -1,7 +1,8 @@
 import { computed, Directive, effect, ElementRef, HostBinding, inject, input, Input, Renderer2 } from "@angular/core";
 import { KeyDetectorService } from "../../service/ctrlkey-pressed.service";
-import { AppearanceNoneDirective, WidthFullDirective } from "../../directives/appearance-none.directive";
+import { AppearanceNoneDirective } from "../../directives/appearance-none.directive";
 import { FlexDirective } from "../../directives/display.directive";
+import { WidthFullDirective } from "../../directives/width.directive";
 
 @Directive({
   selector: "input[type='range'][zz-slider]",
@@ -11,8 +12,8 @@ import { FlexDirective } from "../../directives/display.directive";
 [&::-webkit-slider-thumb]:shadow-black 
 [&::-webkit-slider-thumb]:transition-all
 [&::-webkit-slider-thumb]:duration-150  
-focus:[&::-webkit-slider-thumb]:outline-gray-500  
-dark:focus:[&::-webkit-slider-thumb]:outline-gray-300
+focus:[&::-webkit-slider-thumb]:outline-zinc-500  
+dark:focus:[&::-webkit-slider-thumb]:outline-zinc-300
 [&::-webkit-slider-thumb]:mt-[-0.35rem]
 [&::-webkit-slider-thumb]:h-[.75rem]
 [&::-webkit-slider-thumb]:w-[.75rem]
@@ -34,7 +35,7 @@ export class SliderSlimDirective {
 
   step = input(1, {
     alias: "zzStep",
-    transform: (value?: number) => Math.max(Math.min(100, value ?? 1), 0.1),
+    transform: (value?: number) => Math.max(Math.min(100, value ?? 1), 0.01),
   });
 
   @HostBinding("step")

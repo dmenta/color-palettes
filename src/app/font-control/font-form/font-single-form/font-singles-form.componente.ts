@@ -42,13 +42,13 @@ export class SingleValuePropertiesFormComponent {
   @Input() labelLength?: number = 5;
   @Input() valueLength?: number = 4;
 
-  estadoInicial = signal<string | null>(null);
-  estadoActual = signal<string | null>(null);
+  estadoInicial = signal<string | undefined>(undefined);
+  estadoActual = signal<string | undefined>(undefined);
 
   modificado = computed(() => {
     const inicial = this.estadoInicial();
     const actual = this.estadoActual();
-    if (inicial === null || actual === null) {
+    if (inicial === undefined || actual === undefined) {
       return false;
     }
 
@@ -64,8 +64,8 @@ export class SingleValuePropertiesFormComponent {
   collapsed = signal(false);
 
   private initialize(configs: SingleValuePropertyConfiguration[]) {
-    this.estadoActual.set(null);
-    this.estadoInicial.set(null);
+    this.estadoActual.set(undefined);
+    this.estadoInicial.set(undefined);
 
     this.formGroup = this.fb.group(
       configs.reduce((acc, config) => {
@@ -74,7 +74,7 @@ export class SingleValuePropertiesFormComponent {
           return acc;
         }
         if (config.type === "range") {
-          acc[config.name] = this.fb.nonNullable.control(config.defaultValue);
+          acc[config.name] = this.fb.nonNullable.control(config.defaultValue ?? config.min);
         }
         return acc;
       }, {} as { [key: string]: FormControl<number> | FormControl<boolean> })
@@ -88,7 +88,9 @@ export class SingleValuePropertiesFormComponent {
           this.estadoActual.set(JSON.stringify(values));
         }),
         startWith(this.formGroup.value),
-        map((values) => this.propertyConfigs.map((config) => config.propertyValue(values)).filter((v) => v !== null))
+        map((values) =>
+          this.propertyConfigs.map((config) => config.propertyValue(values)).filter((v) => v !== undefined)
+        )
       )
       .subscribe((value) => {
         this.styleChanged.emit(value);
