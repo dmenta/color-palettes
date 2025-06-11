@@ -16,10 +16,12 @@ type fontPartDefinition = {
 };
 type fontMultivalueDefinition = { type: "multi"; parts: fontPartDefinition[] };
 
-export type FontPropertyDefiniion = {
-  name: string;
-  displayName: string;
-} & (rangeProperty | booleanProperty | multivalueProperty);
+export type FontPropertyDefiniion = Prettify<
+  {
+    name: string;
+    displayName: string;
+  } & (rangeProperty | booleanProperty | multivalueProperty)
+>;
 
 type rangeProperty = {
   configuration: fontRangeDefinition;
@@ -51,3 +53,7 @@ export function createWeigthStandardDedinition(min: number, max: number) {
     },
   };
 }
+
+export type Prettify<T> = {
+  [K in keyof T]: T[K];
+} & {};

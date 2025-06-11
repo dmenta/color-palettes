@@ -1,6 +1,6 @@
 import { Directive, input } from "@angular/core";
 import { BlockDirective } from "./display.directive";
-import { OverflowYiddenDirective } from "./overflow.directive";
+import { OverflowYHiddenDirective } from "./overflow.directive";
 import { TransitionDefaultDirective } from "./transition.directive";
 
 @Directive({
@@ -9,7 +9,7 @@ import { TransitionDefaultDirective } from "./transition.directive";
     "[style.height]": "collapse() ? '0':'calc-size(auto, size)'",
     "[class.opacity-50]": "collapse()",
   },
-  hostDirectives: [BlockDirective, OverflowYiddenDirective, TransitionDefaultDirective],
+  hostDirectives: [BlockDirective, OverflowYHiddenDirective, TransitionDefaultDirective],
 })
 export class CollapseVerticalDirective {
   collapse = input(false, { alias: "zz-collapse-vertical" });
