@@ -1,4 +1,4 @@
-import { Component, Output, signal } from "@angular/core";
+import { Component, Output } from "@angular/core";
 import { ShadowDirective } from "../../../core/directives/shadow.directive";
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { SelectComponent } from "../../../core/components/select/select.component";
@@ -7,8 +7,7 @@ import { ToggleCheckComponent } from "../../../core/components/toggle-check/togg
 import { PanelDirective } from "../../../core/directives/containers/panel.directive";
 import { RoundedDirective } from "../../../core/directives/rounded.directive";
 import { colorModels, namedColorModels } from "../../model/color-models-definitions";
-import { ColorModel, componentKey } from "../../model/colors.model";
-import { Observable, startWith, tap } from "rxjs";
+import { ColorModel } from "../../model/colors.model";
 
 @Component({
   selector: "zz-color-config",

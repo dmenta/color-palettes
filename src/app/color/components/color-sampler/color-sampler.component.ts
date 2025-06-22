@@ -1,4 +1,4 @@
-import { Component, signal } from "@angular/core";
+import { Component, computed, signal } from "@angular/core";
 import { ReactiveFormsModule, FormsModule } from "@angular/forms";
 import { namedColorModels } from "../../model/color-models-definitions";
 import { ColorModel } from "../../model/colors.model";
@@ -28,9 +28,14 @@ export class ColorSamplerComponent {
   });
 
   valores = signal({
-    A: this.current.components.A.defaultValue,
-    B: this.current.components.B.defaultValue,
-    C: this.current.components.C.defaultValue,
+    v0: this.current.components[0].defaultValue,
+    v1: this.current.components[1].defaultValue,
+    v2: this.current.components[2].defaultValue,
+  });
+
+  currentColor = computed(() => {
+    const valores = this.valores();
+    return [valores.v0, valores.v1, valores.v2] as [number, number, number];
   });
 
   configChanged(config: Partial<{ pasos: number; alto: number; continuo: boolean; model: ColorModel }>) {
@@ -38,7 +43,11 @@ export class ColorSamplerComponent {
     this.current = config.model || this.current;
   }
 
-  colorChange(valores: Partial<{ A: number; B: number; C: number }>) {
-    this.valores.set({ ...this.valores(), ...valores });
+  colorChange(valores: Partial<{ v0: number; v1: number; v2: number }>) {
+    this.valores.set({
+      v0: valores.v0 ?? this.valores().v0,
+      v1: valores.v1 ?? this.valores().v1,
+      v2: valores.v2 ?? this.valores().v2,
+    });
   }
 }
