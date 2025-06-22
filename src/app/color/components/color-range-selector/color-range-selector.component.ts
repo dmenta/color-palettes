@@ -29,7 +29,7 @@ export class ColorRangeSelectorComponent {
       Amax: $event.Amax ?? this.config.value.Amax,
     });
   }
-  model = input(namedColorModels["rgb"]);
+  model = input(namedColorModels["oklch"]);
   width = input<number | "full">("full");
   height = input(75);
   pasos = input(10);

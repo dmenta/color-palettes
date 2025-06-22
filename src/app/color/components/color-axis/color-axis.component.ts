@@ -16,7 +16,7 @@ export class ColorAxisComponent {
   rounded = input("large" as borderRadius);
 
   height = input(50);
-  indices = computed(() => Array.from({ length: this.pasos() }, (_, i) => i / this.pasos()));
+  indices = computed(() => Array.from({ length: this.pasos() }, (_, i) => i / (this.pasos() - 1)));
 
   variacion = input("A" as componentKey);
 
