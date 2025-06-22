@@ -1,6 +1,5 @@
 import { Component, effect, input, Output } from "@angular/core";
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { componentKey } from "../../model/colors.model";
 import { namedColorModels } from "../../model/color-models-definitions";
 import { SliderFieldComponent } from "../../../core/components/slider-field/slider-field.component";
 import { CollapseVerticalDirective } from "../../../core/directives/collapse-vertical.directive";
@@ -28,12 +27,11 @@ export class ColorSelectorComponent {
   pasos = input(10);
   continuo = input(false);
 
-  componentsKeys: componentKey[] = ["A", "B", "C"];
-
+  indices: (0 | 1 | 2)[] = [0, 1, 2];
   config = new FormGroup({
-    A: new FormControl(this.model().components.A.defaultValue, { nonNullable: true }),
-    B: new FormControl(this.model().components.B.defaultValue, { nonNullable: true }),
-    C: new FormControl(this.model().components.C.defaultValue, { nonNullable: true }),
+    v0: new FormControl(this.model().components[0].defaultValue, { nonNullable: true }),
+    v1: new FormControl(this.model().components[1].defaultValue, { nonNullable: true }),
+    v2: new FormControl(this.model().components[2].defaultValue, { nonNullable: true }),
   });
 
   @Output() change = this.config.valueChanges;
@@ -42,9 +40,9 @@ export class ColorSelectorComponent {
     effect(() => {
       const model = this.model();
       this.config.patchValue({
-        A: model.components.A.defaultValue,
-        B: model.components.B.defaultValue,
-        C: model.components.C.defaultValue,
+        v0: model.components[0].defaultValue,
+        v1: model.components[1].defaultValue,
+        v2: model.components[2].defaultValue,
       });
     });
   }

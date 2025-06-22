@@ -1,17 +1,11 @@
 export type ColorModelName = "rgb" | "hsl" | "oklch";
 
-type ComponentValues = {
-  [key in componentKey]: number;
-};
-
-type ComponentParts = {
-  [key in componentKey]: string;
-};
-
-export type componentKey = "A" | "B" | "C";
+export type Triple<T> = [T, T, T];
+export type Tuple<T> = [T, T];
 
 export class ColorComponent {
   readonly defaultValue: number;
+
   constructor(
     public name: string,
     public max: number,
@@ -19,34 +13,50 @@ export class ColorComponent {
     public precision: number = 0,
     public min: number = 0
   ) {
-    this.defaultValue = Number.parseFloat(((this.max + this.min) / 2).toFixed(this.precision));
+    this.defaultValue = this.average(min, max);
+  }
+
+  convertAverage(min: number, max: number) {
+    return this.convert(this.internalAverage(min, max));
   }
 
   convert(value: number) {
     return `${this.clampValue(value).toFixed(this.precision)}${this.unit}`;
   }
+
+  average(min: number, max: number) {
+    return Number.parseFloat(this.internalAverage(min, max).toFixed(this.precision));
+  }
+
   clampValue(value?: number): number {
     return value === undefined ? this.defaultValue : Math.max(this.min, Math.min(this.max, value));
+  }
+
+  private internalAverage(min: number, max: number): number {
+    return (Math.max(this.min, min) + Math.min(this.max, max)) / 2;
   }
 }
 
 export class ColorModel {
   readonly templateFn = this.template;
+
   constructor(
     public name: ColorModelName,
-    public components: Record<componentKey, ColorComponent>,
-    templateFn?: (parts: ComponentParts) => string
+    public components: Triple<ColorComponent>,
+
+    templateFn?: (parts: Triple<string>) => string
   ) {
     this.templateFn = templateFn?.bind(this) || this.templateFn;
   }
 
-  private template(parts: ComponentParts): string {
-    return `${this.name}(${parts.A} ${parts.B} ${parts.C})`;
+  private template(parts: Triple<string>): string {
+    return `${this.name}(${parts[0]} ${parts[1]} ${parts[2]})`;
   }
-  convert(values: ComponentValues) {
-    const Apart = this.components.A.convert(values.A);
-    const Bpart = this.components.B.convert(values.B);
-    const Cpart = this.components.C.convert(values.C);
-    return this.templateFn({ A: Apart, B: Bpart, C: Cpart });
+  convert(values: Triple<number>) {
+    return this.templateFn([
+      this.components[0].convert(values[0]),
+      this.components[1].convert(values[1]),
+      this.components[2].convert(values[2]),
+    ]);
   }
 }

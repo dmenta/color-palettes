@@ -1,6 +1,5 @@
-import { Component, effect, input, Output } from "@angular/core";
+import { Component, computed, effect, input, Output, signal } from "@angular/core";
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { componentKey } from "../../model/colors.model";
 import { namedColorModels } from "../../model/color-models-definitions";
 import { SliderFieldComponent } from "../../../core/components/slider-field/slider-field.component";
 import { CollapseVerticalDirective } from "../../../core/directives/collapse-vertical.directive";
@@ -23,25 +22,48 @@ import { DualAxisSliderComponent } from "../dual-axis-slider/dual-axis-slider.co
   templateUrl: "./color-range-selector.component.html",
 })
 export class ColorRangeSelectorComponent {
-  onComponentAChange($event: Partial<{ Amin: number; Amax: number }>) {
+  onComponentAChange($event: Partial<{ min: number; max: number }>) {
     this.config.patchValue({
-      Amin: $event.Amin ?? this.config.value.Amin,
-      Amax: $event.Amax ?? this.config.value.Amax,
+      min: $event.min ?? this.config.value.min,
+      max: $event.max ?? this.config.value.max,
+    });
+    this.minmax.set({
+      min: $event.min ?? this.minmax().min,
+      max: $event.max ?? this.minmax().max,
     });
   }
+
   model = input(namedColorModels["oklch"]);
   width = input<number | "full">("full");
   height = input(75);
   pasos = input(10);
   continuo = input(false);
 
-  componentsKeys: componentKey[] = ["A", "B", "C"];
+  variable = input<0 | 1 | 2>(0);
+
+  fixedIndexs = computed(() => {
+    if (this.variable() === 0) {
+      return [1, 2];
+    } else if (this.variable() === 1) {
+      return [0, 2];
+    }
+    return [0, 1];
+  });
+  indices: (0 | 1 | 2)[] = [0, 1, 2];
+
+  minmax = signal({
+    min: this.model().components[this.variable()].min,
+    max: this.model().components[this.variable()].max,
+  });
+  variableAverage = computed(() =>
+    this.model().components[this.variable()].average(this.minmax().min, this.minmax().max)
+  );
 
   config = new FormGroup({
-    Amin: new FormControl(this.model().components.A.min, { nonNullable: true }),
-    Amax: new FormControl(this.model().components.A.max, { nonNullable: true }),
-    B: new FormControl(this.model().components.B.defaultValue, { nonNullable: true }),
-    C: new FormControl(this.model().components.C.defaultValue, { nonNullable: true }),
+    min: new FormControl(this.model().components[this.variable()].min, { nonNullable: true }),
+    max: new FormControl(this.model().components[this.variable()].max, { nonNullable: true }),
+    f0: new FormControl(this.model().components[this.fixedIndexs()[0]].defaultValue, { nonNullable: true }),
+    f1: new FormControl(this.model().components[this.fixedIndexs()[1]].defaultValue, { nonNullable: true }),
   });
 
   @Output() change = this.config.valueChanges;
@@ -50,10 +72,10 @@ export class ColorRangeSelectorComponent {
     effect(() => {
       const model = this.model();
       this.config.patchValue({
-        Amin: model.components.A.min,
-        Amax: model.components.A.max,
-        B: model.components.B.defaultValue,
-        C: model.components.C.defaultValue,
+        min: model.components[this.variable()].min,
+        max: model.components[this.variable()].max,
+        f0: model.components[this.fixedIndexs()[0]].defaultValue,
+        f1: model.components[this.fixedIndexs()[1]].defaultValue,
       });
     });
   }

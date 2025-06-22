@@ -1,36 +1,27 @@
-<div class="grid grid-cols-[333px_minmax(500px,_1fr)] items-top p-4">
-  <div class="p-4">
-    <div>
-      <zz-color-sample
-        [height]="300"
-        [model]="current.name"
-        [componentA]="(valores().Amin + valores().Amax) / 2"
-        [componentB]="valores().B"
-        [componentC]="valores().C"></zz-color-sample>
-    </div>
-    <div class="w-full mt-4"><zz-color-axis-config (change)="configChanged($event)"></zz-color-axis-config></div>
-  </div>
+<div class="grid grid-cols-[333px_minmax(500px,_1fr)] items-top gap-6 p-6">
   <div>
+    <zz-color-sample [height]="300" [model]="current.name" [values]="currentColor()"></zz-color-sample>
+    <div class="w-full mt-4">
+      <zz-color-axis-config (change)="configChanged($event)"></zz-color-axis-config>
+    </div>
+  </div>
+  <div class="relative">
     <zz-color-range-selector
-      class="p-4"
       (change)="colorChange($event)"
       [model]="current"
       [continuo]="true"
-      [height]="8"
-      [pasos]="50"></zz-color-range-selector>
-    <div zz-panel class="p-4 h-fit w-full">
-      <zz-color-axis
-        class="mb-2 mt-1 block"
-        [height]="config().alto"
-        [pasos]="config().pasos"
-        [shadow]="!config().continuo"
-        [rounded]="config().continuo ? 'none' : 'large'"
-        [variacion]="'A'"
-        [modelName]="current.name"
-        [componenteAmin]="valores().Amin"
-        [componenteAmax]="valores().Amax"
-        [componenteB]="valores().B"
-        [componenteC]="valores().C"></zz-color-axis>
-    </div>
+      [height]="25"
+      [pasos]="20"></zz-color-range-selector>
+    <zz-color-axis
+      class="mt-10 block p-6"
+      [modelName]="current.name"
+      [pasos]="config().pasos"
+      [variable]="0"
+      [min]="valores().min"
+      [max]="valores().max"
+      [fixedValues]="valores().fixedValues"
+      [height]="config().alto"
+      [shadow]="!config().continuo"
+      [rounded]="config().continuo ? 'none' : 'large'"></zz-color-axis>
   </div>
 </div>

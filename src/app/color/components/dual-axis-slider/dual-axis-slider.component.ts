@@ -4,6 +4,7 @@ import { ColorAxisComponent } from "../color-axis/color-axis.component";
 import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { namedColorModels } from "../../model/color-models-definitions";
 import { borderRadius } from "../../../core/directives/rounded.directive";
+import { Tuple } from "../../model/colors.model";
 
 @Component({
   selector: "zz-dual-axis-slider",
@@ -18,16 +19,16 @@ export class DualAxisSliderComponent {
   height = input(75);
   pasos = input(10);
   continuo = input(false);
-  AaxisMin = input(0);
-  AaxisMax = input(100);
-  Baxis = input(50);
-  Caxis = input(50);
+  min = input(0);
+  max = input(100);
+  fixedValues = input<Tuple<number>>([0, 0]);
+  variable = input<0 | 1 | 2>(0);
 
-  componentA = computed(() => this.model().components.A);
+  variableComponent = computed(() => this.model().components[this.variable()]);
 
   formDual = new FormGroup({
-    Amin: new FormControl(this.model().components.A.min, { nonNullable: true }),
-    Amax: new FormControl(this.model().components.A.max, { nonNullable: true }),
+    min: new FormControl(this.model().components[this.variable()].min, { nonNullable: true }),
+    max: new FormControl(this.model().components[this.variable()].max, { nonNullable: true }),
   });
 
   @Output() change = this.formDual.valueChanges;

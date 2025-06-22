@@ -1,6 +1,6 @@
 import { Component, computed, input } from "@angular/core";
 import { ColorSwatchDirective } from "../color-swatch/color-swatch.directive";
-import { ColorModelName, componentKey } from "../../model/colors.model";
+import { ColorModelName, Triple, Tuple } from "../../model/colors.model";
 import { namedColorModels } from "../../model/color-models-definitions";
 import { borderRadius } from "../../../core/directives/rounded.directive";
 
@@ -10,23 +10,54 @@ import { borderRadius } from "../../../core/directives/rounded.directive";
   templateUrl: "./color-axis.component.html",
 })
 export class ColorAxisComponent {
+  modelName = input("rgb" as ColorModelName);
+  protected model = computed(() => namedColorModels[this.modelName()]);
+
+  variable = input<0 | 1 | 2>(0);
+
+  fixedIndexs = computed(() => {
+    if (this.variable() === 0) {
+      return [1, 2];
+    } else if (this.variable() === 1) {
+      return [0, 2];
+    }
+    return [0, 1];
+  });
+
+  min = input(this.model().components[this.variable()].min);
+  max = input(this.model().components[this.variable()].max);
   pasos = input(10);
+  fixedValues = input<Tuple<number>>([0, 0]);
+
+  height = input(50);
+  width = input<number | "full">("full");
 
   shadow = input(true);
   rounded = input("large" as borderRadius);
 
-  height = input(50);
-  indices = computed(() => Array.from({ length: this.pasos() }, (_, i) => i / (this.pasos() - 1)));
+  currentColorBase = computed(() => {
+    const variable = this.variable();
+    const fixedIndexs = this.fixedIndexs();
+    const valores = this.fixedValues();
 
-  variacion = input("A" as componentKey);
+    const valoresResolved = [0, 0, 0];
+    valoresResolved[fixedIndexs[0]] = valores[0];
+    valoresResolved[fixedIndexs[1]] = valores[1];
+    valoresResolved[variable] = this.min();
 
-  modelName = input("rgb" as ColorModelName);
+    return valoresResolved as Triple<number>;
+  });
+  protected componenteVariable = computed(() => this.model().components[this.variable()]);
+  protected indices = computed(() => {
+    const baseArray = this.currentColorBase();
+    const pasos = this.pasos();
+    const step = (this.max() - this.min()) / (pasos - 1);
 
-  model = computed(() => namedColorModels[this.modelName()]);
-  componenteVariable = computed(() => this.model().components[this.variacion()]);
-
-  componenteAmin = input(this.model().components.A.min);
-  componenteAmax = input(this.model().components.A.max);
-  componenteB = input(this.model().components.B.defaultValue);
-  componenteC = input(this.model().components.B.defaultValue);
+    return Array.from({ length: pasos }, (_, i) => {
+      const value = this.min() + i * step;
+      const valores = [...baseArray];
+      valores[this.variable()] = value;
+      return valores as Triple<number>;
+    });
+  });
 }

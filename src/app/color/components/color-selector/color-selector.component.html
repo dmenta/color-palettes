@@ -1,10 +1,11 @@
 <div zz-panel class="p-6 h-fit">
   <form [formGroup]="config" class="min-w-fit h-fit space-y-8">
-    @for(componentKey of componentsKeys; track componentKey){ @let component = this.model().components[componentKey];
+    @for(indice of indices; track indice){ @let component = this.model().components[indice]; @let fixedIndexes=
+    indice===0 ? [1,2] : [0,indice===2?1:2];
     <div [zz-collapse-vertical]="false">
       <zz-slider-field
         class="text-sm"
-        [fieldName]="componentKey"
+        [fieldName]="'v' + indice"
         [min]="component.min"
         [max]="component.max"
         [step]="componentStep(component.precision)"
@@ -21,12 +22,14 @@
         [pasos]="pasos()"
         [shadow]="!continuo()"
         [rounded]="continuo() ? 'none' : 'normal'"
-        [variacion]="componentKey"
+        [variable]="indice"
         [modelName]="this.model().name"
-        [componenteAmin]="config.controls.A.value"
-        [componenteAmax]="config.controls.A.value"
-        [componenteB]="config.controls.B.value"
-        [componenteC]="config.controls.C.value"></zz-color-axis>
+        [min]="this.model().components[indice].min"
+        [max]="this.model().components[indice].max"
+        [fixedValues]="[
+          this.config.get('v' + fixedIndexes[0]).value,
+          this.config.get('v' + fixedIndexes[1]).value
+        ]"></zz-color-axis>
     </div>
     }
   </form>

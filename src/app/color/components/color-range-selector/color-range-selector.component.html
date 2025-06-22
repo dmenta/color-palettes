@@ -1,22 +1,23 @@
 <div zz-panel class="p-6 h-fit">
   <form [formGroup]="config" class="min-w-fit h-fit space-y-8">
-    @for(componentKey of componentsKeys; track componentKey){ @let component = this.model().components[componentKey];
+    @for(indice of indices; track indice){ @let component = this.model().components[indice];
     <div [zz-collapse-vertical]="false">
-      @if(componentKey==="A"){
+      @if(indice===variable()){
       <zz-dual-axis-slider
-        [AaxisMin]="20"
-        [AaxisMax]="80"
-        [Baxis]="config.controls.B.value"
-        [Caxis]="config.controls.C.value"
+        [variable]="indice"
+        [min]="component.min"
+        [max]="component.max"
+        [fixedValues]="[config.controls.f0.value, config.controls.f1.value]"
         [height]="height()"
         [pasos]="pasos()"
         [continuo]="continuo()"
         (change)="onComponentAChange($event)">
       </zz-dual-axis-slider>
-      }@else {
+      }@else { @let fixedIndex= fixedIndexs()[0]=== indice ? 1 : 0; @let variableAverage= this.variableAverage(); @let
+      fixedValue= config.get('f'+fixedIndex).value;
       <zz-slider-field
         class="text-sm"
-        [fieldName]="componentKey"
+        [fieldName]="'f' + (fixedIndex === 1 ? 0 : 1)"
         [min]="component.min"
         [max]="component.max"
         [step]="componentStep(component.precision)"
@@ -33,12 +34,13 @@
         [pasos]="pasos()"
         [shadow]="!continuo()"
         [rounded]="continuo() ? 'none' : 'normal'"
-        [variacion]="componentKey"
+        [variable]="indice"
         [modelName]="this.model().name"
-        [componenteAmin]="(config.controls.Amin.value + config.controls.Amax.value) / 2"
-        [componenteAmax]="(config.controls.Amin.value + config.controls.Amax.value) / 2"
-        [componenteB]="config.controls.B.value"
-        [componenteC]="config.controls.C.value"></zz-color-axis>
+        [min]="component.min"
+        [max]="component.max"
+        [fixedValues]="
+          variable() > indice ? [fixedValue, variableAverage] : [variableAverage, fixedValue]
+        "></zz-color-axis>
       }
     </div>
     }

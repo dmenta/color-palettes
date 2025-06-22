@@ -1,5 +1,5 @@
 <div class="flex flex-row justify-between overflow-hidden">
-  @for(indice of indices(); track indice){ @let variable = indice * componenteVariable().max;
+  @for(indice of indices(); track $index){
   <div
     class="shadow-gray-500/70 dark:shadow-black/30 grow flex items-center text-sm justify-center overflow-hidden"
     [shadow]="shadow()"
@@ -7,12 +7,6 @@
     [height]="height()"
     color-swatch
     [model]="modelName()"
-    [componentA]="
-      variacion() === 'A'
-        ? componenteAmin() + indice * (componenteAmax() - componenteAmin())
-        : (componenteAmin() + componenteAmax()) / 2
-    "
-    [componentB]="variacion() === 'B' ? variable : componenteB()"
-    [componentC]="variacion() === 'C' ? variable : componenteC()"></div>
+    [values]="indice"></div>
   }
 </div>
