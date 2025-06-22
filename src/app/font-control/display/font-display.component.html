@@ -1,0 +1,9 @@
+<div zz-flex class="flex-row w-vw gap-4">
+  <zz-font-sampler
+    class="py-4 h-screen overflow-x-hidden overflow-y-auto min-w-fit"
+    (estiloChanged)="estilo.set($event)"
+    (fontFamilyChanged)="fontName.set($event)" />
+  <div zz-width-full class="h-screen overflow-auto py-4 px-2" [style]="estilo()" [style.fontFamily]="fontName()">
+    <zz-texto-simulado zz-block zz-transition-default class="max-w-[50ch] mx-auto leading-[1.8em] space-y-[1lh]" />
+  </div>
+</div>

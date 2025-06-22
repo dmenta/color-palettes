@@ -1,0 +1,16 @@
+<div class="flex flex-row justify-between overflow-hidden">
+  @for(indice of indices(); track indice){ @let variable = indice * componenteVariable().max;
+  <div
+    class="shadow-gray-500/70 dark:shadow-black/30 grow"
+    [shadow]="shadow()"
+    [roundedSize]="rounded()"
+    [height]="height()"
+    color-swatch
+    [model]="modelName()"
+    [componentA]="variacion() === 'A' ? variable : componenteA()"
+    [componentB]="variacion() === 'B' ? variable : componenteB()"
+    [componentC]="variacion() === 'C' ? variable : componenteC()">
+    &nbsp;
+  </div>
+  }
+</div>

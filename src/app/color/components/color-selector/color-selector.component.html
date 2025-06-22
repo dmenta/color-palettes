@@ -1,0 +1,32 @@
+<div zz-panel class="p-6 h-fit">
+  <form [formGroup]="config" class="min-w-fit h-fit space-y-8">
+    @for(componentKey of componentsKeys; track componentKey){ @let component = this.model().components[componentKey];
+    <div [zz-collapse-vertical]="false">
+      <zz-slider-field
+        class="text-sm"
+        [fieldName]="componentKey"
+        [min]="component.min"
+        [max]="component.max"
+        [step]="componentStep(component.precision)"
+        [label]="component.name"
+        [defaultValue]="component.defaultValue"
+        [showLabel]="true"
+        [labelLength]="10"
+        [unit]="component.unit"
+        [showValue]="true"
+        [valueLength]="9" />
+      <zz-color-axis
+        class="mb-2 mt-1 block"
+        [height]="height()"
+        [pasos]="pasos()"
+        [shadow]="!continuo()"
+        [rounded]="continuo() ? 'none' : 'normal'"
+        [variacion]="componentKey"
+        [modelName]="this.model().name"
+        [componenteA]="config.controls.A.value"
+        [componenteB]="config.controls.B.value"
+        [componenteC]="config.controls.C.value"></zz-color-axis>
+    </div>
+    }
+  </form>
+</div>

@@ -1,4 +1,15 @@
-import { computed, Directive, effect, ElementRef, HostBinding, inject, input, Input, Renderer2 } from "@angular/core";
+import {
+  computed,
+  Directive,
+  effect,
+  ElementRef,
+  Host,
+  HostBinding,
+  inject,
+  input,
+  Input,
+  Renderer2,
+} from "@angular/core";
 import { KeyDetectorService } from "../../service/ctrlkey-pressed.service";
 import { AppearanceNoneDirective } from "../../directives/appearance-none.directive";
 import { FlexDirective } from "../../directives/display.directive";
@@ -43,6 +54,15 @@ export class SliderSlimDirective {
     return this.resolvedStep();
   }
 
+  @HostBinding("value")
+  get current() {
+    return this.value();
+  }
+  value = input(0, {
+    alias: "zzValue",
+    transform: (value?: number) => Math.max(Math.min(500, value ?? 0), 0),
+  });
+
   keyPressedService = inject(KeyDetectorService);
   resolvedStep = computed(() => {
     const step = this.step();
@@ -54,7 +74,7 @@ export class SliderSlimDirective {
       return 1;
     }
 
-    return step >= 2 ? 0.5 : 0.2;
+    return step >= 2 ? 0.5 : 0.01;
   });
 
   toggleAccent = {

@@ -21,11 +21,13 @@
     }
   </div>
   <input
+    #slider
     zz-slider
     [zzStep]="step ?? 1"
     [accent]="defaultValue !== undefined && control.value !== defaultValue"
     type="range"
     [formControlName]="fieldName"
+    [zzValue]="control.value"
     [min]="min"
     [max]="max"
     [attr.aria-label]="'Input for ' + label"

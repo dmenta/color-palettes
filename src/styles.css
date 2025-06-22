@@ -42,16 +42,3 @@ body {
   background-color: var(--bg-application);
   color: var(--text-color);
 }
-
-* {
-  --color-zinc-50: rgb(251, 251, 251);
-  --color-zinc-100: rgb(245, 245, 245);
-  --color-zinc-200: rgb(232, 232, 232);
-  --color-zinc-300: rgb(218, 218, 218);
-  --color-zinc-400: rgb(172, 172, 172);
-  --color-zinc-500: rgb(132, 132, 132);
-  --color-zinc-600: rgb(104, 104, 104);
-  --color-zinc-700: rgb(87, 87, 87);
-  --color-zinc-800: rgb(65, 65, 65);
-  --color-zinc-900: rgb(50, 50, 50);
-}

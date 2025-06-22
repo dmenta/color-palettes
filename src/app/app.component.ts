@@ -9,21 +9,18 @@ import { CommonModule } from "@angular/common";
 import { WidthFullDirective } from "./core/directives/width.directive";
 import { BlockDirective, FlexDirective } from "./core/directives/display.directive";
 import { TransitionDefaultDirective } from "./core/directives/transition.directive";
+import { RouterOutlet } from "@angular/router";
 
 @Component({
   selector: "zz-root",
   templateUrl: "./app.component.html",
   imports: [
+    RouterOutlet,
     CommonModule,
     FormsModule,
-    FontSamplerComponent,
-    TextoSimuladoComponent,
     IconToggleButtonComponent,
     BackgroundDirective,
-    WidthFullDirective,
-    FlexDirective,
     TransitionDefaultDirective,
-    BlockDirective,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
