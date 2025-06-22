@@ -55,7 +55,7 @@ export class FontSamplerComponent {
     return [...this.estilosSingle(), ...this.estiloMulti().map((prop) => prop.value)].join("; ");
   });
   readonly families: FontFamily[] = fontFamilies;
-  readonly family = model<FontFamily>(this.families[0]);
+  readonly family = model<FontFamily>(this.families.length > 0 ? this.families[0] : null);
 
   gruposConfigs = computed(() => {
     const familia = this.family();

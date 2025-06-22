@@ -9,6 +9,6 @@ export const routes: Routes = [
   {
     path: "colors",
     loadComponent: () =>
-      import("./color/components/color-sampler/color-sampler.component").then((m) => m.ColorSamplerComponent),
+      import("./color/components/color-palette/color-palette.component").then((m) => m.ColorPaletteComponent),
   },
 ];

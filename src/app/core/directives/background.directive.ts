@@ -1,4 +1,4 @@
-import { Directive, HostBinding, HostListener, input, signal } from "@angular/core";
+import { Directive, HostBinding, HostListener, signal } from "@angular/core";
 
 @Directive({
   selector: "[zz-background-base], zzBackgroundBase",

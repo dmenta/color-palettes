@@ -12,6 +12,31 @@
     "skipLibCheck": true,
     "isolatedModules": true,
     "esModuleInterop": true,
+    "noImplicitAny": true,
+    "noUnusedLocals": true,
+
+    "forceConsistentCasingInFileNames": true,
+
+    /* Type Checking */
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false,
+    "noImplicitThis": true,
+    "noUncheckedIndexedAccess": true,
+    "noUnusedParameters": true,
+
+    "useUnknownInCatchVariables": true,
+
+    "strictFunctionTypes": true,
+    /*
+      detecta muchos posibles problemas por nulos o indefinidos
+      va a llevar tiempo poder activarlo pero vale la pena
+      porque lo que detecta realmente son situaciones de riesgo
+      */
+    "strictNullChecks": false,
+    /* sólo se pueden activar si strictNullChecks está activado */
+    "exactOptionalPropertyTypes": false,
+    "strictPropertyInitialization": false,
+
     "experimentalDecorators": true,
     "moduleResolution": "bundler",
     "importHelpers": true,

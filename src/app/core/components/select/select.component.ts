@@ -80,7 +80,7 @@ export class SelectComponent<T extends object | string | number, K extends keyof
 
   constructor(public _elementRef: ElementRef<HTMLElement>) {}
 
-  onFocusOut(event: FocusEvent) {
+  onFocusOut(_event: FocusEvent) {
     this.touched = true;
     this.onTouched?.call(this);
   }
@@ -102,6 +102,6 @@ export class SelectComponent<T extends object | string | number, K extends keyof
     this._renderer.setProperty(this._elementRef.nativeElement, "disabled", isDisabled);
   }
 
-  onChange: (value: any) => void = (value: any) => {};
+  onChange: (value: any) => void = (_value: any) => {};
   onTouched?: () => void = () => {};
 }

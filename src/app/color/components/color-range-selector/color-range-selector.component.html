@@ -2,6 +2,18 @@
   <form [formGroup]="config" class="min-w-fit h-fit space-y-8">
     @for(componentKey of componentsKeys; track componentKey){ @let component = this.model().components[componentKey];
     <div [zz-collapse-vertical]="false">
+      @if(componentKey==="A"){
+      <zz-dual-axis-slider
+        [AaxisMin]="20"
+        [AaxisMax]="80"
+        [Baxis]="config.controls.B.value"
+        [Caxis]="config.controls.C.value"
+        [height]="height()"
+        [pasos]="pasos()"
+        [continuo]="continuo()"
+        (change)="onComponentAChange($event)">
+      </zz-dual-axis-slider>
+      }@else {
       <zz-slider-field
         class="text-sm"
         [fieldName]="componentKey"
@@ -23,10 +35,11 @@
         [rounded]="continuo() ? 'none' : 'normal'"
         [variacion]="componentKey"
         [modelName]="this.model().name"
-        [componenteAmin]="config.controls.A.value"
-        [componenteAmax]="config.controls.A.value"
+        [componenteAmin]="(config.controls.Amin.value + config.controls.Amax.value) / 2"
+        [componenteAmax]="(config.controls.Amin.value + config.controls.Amax.value) / 2"
         [componenteB]="config.controls.B.value"
         [componenteC]="config.controls.C.value"></zz-color-axis>
+      }
     </div>
     }
   </form>

@@ -1,7 +1,5 @@
 import { Directive, HostBinding, input } from "@angular/core";
 
-type overflowType = "visible" | "hidden" | "clip" | "scroll" | "auto";
-
 @Directive({
   selector: "[zz-overflow], zzOverflow",
 })

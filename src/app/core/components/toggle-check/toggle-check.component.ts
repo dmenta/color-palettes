@@ -82,7 +82,7 @@ export class ToggleCheckComponent implements ControlValueAccessor {
     this._renderer.setProperty(this._elementRef.nativeElement, "disabled", isDisabled);
   }
 
-  onChange: (value: any) => void = (value: any) => {};
+  onChange: (value: any) => void = (_value: any) => {};
   onTouched: () => void = () => {};
 
   onFocusIn(_event: FocusEvent) {

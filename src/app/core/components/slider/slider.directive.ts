@@ -1,15 +1,4 @@
-import {
-  computed,
-  Directive,
-  effect,
-  ElementRef,
-  Host,
-  HostBinding,
-  inject,
-  input,
-  Input,
-  Renderer2,
-} from "@angular/core";
+import { computed, Directive, effect, ElementRef, HostBinding, inject, input, Renderer2 } from "@angular/core";
 import { KeyDetectorService } from "../../service/ctrlkey-pressed.service";
 import { AppearanceNoneDirective } from "../../directives/appearance-none.directive";
 import { FlexDirective } from "../../directives/display.directive";
@@ -46,7 +35,7 @@ export class SliderSlimDirective {
 
   step = input(1, {
     alias: "zzStep",
-    transform: (value?: number) => Math.max(Math.min(100, value ?? 1), 0.01),
+    transform: (value?: number) => Math.max(Math.min(100, value ?? 1), 0.001),
   });
 
   @HostBinding("step")

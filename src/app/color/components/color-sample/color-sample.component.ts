@@ -12,7 +12,7 @@ import { namedColorModels } from "../../model/color-models-definitions";
   templateUrl: "./color-sample.component.html",
 })
 export class ColorSampleComponent {
-  colorChange($event: any) {
+  colorChange(_$event: any) {
     throw new Error("Method not implemented.");
   }
   height = input(120);

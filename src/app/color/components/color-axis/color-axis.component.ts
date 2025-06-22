@@ -13,7 +13,7 @@ export class ColorAxisComponent {
   pasos = input(10);
 
   shadow = input(true);
-  rounded = input("normal" as borderRadius);
+  rounded = input("large" as borderRadius);
 
   height = input(50);
   indices = computed(() => Array.from({ length: this.pasos() }, (_, i) => i / this.pasos()));
@@ -25,7 +25,8 @@ export class ColorAxisComponent {
   model = computed(() => namedColorModels[this.modelName()]);
   componenteVariable = computed(() => this.model().components[this.variacion()]);
 
-  componenteA = input(this.model().components.A.defaultValue);
+  componenteAmin = input(this.model().components.A.min);
+  componenteAmax = input(this.model().components.A.max);
   componenteB = input(this.model().components.B.defaultValue);
   componenteC = input(this.model().components.B.defaultValue);
 }

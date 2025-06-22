@@ -1,0 +1,40 @@
+<form [formGroup]="formDual">
+  <zz-slider-field
+    class="text-sm"
+    [fieldName]="'Amin'"
+    [min]="componentA().min"
+    [max]="componentA().max"
+    [step]="componentStep(componentA().precision)"
+    [label]="componentA().name"
+    [defaultValue]="componentA().min"
+    [showLabel]="true"
+    [labelLength]="10"
+    [unit]="componentA().unit"
+    [showValue]="true"
+    [valueLength]="9" />
+  <zz-color-axis
+    class="mb-2 mt-1 block"
+    [height]="height()"
+    [pasos]="pasos()"
+    [shadow]="!continuo()"
+    [rounded]="continuo() ? 'none' : 'normal'"
+    [variacion]="'A'"
+    [modelName]="this.model().name"
+    [componenteAmin]="AaxisMin()"
+    [componenteAmax]="AaxisMax()"
+    [componenteB]="Baxis()"
+    [componenteC]="Caxis()"></zz-color-axis>
+  <zz-slider-field
+    class="text-sm"
+    [fieldName]="'Amax'"
+    [min]="componentA().min"
+    [max]="componentA().max"
+    [step]="componentStep(componentA().precision)"
+    [label]="componentA().name"
+    [defaultValue]="componentA().max"
+    [showLabel]="false"
+    [labelLength]="10"
+    [unit]="componentA().unit"
+    [showValue]="false"
+    [valueLength]="9" />
+</form>
