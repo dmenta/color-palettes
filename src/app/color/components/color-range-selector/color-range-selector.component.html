@@ -4,6 +4,7 @@
     <div [zz-collapse-vertical]="false">
       @if(indice===variable()){
       <zz-dual-axis-slider
+        [model]="model()"
         [variable]="indice"
         [min]="component.min"
         [max]="component.max"
@@ -11,12 +12,13 @@
         [height]="height()"
         [pasos]="pasos()"
         [continuo]="continuo()"
-        (change)="onComponentAChange($event)">
+        (colorChange)="onComponentAChange($event)">
       </zz-dual-axis-slider>
       }@else { @let fixedIndex= fixedIndexs()[0]=== indice ? 1 : 0; @let variableAverage= this.variableAverage(); @let
       fixedValue= config.get('f'+fixedIndex).value;
       <zz-slider-field
-        class="text-sm"
+        class="text-sm relative"
+        [showTrack]="false"
         [fieldName]="'f' + (fixedIndex === 1 ? 0 : 1)"
         [min]="component.min"
         [max]="component.max"
@@ -29,7 +31,7 @@
         [showValue]="true"
         [valueLength]="9" />
       <zz-color-axis
-        class="mb-2 mt-1 block"
+        class="mb-2 -mt-2.5 block"
         [height]="height()"
         [pasos]="pasos()"
         [shadow]="!continuo()"

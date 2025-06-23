@@ -45,6 +45,8 @@ export class SelectComponent<T extends object | string | number, K extends keyof
   items = input<T[]>([]);
   displayKey = input.required<K>();
 
+  upperCase = input(false);
+
   @Input()
   get disabled(): boolean {
     return this._disabled;

@@ -1,7 +1,8 @@
 <select
   zz-select
   [zzdisabled]="disabled"
-  class="py-1 pl-3 pr-1 border-1 transition-discrete border-zinc-400 dark:border-zinc-600 transition-all duration-100 ease-in-out text-zinc-700 group-focus-within:text-black dark:bg-zinc-900 dark:text-zinc-300 group-focus-within:dark:text-white"
+  [class.uppercase]="upperCase()"
+  class="py-1 pl-3 pr-1 cursor-pointer border-1 transition-discrete border-zinc-400 dark:border-zinc-600 transition-all duration-100 ease-in-out text-zinc-700 group-focus-within:text-black dark:bg-zinc-900 dark:text-zinc-300 group-focus-within:dark:text-white"
   #valor
   (focusout)="onFocusOut($event)"
   (change)="onValueChange($event)">

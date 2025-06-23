@@ -3,11 +3,13 @@
     <div>
       <zz-color-sample [height]="300" [model]="current.name" [values]="currentColor()"></zz-color-sample>
     </div>
-    <div class="w-full mt-4"><zz-color-config (change)="configChanged($event)"></zz-color-config></div>
+    <div class="w-full mt-4">
+      <zz-color-config (configChange)="configChanged($event)"></zz-color-config>
+    </div>
   </div>
   <zz-color-selector
     class="p-4"
-    (change)="colorChange($event)"
+    (colorChange)="colorChange($event)"
     [model]="current"
     [continuo]="config().continuo"
     [height]="config().alto"

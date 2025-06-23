@@ -23,7 +23,7 @@ export class ColorPaletteComponent {
   current: ColorModel = namedColorModels["oklch"];
 
   config = signal({
-    alto: 100,
+    alto: 25,
     pasos: 10,
     continuo: false,
     variable: 0 as 0 | 1 | 2,

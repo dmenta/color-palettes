@@ -2,22 +2,12 @@ import { Component, effect, input, Output } from "@angular/core";
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { namedColorModels } from "../../model/color-models-definitions";
 import { SliderFieldComponent } from "../../../core/components/slider-field/slider-field.component";
-import { CollapseVerticalDirective } from "../../../core/directives/collapse-vertical.directive";
 import { PanelDirective } from "../../../core/directives/containers/panel.directive";
 import { ColorAxisComponent } from "../color-axis/color-axis.component";
 
 @Component({
   selector: "zz-color-selector",
-  imports: [
-    SliderFieldComponent,
-    FormsModule,
-    ReactiveFormsModule,
-    CollapseVerticalDirective,
-    PanelDirective,
-    ColorAxisComponent,
-
-    CollapseVerticalDirective,
-  ],
+  imports: [SliderFieldComponent, FormsModule, ReactiveFormsModule, PanelDirective, ColorAxisComponent],
   templateUrl: "./color-selector.component.html",
 })
 export class ColorSelectorComponent {
@@ -34,7 +24,7 @@ export class ColorSelectorComponent {
     v2: new FormControl(this.model().components[2].defaultValue, { nonNullable: true }),
   });
 
-  @Output() change = this.config.valueChanges;
+  @Output() colorChange = this.config.valueChanges;
 
   constructor() {
     effect(() => {

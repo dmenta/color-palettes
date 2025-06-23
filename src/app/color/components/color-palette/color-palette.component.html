@@ -1,16 +1,16 @@
-<div class="grid grid-cols-[333px_minmax(500px,_1fr)] items-top gap-6 p-6">
+<div class="grid grid-cols-[270px_minmax(500px,_1fr)] items-top gap-6 p-6">
   <div>
-    <zz-color-sample [height]="300" [model]="current.name" [values]="currentColor()"></zz-color-sample>
+    <zz-color-sample [model]="current.name" [values]="currentColor()"></zz-color-sample>
     <div class="w-full mt-4">
-      <zz-color-axis-config (change)="configChanged($event)"></zz-color-axis-config>
+      <zz-color-axis-config (configChange)="configChanged($event)"></zz-color-axis-config>
     </div>
   </div>
   <div class="relative">
     <zz-color-range-selector
-      (change)="colorChange($event)"
+      (colorChange)="colorChange($event)"
       [model]="current"
       [continuo]="true"
-      [height]="25"
+      [height]="config().alto"
       [pasos]="20"></zz-color-range-selector>
     <zz-color-axis
       class="mt-10 block p-6"
@@ -20,7 +20,7 @@
       [min]="valores().min"
       [max]="valores().max"
       [fixedValues]="valores().fixedValues"
-      [height]="config().alto"
+      [height]="100"
       [shadow]="!config().continuo"
       [rounded]="config().continuo ? 'none' : 'large'"></zz-color-axis>
   </div>

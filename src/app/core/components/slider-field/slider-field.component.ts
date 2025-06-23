@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, Optional } from "@angular/core";
+import { ChangeDetectionStrategy, Component, input, Input, Optional } from "@angular/core";
 import { FieldValueComponent } from "./field-value.component";
 import { FormGroupDirective, ReactiveFormsModule } from "@angular/forms";
 import { SliderSlimDirective } from "../slider/slider.directive";
@@ -26,6 +26,8 @@ export class SliderFieldComponent {
   @Input() label: string = "";
   @Input() valueLength?: number;
   @Input() unit?: string = "";
+
+  showTrack = input(true);
 
   @Input() min?: number = 0;
   @Input() max?: number = 10;

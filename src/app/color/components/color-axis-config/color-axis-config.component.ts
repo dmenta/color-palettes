@@ -22,9 +22,9 @@ import { RoundedDirective } from "../../../core/directives/rounded.directive";
 export class ColorAxisConfigComponent {
   config = new FormGroup({
     pasos: new FormControl<number>(10, { nonNullable: true }),
-    alto: new FormControl<number>(100, { nonNullable: true }),
+    alto: new FormControl<number>(25, { nonNullable: true }),
     continuo: new FormControl<boolean>(false, { nonNullable: true }),
   });
 
-  @Output() change = this.config.valueChanges;
+  @Output() configChange = this.config.valueChanges;
 }

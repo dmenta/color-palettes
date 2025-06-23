@@ -1,6 +1,7 @@
-<form [formGroup]="formDual">
+<form [formGroup]="formDual" class="relative">
   <zz-slider-field
-    class="text-sm"
+    class="text-sm relative"
+    [showTrack]="false"
     [fieldName]="'min'"
     [min]="variableComponent().min"
     [max]="variableComponent().max"
@@ -13,7 +14,7 @@
     [showValue]="true"
     [valueLength]="9" />
   <zz-color-axis
-    class="mb-2 mt-1 block"
+    class="-mt-2.5 block"
     [height]="height()"
     [pasos]="pasos()"
     [shadow]="!continuo()"
@@ -24,7 +25,8 @@
     [max]="max()"
     [fixedValues]="fixedValues()"></zz-color-axis>
   <zz-slider-field
-    class="text-sm"
+    class="text-sm relative -mt-2.5 block"
+    [showTrack]="false"
     [fieldName]="'max'"
     [min]="variableComponent().min"
     [max]="variableComponent().max"

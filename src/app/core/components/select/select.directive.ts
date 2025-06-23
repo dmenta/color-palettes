@@ -33,7 +33,7 @@ export class SelectDirective {
     { directive: DisabledDirective, inputs: ["zz-disabled:zzDisabled"] },
   ],
   host: {
-    class: "p-1.5 border-1 border-gray-500 w-16 text-right",
+    class: "p-1 border-1 border-gray-500 w-14 text-right",
   },
 })
 export class InputDirective {}

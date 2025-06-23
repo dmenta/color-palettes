@@ -2,9 +2,10 @@
   <form [formGroup]="config" class="min-w-fit h-fit space-y-8">
     @for(indice of indices; track indice){ @let component = this.model().components[indice]; @let fixedIndexes=
     indice===0 ? [1,2] : [0,indice===2?1:2];
-    <div [zz-collapse-vertical]="false">
+    <div class="relative">
       <zz-slider-field
-        class="text-sm"
+        class="text-sm relative"
+        [showTrack]="false"
         [fieldName]="'v' + indice"
         [min]="component.min"
         [max]="component.max"
@@ -17,7 +18,7 @@
         [showValue]="true"
         [valueLength]="9" />
       <zz-color-axis
-        class="mb-2 mt-1 block"
+        class="mb-2 -mt-2.5 block"
         [height]="height()"
         [pasos]="pasos()"
         [shadow]="!continuo()"

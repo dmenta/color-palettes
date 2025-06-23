@@ -66,7 +66,7 @@ export class ColorRangeSelectorComponent {
     f1: new FormControl(this.model().components[this.fixedIndexs()[1]].defaultValue, { nonNullable: true }),
   });
 
-  @Output() change = this.config.valueChanges;
+  @Output() colorChange = this.config.valueChanges;
 
   constructor() {
     effect(() => {

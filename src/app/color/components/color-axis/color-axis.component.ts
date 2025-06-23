@@ -1,12 +1,12 @@
 import { Component, computed, input } from "@angular/core";
-import { ColorSwatchDirective } from "../color-swatch/color-swatch.directive";
+import { FullWidthColorSwatchDirective } from "../color-swatch/color-swatch.directive";
 import { ColorModelName, Triple, Tuple } from "../../model/colors.model";
 import { namedColorModels } from "../../model/color-models-definitions";
 import { borderRadius } from "../../../core/directives/rounded.directive";
 
 @Component({
   selector: "zz-color-axis",
-  imports: [ColorSwatchDirective],
+  imports: [FullWidthColorSwatchDirective],
   templateUrl: "./color-axis.component.html",
 })
 export class ColorAxisComponent {

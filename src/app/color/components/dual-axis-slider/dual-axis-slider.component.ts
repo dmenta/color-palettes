@@ -12,7 +12,7 @@ import { Tuple } from "../../model/colors.model";
   templateUrl: "./dual-axis-slider.component.html",
 })
 export class DualAxisSliderComponent {
-  model = input(namedColorModels["oklch"]);
+  model = input(namedColorModels["rgb"]);
   shadow = input(true);
   rounded = input("large" as borderRadius);
   width = input<number | "full">("full");
@@ -31,7 +31,7 @@ export class DualAxisSliderComponent {
     max: new FormControl(this.model().components[this.variable()].max, { nonNullable: true }),
   });
 
-  @Output() change = this.formDual.valueChanges;
+  @Output() colorChange = this.formDual.valueChanges;
 
   componentStep(precision: number): number {
     return 1 / Math.pow(10, precision);

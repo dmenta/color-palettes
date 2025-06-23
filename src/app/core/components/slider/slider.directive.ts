@@ -23,15 +23,18 @@ focus:[&::-webkit-slider-thumb]:outline-2
 focus:[&::-webkit-slider-thumb]:outline-offset-0
 [&::-webkit-slider-runnable-track]:h-[.125rem]
 [&::-webkit-slider-runnable-track]:rounded-full
-[&::-webkit-slider-runnable-track]:bg-black/20 
- focus:[&::-webkit-slider-runnable-track]:bg-black/50 
- dark:[&::-webkit-slider-runnable-track]:bg-white/30
-  focus:dark:[&::-webkit-slider-runnable-track]:bg-white/50`,
+`,
+    "[class]": `{'dark:[&::-webkit-slider-runnable-track]:bg-white/30':showTrack(), 
+          '[&::-webkit-slider-runnable-track]:bg-black/20': showTrack(),
+          'focus:[&::-webkit-slider-runnable-track]:bg-black/50':showTrack(), 
+          'focus:dark:[&::-webkit-slider-runnable-track]:bg-white/50':showTrack()}`,
   },
   hostDirectives: [WidthFullDirective, AppearanceNoneDirective, FlexDirective],
 })
 export class SliderSlimDirective {
   accent = input(false);
+
+  showTrack = input(true);
 
   step = input(1, {
     alias: "zzStep",

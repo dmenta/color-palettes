@@ -34,5 +34,5 @@ export class ColorConfigComponent {
     model: new FormControl<ColorModel>(this.current, { nonNullable: true }),
   });
 
-  @Output() change = this.config.valueChanges;
+  @Output() configChange = this.config.valueChanges;
 }
