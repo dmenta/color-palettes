@@ -38,7 +38,7 @@ export class SliderSlimDirective {
 
   step = input(1, {
     alias: "zzStep",
-    transform: (value?: number) => Math.max(Math.min(100, value ?? 1), 0.001),
+    transform: (value?: number) => Math.max(Math.min(400, value ?? 1), 0.001),
   });
 
   @HostBinding("step")

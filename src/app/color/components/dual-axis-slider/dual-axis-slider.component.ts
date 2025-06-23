@@ -20,7 +20,7 @@ export class DualAxisSliderComponent {
   pasos = input(10);
   continuo = input(false);
   min = input(0);
-  max = input(100);
+  max = input(400);
   fixedValues = input<Tuple<number>>([0, 0]);
   variable = input<0 | 1 | 2>(0);
 
@@ -28,7 +28,7 @@ export class DualAxisSliderComponent {
 
   formDual = new FormGroup({
     min: new FormControl(this.model().components[this.variable()].min, { nonNullable: true }),
-    max: new FormControl(this.model().components[this.variable()].max, { nonNullable: true }),
+    max: new FormControl(360, { nonNullable: true }),
   });
 
   @Output() colorChange = this.formDual.valueChanges;

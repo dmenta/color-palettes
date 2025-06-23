@@ -61,7 +61,7 @@ export class ColorRangeSelectorComponent {
 
   config = new FormGroup({
     min: new FormControl(this.model().components[this.variable()].min, { nonNullable: true }),
-    max: new FormControl(this.model().components[this.variable()].max, { nonNullable: true }),
+    max: new FormControl(500, { nonNullable: true }),
     f0: new FormControl(this.model().components[this.fixedIndexs()[0]].defaultValue, { nonNullable: true }),
     f1: new FormControl(this.model().components[this.fixedIndexs()[1]].defaultValue, { nonNullable: true }),
   });

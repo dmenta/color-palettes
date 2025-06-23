@@ -1,4 +1,4 @@
-import { Component, computed, signal } from "@angular/core";
+import { Component, computed, input, signal } from "@angular/core";
 import { ReactiveFormsModule, FormsModule } from "@angular/forms";
 import { namedColorModels } from "../../model/color-models-definitions";
 import { ColorModel, Triple, Tuple } from "../../model/colors.model";
@@ -22,15 +22,16 @@ import { ColorRangeSelectorComponent } from "../color-range-selector/color-range
 export class ColorPaletteComponent {
   current: ColorModel = namedColorModels["oklch"];
 
+  variable = input<0 | 1 | 2>(2);
+
   config = signal({
     alto: 25,
     pasos: 10,
     continuo: false,
-    variable: 0 as 0 | 1 | 2,
   });
 
   fixedIndexs = computed(() => {
-    const variable = this.config().variable;
+    const variable = this.variable();
     if (variable === 0) {
       return [1, 2];
     } else if (variable === 1) {
@@ -40,7 +41,7 @@ export class ColorPaletteComponent {
   });
 
   currentColor = computed(() => {
-    const variable = this.config().variable;
+    const variable = this.variable();
     const fixedIndexs = this.fixedIndexs();
     const valores = this.valores();
 

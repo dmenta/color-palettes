@@ -11,12 +11,13 @@
       [model]="current"
       [continuo]="true"
       [height]="config().alto"
+      [variable]="variable()"
       [pasos]="20"></zz-color-range-selector>
     <zz-color-axis
       class="mt-10 block p-6"
       [modelName]="current.name"
       [pasos]="config().pasos"
-      [variable]="0"
+      [variable]="variable()"
       [min]="valores().min"
       [max]="valores().max"
       [fixedValues]="valores().fixedValues"
