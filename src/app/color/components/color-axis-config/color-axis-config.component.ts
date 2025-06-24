@@ -6,6 +6,7 @@ import { ToggleCheckComponent } from "../../../core/components/toggle-check/togg
 import { PanelDirective } from "../../../core/directives/containers/panel.directive";
 import { RoundedDirective } from "../../../core/directives/rounded.directive";
 import { debounceTime, distinctUntilChanged, startWith } from "rxjs";
+import { AxisConfig } from "../../model/colors.model";
 
 @Component({
   selector: "zz-color-axis-config",
@@ -27,15 +28,11 @@ export class ColorAxisConfigComponent {
         continuo: FormControl<boolean>;
         pasos: FormControl<number>;
         automatico: FormControl<boolean>;
+        showRGB: FormControl<boolean>;
       }>
     | undefined = undefined;
 
-  @Output() axisConfigChange = new EventEmitter<{
-    alto: number;
-    continuo: boolean;
-    pasos: number;
-    automatico: boolean;
-  }>();
+  @Output() axisConfigChange = new EventEmitter<AxisConfig>();
 
   ngOnInit() {
     this.configGroup = new FormGroup({
@@ -43,6 +40,7 @@ export class ColorAxisConfigComponent {
       continuo: new FormControl<boolean>(false, { nonNullable: true }),
       pasos: new FormControl<number>(15, { nonNullable: true, validators: [Validators.min(1), Validators.max(100)] }),
       automatico: new FormControl<boolean>(true, { nonNullable: true }),
+      showRGB: new FormControl<boolean>(false, { nonNullable: true }),
     });
 
     this.configGroup.valueChanges
@@ -58,6 +56,7 @@ export class ColorAxisConfigComponent {
             continuo: value.continuo,
             pasos: value.pasos,
             automatico: value.automatico,
+            showRGB: value.showRGB,
           });
         }
       });

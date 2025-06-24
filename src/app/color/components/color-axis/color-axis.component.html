@@ -1,12 +1,18 @@
 <div class="flex flex-row justify-between rounded-sm overflow-hidden">
   @for(indice of indices(); track $index){
   <div
-    class="grow flex items-center text-sm justify-center overflow-hidden"
+    class="grow flex flex-row items-center text-xs justify-center overflow-hidden"
     [shadow]="shadow()"
     [roundedSize]="rounded()"
     [height]="height()"
     color-swatch-full
     [model]="model()"
-    [values]="indice"></div>
+    [values]="indice.valores">
+    @if(showRGB()){
+    <pre [style.color]="indice.color | toContrast">
+      {{ indice.color | toRgb }}
+    </pre>
+    }
+  </div>
   }
 </div>

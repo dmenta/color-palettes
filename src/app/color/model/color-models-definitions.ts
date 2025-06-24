@@ -12,7 +12,7 @@ export const colorModels: ColorModel[] = [
     new ColorComponent("Lightness", 100, "%", 0, 35),
   ]),
   new ColorModel("oklch", [
-    new ColorComponent("Lightness", 100, "%", 2, 35),
+    new ColorComponent("Lightness", 1, "", 3, 35),
     new ColorComponent("Chroma", 0.3, "", 3, 20),
     new ColorComponent("Hue", 360, "", 2, 55),
   ]),

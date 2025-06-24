@@ -70,3 +70,5 @@ export class ColorModel {
     ]);
   }
 }
+
+export type AxisConfig = { alto: number; continuo: boolean; pasos: number; automatico: boolean; showRGB: boolean };

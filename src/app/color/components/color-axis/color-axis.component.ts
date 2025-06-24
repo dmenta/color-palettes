@@ -2,10 +2,11 @@ import { Component, computed, input, Signal } from "@angular/core";
 import { FullWidthColorSwatchDirective } from "../color-swatch/color-swatch.directive";
 import { ColorComponent, ColorModel, Triple, Tuple } from "../../model/colors.model";
 import { borderRadius } from "../../../core/directives/rounded.directive";
+import { ColorToContrastPipe, ColorToRgbPipe } from "../color-swatch/color-to-rgb.pipe";
 
 @Component({
   selector: "zz-color-axis",
-  imports: [FullWidthColorSwatchDirective],
+  imports: [FullWidthColorSwatchDirective, ColorToRgbPipe, ColorToContrastPipe],
   templateUrl: "./color-axis.component.html",
 })
 export class ColorAxisComponent {
@@ -16,6 +17,7 @@ export class ColorAxisComponent {
   min = input<number | undefined>(undefined);
   max = input<number | undefined>(undefined);
 
+  showRGB = input(false);
   pasos = input(10);
   fixedValues = input<Tuple<number>>([0, 0]);
   height = input(10);
@@ -24,7 +26,7 @@ export class ColorAxisComponent {
   shadow = input(true);
   rounded = input("large" as borderRadius);
 
-  indices: Signal<Triple<number>[]> | undefined = undefined;
+  indices: Signal<{ valores: Triple<number>; color: string }[]> | undefined = undefined;
 
   ngOnInit() {
     this.indices = computed(() => {
@@ -43,7 +45,7 @@ export class ColorAxisComponent {
         const value = this.min() + i * step;
         const valores = [...baseArray];
         valores[this.variable()] = value;
-        return valores as Triple<number>;
+        return { valores: valores as Triple<number>, color: model.convert([valores[0], valores[1], valores[2]]) };
       });
     });
   }

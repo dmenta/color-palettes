@@ -1,6 +1,6 @@
 import { Component, computed, Signal, signal } from "@angular/core";
 import { ReactiveFormsModule, FormsModule } from "@angular/forms";
-import { ColorComponent, ColorModel, Triple, Tuple } from "../../model/colors.model";
+import { AxisConfig, ColorComponent, ColorModel, Triple, Tuple } from "../../model/colors.model";
 import { ColorSampleComponent } from "../color-sample/color-sample.component";
 import { ColorAxisConfigComponent } from "../color-axis-config/color-axis-config.component";
 import { ColorAxisComponent } from "../color-axis/color-axis.component";
@@ -21,15 +21,7 @@ import { ColorConfigComponent } from "../color-config/color-config.component";
   templateUrl: "./color-palette.component.html",
 })
 export class ColorPaletteComponent {
-  config = signal<
-    | {
-        alto: number;
-        continuo: boolean;
-        pasos: number;
-        automatico: boolean;
-      }
-    | undefined
-  >(undefined);
+  config = signal<AxisConfig | undefined>(undefined);
 
   colorConfig = signal<
     | {
@@ -60,7 +52,7 @@ export class ColorPaletteComponent {
       return config?.pasos ?? 10;
     });
   }
-  configChanged(config: { alto: number; continuo: boolean; pasos: number; automatico: boolean }) {
+  configChanged(config: AxisConfig) {
     this.config.set(config);
   }
   colorConfigChanged(config: { model: ColorModel; variable: ColorComponent; variableIndex: 0 | 1 | 2 }) {

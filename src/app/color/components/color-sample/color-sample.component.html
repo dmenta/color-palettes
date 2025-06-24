@@ -1,7 +1,10 @@
 <div [zz-shadow]="true" zz-rounded="large" class="min-w-fit">
-  <div [width]="'full'" color-swatch-square [model]="colorModel()" [values]="currentColor()"></div>
+  <div [height]="200" color-swatch-full [model]="colorModel()" [values]="currentColor()"></div>
   <div
-    class="justify-center whitespace-nowrap w-full h-12 flex flex-row items-center text-md dark:bg-zinc-900 bg-zinc-200 dark:text-zinc-300 text-zinc-700">
+    class="justify-center w-full min-h-10 max-h-20 py-2 flex flex-col items-center text-md dark:bg-zinc-900 bg-zinc-200 dark:text-zinc-300 text-zinc-700">
     {{ texto() }}
+    @if(colorModel().name!=="rgb"){
+    <span class="text-sm mt-1 opacity-80"> {{ texto() | toRgb }} </span>
+    }
   </div>
 </div>

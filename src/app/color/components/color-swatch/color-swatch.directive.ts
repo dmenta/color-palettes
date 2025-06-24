@@ -1,4 +1,4 @@
-import { computed, Directive, HostBinding, input } from "@angular/core";
+import { computed, Directive, HostBinding, HostListener, input } from "@angular/core";
 import { ColorModel, Triple } from "../../model/colors.model";
 import { RoundedDirective } from "../../../core/directives/rounded.directive";
 import { ShadowDirective } from "../../../core/directives/shadow.directive";
