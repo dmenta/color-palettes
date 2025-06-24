@@ -44,7 +44,7 @@ export class ColorSamplerComponent {
     this.colorConfig.set(config);
   }
 
-  colorChange(valores: Partial<{ v0: number; v1: number; v2: number }>) {
-    this.currentColor.set([valores.v0, valores.v1, valores.v2]);
+  colorChange(valores: Triple<number>) {
+    this.currentColor.set(valores);
   }
 }

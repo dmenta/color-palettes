@@ -1,6 +1,6 @@
 <div zz-panel class="p-6 h-fit">
   <form [formGroup]="config" class="min-w-fit h-fit space-y-8">
-    @for(indice of indices; track indice){ @let component = this.model().components[indice]; @let fixedIndexes=
+    @for(indice of indices; track indice){ @let component = colorModel().components[indice]; @let fixedIndexes=
     indice===0 ? [1,2] : [0,indice===2?1:2];
     <div class="relative">
       <zz-slider-field
@@ -24,9 +24,9 @@
         [shadow]="!continuo()"
         [rounded]="continuo() ? 'none' : 'normal'"
         [variable]="indice"
-        [model]="this.model()"
-        [min]="this.model().components[indice].min"
-        [max]="this.model().components[indice].max"
+        [model]="colorModel()"
+        [min]="colorModel().components[indice].min"
+        [max]="colorModel().components[indice].max"
         [fixedValues]="[
           this.config.get('v' + fixedIndexes[0]).value,
           this.config.get('v' + fixedIndexes[1]).value
