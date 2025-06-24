@@ -23,23 +23,26 @@ import { debounceTime, distinctUntilChanged, startWith } from "rxjs";
 export class ColorAxisConfigComponent {
   configGroup:
     | FormGroup<{
-        pasos: FormControl<number>;
         alto: FormControl<number>;
         continuo: FormControl<boolean>;
+        pasos: FormControl<number>;
+        automatico: FormControl<boolean>;
       }>
     | undefined = undefined;
 
   @Output() axisConfigChange = new EventEmitter<{
-    pasos: number;
     alto: number;
     continuo: boolean;
+    pasos: number;
+    automatico: boolean;
   }>();
 
   ngOnInit() {
     this.configGroup = new FormGroup({
-      pasos: new FormControl<number>(10, { nonNullable: true, validators: [Validators.min(1), Validators.max(100)] }),
       alto: new FormControl<number>(100, { nonNullable: true, validators: [Validators.min(1), Validators.max(180)] }),
       continuo: new FormControl<boolean>(false, { nonNullable: true }),
+      pasos: new FormControl<number>(15, { nonNullable: true, validators: [Validators.min(1), Validators.max(100)] }),
+      automatico: new FormControl<boolean>(true, { nonNullable: true }),
     });
 
     this.configGroup.valueChanges
@@ -51,9 +54,10 @@ export class ColorAxisConfigComponent {
       .subscribe((value) => {
         if (this.configGroup.valid) {
           this.axisConfigChange.emit({
-            pasos: value.pasos,
             alto: value.alto,
             continuo: value.continuo,
+            pasos: value.pasos,
+            automatico: value.automatico,
           });
         }
       });

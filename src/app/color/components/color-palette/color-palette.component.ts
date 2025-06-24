@@ -1,4 +1,4 @@
-import { Component, signal } from "@angular/core";
+import { Component, computed, Signal, signal } from "@angular/core";
 import { ReactiveFormsModule, FormsModule } from "@angular/forms";
 import { ColorComponent, ColorModel, Triple, Tuple } from "../../model/colors.model";
 import { ColorSampleComponent } from "../color-sample/color-sample.component";
@@ -24,8 +24,9 @@ export class ColorPaletteComponent {
   config = signal<
     | {
         alto: number;
-        pasos: number;
         continuo: boolean;
+        pasos: number;
+        automatico: boolean;
       }
     | undefined
   >(undefined);
@@ -41,8 +42,25 @@ export class ColorPaletteComponent {
 
   minmax = signal<Tuple<number>>([0, 0]);
   currentColor = signal<Triple<number>>([0, 0, 0]);
+  pasos: Signal<number | undefined> = undefined;
 
-  configChanged(config: { pasos: number; alto: number; continuo: boolean }) {
+  ngOnInit() {
+    this.pasos = computed(() => {
+      const config = this.config();
+      if (config.automatico) {
+        const variable = this.colorConfig()?.variable;
+        const minmax = this.minmax();
+        const pasosMax = config?.pasos ?? 10;
+
+        return Math.min(
+          pasosMax,
+          Math.max(2, Math.ceil((Math.abs(minmax[1] - minmax[0]) / (variable.max - variable.min)) * variable.steps))
+        );
+      }
+      return config?.pasos ?? 10;
+    });
+  }
+  configChanged(config: { alto: number; continuo: boolean; pasos: number; automatico: boolean }) {
     this.config.set(config);
   }
   colorConfigChanged(config: { model: ColorModel; variable: ColorComponent; variableIndex: 0 | 1 | 2 }) {

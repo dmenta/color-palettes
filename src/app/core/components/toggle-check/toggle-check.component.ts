@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  DebugElement,
   ElementRef,
   forwardRef,
   HostBinding,
@@ -29,12 +30,10 @@ export class ToggleCheckComponent implements ControlValueAccessor {
   static nextId = 0;
   controlType = "toggle-check";
 
-  @ViewChild("valor") valorInput?: ElementRef<HTMLInputElement>;
-
   @HostBinding() id = `${this.controlType}-${ToggleCheckComponent.nextId++}`;
-
+  @ViewChild("valor", { static: true }) input?: ElementRef<HTMLInputElement>;
   @Input("aria-describedby") userAriaDescribedBy?: string;
-  @Input() before: boolean = false;
+  @Input() before: boolean | undefined;
 
   @Input()
   get disabled(): boolean {
@@ -70,7 +69,9 @@ export class ToggleCheckComponent implements ControlValueAccessor {
   _renderer: Renderer2 = inject(Renderer2);
 
   writeValue(value: boolean): void {
-    this._renderer.setProperty(this.valorInput?.nativeElement, "checked", value);
+    if (this.input) {
+      this._renderer.setProperty(this.input.nativeElement, "checked", value);
+    }
   }
   registerOnChange(fn: (value: any) => void): void {
     this.onChange = fn;
@@ -79,7 +80,7 @@ export class ToggleCheckComponent implements ControlValueAccessor {
     this.onTouched = fn;
   }
   setDisabledState(isDisabled: boolean): void {
-    this._renderer.setProperty(this._elementRef.nativeElement, "disabled", isDisabled);
+    this._renderer.setProperty(this._elementRef?.nativeElement, "disabled", isDisabled);
   }
 
   onChange: (value: any) => void = (_value: any) => {};

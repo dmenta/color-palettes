@@ -11,6 +11,7 @@ export class ColorComponent {
     public max: number,
     public unit: string = "",
     public precision: number = 0,
+    public steps: number = 200,
     public min: number = 0
   ) {
     this.defaultValue = this.average(min, max);
