@@ -1,7 +1,10 @@
 <form [formGroup]="formDual" class="relative">
   @if(colorModel()){
+  <div class="absolute left-1/2 top-1">
+    <span zz-icon class="h-6">arrow_range</span>
+  </div>
   <zz-slider-field
-    class="text-sm relative"
+    class="text-sm relative font-bold"
     [showTrack]="false"
     fieldName="min"
     [min]="variable().min"

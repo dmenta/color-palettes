@@ -9,9 +9,9 @@
       [for]="fieldName"
       [zz-text-length]="labelLength"
       [class.opacity-80]="defaultValue !== undefined && control.value === defaultValue"
-      (dblclick)="control.reset()"
-      >{{ label }}</label
-    >
+      (dblclick)="control.reset()">
+      {{ label }}
+    </label>
     }@else{
     <div></div>
     } @if(showValue) {

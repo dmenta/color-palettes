@@ -1,7 +1,6 @@
 import { Component, effect, EventEmitter, input, Output, Signal, signal } from "@angular/core";
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { SliderFieldComponent } from "../../../core/components/slider-field/slider-field.component";
-import { CollapseVerticalDirective } from "../../../core/directives/collapse-vertical.directive";
 import { PanelDirective } from "../../../core/directives/containers/panel.directive";
 import { ColorAxisComponent } from "../color-axis/color-axis.component";
 import { DualAxisSliderComponent } from "../dual-axis-slider/dual-axis-slider.component";
@@ -13,11 +12,9 @@ import { ColorComponent, ColorModel, Triple, Tuple } from "../../model/colors.mo
     SliderFieldComponent,
     FormsModule,
     ReactiveFormsModule,
-    CollapseVerticalDirective,
     PanelDirective,
     ColorAxisComponent,
     DualAxisSliderComponent,
-    CollapseVerticalDirective,
   ],
   templateUrl: "./color-range-selector.component.html",
 })

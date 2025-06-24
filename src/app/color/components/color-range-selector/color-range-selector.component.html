@@ -1,9 +1,10 @@
 <div zz-panel class="p-6 h-fit">
-  <form [formGroup]="configGroup" class="min-w-fit h-fit space-y-8">
+  <form [formGroup]="configGroup" class="min-w-fit h-fit">
     @for(indice of indices; track $index){ @let component = colorModel().components[indice];
-    <div [zz-collapse-vertical]="false">
+    <div class="h-[90px]">
       @if(indice===variableIndex()){
       <zz-dual-axis-slider
+        class="block"
         [model]="colorModel()"
         [variableIndex]="indice"
         [variable]="variable()"

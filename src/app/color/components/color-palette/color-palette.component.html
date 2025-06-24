@@ -1,29 +1,32 @@
 <div class="grid grid-cols-[270px_minmax(500px,_1fr)] items-top gap-6 p-6">
   <div>
     @if(config()){
-    <zz-color-sample [model]="config().model" [values]="currentColor()"></zz-color-sample>
+    <zz-color-sample [model]="colorConfig().model" [values]="currentColor()"></zz-color-sample>
     }
     <div class="w-full mt-4">
-      <zz-color-axis-config (configChange)="configChanged($event)"></zz-color-axis-config>
+      <zz-color-config (colorConfigChange)="colorConfigChanged($event)"></zz-color-config>
+    </div>
+    <div class="w-full mt-4">
+      <zz-color-axis-config (axisConfigChange)="configChanged($event)"></zz-color-axis-config>
     </div>
   </div>
   <div class="relative">
     <zz-color-range-selector
-      [model]="config().model"
+      [model]="colorConfig().model"
       [continuo]="true"
       [height]="20"
-      [variable]="config().variable"
-      [variableIndex]="config().variableIndex"
+      [variable]="colorConfig().variable"
+      [variableIndex]="colorConfig().variableIndex"
       [pasos]="20"
       (colorChange)="colorChange($event)"
       (rangeChange)="rangeChange($event)">
     </zz-color-range-selector>
     <zz-color-axis
       class="mt-10 block p-6"
-      [model]="config().model"
+      [model]="colorConfig().model"
       [pasos]="config().pasos"
-      [variableComponent]="config().variable"
-      [variable]="config().variableIndex"
+      [variableComponent]="colorConfig().variable"
+      [variable]="colorConfig().variableIndex"
       [min]="minmax()[0]"
       [max]="minmax()[1]"
       [color-base]="currentColor()"

@@ -42,6 +42,7 @@ export class SelectComponent<T extends object | string | number, K extends keyof
   @ViewChild("valor") valorInput?: ElementRef<HTMLSelectElement>;
 
   @HostBinding() id = `${this.controlType}-${SelectComponent.nextId++}`;
+  @HostBinding() selectId = `${this.id}-select`;
 
   @Input("aria-describedby") userAriaDescribedBy?: string;
 

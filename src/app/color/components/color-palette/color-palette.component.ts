@@ -5,6 +5,7 @@ import { ColorSampleComponent } from "../color-sample/color-sample.component";
 import { ColorAxisConfigComponent } from "../color-axis-config/color-axis-config.component";
 import { ColorAxisComponent } from "../color-axis/color-axis.component";
 import { ColorRangeSelectorComponent } from "../color-range-selector/color-range-selector.component";
+import { ColorConfigComponent } from "../color-config/color-config.component";
 
 @Component({
   selector: "zz-color-palette",
@@ -15,17 +16,24 @@ import { ColorRangeSelectorComponent } from "../color-range-selector/color-range
     ColorSampleComponent,
     ColorRangeSelectorComponent,
     ColorAxisConfigComponent,
+    ColorConfigComponent,
   ],
   templateUrl: "./color-palette.component.html",
 })
 export class ColorPaletteComponent {
   config = signal<
     | {
-        model: ColorModel;
-        variable: ColorComponent;
         alto: number;
         pasos: number;
         continuo: boolean;
+      }
+    | undefined
+  >(undefined);
+
+  colorConfig = signal<
+    | {
+        model: ColorModel;
+        variable: ColorComponent;
         variableIndex: 0 | 1 | 2;
       }
     | undefined
@@ -34,14 +42,11 @@ export class ColorPaletteComponent {
   minmax = signal<Tuple<number>>([0, 0]);
   currentColor = signal<Triple<number>>([0, 0, 0]);
 
-  configChanged(
-    config: Partial<{ pasos: number; alto: number; continuo: boolean; model: ColorModel; variable: ColorComponent }>
-  ) {
-    this.config.set({
-      ...this.config(),
-      ...config,
-      variableIndex: config.model?.components.findIndex((c) => c.name === (config.variable?.name ?? "")) as 0 | 1 | 2,
-    });
+  configChanged(config: { pasos: number; alto: number; continuo: boolean }) {
+    this.config.set(config);
+  }
+  colorConfigChanged(config: { model: ColorModel; variable: ColorComponent; variableIndex: 0 | 1 | 2 }) {
+    this.colorConfig.set(config);
     this.minmax.set(config.variable ? [config.variable.min, config.variable.max] : ([0, 0] as Tuple<number>));
     this.currentColor.set(config.model?.defaultValues() ?? ([0, 0, 0] as Triple<number>));
   }

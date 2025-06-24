@@ -59,6 +59,7 @@
               "buildTarget": "novedades:build:production"
             },
             "development": {
+              "port": 5200,
               "buildTarget": "novedades:build:development"
             }
           },

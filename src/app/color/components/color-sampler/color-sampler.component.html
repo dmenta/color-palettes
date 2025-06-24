@@ -1,16 +1,19 @@
 <div class="grid grid-cols-[333px_minmax(500px,_1fr)] items-top p-4">
   <div class="p-4">
     <div>
-      <zz-color-sample [height]="300" [model]="current" [values]="currentColor()"></zz-color-sample>
+      <zz-color-sample [height]="300" [model]="colorConfig().model" [values]="currentColor()"></zz-color-sample>
     </div>
     <div class="w-full mt-4">
-      <zz-color-config (configChange)="configChanged($event)"></zz-color-config>
+      <zz-color-config (colorConfigChange)="colorConfigChanged($event)"></zz-color-config>
+    </div>
+    <div class="w-full mt-4">
+      <zz-color-axis-config (axisConfigChange)="axisConfigChanged($event)"></zz-color-axis-config>
     </div>
   </div>
   <zz-color-selector
     class="p-4"
     (colorChange)="colorChange($event)"
-    [model]="current"
+    [model]="colorConfig().model"
     [continuo]="config().continuo"
     [height]="config().alto"
     [pasos]="config().pasos"></zz-color-selector>

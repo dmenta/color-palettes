@@ -4,11 +4,15 @@ import { ColorAxisComponent } from "../color-axis/color-axis.component";
 import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { borderRadius } from "../../../core/directives/rounded.directive";
 import { ColorComponent, ColorModel, Triple, Tuple } from "../../model/colors.model";
+import { IconDirective } from "../../../core/components/icon/icon.directive";
 
 @Component({
   selector: "zz-dual-axis-slider",
-  imports: [SliderFieldComponent, ColorAxisComponent, ReactiveFormsModule],
+  imports: [SliderFieldComponent, ColorAxisComponent, ReactiveFormsModule, IconDirective],
   templateUrl: "./dual-axis-slider.component.html",
+  host: {
+    class: "block w-full",
+  },
 })
 export class DualAxisSliderComponent {
   colorBase = input<Triple<number> | undefined>(undefined, { alias: "color-base" });
