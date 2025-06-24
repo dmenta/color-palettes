@@ -1,4 +1,8 @@
-<div class="w-full p-1 bg-transparent" zz-overflow-visible [formGroup]="formGroup">
+<div
+  class="w-full p-1 bg-transparent flex flex-col"
+  [class.flex-col-reverse]="!labelsAbove"
+  zz-overflow-visible
+  [formGroup]="formGroup">
   <div class="flex flex-row items-base justify-between" zz-overflow-visible>
     @if(showLabel) {
     <label

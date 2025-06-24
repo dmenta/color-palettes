@@ -1,11 +1,11 @@
-import { Component, computed, effect, input, Output, signal } from "@angular/core";
+import { Component, effect, EventEmitter, input, Output, Signal, signal } from "@angular/core";
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { namedColorModels } from "../../model/color-models-definitions";
 import { SliderFieldComponent } from "../../../core/components/slider-field/slider-field.component";
 import { CollapseVerticalDirective } from "../../../core/directives/collapse-vertical.directive";
 import { PanelDirective } from "../../../core/directives/containers/panel.directive";
 import { ColorAxisComponent } from "../color-axis/color-axis.component";
 import { DualAxisSliderComponent } from "../dual-axis-slider/dual-axis-slider.component";
+import { ColorComponent, ColorModel, Triple, Tuple } from "../../model/colors.model";
 
 @Component({
   selector: "zz-color-range-selector",
@@ -22,62 +22,69 @@ import { DualAxisSliderComponent } from "../dual-axis-slider/dual-axis-slider.co
   templateUrl: "./color-range-selector.component.html",
 })
 export class ColorRangeSelectorComponent {
-  onComponentAChange($event: Partial<{ min: number; max: number }>) {
-    this.config.patchValue({
-      min: $event.min ?? this.config.value.min,
-      max: $event.max ?? this.config.value.max,
-    });
-    this.minmax.set({
-      min: $event.min ?? this.minmax().min,
-      max: $event.max ?? this.minmax().max,
-    });
-  }
-
-  model = input(namedColorModels["oklch"]);
+  colorModel = input<ColorModel | undefined>(undefined, { alias: "model" });
   width = input<number | "full">("full");
   height = input(75);
   pasos = input(10);
   continuo = input(false);
 
-  variable = input<0 | 1 | 2>(0);
-
-  fixedIndexs = computed(() => {
-    if (this.variable() === 0) {
-      return [1, 2];
-    } else if (this.variable() === 1) {
-      return [0, 2];
-    }
-    return [0, 1];
-  });
+  variable = input<ColorComponent | undefined>(undefined);
+  variableIndex = input<0 | 1 | 2 | undefined>(undefined);
   indices: (0 | 1 | 2)[] = [0, 1, 2];
 
-  minmax = signal({
-    min: this.model().components[this.variable()].min,
-    max: this.model().components[this.variable()].max,
-  });
-  variableAverage = computed(() =>
-    this.model().components[this.variable()].average(this.minmax().min, this.minmax().max)
-  );
+  currentColor = signal<Triple<number>>([0, 0, 0]);
 
-  config = new FormGroup({
-    min: new FormControl(this.model().components[this.variable()].min, { nonNullable: true }),
-    max: new FormControl(500, { nonNullable: true }),
-    f0: new FormControl(this.model().components[this.fixedIndexs()[0]].defaultValue, { nonNullable: true }),
-    f1: new FormControl(this.model().components[this.fixedIndexs()[1]].defaultValue, { nonNullable: true }),
-  });
+  variableAverage: Signal<number> | undefined = undefined;
+  configGroup: FormGroup<{
+    v0: FormControl<number>;
+    v1: FormControl<number>;
+    v2: FormControl<number>;
+  }>;
 
-  @Output() colorChange = this.config.valueChanges;
+  @Output() colorChange = new EventEmitter<Triple<number>>();
+  @Output() rangeChange = new EventEmitter<Tuple<number>>();
 
   constructor() {
     effect(() => {
-      const model = this.model();
-      this.config.patchValue({
-        min: model.components[this.variable()].min,
-        max: model.components[this.variable()].max,
-        f0: model.components[this.fixedIndexs()[0]].defaultValue,
-        f1: model.components[this.fixedIndexs()[1]].defaultValue,
-      });
+      const variable = this.variable();
+      if (!variable) {
+        return;
+      }
+
+      const colorModel = this.colorModel();
+
+      this.currentColor.set(colorModel?.defaultValues() ?? ([0, 0, 0] as Triple<number>));
+      this.configGroup.patchValue(
+        {
+          v0: colorModel?.components[0].defaultValue ?? 0,
+          v1: colorModel?.components[1].defaultValue ?? 0,
+          v2: colorModel?.components[2].defaultValue ?? 0,
+        },
+        { emitEvent: true }
+      );
     });
+  }
+  ngOnInit() {
+    const colorModel = this.colorModel();
+
+    this.configGroup = new FormGroup({
+      v0: new FormControl(colorModel.components[0].defaultValue, { nonNullable: true }),
+      v1: new FormControl(colorModel.components[1].defaultValue, { nonNullable: true }),
+      v2: new FormControl(colorModel.components[2].defaultValue, { nonNullable: true }),
+    });
+
+    this.configGroup.valueChanges.subscribe(() => {
+      const { v0, v1, v2 } = this.configGroup.value;
+      const color: Triple<number> = [v0, v1, v2] as Triple<number>;
+      this.currentColor.set(color);
+      this.colorChange.emit(color);
+    });
+  }
+  onVariableChange(minmax: Tuple<number>) {
+    this.configGroup.patchValue({
+      ["v" + this.variableIndex()]: (minmax[0] + minmax[1]) / 2,
+    });
+    this.rangeChange.emit(minmax);
   }
   componentStep(precision: number): number {
     return 1 / Math.pow(10, precision);

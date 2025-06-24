@@ -1,7 +1,6 @@
-import { Component, computed, input, signal } from "@angular/core";
+import { Component, signal } from "@angular/core";
 import { ReactiveFormsModule, FormsModule } from "@angular/forms";
-import { namedColorModels } from "../../model/color-models-definitions";
-import { ColorModel, Triple, Tuple } from "../../model/colors.model";
+import { ColorComponent, ColorModel, Triple, Tuple } from "../../model/colors.model";
 import { ColorSampleComponent } from "../color-sample/color-sample.component";
 import { ColorAxisConfigComponent } from "../color-axis-config/color-axis-config.component";
 import { ColorAxisComponent } from "../color-axis/color-axis.component";
@@ -20,58 +19,37 @@ import { ColorRangeSelectorComponent } from "../color-range-selector/color-range
   templateUrl: "./color-palette.component.html",
 })
 export class ColorPaletteComponent {
-  current: ColorModel = namedColorModels["oklch"];
+  config = signal<
+    | {
+        model: ColorModel;
+        variable: ColorComponent;
+        alto: number;
+        pasos: number;
+        continuo: boolean;
+        variableIndex: 0 | 1 | 2;
+      }
+    | undefined
+  >(undefined);
 
-  variable = input<0 | 1 | 2>(2);
+  minmax = signal<Tuple<number>>([0, 0]);
+  currentColor = signal<Triple<number>>([0, 0, 0]);
 
-  config = signal({
-    alto: 25,
-    pasos: 10,
-    continuo: false,
-  });
-
-  fixedIndexs = computed(() => {
-    const variable = this.variable();
-    if (variable === 0) {
-      return [1, 2];
-    } else if (variable === 1) {
-      return [0, 2];
-    }
-    return [0, 1];
-  });
-
-  currentColor = computed(() => {
-    const variable = this.variable();
-    const fixedIndexs = this.fixedIndexs();
-    const valores = this.valores();
-
-    const valoresResolved = [0, 0, 0];
-    valoresResolved[fixedIndexs[0]] = valores.fixedValues[0];
-    valoresResolved[fixedIndexs[1]] = valores.fixedValues[1];
-    valoresResolved[variable] = this.current.components[variable].average(valores.min, valores.max);
-
-    return valoresResolved as Triple<number>;
-  });
-
-  valores = signal({
-    min: this.current.components[0].defaultValue,
-    max: this.current.components[0].defaultValue,
-    fixedValues: [this.current.components[1].defaultValue, this.current.components[2].defaultValue] as Tuple<number>,
-  });
-
-  configChanged(config: Partial<{ pasos: number; alto: number; continuo: boolean; model: ColorModel }>) {
-    this.config.set({ ...this.config(), ...config });
-    this.current = config.model || this.current;
+  configChanged(
+    config: Partial<{ pasos: number; alto: number; continuo: boolean; model: ColorModel; variable: ColorComponent }>
+  ) {
+    this.config.set({
+      ...this.config(),
+      ...config,
+      variableIndex: config.model?.components.findIndex((c) => c.name === (config.variable?.name ?? "")) as 0 | 1 | 2,
+    });
+    this.minmax.set(config.variable ? [config.variable.min, config.variable.max] : ([0, 0] as Tuple<number>));
+    this.currentColor.set(config.model?.defaultValues() ?? ([0, 0, 0] as Triple<number>));
+  }
+  colorChange(valores: Triple<number>) {
+    this.currentColor.set(valores);
   }
 
-  colorChange(valores: Partial<{ min: number; max: number; f0: number; f1: number }>) {
-    const fixedValues = this.valores().fixedValues;
-    if (valores.f0 !== undefined) {
-      fixedValues[0] = valores.f0;
-    }
-    if (valores.f1 !== undefined) {
-      fixedValues[1] = valores.f1;
-    }
-    this.valores.set({ min: valores.min, max: valores.max, fixedValues: [valores.f0, valores.f1] });
+  rangeChange(minmax: Tuple<number>) {
+    this.minmax.set(minmax);
   }
 }

@@ -6,7 +6,7 @@
   #valor
   (focusout)="onFocusOut($event)"
   (change)="onValueChange($event)">
-  @for (item of items(); track item) {
+  @for (item of items(); track trackValue($index,item)) {
   <option [value]="item">
     {{ item[displayKey()] }}
   </option>

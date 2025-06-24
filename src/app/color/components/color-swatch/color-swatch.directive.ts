@@ -1,6 +1,5 @@
 import { computed, Directive, HostBinding, input } from "@angular/core";
-import { ColorModelName, Triple } from "../../model/colors.model";
-import { namedColorModels } from "../../model/color-models-definitions";
+import { ColorModel, Triple } from "../../model/colors.model";
 import { RoundedDirective } from "../../../core/directives/rounded.directive";
 import { ShadowDirective } from "../../../core/directives/shadow.directive";
 import { WidthFullDirective } from "../../../core/directives/width.directive";
@@ -13,23 +12,22 @@ import { WidthFullDirective } from "../../../core/directives/width.directive";
   ],
 })
 export class ColorSwatchDirective {
-  model = input<ColorModelName>("rgb");
-  values = input([50, 1, 200], {
-    transform: (values?: Triple<number>) => [...(values?.map((v, i) => this.clampValue(i, v)) ?? [0, 0, 0])],
-  });
+  model = input<ColorModel | undefined>(undefined);
+  values = input<Triple<number> | undefined>(undefined);
 
   @HostBinding("style.backgroundColor")
   get background() {
-    return this.bgColor();
+    return this.bgColor() ?? "black";
   }
   bgColor = computed(() => {
-    const valores = this.values();
-    return namedColorModels[this.model()].convert([valores[0], valores[1], valores[2]]);
-  });
+    const model = this.model();
+    if (!model) {
+      return undefined;
+    }
 
-  private clampValue(index: number, value?: number): number {
-    return namedColorModels[this.model()].components[index].clampValue(value);
-  }
+    const valores = this.values();
+    return model.convert([valores[0], valores[1], valores[2]]);
+  });
 }
 
 @Directive({

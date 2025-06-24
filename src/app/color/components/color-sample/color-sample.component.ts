@@ -1,10 +1,9 @@
-import { Component, computed, input } from "@angular/core";
+import { Component, computed, input, Signal } from "@angular/core";
 import { SquareColorSwatchDirective } from "../color-swatch/color-swatch.directive";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { RoundedDirective } from "../../../core/directives/rounded.directive";
 import { ShadowDirective } from "../../../core/directives/shadow.directive";
-import { ColorModelName, Triple } from "../../model/colors.model";
-import { namedColorModels } from "../../model/color-models-definitions";
+import { ColorModel, Triple } from "../../model/colors.model";
 
 @Component({
   selector: "zz-color-sample",
@@ -13,12 +12,17 @@ import { namedColorModels } from "../../model/color-models-definitions";
 })
 export class ColorSampleComponent {
   height = input(120);
-  model = input<ColorModelName>("rgb");
+  colorModel = input.required<ColorModel>({ alias: "model" });
 
-  values = input<Triple<number>>([0, 0, 0]);
+  values = input<Triple<number> | undefined>(undefined);
 
-  texto = computed(() => {
-    const model = namedColorModels[this.model()];
-    return model.convert(this.values());
-  });
+  currentColor: Signal<Triple<number>> | undefined = undefined;
+  texto: Signal<string> | undefined = undefined;
+
+  ngOnInit() {
+    this.currentColor = computed(
+      () => this.values() ?? this.colorModel()?.defaultValues() ?? ([0, 0, 0] as Triple<number>)
+    );
+    this.texto = computed(() => this.colorModel()?.convert(this.currentColor()) ?? "");
+  }
 }

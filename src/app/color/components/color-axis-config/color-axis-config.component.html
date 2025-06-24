@@ -1,14 +1,26 @@
-<form [formGroup]="config" class="h-fit w-full text-sm">
+<form [formGroup]="configGroup" class="h-fit w-full text-sm">
   <div zz-panel class="p-4 h-fit w-full">
     <div class="opacity-80 space-y-6">
+      <div>
+        <zz-select [upperCase]="true" [items]="models" class="w-full" displayKey="name" formControlName="model">
+        </zz-select>
+      </div>
+      <div>
+        <zz-select
+          [items]="configGroup.controls.model.value.components"
+          class="w-full"
+          displayKey="name"
+          formControlName="variable">
+        </zz-select>
+      </div>
       <div class="flex flex-row flex-wrap items-center justify-between gap-4">
         <div class="flex flex-row items-center gap-2">
           <label>Height </label>
-          <input type="number" zz-input formControlName="alto" value="10" />
+          <input type="number" zz-input formControlName="alto" value="10" [min]="1" [max]="180" />
         </div>
         <div class="flex flex-row items-center gap-4">
           <label> Steps </label>
-          <input type="number" zz-input formControlName="pasos" value="10" />
+          <input type="number" zz-input formControlName="pasos" value="10" [min]="1" [max]="100" />
         </div>
       </div>
       <div class="-ml-1">

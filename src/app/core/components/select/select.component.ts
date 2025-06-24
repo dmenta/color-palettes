@@ -33,6 +33,9 @@ import { SelectDirective } from "./select.directive";
 export class SelectComponent<T extends object | string | number, K extends keyof T = keyof T>
   implements ControlValueAccessor
 {
+  trackValue(index: number, item: T) {
+    return index + "-" + item[this.displayKey()].toString();
+  }
   static nextId = 0;
   controlType = "select";
 
@@ -88,8 +91,10 @@ export class SelectComponent<T extends object | string | number, K extends keyof
   }
 
   writeValue(value: T | null): void {
-    const indice = this.items().findIndex((item) => item === value);
-    if (indice > -1) {
+    if (value) {
+      const valueKey = value[this.displayKey()];
+      let indice = this.items().findIndex((item) => item[this.displayKey()] === valueKey);
+      indice = indice === -1 ? 0 : indice;
       const selectedOption = this.valorInput?.nativeElement.querySelector(`option:nth-of-type(${indice + 1})`);
       this._renderer.setProperty(selectedOption, "selected", "selected");
     }

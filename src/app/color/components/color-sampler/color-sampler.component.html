@@ -1,7 +1,7 @@
 <div class="grid grid-cols-[333px_minmax(500px,_1fr)] items-top p-4">
   <div class="p-4">
     <div>
-      <zz-color-sample [height]="300" [model]="current.name" [values]="currentColor()"></zz-color-sample>
+      <zz-color-sample [height]="300" [model]="current" [values]="currentColor()"></zz-color-sample>
     </div>
     <div class="w-full mt-4">
       <zz-color-config (configChange)="configChanged($event)"></zz-color-config>

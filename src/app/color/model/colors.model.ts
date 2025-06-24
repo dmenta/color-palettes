@@ -52,6 +52,15 @@ export class ColorModel {
   private template(parts: Triple<string>): string {
     return `${this.name}(${parts[0]} ${parts[1]} ${parts[2]})`;
   }
+
+  defaultValues() {
+    return [
+      this.components[0].defaultValue,
+      this.components[1].defaultValue,
+      this.components[2].defaultValue,
+    ] as Triple<number>;
+  }
+
   convert(values: Triple<number>) {
     return this.templateFn([
       this.components[0].convert(values[0]),

@@ -1,16 +1,17 @@
 <form [formGroup]="formDual" class="relative">
+  @if(colorModel()){
   <zz-slider-field
     class="text-sm relative"
     [showTrack]="false"
-    [fieldName]="'min'"
-    [min]="variableComponent().min"
-    [max]="variableComponent().max"
-    [step]="componentStep(variableComponent().precision)"
-    [label]="variableComponent().name"
-    [defaultValue]="variableComponent().min"
+    fieldName="min"
+    [min]="variable().min"
+    [max]="variable().max"
+    [step]="componentStep(variable().precision)"
+    [label]="variable().name"
+    [defaultValue]="variable().min"
     [showLabel]="true"
     [labelLength]="10"
-    [unit]="variableComponent().unit"
+    [unit]="variable().unit"
     [showValue]="true"
     [valueLength]="9" />
   <zz-color-axis
@@ -19,23 +20,26 @@
     [pasos]="pasos()"
     [shadow]="!continuo()"
     [rounded]="continuo() ? 'none' : 'normal'"
-    [variable]="variable()"
-    [modelName]="this.model().name"
+    [variable]="variableIndex()"
+    [variableComponent]="variable()"
+    [model]="this.colorModel()"
     [min]="min()"
     [max]="max()"
-    [fixedValues]="fixedValues()"></zz-color-axis>
+    [color-base]="currentColor()"></zz-color-axis>
   <zz-slider-field
     class="text-sm relative -mt-2.5 block"
+    fieldName="max"
     [showTrack]="false"
-    [fieldName]="'max'"
-    [min]="variableComponent().min"
-    [max]="variableComponent().max"
-    [step]="componentStep(variableComponent().precision)"
-    [label]="variableComponent().name"
-    [defaultValue]="variableComponent().max"
+    [labels-above]="false"
+    [min]="variable().min"
+    [max]="variable().max"
+    [step]="componentStep(variable().precision)"
+    [label]="variable().name"
+    [defaultValue]="variable().max"
     [showLabel]="false"
     [labelLength]="10"
-    [unit]="variableComponent().unit"
-    [showValue]="false"
+    [unit]="variable().unit"
+    [showValue]="true"
     [valueLength]="9" />
+  }
 </form>

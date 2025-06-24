@@ -1,9 +1,9 @@
 import { Component, effect, input, Output } from "@angular/core";
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { namedColorModels } from "../../model/color-models-definitions";
 import { SliderFieldComponent } from "../../../core/components/slider-field/slider-field.component";
 import { PanelDirective } from "../../../core/directives/containers/panel.directive";
 import { ColorAxisComponent } from "../color-axis/color-axis.component";
+import { ColorModel } from "../../model/colors.model";
 
 @Component({
   selector: "zz-color-selector",
@@ -11,7 +11,7 @@ import { ColorAxisComponent } from "../color-axis/color-axis.component";
   templateUrl: "./color-selector.component.html",
 })
 export class ColorSelectorComponent {
-  model = input(namedColorModels["rgb"]);
+  model = input<ColorModel>(undefined);
   width = input<number | "full">("full");
   height = input(75);
   pasos = input(10);
@@ -19,9 +19,9 @@ export class ColorSelectorComponent {
 
   indices: (0 | 1 | 2)[] = [0, 1, 2];
   config = new FormGroup({
-    v0: new FormControl(this.model().components[0].defaultValue, { nonNullable: true }),
-    v1: new FormControl(this.model().components[1].defaultValue, { nonNullable: true }),
-    v2: new FormControl(this.model().components[2].defaultValue, { nonNullable: true }),
+    v0: new FormControl(this.model()?.components[0].defaultValue, { nonNullable: true }),
+    v1: new FormControl(this.model()?.components[1].defaultValue, { nonNullable: true }),
+    v2: new FormControl(this.model()?.components[2].defaultValue, { nonNullable: true }),
   });
 
   @Output() colorChange = this.config.valueChanges;

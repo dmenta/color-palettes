@@ -1,25 +1,25 @@
 <div zz-panel class="p-6 h-fit">
-  <form [formGroup]="config" class="min-w-fit h-fit space-y-8">
-    @for(indice of indices; track indice){ @let component = this.model().components[indice];
+  <form [formGroup]="configGroup" class="min-w-fit h-fit space-y-8">
+    @for(indice of indices; track $index){ @let component = colorModel().components[indice];
     <div [zz-collapse-vertical]="false">
-      @if(indice===variable()){
+      @if(indice===variableIndex()){
       <zz-dual-axis-slider
-        [model]="model()"
-        [variable]="indice"
-        [min]="component.min"
-        [max]="component.max"
-        [fixedValues]="[config.controls.f0.value, config.controls.f1.value]"
+        [model]="colorModel()"
+        [variableIndex]="indice"
+        [variable]="variable()"
+        [min]="variable().min"
+        [max]="variable().max"
+        [color-base]="currentColor()"
         [height]="height()"
         [pasos]="pasos()"
         [continuo]="continuo()"
-        (colorChange)="onComponentAChange($event)">
+        (minmaxChange)="onVariableChange($event)">
       </zz-dual-axis-slider>
-      }@else { @let fixedIndex= fixedIndexs()[0]=== indice ? 1 : 0; @let variableAverage= this.variableAverage(); @let
-      fixedValue= config.get('f'+fixedIndex).value;
+      }@else {
       <zz-slider-field
         class="text-sm relative"
         [showTrack]="false"
-        [fieldName]="'f' + (fixedIndex === 1 ? 0 : 1)"
+        [fieldName]="'v' + indice"
         [min]="component.min"
         [max]="component.max"
         [step]="componentStep(component.precision)"
@@ -37,12 +37,10 @@
         [shadow]="!continuo()"
         [rounded]="continuo() ? 'none' : 'normal'"
         [variable]="indice"
-        [modelName]="this.model().name"
+        [model]="colorModel()"
         [min]="component.min"
         [max]="component.max"
-        [fixedValues]="
-          variable() > indice ? [fixedValue, variableAverage] : [variableAverage, fixedValue]
-        "></zz-color-axis>
+        [color-base]="currentColor()"></zz-color-axis>
       }
     </div>
     }

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input, Input, Optional } from "@angular/core";
+import { Component, input, Input, Optional } from "@angular/core";
 import { FieldValueComponent } from "./field-value.component";
 import { FormGroupDirective, ReactiveFormsModule } from "@angular/forms";
 import { SliderSlimDirective } from "../slider/slider.directive";
@@ -19,10 +19,10 @@ import { WidthFullDirective } from "../../directives/width.directive";
   ],
   templateUrl: "./slider-field.component.html",
   hostDirectives: [WidthFullDirective],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SliderFieldComponent {
   @Input({ required: true }) fieldName: string = "";
+  @Input("labels-above") labelsAbove = true;
   @Input() label: string = "";
   @Input() valueLength?: number;
   @Input() unit?: string = "";
@@ -35,7 +35,14 @@ export class SliderFieldComponent {
   @Input() stops?: number[] = [];
   @Input() labelLength?: number;
 
-  @Input() defaultValue?: number;
+  private _defaultValue: number = 0;
+  @Input()
+  get defaultValue() {
+    return this._defaultValue;
+  }
+  set defaultValue(value: number) {
+    this._defaultValue = value;
+  }
 
   private _showLabel: boolean = false;
 

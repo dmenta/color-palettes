@@ -1,10 +1,9 @@
-import { Component, computed, input, Output } from "@angular/core";
+import { Component, effect, EventEmitter, input, Output, signal } from "@angular/core";
 import { SliderFieldComponent } from "../../../core/components/slider-field/slider-field.component";
 import { ColorAxisComponent } from "../color-axis/color-axis.component";
 import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
-import { namedColorModels } from "../../model/color-models-definitions";
 import { borderRadius } from "../../../core/directives/rounded.directive";
-import { Tuple } from "../../model/colors.model";
+import { ColorComponent, ColorModel, Triple, Tuple } from "../../model/colors.model";
 
 @Component({
   selector: "zz-dual-axis-slider",
@@ -12,27 +11,75 @@ import { Tuple } from "../../model/colors.model";
   templateUrl: "./dual-axis-slider.component.html",
 })
 export class DualAxisSliderComponent {
-  model = input(namedColorModels["rgb"]);
+  colorBase = input<Triple<number> | undefined>(undefined, { alias: "color-base" });
+  colorModel = input<ColorModel | undefined>(undefined, { alias: "model" });
+  min = input<number | undefined>(undefined);
+  max = input<number | undefined>(undefined);
+  variableIndex = input<0 | 1 | 2>(0);
+
+  variable = input<ColorComponent | undefined>(undefined);
   shadow = input(true);
   rounded = input("large" as borderRadius);
   width = input<number | "full">("full");
   height = input(75);
   pasos = input(10);
   continuo = input(false);
-  min = input(0);
-  max = input(400);
-  fixedValues = input<Tuple<number>>([0, 0]);
-  variable = input<0 | 1 | 2>(0);
 
-  variableComponent = computed(() => this.model().components[this.variable()]);
+  currentColor = signal<Triple<number>>([0, 0, 0]);
 
-  formDual = new FormGroup({
-    min: new FormControl(this.model().components[this.variable()].min, { nonNullable: true }),
-    max: new FormControl(360, { nonNullable: true }),
-  });
+  @Output() minmaxChange = new EventEmitter<Tuple<number>>();
+  formDual: FormGroup<{ min: FormControl<number>; max: FormControl<number> }>;
 
-  @Output() colorChange = this.formDual.valueChanges;
+  constructor() {
+    effect(() => {
+      const variable = this.variable();
 
+      const min = this.min() ?? variable.min;
+      const max = this.max() ?? variable.max;
+
+      this.formDual.patchValue(
+        {
+          min: min,
+          max: max,
+        },
+        { emitEvent: false }
+      );
+    });
+    effect(() => {
+      const colorBase = this.colorBase();
+      if (colorBase) {
+        this.currentColor.set(colorBase);
+      } else {
+        const model = this.colorModel();
+        this.currentColor.set(model?.defaultValues() ?? ([0, 0, 0] as Triple<number>));
+      }
+    });
+  }
+
+  ngOnInit() {
+    const variable = this.variable();
+
+    const min = this.min() ?? variable.min;
+    const max = this.max() ?? variable.max;
+
+    this.formDual = new FormGroup({
+      min: new FormControl(min, { nonNullable: true }),
+      max: new FormControl(max, { nonNullable: true }),
+    });
+
+    this.formDual.valueChanges.subscribe((value) => {
+      const colorBase = this.colorBase();
+      colorBase[this.variableIndex()] = (value.min + value.max) / 2;
+      this.currentColor.set(colorBase);
+
+      this.minmaxChange.emit([value.min, value.max]);
+    });
+
+    const model = this.colorModel();
+    const colorBase = this.colorBase();
+
+    this.currentColor.set(colorBase ?? model.defaultValues() ?? ([0, 0, 0] as Triple<number>));
+  }
   componentStep(precision: number): number {
     return 1 / Math.pow(10, precision);
   }

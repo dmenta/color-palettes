@@ -24,7 +24,7 @@
         [shadow]="!continuo()"
         [rounded]="continuo() ? 'none' : 'normal'"
         [variable]="indice"
-        [modelName]="this.model().name"
+        [model]="this.model()"
         [min]="this.model().components[indice].min"
         [max]="this.model().components[indice].max"
         [fixedValues]="[
