@@ -23,6 +23,7 @@ import { WidthFullDirective } from "../../directives/width.directive";
 export class SliderFieldComponent {
   @Input({ required: true }) fieldName: string = "";
   @Input("labels-above") labelsAbove = true;
+  @Input("labels-reverse") labelsReverse = false;
   @Input() label: string = "";
   @Input() valueLength?: number;
   @Input() unit?: string = "";

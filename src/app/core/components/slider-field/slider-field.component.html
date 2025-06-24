@@ -3,11 +3,12 @@
   [class.flex-col-reverse]="!labelsAbove"
   zz-overflow-visible
   [formGroup]="formGroup">
-  <div class="flex flex-row items-base justify-between" zz-overflow-visible>
+  <div class="flex flex-row items-base justify-between" [class.flex-row-reverse]="labelsReverse" zz-overflow-visible>
     @if(showLabel) {
     <label
       [for]="fieldName"
       [zz-text-length]="labelLength"
+      [class.text-right]="labelsReverse"
       [class.opacity-80]="defaultValue !== undefined && control.value === defaultValue"
       (dblclick)="control.reset()">
       {{ label }}
