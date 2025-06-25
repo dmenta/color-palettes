@@ -15,8 +15,8 @@ import { merge, startWith, tap } from "rxjs";
 })
 export class ColorConfigComponent {
   models = colorModels;
-
   variableSelection = input(true);
+
   configGroup:
     | FormGroup<{
         model: FormControl<ColorModel>;

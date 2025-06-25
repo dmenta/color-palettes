@@ -4,7 +4,7 @@ import { SliderFieldComponent } from "../../../core/components/slider-field/slid
 import { PanelDirective } from "../../../core/directives/containers/panel.directive";
 import { ColorAxisComponent } from "../color-axis/color-axis.component";
 import { DualAxisSliderComponent } from "../dual-axis-slider/dual-axis-slider.component";
-import { AxisConfig, ColorComponent, ColorConfig, ColorModel, Triple, Tuple } from "../../model/colors.model";
+import { AxisConfig, ColorConfig, Triple, Tuple } from "../../model/colors.model";
 
 @Component({
   selector: "zz-color-range-selector",
@@ -24,20 +24,20 @@ export class ColorRangeSelectorComponent {
   colorBase = input<Triple<number> | undefined>(undefined, { alias: "color-base" });
 
   width = input<number | "full">("full");
+  @Output() colorChange = new EventEmitter<Triple<number>>();
+  @Output() rangeChange = new EventEmitter<Tuple<number>>();
 
   indices: (0 | 1 | 2)[] = [0, 1, 2];
 
   currentColor = signal<Triple<number>>([0, 0, 0]);
 
   variableAverage: Signal<number> | undefined = undefined;
+
   configGroup: FormGroup<{
     v0: FormControl<number>;
     v1: FormControl<number>;
     v2: FormControl<number>;
   }>;
-
-  @Output() colorChange = new EventEmitter<Triple<number>>();
-  @Output() rangeChange = new EventEmitter<Tuple<number>>();
 
   constructor() {
     effect(() => {

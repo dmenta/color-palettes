@@ -52,7 +52,7 @@ export class SliderSlimDirective {
   }
   value = input(0, {
     alias: "zzValue",
-    transform: (value?: number) => Math.max(Math.min(500, value ?? 0), 0),
+    transform: (value?: number) => Math.max(Math.min(720, value ?? 0), 0),
   });
 
   keyPressedService = inject(KeyDetectorService);

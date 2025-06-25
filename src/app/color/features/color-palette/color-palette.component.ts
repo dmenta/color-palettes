@@ -1,11 +1,11 @@
-import { Component, computed, Signal, signal } from "@angular/core";
+import { Component, Signal, signal } from "@angular/core";
 import { ReactiveFormsModule } from "@angular/forms";
 import { ColorAxisComponent } from "../../components/color-axis/color-axis.component";
 import { ColorAxisConfigComponent } from "../../components/color-axis-config/color-axis-config.component";
 import { ColorConfigComponent } from "../../components/color-config/color-config.component";
 import { ColorRangeSelectorComponent } from "../../components/color-range-selector/color-range-selector.component";
 import { ColorSampleComponent } from "../../components/color-sample/color-sample.component";
-import { AxisConfig, ColorModel, ColorComponent, Tuple, Triple, ColorConfig } from "../../model/colors.model";
+import { AxisConfig, Tuple, Triple, ColorConfig } from "../../model/colors.model";
 
 @Component({
   selector: "zz-color-palette",

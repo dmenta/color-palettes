@@ -2,8 +2,7 @@ import { Component, effect, EventEmitter, input, Output, signal } from "@angular
 import { SliderFieldComponent } from "../../../core/components/slider-field/slider-field.component";
 import { ColorAxisComponent } from "../color-axis/color-axis.component";
 import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
-import { borderRadius } from "../../../core/directives/rounded.directive";
-import { AxisConfig, ColorComponent, ColorConfig, ColorModel, Triple, Tuple } from "../../model/colors.model";
+import { AxisConfig, ColorConfig, Triple, Tuple } from "../../model/colors.model";
 import { IconDirective } from "../../../core/components/icon/icon.directive";
 
 @Component({

@@ -1,7 +1,7 @@
 <div class="grid grid-cols-[280px_minmax(500px,_1fr)] items-top gap-6 p-6">
   <div>
     @if(colorConfig()){
-    <zz-color-sample [model]="colorConfig().model" [values]="currentColor()"></zz-color-sample>
+    <zz-color-sample [model]="colorConfig().model" [color-base]="currentColor()"></zz-color-sample>
     }
     <div class="w-full mt-4">
       <zz-color-config (colorConfigChange)="colorConfigChanged($event)"></zz-color-config>

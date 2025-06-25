@@ -27,10 +27,8 @@ import { RgbEditComponent } from "../rgb-edit/rgb-edit.component";
 export class ColorSampleComponent {
   height = input(120);
   colorModel = input.required<ColorModel>({ alias: "model" });
+  currentColor = input<Triple<number> | undefined>(undefined, { alias: "color-base" });
 
-  values = input<Triple<number> | undefined>(undefined);
-
-  currentColor: Signal<Triple<number>> | undefined = undefined;
   texto: Signal<string> | undefined = undefined;
   rgb: Signal<string> | undefined = undefined;
   baseRGB: Signal<string> | undefined = undefined;
@@ -38,10 +36,6 @@ export class ColorSampleComponent {
   @ViewChild("swatch", { static: true }) swatchEl?: ElementRef<HTMLElement>;
 
   ngOnInit() {
-    this.currentColor = computed(() => {
-      const valores = this.values() ?? this.colorModel()?.defaultValues() ?? ([0, 0, 0] as Triple<number>);
-      return valores;
-    });
     this.texto = computed(() => this.colorModel()?.convert(this.currentColor()) ?? "");
   }
 }
