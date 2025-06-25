@@ -12,27 +12,17 @@
   </div>
   <div class="relative">
     <zz-color-range-selector
-      [model]="colorConfig().model"
-      [continuo]="true"
-      [height]="20"
-      [variable]="colorConfig().variable"
-      [variableIndex]="colorConfig().variableIndex"
-      [pasos]="30"
+      [color-config]="colorConfig()"
+      [axis-config]="{ alto: 40, continuo: true, pasos: 60, automatico: true, showRGB: false }"
       (colorChange)="colorChange($event)"
       (rangeChange)="rangeChange($event)">
     </zz-color-range-selector>
     <zz-color-axis
       class="mt-10 block p-6"
-      [model]="colorConfig().model"
-      [pasos]="pasos() ?? config().pasos"
-      [variableComponent]="colorConfig().variable"
-      [variable]="colorConfig().variableIndex"
-      [showRGB]="config().showRGB"
+      [color-config]="colorConfig()"
+      [axis-config]="axisConfig()"
       [min]="minmax()[0]"
       [max]="minmax()[1]"
-      [color-base]="currentColor()"
-      [height]="config().alto"
-      [shadow]="!config().continuo"
-      [rounded]="config().continuo ? 'none' : 'large'"></zz-color-axis>
+      [color-base]="currentColor()"></zz-color-axis>
   </div>
 </div>

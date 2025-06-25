@@ -2,13 +2,13 @@
   @for(indice of indices(); track $index){
   <div
     class="grow flex flex-row items-center text-xs justify-center overflow-hidden"
-    [shadow]="shadow()"
-    [roundedSize]="rounded()"
-    [height]="height()"
+    [shadow]="!axisConfig().continuo"
+    [roundedSize]="axisConfig().continuo ? 'none' : 'large'"
+    [height]="axisConfig().alto"
     color-swatch-full
-    [model]="model()"
+    [model]="colorConfig().model"
     [values]="indice.valores">
-    @if(showRGB()){
+    @if(axisConfig().showRGB){
     <pre [style.color]="indice.color | toContrast">
       {{ indice.color | toRgb }}
     </pre>

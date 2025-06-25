@@ -1,7 +1,6 @@
 import { Component, computed, input, Signal } from "@angular/core";
 import { FullWidthColorSwatchDirective } from "../color-swatch/color-swatch.directive";
-import { ColorComponent, ColorModel, Triple, Tuple } from "../../model/colors.model";
-import { borderRadius } from "../../../core/directives/rounded.directive";
+import { AxisConfig, ColorConfig, Triple } from "../../model/colors.model";
 import { ColorToContrastPipe, ColorToRgbPipe } from "../color-swatch/color-to-rgb.pipe";
 
 @Component({
@@ -10,27 +9,39 @@ import { ColorToContrastPipe, ColorToRgbPipe } from "../color-swatch/color-to-rg
   templateUrl: "./color-axis.component.html",
 })
 export class ColorAxisComponent {
+  colorConfig = input<ColorConfig | undefined>(undefined, { alias: "color-config" });
+  axisConfig = input<AxisConfig | undefined>(undefined, { alias: "axis-config" });
   colorBase = input<Triple<number> | undefined>(undefined, { alias: "color-base" });
-  model = input<ColorModel>();
-  variableComponent = input<ColorComponent | undefined>(undefined);
-  variable = input<0 | 1 | 2 | undefined>(undefined);
+
   min = input<number | undefined>(undefined);
   max = input<number | undefined>(undefined);
 
-  showRGB = input(false);
-  pasos = input(10);
-  fixedValues = input<Tuple<number>>([0, 0]);
-  height = input(10);
   width = input<number | "full">("full");
-
-  shadow = input(true);
-  rounded = input("large" as borderRadius);
 
   indices: Signal<{ valores: Triple<number>; color: string }[]> | undefined = undefined;
 
+  pasos: Signal<number | undefined> = undefined;
+
   ngOnInit() {
+    this.pasos = computed(() => {
+      const config = this.axisConfig();
+      const pasosConfig = config.pasos ?? 10;
+      if (config.automatico) {
+        const variable = this.colorConfig().variable;
+        const min = this.min();
+        const max = this.max();
+
+        return Math.min(
+          pasosConfig,
+          Math.max(2, Math.ceil((Math.abs(max - min) / (variable.max - variable.min)) * variable.steps))
+        );
+      }
+
+      return pasosConfig;
+    });
+
     this.indices = computed(() => {
-      const model = this.model();
+      const model = this.colorConfig().model;
       const baseArray =
         this.colorBase() ??
         ([
@@ -44,7 +55,7 @@ export class ColorAxisComponent {
       return Array.from({ length: pasos }, (_, i) => {
         const value = this.min() + i * step;
         const valores = [...baseArray];
-        valores[this.variable()] = value;
+        valores[this.colorConfig().variableIndex] = value;
         return { valores: valores as Triple<number>, color: model.convert([valores[0], valores[1], valores[2]]) };
       });
     });

@@ -4,7 +4,7 @@ import { SliderFieldComponent } from "../../../core/components/slider-field/slid
 import { PanelDirective } from "../../../core/directives/containers/panel.directive";
 import { ColorAxisComponent } from "../color-axis/color-axis.component";
 import { DualAxisSliderComponent } from "../dual-axis-slider/dual-axis-slider.component";
-import { ColorComponent, ColorModel, Triple, Tuple } from "../../model/colors.model";
+import { AxisConfig, ColorComponent, ColorConfig, ColorModel, Triple, Tuple } from "../../model/colors.model";
 
 @Component({
   selector: "zz-color-range-selector",
@@ -19,14 +19,12 @@ import { ColorComponent, ColorModel, Triple, Tuple } from "../../model/colors.mo
   templateUrl: "./color-range-selector.component.html",
 })
 export class ColorRangeSelectorComponent {
-  colorModel = input<ColorModel | undefined>(undefined, { alias: "model" });
-  width = input<number | "full">("full");
-  height = input(75);
-  pasos = input(10);
-  continuo = input(false);
+  colorConfig = input<ColorConfig | undefined>(undefined, { alias: "color-config" });
+  axisConfig = input<AxisConfig | undefined>(undefined, { alias: "axis-config" });
+  colorBase = input<Triple<number> | undefined>(undefined, { alias: "color-base" });
 
-  variable = input<ColorComponent | undefined>(undefined);
-  variableIndex = input<0 | 1 | 2 | undefined>(undefined);
+  width = input<number | "full">("full");
+
   indices: (0 | 1 | 2)[] = [0, 1, 2];
 
   currentColor = signal<Triple<number>>([0, 0, 0]);
@@ -43,12 +41,12 @@ export class ColorRangeSelectorComponent {
 
   constructor() {
     effect(() => {
-      const variable = this.variable();
+      const variable = this.colorConfig().variable;
       if (!variable) {
         return;
       }
 
-      const colorModel = this.colorModel();
+      const colorModel = this.colorConfig().model;
 
       this.currentColor.set(colorModel?.defaultValues() ?? ([0, 0, 0] as Triple<number>));
       this.configGroup.patchValue(
@@ -62,7 +60,7 @@ export class ColorRangeSelectorComponent {
     });
   }
   ngOnInit() {
-    const colorModel = this.colorModel();
+    const colorModel = this.colorConfig().model;
 
     this.configGroup = new FormGroup({
       v0: new FormControl(colorModel.components[0].defaultValue, { nonNullable: true }),
@@ -79,7 +77,7 @@ export class ColorRangeSelectorComponent {
   }
   onVariableChange(minmax: Tuple<number>) {
     this.configGroup.patchValue({
-      ["v" + this.variableIndex()]: (minmax[0] + minmax[1]) / 2,
+      ["v" + this.colorConfig().variableIndex]: (minmax[0] + minmax[1]) / 2,
     });
     this.rangeChange.emit(minmax);
   }

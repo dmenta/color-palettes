@@ -6,7 +6,7 @@
       }
     </div>
     <div class="w-full mt-4">
-      <zz-color-config (colorConfigChange)="colorConfigChanged($event)"></zz-color-config>
+      <zz-color-config (colorConfigChange)="colorConfigChanged($event)" [variableSelection]="false"></zz-color-config>
     </div>
     <div class="w-full mt-4">
       <zz-color-axis-config (axisConfigChange)="axisConfigChanged($event)"></zz-color-axis-config>
@@ -16,7 +16,5 @@
     class="p-4"
     (colorChange)="colorChange($event)"
     [model]="colorConfig().model"
-    [continuo]="config().continuo"
-    [height]="config().alto"
-    [pasos]="config().pasos"></zz-color-selector>
+    [axis-config]="axisConfig()"></zz-color-selector>
 </div>

@@ -1,6 +1,3 @@
-::ng-deep .zz-select {
-}
-
 ::ng-deep .zz-select::picker-icon {
   font-family: var(--material-icons-font);
   font-variation-settings: var(--material-icons-variation-settings);

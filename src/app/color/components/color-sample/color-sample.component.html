@@ -1,5 +1,9 @@
 <div [zz-shadow]="true" zz-rounded="large" class="min-w-fit">
-  <div [height]="200" color-swatch-full [model]="colorModel()" [values]="currentColor()"></div>
+  <div [height]="200" color-swatch-full [model]="colorModel()" [values]="currentColor()" class="text-right p-2">
+    <button zz-icon-button (click)="modal.showModal()">
+      <span zz-icon>edit</span>
+    </button>
+  </div>
   <div
     class="justify-center w-full min-h-10 max-h-20 py-2 flex flex-col items-center text-md dark:bg-zinc-900 bg-zinc-200 dark:text-zinc-300 text-zinc-700">
     {{ texto() }}
@@ -8,3 +12,9 @@
     }
   </div>
 </div>
+<dialog
+  #modal
+  class="backdrop:bg-gray-700/20 dark:bg-zinc-800 bg-zinc-100 top-16 left-24 border-[1px] border-zinc-700/50 dark:border-zinc-400/30 rounded-lg shadow-md shadow-black/30"
+  closedby="any">
+  <zz-rgb-edit></zz-rgb-edit>
+</dialog>

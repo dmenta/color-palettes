@@ -1,5 +1,5 @@
 <form [formGroup]="formDual" class="relative">
-  @if(colorModel()){
+  @let config=colorConfig(); @if(config){
   <div class="absolute left-1/2 top-1">
     <span zz-icon class="h-6">arrow_range</span>
   </div>
@@ -7,25 +7,20 @@
     class="text-sm relative font-bold"
     [showTrack]="false"
     fieldName="max"
-    [min]="variable().min"
-    [max]="variable().max"
-    [step]="componentStep(variable().precision)"
-    [label]="variable().name"
-    [defaultValue]="variable().max"
+    [min]="config.variable.min"
+    [max]="config.variable.max"
+    [step]="componentStep(config.variable.precision)"
+    [label]="config.variable.name"
+    [defaultValue]="config.variable.max"
     [showLabel]="true"
     [labelLength]="10"
-    [unit]="variable().unit"
+    [unit]="config.variable.unit"
     [showValue]="true"
     [valueLength]="9" />
   <zz-color-axis
     class="-mt-2.5 block"
-    [height]="height()"
-    [pasos]="pasos()"
-    [shadow]="!continuo()"
-    [rounded]="continuo() ? 'none' : 'normal'"
-    [variable]="variableIndex()"
-    [variableComponent]="variable()"
-    [model]="this.colorModel()"
+    [color-config]="config"
+    [axis-config]="axisConfig()"
     [min]="min()"
     [max]="max()"
     [color-base]="currentColor()"></zz-color-axis>
@@ -35,14 +30,14 @@
     [showTrack]="false"
     [labels-above]="false"
     [labels-reverse]="true"
-    [min]="variable().min"
-    [max]="variable().max"
-    [step]="componentStep(variable().precision)"
-    [label]="variable().name"
-    [defaultValue]="variable().min"
+    [min]="config.variable.min"
+    [max]="config.variable.max"
+    [step]="componentStep(config.variable.precision)"
+    [label]="config.variable.name"
+    [defaultValue]="config.variable.min"
     [showLabel]="false"
     [labelLength]="10"
-    [unit]="variable().unit"
+    [unit]="config.variable.unit"
     [showValue]="true"
     [valueLength]="9" />
   }

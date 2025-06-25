@@ -3,7 +3,7 @@ import { SliderFieldComponent } from "../../../core/components/slider-field/slid
 import { ColorAxisComponent } from "../color-axis/color-axis.component";
 import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { borderRadius } from "../../../core/directives/rounded.directive";
-import { ColorComponent, ColorModel, Triple, Tuple } from "../../model/colors.model";
+import { AxisConfig, ColorComponent, ColorConfig, ColorModel, Triple, Tuple } from "../../model/colors.model";
 import { IconDirective } from "../../../core/components/icon/icon.directive";
 
 @Component({
@@ -15,28 +15,23 @@ import { IconDirective } from "../../../core/components/icon/icon.directive";
   },
 })
 export class DualAxisSliderComponent {
+  colorConfig = input<ColorConfig | undefined>(undefined, { alias: "color-config" });
+  axisConfig = input<AxisConfig | undefined>(undefined, { alias: "axis-config" });
   colorBase = input<Triple<number> | undefined>(undefined, { alias: "color-base" });
-  colorModel = input<ColorModel | undefined>(undefined, { alias: "model" });
   min = input<number | undefined>(undefined);
   max = input<number | undefined>(undefined);
-  variableIndex = input<0 | 1 | 2>(0);
 
-  variable = input<ColorComponent | undefined>(undefined);
-  shadow = input(true);
-  rounded = input("large" as borderRadius);
   width = input<number | "full">("full");
-  height = input(75);
-  pasos = input(10);
-  continuo = input(false);
 
   currentColor = signal<Triple<number>>([0, 0, 0]);
 
   @Output() minmaxChange = new EventEmitter<Tuple<number>>();
+
   formDual: FormGroup<{ min: FormControl<number>; max: FormControl<number> }>;
 
   constructor() {
     effect(() => {
-      const variable = this.variable();
+      const variable = this.colorConfig().variable;
 
       const min = this.min() ?? variable.min;
       const max = this.max() ?? variable.max;
@@ -54,14 +49,14 @@ export class DualAxisSliderComponent {
       if (colorBase) {
         this.currentColor.set(colorBase);
       } else {
-        const model = this.colorModel();
+        const model = this.colorConfig().model;
         this.currentColor.set(model?.defaultValues() ?? ([0, 0, 0] as Triple<number>));
       }
     });
   }
 
   ngOnInit() {
-    const variable = this.variable();
+    const variable = this.colorConfig().variable;
 
     const min = this.min() ?? variable.min;
     const max = this.max() ?? variable.max;
@@ -73,13 +68,13 @@ export class DualAxisSliderComponent {
 
     this.formDual.valueChanges.subscribe((value) => {
       const colorBase = this.colorBase();
-      colorBase[this.variableIndex()] = (value.min + value.max) / 2;
+      colorBase[this.colorConfig().variableIndex] = (value.min + value.max) / 2;
       this.currentColor.set(colorBase);
 
       this.minmaxChange.emit([value.min, value.max]);
     });
 
-    const model = this.colorModel();
+    const model = this.colorConfig().model;
     const colorBase = this.colorBase();
 
     this.currentColor.set(colorBase ?? model.defaultValues() ?? ([0, 0, 0] as Triple<number>));

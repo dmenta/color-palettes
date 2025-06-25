@@ -1,11 +1,11 @@
-import { Component, EventEmitter, Output } from "@angular/core";
+import { Component, EventEmitter, input, Output } from "@angular/core";
 import { ShadowDirective } from "../../../core/directives/shadow.directive";
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { SelectComponent } from "../../../core/components/select/select.component";
 import { PanelDirective } from "../../../core/directives/containers/panel.directive";
 import { RoundedDirective } from "../../../core/directives/rounded.directive";
 import { colorModels, namedColorModels } from "../../model/color-models-definitions";
-import { ColorComponent, ColorModel } from "../../model/colors.model";
+import { ColorComponent, ColorConfig, ColorModel } from "../../model/colors.model";
 import { merge, startWith, tap } from "rxjs";
 
 @Component({
@@ -15,6 +15,8 @@ import { merge, startWith, tap } from "rxjs";
 })
 export class ColorConfigComponent {
   models = colorModels;
+
+  variableSelection = input(true);
   configGroup:
     | FormGroup<{
         model: FormControl<ColorModel>;
@@ -22,16 +24,15 @@ export class ColorConfigComponent {
       }>
     | undefined = undefined;
 
-  @Output() colorConfigChange = new EventEmitter<{
-    model: ColorModel;
-    variable: ColorComponent;
-    variableIndex: 0 | 1 | 2;
-  }>();
+  @Output() colorConfigChange = new EventEmitter<ColorConfig>();
 
   ngOnInit() {
     this.configGroup = new FormGroup({
-      model: new FormControl<ColorModel>(namedColorModels["rgb"], { nonNullable: true }),
-      variable: new FormControl<ColorComponent>(namedColorModels["rgb"].components[0], { nonNullable: true }),
+      model: new FormControl<ColorModel>(namedColorModels["oklch"], { nonNullable: true }),
+      variable: new FormControl<ColorComponent>(
+        { value: namedColorModels["oklch"].components[0], disabled: !this.variableSelection() },
+        { nonNullable: true }
+      ),
     });
 
     merge(

@@ -2,9 +2,9 @@ import { ColorComponent, ColorModel, ColorModelName } from "./colors.model";
 
 export const colorModels: ColorModel[] = [
   new ColorModel("rgb", [
-    new ColorComponent("Red", 255, "", 0, 20),
-    new ColorComponent("Green", 255, "", 0, 20),
-    new ColorComponent("Blue", 255, "", 0, 20),
+    new ColorComponent("Red", 255, "", 0, 25),
+    new ColorComponent("Green", 255, "", 0, 25),
+    new ColorComponent("Blue", 255, "", 0, 25),
   ]),
   new ColorModel("hsl", [
     new ColorComponent("Hue", 360, "deg", 0, 55),

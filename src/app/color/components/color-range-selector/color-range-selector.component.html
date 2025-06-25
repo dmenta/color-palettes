@@ -1,19 +1,15 @@
 <div zz-panel class="p-6 h-fit">
   <form [formGroup]="configGroup" class="min-w-fit h-fit">
-    @for(indice of indices; track $index){ @let component = colorModel().components[indice];
-    <div class="h-[90px]">
-      @if(indice===variableIndex()){
+    @let config= colorConfig(); @for(indice of indices; track $index){ @let component = config.model.components[indice];
+    <div [style.minHeight.px]="60 + axisConfig().alto">
+      @if(indice===config.variableIndex){
       <zz-dual-axis-slider
         class="block"
-        [model]="colorModel()"
-        [variableIndex]="indice"
-        [variable]="variable()"
-        [min]="variable().min"
-        [max]="variable().max"
+        [color-config]="colorConfig()"
+        [min]="config.variable.min"
+        [max]="config.variable.max"
         [color-base]="currentColor()"
-        [height]="height()"
-        [pasos]="pasos()"
-        [continuo]="continuo()"
+        [axis-config]="axisConfig()"
         (minmaxChange)="onVariableChange($event)">
       </zz-dual-axis-slider>
       }@else {
@@ -33,12 +29,8 @@
         [valueLength]="9" />
       <zz-color-axis
         class="mb-2 -mt-2.5 block"
-        [height]="height()"
-        [pasos]="pasos()"
-        [shadow]="!continuo()"
-        [rounded]="continuo() ? 'none' : 'normal'"
-        [variable]="indice"
-        [model]="colorModel()"
+        [axis-config]="axisConfig()"
+        [color-config]="{ model: config.model, variable: component, variableIndex: indice }"
         [min]="component.min"
         [max]="component.max"
         [color-base]="currentColor()"></zz-color-axis>

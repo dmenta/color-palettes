@@ -11,11 +11,11 @@ export const routes: Routes = [
     path: "palettes",
     title: "Paletas de color",
     loadComponent: () =>
-      import("./color/components/color-palette/color-palette.component").then((m) => m.ColorPaletteComponent),
+      import("./color/features/color-palette/color-palette.component").then((m) => m.ColorPaletteComponent),
   },
   {
     path: "colors",
     loadComponent: () =>
-      import("./color/components/color-sampler/color-sampler.component").then((m) => m.ColorSamplerComponent),
+      import("./color/features/color-sampler/color-sampler.component").then((m) => m.ColorSamplerComponent),
   },
 ];

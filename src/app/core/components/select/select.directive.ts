@@ -23,17 +23,3 @@ export class SelectDirective {
     return true;
   }
 }
-
-@Directive({
-  selector: "[zz-input], zzInput",
-  hostDirectives: [
-    InilineBlockDirective,
-    RoundedDirective,
-    FocusRingDirective,
-    { directive: DisabledDirective, inputs: ["zz-disabled:zzDisabled"] },
-  ],
-  host: {
-    class: "p-1 border-1 border-gray-500 w-14 text-right invalid:dark:border-red-500 invalid:border-red-700",
-  },
-})
-export class InputDirective {}

@@ -1,11 +1,14 @@
-import { Component, computed, ElementRef, Host, input, Signal, ViewChild } from "@angular/core";
-import { FullWidthColorSwatchDirective, SquareColorSwatchDirective } from "../color-swatch/color-swatch.directive";
+import { Component, computed, ElementRef, input, Signal, ViewChild } from "@angular/core";
+import { FullWidthColorSwatchDirective } from "../color-swatch/color-swatch.directive";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { RoundedDirective } from "../../../core/directives/rounded.directive";
 import { ShadowDirective } from "../../../core/directives/shadow.directive";
 import { ColorModel, Triple } from "../../model/colors.model";
-import Color from "colorjs.io";
 import { ColorToRgbPipe } from "../color-swatch/color-to-rgb.pipe";
+import { IconDirective } from "../../../core/components/icon/icon.directive";
+import { IconButtonDirective } from "../../../core/components/buttons/icon-button.directive";
+import { RgbEditComponent } from "../rgb-edit/rgb-edit.component";
+
 @Component({
   selector: "zz-color-sample",
   imports: [
@@ -15,6 +18,9 @@ import { ColorToRgbPipe } from "../color-swatch/color-to-rgb.pipe";
     ReactiveFormsModule,
     ShadowDirective,
     RoundedDirective,
+    IconDirective,
+    RgbEditComponent,
+    IconButtonDirective,
   ],
   templateUrl: "./color-sample.component.html",
 })

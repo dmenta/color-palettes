@@ -1,9 +1,9 @@
-import { Component, effect, EventEmitter, input, Output } from "@angular/core";
+import { Component, effect, EventEmitter, input, Output, signal } from "@angular/core";
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { SliderFieldComponent } from "../../../core/components/slider-field/slider-field.component";
 import { PanelDirective } from "../../../core/directives/containers/panel.directive";
 import { ColorAxisComponent } from "../color-axis/color-axis.component";
-import { ColorModel, Triple } from "../../model/colors.model";
+import { AxisConfig, ColorModel, Triple } from "../../model/colors.model";
 
 @Component({
   selector: "zz-color-selector",
@@ -12,12 +12,12 @@ import { ColorModel, Triple } from "../../model/colors.model";
 })
 export class ColorSelectorComponent {
   colorModel = input<ColorModel | undefined>(undefined, { alias: "model" });
+  axisConfig = input<AxisConfig | undefined>(undefined, { alias: "axis-config" });
+
   width = input<number | "full">("full");
-  height = input(75);
-  pasos = input(10);
-  continuo = input(false);
 
   indices: (0 | 1 | 2)[] = [0, 1, 2];
+  currentColor = signal<Triple<number>>([0, 0, 0]);
 
   @Output() colorChange = new EventEmitter<Triple<number>>();
   config: FormGroup<{ v0: FormControl<any>; v1: FormControl<any>; v2: FormControl<any> }>;
@@ -40,7 +40,11 @@ export class ColorSelectorComponent {
     });
 
     this.config.valueChanges.subscribe((valores) => {
-      this.colorChange.emit([valores.v0, valores.v1, valores.v2]);
+      const { v0, v1, v2 } = valores;
+
+      const color: Triple<number> = [v0, v1, v2] as Triple<number>;
+      this.currentColor.set(color);
+      this.colorChange.emit(color);
     });
   }
   componentStep(precision: number): number {

@@ -39,7 +39,7 @@ export class SelectComponent<T extends object | string | number, K extends keyof
   static nextId = 0;
   controlType = "select";
 
-  @ViewChild("valor") valorInput?: ElementRef<HTMLSelectElement>;
+  @ViewChild("valor", { static: true }) valorInput?: ElementRef<HTMLSelectElement>;
 
   @HostBinding() id = `${this.controlType}-${SelectComponent.nextId++}`;
   @HostBinding() selectId = `${this.id}-select`;
@@ -92,6 +92,7 @@ export class SelectComponent<T extends object | string | number, K extends keyof
   }
 
   writeValue(value: T | null): void {
+    this._value = value;
     if (value) {
       const valueKey = value[this.displayKey()];
       let indice = this.items().findIndex((item) => item[this.displayKey()] === valueKey);
@@ -107,7 +108,7 @@ export class SelectComponent<T extends object | string | number, K extends keyof
     this.onTouched = fn;
   }
   setDisabledState(isDisabled: boolean): void {
-    this._renderer.setProperty(this._elementRef.nativeElement, "disabled", isDisabled);
+    this._disabled = isDisabled;
   }
 
   onChange: (value: any) => void = (_value: any) => {};

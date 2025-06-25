@@ -1,12 +1,12 @@
 import { Component, EventEmitter, Output } from "@angular/core";
 import { ShadowDirective } from "../../../core/directives/shadow.directive";
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
-import { InputDirective } from "../../../core/components/select/select.directive";
 import { ToggleCheckComponent } from "../../../core/components/toggle-check/toggle-check.component";
 import { PanelDirective } from "../../../core/directives/containers/panel.directive";
 import { RoundedDirective } from "../../../core/directives/rounded.directive";
 import { debounceTime, distinctUntilChanged, startWith } from "rxjs";
 import { AxisConfig } from "../../model/colors.model";
+import { InputDirective } from "../../../core/directives/input.directive";
 
 @Component({
   selector: "zz-color-axis-config",
