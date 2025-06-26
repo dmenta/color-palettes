@@ -17,7 +17,8 @@ import { min } from "rxjs";
 export class DualAxisSliderComponent {
   colorConfig = input<ColorConfig | undefined>(undefined, { alias: "color-config" });
   axisConfig = input<AxisConfig | undefined>(undefined, { alias: "axis-config" });
-  colorBase = input<Triple<number> | undefined>(undefined, { alias: "color-base" });
+  currentColor = input<Triple<number> | undefined>(undefined);
+  value = input<number | undefined>(undefined);
 
   width = input<number | "full">("full");
 
@@ -27,7 +28,7 @@ export class DualAxisSliderComponent {
 
   constructor() {
     effect(() => {
-      const minmax = this.minMax(this.colorConfig(), this.colorBase());
+      const minmax = this.minMax(this.colorConfig(), this.value());
 
       this.formDual.patchValue(
         {
@@ -40,7 +41,7 @@ export class DualAxisSliderComponent {
   }
 
   ngOnInit() {
-    const minmax = this.minMax(this.colorConfig(), this.colorBase());
+    const minmax = this.minMax(this.colorConfig(), this.value());
 
     this.formDual = new FormGroup({
       min: new FormControl(minmax.min, { nonNullable: true }),
@@ -52,9 +53,8 @@ export class DualAxisSliderComponent {
     });
   }
 
-  minMax(config: ColorConfig, color: Triple<number>) {
+  minMax(config: ColorConfig, value: number) {
     const middle = (config.variable.max + config.variable.min) / 2;
-    const value = color[config.variableIndex];
     const max = value > middle ? config.variable.max : value * 2 - config.variable.min;
     const min = value < middle ? config.variable.min : value * 2 - config.variable.max;
 
