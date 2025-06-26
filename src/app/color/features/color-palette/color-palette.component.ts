@@ -24,19 +24,23 @@ import { ColorSpace, Coords } from "colorjs.io/fn";
 export class ColorPaletteComponent {
   colorConfig = signal<ColorConfig | undefined>(undefined);
   axisConfig = signal<AxisConfig | undefined>(undefined);
+  colorBase = signal<Triple<number>>([0, 0, 0]);
 
   minmax = signal<Tuple<number>>([0, 0]);
+
   currentColor = signal<Triple<number>>([0, 0, 0]);
-  pasos: Signal<number | undefined> = undefined;
 
   configChanged(config: AxisConfig) {
     this.axisConfig.set(config);
   }
+
   colorConfigChanged(config: ColorConfig) {
     this.colorConfig.set(config);
     this.minmax.set(config.variable ? [config.variable.min, config.variable.max] : ([0, 0] as Tuple<number>));
+    this.colorBase.set(config.model?.defaultValues() ?? ([0, 0, 0] as Triple<number>));
     this.currentColor.set(config.model?.defaultValues() ?? ([0, 0, 0] as Triple<number>));
   }
+
   colorChange(valores: Triple<number>) {
     this.currentColor.set(valores);
   }
@@ -45,16 +49,17 @@ export class ColorPaletteComponent {
     this.minmax.set(minmax);
   }
 
-  changeColor(rgb: Triple<number>) {
-    this.getChannels(rgb);
+  onNewColor(rgb: Triple<number>) {
+    const color = this.getChannels(rgb);
+    this.colorBase.set(color);
+    this.currentColor.set(color);
   }
 
   private getChannels(rgb: Triple<number>) {
     const model = this.colorConfig()?.model;
 
     if (model.name === "rgb") {
-      this.currentColor.set(rgb);
-      return;
+      return rgb;
     }
 
     const color = new Color(`rgb(${rgb[0]} ${rgb[1]} ${rgb[2]})`).to(model.name);
@@ -63,7 +68,7 @@ export class ColorPaletteComponent {
     const b = this.ensureCoord(color.coords[1], model.components[1]);
     const c = this.ensureCoord(color.coords[2], model.components[2]);
 
-    this.currentColor.set([a, b, c]);
+    return [a, b, c] as Triple<number>;
   }
 
   ensureCoord(coord: number, component: ColorComponent): number {

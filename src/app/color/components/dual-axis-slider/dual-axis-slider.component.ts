@@ -4,6 +4,7 @@ import { ColorAxisComponent } from "../color-axis/color-axis.component";
 import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { AxisConfig, ColorConfig, Triple, Tuple } from "../../model/colors.model";
 import { IconDirective } from "../../../core/components/icon/icon.directive";
+import { min } from "rxjs";
 
 @Component({
   selector: "zz-dual-axis-slider",
@@ -17,12 +18,8 @@ export class DualAxisSliderComponent {
   colorConfig = input<ColorConfig | undefined>(undefined, { alias: "color-config" });
   axisConfig = input<AxisConfig | undefined>(undefined, { alias: "axis-config" });
   colorBase = input<Triple<number> | undefined>(undefined, { alias: "color-base" });
-  min = input<number | undefined>(undefined);
-  max = input<number | undefined>(undefined);
 
   width = input<number | "full">("full");
-
-  currentColor = signal<Triple<number>>([0, 0, 0]);
 
   @Output() minmaxChange = new EventEmitter<Tuple<number>>();
 
@@ -30,53 +27,41 @@ export class DualAxisSliderComponent {
 
   constructor() {
     effect(() => {
-      const variable = this.colorConfig().variable;
-
-      const min = this.min() ?? variable.min;
-      const max = this.max() ?? variable.max;
+      const minmax = this.minMax(this.colorConfig(), this.colorBase());
 
       this.formDual.patchValue(
         {
-          min: min,
-          max: max,
+          min: minmax.min,
+          max: minmax.max,
         },
-        { emitEvent: false }
+        { emitEvent: true }
       );
-    });
-    effect(() => {
-      const colorBase = this.colorBase();
-      if (colorBase) {
-        this.currentColor.set(colorBase);
-      } else {
-        const model = this.colorConfig().model;
-        this.currentColor.set(model?.defaultValues() ?? ([0, 0, 0] as Triple<number>));
-      }
     });
   }
 
   ngOnInit() {
-    const variable = this.colorConfig().variable;
-
-    const min = this.min() ?? variable.min;
-    const max = this.max() ?? variable.max;
+    const minmax = this.minMax(this.colorConfig(), this.colorBase());
 
     this.formDual = new FormGroup({
-      min: new FormControl(min, { nonNullable: true }),
-      max: new FormControl(max, { nonNullable: true }),
+      min: new FormControl(minmax.min, { nonNullable: true }),
+      max: new FormControl(minmax.max, { nonNullable: true }),
     });
 
     this.formDual.valueChanges.subscribe((value) => {
-      const colorBase = this.colorBase();
-      colorBase[this.colorConfig().variableIndex] = (value.min + value.max) / 2;
-      this.currentColor.set(colorBase);
-
       this.minmaxChange.emit([value.min, value.max]);
     });
+  }
 
-    const model = this.colorConfig().model;
-    const colorBase = this.colorBase();
+  minMax(config: ColorConfig, color: Triple<number>) {
+    const middle = (config.variable.max + config.variable.min) / 2;
+    const value = color[config.variableIndex];
+    const max = value > middle ? config.variable.max : value * 2 - config.variable.min;
+    const min = value < middle ? config.variable.min : value * 2 - config.variable.max;
 
-    this.currentColor.set(colorBase ?? model.defaultValues() ?? ([0, 0, 0] as Triple<number>));
+    return {
+      min: min,
+      max: max,
+    };
   }
   componentStep(precision: number): number {
     return 1 / Math.pow(10, precision);

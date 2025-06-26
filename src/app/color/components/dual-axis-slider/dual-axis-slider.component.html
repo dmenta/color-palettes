@@ -21,9 +21,9 @@
     class="-mt-2.5 block"
     [color-config]="config"
     [axis-config]="axisConfig()"
-    [min]="min()"
-    [max]="max()"
-    [color-base]="currentColor()"></zz-color-axis>
+    [color-base]="colorBase()"
+    [min]="config.variable.min"
+    [max]="config.variable.max"></zz-color-axis>
   <zz-slider-field
     class="text-sm relative -mt-2.5 block"
     fieldName="min"

@@ -5,6 +5,7 @@ import { PanelDirective } from "../../../core/directives/containers/panel.direct
 import { ColorAxisComponent } from "../color-axis/color-axis.component";
 import { DualAxisSliderComponent } from "../dual-axis-slider/dual-axis-slider.component";
 import { AxisConfig, ColorConfig, Triple, Tuple } from "../../model/colors.model";
+import { startWith } from "rxjs";
 
 @Component({
   selector: "zz-color-range-selector",
@@ -23,15 +24,12 @@ export class ColorRangeSelectorComponent {
   axisConfig = input<AxisConfig | undefined>(undefined, { alias: "axis-config" });
   colorBase = input<Triple<number> | undefined>(undefined, { alias: "color-base" });
 
-  width = input<number | "full">("full");
+  currentColor = signal<Triple<number>>([0, 0, 0]);
+
   @Output() colorChange = new EventEmitter<Triple<number>>();
   @Output() rangeChange = new EventEmitter<Tuple<number>>();
 
   indices: (0 | 1 | 2)[] = [0, 1, 2];
-
-  currentColor = signal<Triple<number>>([0, 0, 0]);
-
-  variableAverage: Signal<number> | undefined = undefined;
 
   configGroup: FormGroup<{
     v0: FormControl<number>;
@@ -41,13 +39,8 @@ export class ColorRangeSelectorComponent {
 
   constructor() {
     effect(() => {
-      const variable = this.colorConfig().variable;
       const color = this.colorBase();
-      if (!variable) {
-        return;
-      }
 
-      this.currentColor.set(color);
       this.configGroup.patchValue(
         {
           v0: color[0],
@@ -60,8 +53,6 @@ export class ColorRangeSelectorComponent {
   }
 
   ngOnInit() {
-    const colorModel = this.colorConfig().model;
-
     this.configGroup = new FormGroup({
       v0: new FormControl(this.colorBase()[0], { nonNullable: true }),
       v1: new FormControl(this.colorBase()[1], { nonNullable: true }),

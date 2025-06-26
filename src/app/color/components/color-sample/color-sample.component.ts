@@ -29,8 +29,6 @@ export class ColorSampleComponent {
   currentColor = input<Triple<number> | undefined>(undefined, { alias: "color-base" });
 
   texto: Signal<string> | undefined = undefined;
-  rgb: Signal<string> | undefined = undefined;
-  baseRGB: Signal<string> | undefined = undefined;
 
   @Output() newColor = new EventEmitter<Triple<number>>();
 
@@ -39,6 +37,7 @@ export class ColorSampleComponent {
   ngOnInit() {
     this.texto = computed(() => this.colorModel()?.convert(this.currentColor()) ?? "");
   }
+
   changeColor(values: Triple<number>, _dialog: HTMLDialogElement) {
     this.newColor.emit(values);
     _dialog.close();

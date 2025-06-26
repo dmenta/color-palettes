@@ -6,9 +6,7 @@
       <zz-dual-axis-slider
         class="block"
         [color-config]="colorConfig()"
-        [min]="config.variable.min"
-        [max]="config.variable.max"
-        [color-base]="currentColor()"
+        [color-base]="colorBase()"
         [axis-config]="axisConfig()"
         (minmaxChange)="onVariableChange($event)">
       </zz-dual-axis-slider>

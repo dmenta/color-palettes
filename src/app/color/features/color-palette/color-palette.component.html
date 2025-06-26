@@ -2,9 +2,10 @@
   <div>
     @if(colorConfig()){
     <zz-color-sample
+      [height]="200"
       [model]="colorConfig().model"
       [color-base]="currentColor()"
-      (newColor)="changeColor($event)"></zz-color-sample>
+      (newColor)="onNewColor($event)"></zz-color-sample>
     }
     <div class="w-full mt-4">
       <zz-color-config (colorConfigChange)="colorConfigChanged($event)"></zz-color-config>
@@ -17,7 +18,7 @@
     <zz-color-range-selector
       [color-config]="colorConfig()"
       [axis-config]="{ alto: 40, continuo: true, pasos: 60, automatico: true, showRGB: false }"
-      [color-base]="currentColor()"
+      [color-base]="colorBase()"
       (colorChange)="colorChange($event)"
       (rangeChange)="rangeChange($event)">
     </zz-color-range-selector>

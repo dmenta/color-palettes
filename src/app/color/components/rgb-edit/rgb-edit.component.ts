@@ -1,34 +1,53 @@
-import { Component, EventEmitter, input, Output } from "@angular/core";
+import { Component, EventEmitter, input, Output, signal, Signal, WritableSignal } from "@angular/core";
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { InputDirective } from "../../../core/directives/input.directive";
 import { Triple } from "../../model/colors.model";
 import Color from "colorjs.io";
 import { NormalButtonDirective } from "../../../core/components/buttons/normal-button.directive";
+import { SquareColorSwatchDirective } from "../color-swatch/color-swatch.directive";
+import { colorModels, namedColorModels } from "../../model/color-models-definitions";
 
 @Component({
   selector: "zz-rgb-edit",
-  imports: [ReactiveFormsModule, InputDirective, NormalButtonDirective],
+  imports: [ReactiveFormsModule, InputDirective, NormalButtonDirective, SquareColorSwatchDirective],
   templateUrl: "./rgb-edit.component.html",
 })
 export class RgbEditComponent {
-  rgbTexto = input<string | undefined>(undefined);
+  rgb = input(undefined, {
+    transform: (value?: string | undefined) => this.getChannels(value ?? "rgb(0, 0, 0)"),
+  });
+
+  rgbModel = namedColorModels.rgb;
   rgbColor: FormGroup<{ r: FormControl<number>; g: FormControl<number>; b: FormControl<number> }> | undefined =
     undefined;
-
+  newRgb: WritableSignal<Triple<number>> | undefined = undefined;
   @Output() newColor = new EventEmitter<Triple<number>>();
   ngOnInit() {
-    const rgb = this.getChannels(this.rgbTexto());
-
     this.rgbColor = new FormGroup({
-      r: new FormControl<number>(rgb[0], { nonNullable: true, validators: [Validators.min(0), Validators.max(255)] }),
-      g: new FormControl<number>(rgb[1], { nonNullable: true, validators: [Validators.min(0), Validators.max(255)] }),
-      b: new FormControl<number>(rgb[2], { nonNullable: true, validators: [Validators.min(0), Validators.max(255)] }),
+      r: new FormControl<number>(this.rgb()[0], {
+        nonNullable: true,
+        validators: [Validators.min(0), Validators.max(255)],
+      }),
+      g: new FormControl<number>(this.rgb()[1], {
+        nonNullable: true,
+        validators: [Validators.min(0), Validators.max(255)],
+      }),
+      b: new FormControl<number>(this.rgb()[2], {
+        nonNullable: true,
+        validators: [Validators.min(0), Validators.max(255)],
+      }),
     });
+
+    this.rgbColor.valueChanges.subscribe((value) => {
+      const { r, g, b } = value;
+      this.newRgb?.set([r, g, b] as Triple<number>);
+    });
+
+    this.newRgb = signal(this.rgb());
   }
 
   aceptar() {
-    const { r, g, b } = this.rgbColor?.value ?? { r: 0, g: 0, b: 0 };
-    this.newColor.emit([r, g, b] as Triple<number>);
+    this.newColor.emit(this.newRgb());
   }
   private getChannels(textoColor: string) {
     const color = new Color(textoColor).to("srgb");
