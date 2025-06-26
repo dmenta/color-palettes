@@ -42,30 +42,30 @@ export class ColorRangeSelectorComponent {
   constructor() {
     effect(() => {
       const variable = this.colorConfig().variable;
+      const color = this.colorBase();
       if (!variable) {
         return;
       }
 
-      const colorModel = this.colorConfig().model;
-
-      this.currentColor.set(colorModel?.defaultValues() ?? ([0, 0, 0] as Triple<number>));
+      this.currentColor.set(color);
       this.configGroup.patchValue(
         {
-          v0: colorModel?.components[0].defaultValue ?? 0,
-          v1: colorModel?.components[1].defaultValue ?? 0,
-          v2: colorModel?.components[2].defaultValue ?? 0,
+          v0: color[0],
+          v1: color[1],
+          v2: color[2],
         },
         { emitEvent: true }
       );
     });
   }
+
   ngOnInit() {
     const colorModel = this.colorConfig().model;
 
     this.configGroup = new FormGroup({
-      v0: new FormControl(colorModel.components[0].defaultValue, { nonNullable: true }),
-      v1: new FormControl(colorModel.components[1].defaultValue, { nonNullable: true }),
-      v2: new FormControl(colorModel.components[2].defaultValue, { nonNullable: true }),
+      v0: new FormControl(this.colorBase()[0], { nonNullable: true }),
+      v1: new FormControl(this.colorBase()[1], { nonNullable: true }),
+      v2: new FormControl(this.colorBase()[2], { nonNullable: true }),
     });
 
     this.configGroup.valueChanges.subscribe(() => {

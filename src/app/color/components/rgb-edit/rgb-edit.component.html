@@ -1,14 +1,18 @@
-<form method="dialog" [formGroup]="rgbColor" class="px-4 py-4 flex flex-row gap-4 items-center justify-center text-sm">
+<form
+  method="dialog"
+  [formGroup]="rgbColor"
+  (ngSubmit)="aceptar()"
+  class="px-4 py-4 flex flex-row gap-4 items-center justify-center text-sm">
   <div class="space-x-1">
     <label for="Rchannel">R: </label>
     <input
       [min]="0"
       [max]="255"
       zz-input
-      [zzDisabled]="rgbColor.controls.R.disabled"
+      [zzDisabled]="rgbColor.controls.r.disabled"
       type="number"
       id="Rchannel"
-      formControlName="R" />
+      formControlName="r" />
   </div>
   <div class="space-x-1">
     <label for="Gchannel">G: </label>
@@ -16,10 +20,10 @@
       [min]="0"
       [max]="255"
       zz-input
-      [zzDisabled]="rgbColor.controls.G.disabled"
+      [zzDisabled]="rgbColor.controls.g.disabled"
       type="number"
       id="Gchannel"
-      formControlName="G" />
+      formControlName="g" />
   </div>
   <div class="space-x-1">
     <label for="Bchannel">B: </label>
@@ -27,9 +31,10 @@
       [min]="0"
       [max]="255"
       zz-input
-      [zzDisabled]="rgbColor.controls.B.disabled"
+      [zzDisabled]="rgbColor.controls.b.disabled"
       type="number"
       id="Bchannel"
-      formControlName="B" />
+      formControlName="b" />
   </div>
+  <button zz-normal-button type="submit" (click)="aceptar()">OK</button>
 </form>

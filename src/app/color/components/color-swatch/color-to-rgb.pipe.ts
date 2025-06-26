@@ -5,7 +5,6 @@ import Color from "colorjs.io";
 export class ColorToRgbPipe implements PipeTransform {
   transform(textoColor: string, channel?: "R" | "G" | "B"): string {
     const color = new Color(textoColor).to("srgb");
-    const partes = color.toString().replace("rgb(", "").replace(")", "").split(" ");
 
     const r = Math.max(0, Math.min(1, color.r)) * 255;
     if (channel === "R") {
