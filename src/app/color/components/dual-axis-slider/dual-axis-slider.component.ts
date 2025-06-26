@@ -1,10 +1,9 @@
-import { Component, effect, EventEmitter, input, Output, signal } from "@angular/core";
+import { Component, effect, EventEmitter, input, Output } from "@angular/core";
 import { SliderFieldComponent } from "../../../core/components/slider-field/slider-field.component";
 import { ColorAxisComponent } from "../color-axis/color-axis.component";
 import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { AxisConfig, ColorConfig, Triple, Tuple } from "../../model/colors.model";
 import { IconDirective } from "../../../core/components/icon/icon.directive";
-import { min } from "rxjs";
 
 @Component({
   selector: "zz-dual-axis-slider",

@@ -1,11 +1,12 @@
 import { Component, computed, input, Signal } from "@angular/core";
 import { FullWidthColorSwatchDirective } from "../color-swatch/color-swatch.directive";
 import { AxisConfig, ColorConfig, Triple } from "../../model/colors.model";
-import { ColorToContrastPipe, ColorToRgbPipe } from "../color-swatch/color-to-rgb.pipe";
+import { RgbDisplayComponent } from "../rgb-display/rgb-display.component";
+import { toContrast, toRgb } from "../color";
 
 @Component({
   selector: "zz-color-axis",
-  imports: [FullWidthColorSwatchDirective, ColorToRgbPipe, ColorToContrastPipe],
+  imports: [FullWidthColorSwatchDirective, RgbDisplayComponent],
   templateUrl: "./color-axis.component.html",
 })
 export class ColorAxisComponent {
@@ -18,7 +19,7 @@ export class ColorAxisComponent {
 
   width = input<number | "full">("full");
 
-  indices: Signal<{ valores: Triple<number>; color: string }[]> | undefined = undefined;
+  indices: Signal<{ valores: Triple<number>; color: Triple<number>; fore: string }[]> | undefined = undefined;
 
   pasos: Signal<number | undefined> = undefined;
 
@@ -56,7 +57,12 @@ export class ColorAxisComponent {
         const value = this.min() + i * step;
         const valores = [...baseArray];
         valores[this.colorConfig().variableIndex] = value;
-        return { valores: valores as Triple<number>, color: model.convert([valores[0], valores[1], valores[2]]) };
+        const color = model.convert([valores[0], valores[1], valores[2]]);
+        return {
+          valores: valores as Triple<number>,
+          color: toRgb(color),
+          fore: toContrast(color),
+        };
       });
     });
   }

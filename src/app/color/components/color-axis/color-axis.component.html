@@ -9,9 +9,9 @@
     [model]="colorConfig().model"
     [values]="indice.valores">
     @if(axisConfig().showRGB){
-    <pre [style.color]="indice.color | toContrast">
-      {{ indice.color | toRgb }}
-    </pre>
+    <div [style.color]="indice.fore">
+      <zz-rgb-display [rgb]="indice.color" [vertical]="true"></zz-rgb-display>
+    </div>
     }
   </div>
   }

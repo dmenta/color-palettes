@@ -1,11 +1,10 @@
-import { Component, effect, EventEmitter, input, Output, Signal, signal } from "@angular/core";
+import { Component, effect, EventEmitter, input, Output, signal } from "@angular/core";
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { SliderFieldComponent } from "../../../core/components/slider-field/slider-field.component";
 import { PanelDirective } from "../../../core/directives/containers/panel.directive";
 import { ColorAxisComponent } from "../color-axis/color-axis.component";
 import { DualAxisSliderComponent } from "../dual-axis-slider/dual-axis-slider.component";
 import { AxisConfig, ColorConfig, Triple, Tuple } from "../../model/colors.model";
-import { startWith } from "rxjs";
 
 @Component({
   selector: "zz-color-range-selector",

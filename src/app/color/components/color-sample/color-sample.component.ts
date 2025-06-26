@@ -4,22 +4,19 @@ import { ReactiveFormsModule } from "@angular/forms";
 import { RoundedDirective } from "../../../core/directives/rounded.directive";
 import { ShadowDirective } from "../../../core/directives/shadow.directive";
 import { ColorModel, Triple } from "../../model/colors.model";
-import { ColorToRgbPipe } from "../color-swatch/color-to-rgb.pipe";
-import { IconDirective } from "../../../core/components/icon/icon.directive";
-import { IconButtonDirective } from "../../../core/components/buttons/icon-button.directive";
-import { RgbEditComponent } from "../rgb-edit/rgb-edit.component";
+import { toRgb } from "../color";
+import { RgbDisplayComponent } from "../rgb-display/rgb-display.component";
+import { ColorSelectorComponent } from "../selector/color-selector.component";
 
 @Component({
   selector: "zz-color-sample",
   imports: [
     ReactiveFormsModule,
-    ColorToRgbPipe,
     FullWidthColorSwatchDirective,
-    IconButtonDirective,
     RoundedDirective,
     ShadowDirective,
-    IconDirective,
-    RgbEditComponent,
+    RgbDisplayComponent,
+    ColorSelectorComponent,
   ],
   templateUrl: "./color-sample.component.html",
 })
@@ -29,6 +26,7 @@ export class ColorSampleComponent {
   currentColor = input<Triple<number> | undefined>(undefined, { alias: "color-base" });
 
   texto: Signal<string> | undefined = undefined;
+  rgb: Signal<Triple<number>>;
 
   @Output() newColor = new EventEmitter<Triple<number>>();
 
@@ -36,10 +34,10 @@ export class ColorSampleComponent {
 
   ngOnInit() {
     this.texto = computed(() => this.colorModel()?.convert(this.currentColor()) ?? "");
+    this.rgb = computed(() => toRgb(this.texto() ?? "rgb(0, 0, 0)"));
   }
 
-  changeColor(values: Triple<number>, _dialog: HTMLDialogElement) {
+  changeColor(values: Triple<number>) {
     this.newColor.emit(values);
-    _dialog.close();
   }
 }
