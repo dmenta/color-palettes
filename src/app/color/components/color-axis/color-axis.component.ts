@@ -19,7 +19,9 @@ export class ColorAxisComponent {
 
   width = input<number | "full">("full");
 
-  indices: Signal<{ valores: Triple<number>; color: Triple<number>; fore: string }[]> | undefined = undefined;
+  indices:
+    | Signal<{ values: { valores: Triple<number>; color: Triple<number>; fore: string }[]; min: number; max: number }>
+    | undefined = undefined;
 
   pasos: Signal<number | undefined> = undefined;
 
@@ -53,17 +55,41 @@ export class ColorAxisComponent {
       const pasos = this.pasos();
       const step = (this.max() - this.min()) / (pasos - 1);
 
-      return Array.from({ length: pasos }, (_, i) => {
+      const maximo = [...baseArray];
+      maximo[this.colorConfig().variableIndex] = this.colorConfig().variable.max;
+
+      const maxRgb = toRgb(model.convert([maximo[0], maximo[1], maximo[2]]));
+
+      const minimo = [...baseArray];
+      minimo[this.colorConfig().variableIndex] = this.colorConfig().variable.min;
+
+      const minRgb = toRgb(model.convert([minimo[0], minimo[1], minimo[2]]));
+
+      const valores = Array.from({ length: pasos }, (_, i) => {
         const value = this.min() + i * step;
         const valores = [...baseArray];
         valores[this.colorConfig().variableIndex] = value;
         const color = model.convert([valores[0], valores[1], valores[2]]);
+        const rgb = toRgb(color);
         return {
           valores: valores as Triple<number>,
-          color: toRgb(color),
+          color: rgb,
           fore: toContrast(color),
         };
       });
+
+      const minIndex = valores.findIndex(
+        (v) => v.color[0] === minRgb[0] && v.color[1] === minRgb[1] && v.color[2] === minRgb[2]
+      );
+      const maxIndex = valores.findIndex(
+        (v) => v.color[0] === maxRgb[0] && v.color[1] === maxRgb[1] && v.color[2] === maxRgb[2]
+      );
+
+      return {
+        values: valores,
+        min: minIndex > 0 ? minIndex : -1,
+        max: maxIndex > 0 && maxIndex !== valores.length - 1 ? maxIndex : valores.length,
+      };
     });
   }
 }

@@ -1,13 +1,19 @@
 <div class="flex flex-row justify-between rounded-sm overflow-hidden">
-  @for(indice of indices(); track $index){
+  @for(indice of indices().values; track $index){
   <div
-    class="grow flex flex-row items-center text-xs justify-center overflow-hidden"
+    class="grow relative flex flex-row items-center text-xs justify-center overflow-hidden"
     [shadow]="!axisConfig().continuo"
     [roundedSize]="axisConfig().continuo ? 'none' : 'large'"
     [height]="axisConfig().alto"
     color-swatch-full
     [model]="colorConfig().model"
     [values]="indice.valores">
+    <div
+      class="text-lg absolute select-none bottom-0 right-2 opacity-0 transition-opacity duration-500 ease-in-out"
+      [class.opacity-60]="$index >= indices().max || $index <= indices().min"
+      [style.color]="indice.fore">
+      &#x26A0;
+    </div>
     @if(axisConfig().showRGB){
     <div [style.color]="indice.fore">
       <zz-rgb-display [rgb]="indice.color" [vertical]="true"></zz-rgb-display>
