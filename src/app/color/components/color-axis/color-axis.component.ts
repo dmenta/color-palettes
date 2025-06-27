@@ -17,11 +17,11 @@ export class ColorAxisComponent {
   min = input<number | undefined>(undefined);
   max = input<number | undefined>(undefined);
 
+  showClamp = input<boolean>(false);
+
   width = input<number | "full">("full");
 
-  indices:
-    | Signal<{ values: { valores: Triple<number>; color: Triple<number>; fore: string }[]; min: number; max: number }>
-    | undefined = undefined;
+  swatches: Signal<Swatch[]> | undefined = undefined;
 
   pasos: Signal<number | undefined> = undefined;
 
@@ -43,7 +43,7 @@ export class ColorAxisComponent {
       return pasosConfig;
     });
 
-    this.indices = computed(() => {
+    this.swatches = computed(() => {
       const model = this.colorConfig().model;
       const baseArray =
         this.colorBase() ??
@@ -75,21 +75,25 @@ export class ColorAxisComponent {
           valores: valores as Triple<number>,
           color: rgb,
           fore: toContrast(color),
-        };
+        } as Swatch;
       });
 
-      const minIndex = valores.findIndex(
-        (v) => v.color[0] === minRgb[0] && v.color[1] === minRgb[1] && v.color[2] === minRgb[2]
-      );
-      const maxIndex = valores.findIndex(
-        (v) => v.color[0] === maxRgb[0] && v.color[1] === maxRgb[1] && v.color[2] === maxRgb[2]
-      );
+      let previo = valores[0].color;
+      for (let i = 1; i < valores.length; i++) {
+        const actual = valores[i].color;
+        const diff0 = Math.abs(actual[0] - previo[0]);
+        const diff1 = Math.abs(actual[1] - previo[1]);
+        const diff2 = Math.abs(actual[2] - previo[2]);
+        if (diff0 <= 7 && diff1 <= 3 && diff2 <= 14) {
+          valores[i - 1].clamp = true;
+          valores[i].clamp = true;
+        }
+        previo = actual;
+      }
 
-      return {
-        values: valores,
-        min: minIndex > 0 ? minIndex : -1,
-        max: maxIndex > 0 && maxIndex !== valores.length - 1 ? maxIndex : valores.length,
-      };
+      return valores;
     });
   }
 }
+
+export type Swatch = { valores: Triple<number>; color: Triple<number>; fore: string; clamp?: boolean };

@@ -1,5 +1,5 @@
 <div class="flex flex-row justify-between rounded-sm overflow-hidden">
-  @for(indice of indices().values; track $index){
+  @for(swatch of swatches(); track $index){
   <div
     class="grow relative flex flex-row items-center text-xs justify-center overflow-hidden"
     [shadow]="!axisConfig().continuo"
@@ -7,16 +7,17 @@
     [height]="axisConfig().alto"
     color-swatch-full
     [model]="colorConfig().model"
-    [values]="indice.valores">
+    [values]="swatch.valores">
+    @if(showClamp()){
     <div
       class="text-lg absolute select-none bottom-0 right-2 opacity-0 transition-opacity duration-500 ease-in-out"
-      [class.opacity-60]="$index >= indices().max || $index <= indices().min"
-      [style.color]="indice.fore">
+      [class.opacity-60]="swatch.clamp"
+      [style.color]="swatch.fore">
       &#x26A0;
     </div>
-    @if(axisConfig().showRGB){
-    <div [style.color]="indice.fore">
-      <zz-rgb-display [rgb]="indice.color" [vertical]="true"></zz-rgb-display>
+    } @if(axisConfig().showRGB){
+    <div [style.color]="swatch.fore">
+      <zz-rgb-display [rgb]="swatch.color" [vertical]="true"></zz-rgb-display>
     </div>
     }
   </div>

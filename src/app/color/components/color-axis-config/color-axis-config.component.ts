@@ -38,7 +38,7 @@ export class ColorAxisConfigComponent {
     this.configGroup = new FormGroup({
       alto: new FormControl<number>(100, { nonNullable: true, validators: [Validators.min(1), Validators.max(180)] }),
       continuo: new FormControl<boolean>(false, { nonNullable: true }),
-      pasos: new FormControl<number>(15, { nonNullable: true, validators: [Validators.min(1), Validators.max(100)] }),
+      pasos: new FormControl<number>(15, { nonNullable: true, validators: [Validators.min(2), Validators.max(100)] }),
       automatico: new FormControl<boolean>(true, { nonNullable: true }),
       showRGB: new FormControl<boolean>(false, { nonNullable: true }),
     });
