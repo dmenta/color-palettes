@@ -5,7 +5,7 @@ import { RoundedDirective } from "../../../core/directives/rounded.directive";
 import { ShadowDirective } from "../../../core/directives/shadow.directive";
 import { ColorModel, Triple } from "../../model/colors.model";
 import { toRgb } from "../color";
-import { RgbDisplayComponent } from "../rgb-display/rgb-display.component";
+import { ColorValuesDisplayComponent } from "../rgb-display/color-values-display.component";
 import { ColorSelectorComponent } from "../selector/color-selector.component";
 
 @Component({
@@ -15,7 +15,7 @@ import { ColorSelectorComponent } from "../selector/color-selector.component";
     FullWidthColorSwatchDirective,
     RoundedDirective,
     ShadowDirective,
-    RgbDisplayComponent,
+    ColorValuesDisplayComponent,
     ColorSelectorComponent,
   ],
   templateUrl: "./color-sample.component.html",

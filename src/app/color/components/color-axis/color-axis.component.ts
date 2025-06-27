@@ -1,12 +1,12 @@
 import { Component, computed, input, Signal } from "@angular/core";
 import { FullWidthColorSwatchDirective } from "../color-swatch/color-swatch.directive";
 import { AxisConfig, ColorConfig, Triple } from "../../model/colors.model";
-import { RgbDisplayComponent } from "../rgb-display/rgb-display.component";
+import { ColorValuesDisplayComponent } from "../rgb-display/color-values-display.component";
 import { toContrast, toRgb } from "../color";
 
 @Component({
   selector: "zz-color-axis",
-  imports: [FullWidthColorSwatchDirective, RgbDisplayComponent],
+  imports: [FullWidthColorSwatchDirective, ColorValuesDisplayComponent],
   templateUrl: "./color-axis.component.html",
 })
 export class ColorAxisComponent {

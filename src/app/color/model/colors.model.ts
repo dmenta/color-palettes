@@ -8,6 +8,7 @@ export class ColorComponent {
 
   constructor(
     public name: string,
+    public label: string,
     public max: number,
     public unit: string = "",
     public precision: number = 0,

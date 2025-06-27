@@ -4,9 +4,9 @@
   </div>
   <div
     class="justify-center w-full min-h-10 max-h-20 py-2 flex flex-col items-center text-md dark:bg-gris-900 bg-gris-200 dark:text-gris-300 text-gris-700">
-    {{ texto() }}
+    <zz-color-values-display [model]="colorModel()" [values]="currentColor()"></zz-color-values-display>
     @if(colorModel().name!=="rgb"){
-    <zz-rgb-display [rgb]="rgb()" class="text-sm opacity-80"></zz-rgb-display>
+    <zz-color-values-display [values]="rgb()" class="text-sm opacity-80"></zz-color-values-display>
     }
   </div>
 </div>

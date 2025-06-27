@@ -1,5 +1,5 @@
-<div class="grid grid-cols-[280px_minmax(500px,_1fr)] items-top gap-6 p-6">
-  <div>
+<div class="md:grid md:grid-cols-[280px_minmax(500px,_1fr)] p-6 items-top md:gap-6 flex flex-col-reverse">
+  <div class="flex flex-col-reverse gap-4 md:flex-col">
     @if(colorConfig()){
     <zz-color-sample
       [height]="200"
@@ -7,23 +7,23 @@
       [color-base]="currentColor()"
       (newColor)="onNewColor($event)"></zz-color-sample>
     }
-    <div class="w-full mt-4">
+    <div class="w-full">
       <zz-color-config (colorConfigChange)="colorConfigChanged($event)"></zz-color-config>
     </div>
-    <div class="w-full mt-4">
+    <div class="w-full md:block hidden">
       <zz-color-axis-config (axisConfigChange)="configChanged($event)"></zz-color-axis-config>
     </div>
   </div>
-  <div class="relative">
+  <div class="relative flex flex-col">
     <zz-color-range-selector
       [color-config]="colorConfig()"
-      [axis-config]="{ alto: 40, continuo: true, pasos: 60, automatico: true, showRGB: false }"
+      [axis-config]="{ alto: 10, continuo: true, pasos: 60, automatico: true, showRGB: false }"
       [color-base]="colorBase()"
       (colorChange)="colorChange($event)"
       (rangeChange)="rangeChange($event)">
     </zz-color-range-selector>
     <zz-color-axis
-      class="mt-10 block p-6"
+      class="block p-6"
       [showClamp]="true"
       [color-config]="colorConfig()"
       [axis-config]="axisConfig()"

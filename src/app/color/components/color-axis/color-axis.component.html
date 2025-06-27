@@ -17,7 +17,10 @@
     </div>
     } @if(axisConfig().showRGB){
     <div [style.color]="swatch.fore">
-      <zz-rgb-display [rgb]="swatch.color" [vertical]="true"></zz-rgb-display>
+      <zz-color-values-display
+        [model]="colorConfig().model"
+        [values]="swatch.color"
+        [vertical]="true"></zz-color-values-display>
     </div>
     }
   </div>
