@@ -1,11 +1,9 @@
-import { Directive, HostBinding } from "@angular/core";
+import { Directive } from "@angular/core";
 
 @Directive({
   selector: "[zz-width-full], zzWidthFull",
+  host: {
+    class: "w-full",
+  },
 })
-export class WidthFullDirective {
-  @HostBinding("style.width")
-  get width() {
-    return "100%";
-  }
-}
+export class WidthFullDirective {}

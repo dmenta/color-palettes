@@ -1,9 +1,10 @@
 import { Directive, HostBinding, input } from "@angular/core";
-import { TruncateDirective } from "./truncate.directive";
 
 @Directive({
   selector: "[zz-text-length], zzTextLength",
-  hostDirectives: [TruncateDirective],
+  host: {
+    class: "truncate",
+  },
 })
 export class TextLengthDirective {
   length = input(undefined, {

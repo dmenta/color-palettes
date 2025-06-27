@@ -52,16 +52,3 @@ export class BlockDirective extends DisplayBaseDirective {
 export class FlexDirective extends DisplayBaseDirective {
   override tipo = "flex";
 }
-
-@Directive({
-  selector: "[zz-grid], zzGrid",
-})
-export class GridDirective extends DisplayBaseDirective {
-  override tipo = "grid";
-}
-@Directive({
-  selector: "[zz-none], zzNone",
-})
-export class HiddenDirective extends DisplayBaseDirective {
-  override tipo = "none";
-}
