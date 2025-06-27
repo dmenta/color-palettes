@@ -3,13 +3,13 @@
     @if(colorConfig()){
     <zz-color-range-selector
       [color-config]="colorConfig()"
-      [axis-config]="{ alto: 40, continuo: true, pasos: 60, automatico: true, showValues: 'no' }"
+      [axis-config]="{ alto: 63, continuo: true, pasos: 60, automatico: true, showValues: 'no' }"
       [color-base]="colorBase()"
       (colorChange)="colorChange($event)"
       (rangeChange)="rangeChange($event)">
     </zz-color-range-selector>
     <zz-color-axis
-      class="block p-6"
+      class="block p-6 mt-6"
       [showClamp]="true"
       [color-config]="colorConfig()"
       [axis-config]="axisConfig()"

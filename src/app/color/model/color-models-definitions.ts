@@ -7,9 +7,9 @@ export const colorModels: ColorModel[] = [
     new ColorComponent("Blue", "b", 255, "", 0, 25),
   ]),
   new ColorModel("hsl", [
-    new ColorComponent("Hue", "h", 720, "deg", 0, 55),
+    new ColorComponent("Hue", "h", 540, "deg", 0, 55, -180),
     new ColorComponent("Saturation", "s", 100, "%", 0, 20),
-    new ColorComponent("Lightness", "l", 100, "%", 0, 35),
+    new ColorComponent("Lightness", "l", 100, "%", 1, 35),
   ]),
   new ColorModel("oklch", [
     new ColorComponent("Lightness", "l", 1, "", 3, 35),
