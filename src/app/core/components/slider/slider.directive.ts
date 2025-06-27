@@ -12,8 +12,8 @@ import { WidthFullDirective } from "../../directives/width.directive";
 [&::-webkit-slider-thumb]:shadow-black 
 [&::-webkit-slider-thumb]:transition-all
 [&::-webkit-slider-thumb]:duration-150  
-focus:[&::-webkit-slider-thumb]:outline-zinc-500  
-dark:focus:[&::-webkit-slider-thumb]:outline-zinc-300
+focus:[&::-webkit-slider-thumb]:outline-gris-500  
+dark:focus:[&::-webkit-slider-thumb]:outline-gris-300
 [&::-webkit-slider-thumb]:mt-[-0.35rem]
 [&::-webkit-slider-thumb]:h-[.75rem]
 [&::-webkit-slider-thumb]:w-[.75rem]

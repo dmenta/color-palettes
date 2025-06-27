@@ -5,8 +5,8 @@ import { Directive } from "@angular/core";
   host: {
     class: `
           group-focus-within:ring-2 group-focus-within:ring-offset-0
-          ring-zinc-600/50 outline-none  
-          dark:ring-zinc-300/60
+          ring-gris-600/50 outline-none  
+          dark:ring-gris-300/60
           focus:ring-2 focus:ring-offset-0
           `,
   },

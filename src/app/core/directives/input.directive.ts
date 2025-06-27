@@ -13,7 +13,7 @@ import { RoundedDirective } from "./rounded.directive";
     { directive: DisabledDirective, inputs: ["zz-disabled:zzDisabled"] },
   ],
   host: {
-    class: "p-1 border-1 border-gray-500 w-14 text-right invalid:dark:border-red-500 invalid:border-red-700",
+    class: "p-1 border-1 border-gris-500 w-14 text-right invalid:dark:border-red-500 invalid:border-red-700",
   },
 })
 export class InputDirective {}

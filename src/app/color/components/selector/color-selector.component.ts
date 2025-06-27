@@ -9,7 +9,7 @@ import { Triple } from "../../model/colors.model";
     type="color"
     class="rounded-md appearance-none [&::-webkit-color-swatch]:rounded-md
   [&::-webkit-color-swatch]:border-none [&::-webkit-color-swatch-wrapper]:p-0 shadow-md shadow-black/20 border-2
-  focus:ring-1 focus:ring-gray-600/100"
+  focus:ring-1 focus:ring-gris-600/100"
     [class]="{ 'border-white/40': borderColor() === 'white', 'border-black/40': borderColor() === 'black' }"
     [formControl]="colorControl"
     (change)="updateColor()" />`,

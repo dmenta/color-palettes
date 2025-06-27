@@ -2,6 +2,20 @@
 
 @import "tailwindcss";
 
+@theme {
+  --color-gris-50: oklch(98.9% 0.012 54);
+  --color-gris-100: oklch(90.3% 0.012 54);
+  --color-gris-200: oklch(81.8% 0.012 54);
+  --color-gris-300: oklch(73.2% 0.012 54);
+  --color-gris-400: oklch(64.6% 0.012 54);
+  --color-gris-500: oklch(56% 0.012 54);
+  --color-gris-600: oklch(47.5% 0.012 54);
+  --color-gris-700: oklch(38.9% 0.012 54);
+  --color-gris-800: oklch(30.3% 0.012 54);
+  --color-gris-900: oklch(21.8% 0.012 54);
+  --color-gris-950: oklch(13.2% 0.012 54);
+}
+
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
@@ -11,11 +25,11 @@
 
 :root {
   --bg-base: #ffffff;
-  --bg-application: #fafafa;
-  --bg-container: hsl(0, 0%, 96%);
-  --bg-hover: hsl(0, 0%, 93%);
-  --bg-button: #e0e0e1;
-  --bg-button-hover: hsl(240, 2%, 83%);
+  --bg-application: ffffff;
+  --bg-container: oklch(98.9% 0.012 54);
+  --bg-hover: oklch(81.8% 0.012 54);
+  --bg-button: oklch(90.3% 0.012 54);
+  --bg-button-hover: oklch(81.8% 0.012 54);
 
   --accent-color: #ffb86a;
   --primary-color: #19c1ff;
@@ -24,12 +38,12 @@
 }
 
 :root.dark {
-  --bg-base: #0e0e10;
-  --bg-application: #131314;
-  --bg-container: hsl(240, 6%, 10%);
-  --bg-hover: hsl(240, 6%, 14%);
-  --bg-button: #2f2f33;
-  --bg-button-hover: hsl(240, 4%, 25%);
+  --bg-base: oklch(13.2% 0.012 54);
+  --bg-application: oklch(21.8% 0.012 54);
+  --bg-container: oklch(30.3% 0.012 54);
+  --bg-hover: oklch(38.9% 0.012 54);
+  --bg-button: oklch(30.3% 0.012 54);
+  --bg-button-hover: oklch(38.9% 0.012 54);
 
   --accent-color: #ff8a05;
   --primary-color: #50a2ff;

@@ -55,16 +55,6 @@ export class ColorAxisComponent {
       const pasos = this.pasos();
       const step = (this.max() - this.min()) / (pasos - 1);
 
-      const maximo = [...baseArray];
-      maximo[this.colorConfig().variableIndex] = this.colorConfig().variable.max;
-
-      const maxRgb = toRgb(model.convert([maximo[0], maximo[1], maximo[2]]));
-
-      const minimo = [...baseArray];
-      minimo[this.colorConfig().variableIndex] = this.colorConfig().variable.min;
-
-      const minRgb = toRgb(model.convert([minimo[0], minimo[1], minimo[2]]));
-
       const valores = Array.from({ length: pasos }, (_, i) => {
         const value = this.min() + i * step;
         const valores = [...baseArray];

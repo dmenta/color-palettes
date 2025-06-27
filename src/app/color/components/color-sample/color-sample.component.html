@@ -3,7 +3,7 @@
     <zz-color-selector [color]="rgb()" (color-change)="changeColor($event)"></zz-color-selector>
   </div>
   <div
-    class="justify-center w-full min-h-10 max-h-20 py-2 flex flex-col items-center text-md dark:bg-zinc-900 bg-zinc-200 dark:text-zinc-300 text-zinc-700">
+    class="justify-center w-full min-h-10 max-h-20 py-2 flex flex-col items-center text-md dark:bg-gris-900 bg-gris-200 dark:text-gris-300 text-gris-700">
     {{ texto() }}
     @if(colorModel().name!=="rgb"){
     <zz-rgb-display [rgb]="rgb()" class="text-sm opacity-80"></zz-rgb-display>
