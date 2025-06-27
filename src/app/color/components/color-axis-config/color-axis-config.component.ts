@@ -5,8 +5,9 @@ import { ToggleCheckComponent } from "../../../core/components/toggle-check/togg
 import { PanelDirective } from "../../../core/directives/containers/panel.directive";
 import { RoundedDirective } from "../../../core/directives/rounded.directive";
 import { debounceTime, distinctUntilChanged, startWith } from "rxjs";
-import { AxisConfig } from "../../model/colors.model";
+import { AxisConfig, showValuesOption } from "../../model/colors.model";
 import { InputDirective } from "../../../core/directives/input.directive";
+import { SelectComponent } from "../../../core/components/select/select.component";
 
 @Component({
   selector: "zz-color-axis-config",
@@ -18,6 +19,7 @@ import { InputDirective } from "../../../core/directives/input.directive";
     RoundedDirective,
     InputDirective,
     ToggleCheckComponent,
+    SelectComponent,
   ],
   templateUrl: "./color-axis-config.component.html",
 })
@@ -28,19 +30,26 @@ export class ColorAxisConfigComponent {
         continuo: FormControl<boolean>;
         pasos: FormControl<number>;
         automatico: FormControl<boolean>;
-        showRGB: FormControl<boolean>;
+        showValues: FormControl<{ text: string; value: showValuesOption }>;
       }>
     | undefined = undefined;
 
   @Output() axisConfigChange = new EventEmitter<AxisConfig>();
+  showValuesOptions: { text: string; value: showValuesOption }[] = [
+    { text: "No", value: "no" },
+    { text: "Yes", value: "yes" },
+    { text: "RGB", value: "rgb" },
+  ];
 
   ngOnInit() {
     this.configGroup = new FormGroup({
       alto: new FormControl<number>(100, { nonNullable: true, validators: [Validators.min(1), Validators.max(180)] }),
       continuo: new FormControl<boolean>(false, { nonNullable: true }),
-      pasos: new FormControl<number>(15, { nonNullable: true, validators: [Validators.min(2), Validators.max(100)] }),
+      pasos: new FormControl<number>(12, { nonNullable: true, validators: [Validators.min(2), Validators.max(100)] }),
       automatico: new FormControl<boolean>(true, { nonNullable: true }),
-      showRGB: new FormControl<boolean>(false, { nonNullable: true }),
+      showValues: new FormControl<{ text: string; value: showValuesOption }>(this.showValuesOptions[0], {
+        nonNullable: true,
+      }),
     });
 
     this.configGroup.valueChanges
@@ -56,7 +65,7 @@ export class ColorAxisConfigComponent {
             continuo: value.continuo,
             pasos: value.pasos,
             automatico: value.automatico,
-            showRGB: value.showRGB,
+            showValues: value.showValues.value,
           });
         }
       });

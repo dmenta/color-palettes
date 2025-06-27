@@ -15,12 +15,16 @@
       [style.color]="swatch.fore">
       &#x26A0;
     </div>
-    } @if(axisConfig().showRGB){
+    } @if(axisConfig().showValues==='yes'){
     <div [style.color]="swatch.fore">
       <zz-color-values-display
         [model]="colorConfig().model"
-        [values]="swatch.color"
+        [values]="swatch.valores"
         [vertical]="true"></zz-color-values-display>
+    </div>
+    }@if(axisConfig().showValues==="rgb"){
+    <div [style.color]="swatch.fore">
+      <zz-color-values-display [values]="swatch.color" [vertical]="true"></zz-color-values-display>
     </div>
     }
   </div>

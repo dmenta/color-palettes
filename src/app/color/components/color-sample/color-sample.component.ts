@@ -25,7 +25,6 @@ export class ColorSampleComponent {
   colorModel = input.required<ColorModel>({ alias: "model" });
   currentColor = input<Triple<number> | undefined>(undefined, { alias: "color-base" });
 
-  texto: Signal<string> | undefined = undefined;
   rgb: Signal<Triple<number>>;
 
   @Output() newColor = new EventEmitter<Triple<number>>();
@@ -33,8 +32,7 @@ export class ColorSampleComponent {
   @ViewChild("swatch", { static: true }) swatchEl?: ElementRef<HTMLElement>;
 
   ngOnInit() {
-    this.texto = computed(() => this.colorModel()?.convert(this.currentColor()) ?? "");
-    this.rgb = computed(() => toRgb(this.texto() ?? "rgb(0, 0, 0)"));
+    this.rgb = computed(() => toRgb(this.colorModel()?.convert(this.currentColor()) ?? "rgb(0, 0, 0)"));
   }
 
   changeColor(values: Triple<number>) {

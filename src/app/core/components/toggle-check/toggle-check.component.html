@@ -1,12 +1,12 @@
 <div
-  class="ml-1 my-1 flex items-center gap-2 group"
+  class="ml-1 flex items-center gap-2 group"
   [class.opacity-70]="!disabled && !value"
   (focusout)="onFocusOut($event)"
   (focusin)="onFocusIn($event)"
   [style.flexDirection]="before ? 'row-reverse' : 'row'">
   <label
     zz-focus-ring
-    class="relative block h-8 w-14 rounded-full cursor-pointer bg-gris-300 transition-colors [-webkit-tap-highlight-color:_transparent] has-checked:bg-sky-500 dark:bg-gris-600 dark:has-checked:bg-sky-600">
+    class="relative block h-8 w-14 rounded-full cursor-pointer bg-gris-300 transition-colors [-webkit-tap-highlight-color:_transparent] has-checked:bg-sky-400 dark:bg-gris-600 dark:has-checked:bg-sky-800">
     <input type="checkbox" class="peer sr-only" #valor (click)="clickCheckbox($event)" />
 
     <span

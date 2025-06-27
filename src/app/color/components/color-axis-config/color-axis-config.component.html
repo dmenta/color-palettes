@@ -1,6 +1,6 @@
 <form [formGroup]="configGroup" class="h-fit w-full text-sm">
   <div zz-panel class="p-4 h-fit w-full">
-    <div class="opacity-80 space-y-2">
+    <div class="space-y-4">
       <div class="flex flex-row flex-wrap items-center justify-between">
         <div class="flex flex-row items-center justify-between w-28">
           <label for="alto">Height </label>
@@ -35,10 +35,10 @@
           <zz-toggle-check formControlName="automatico" label="Auto" [before]="true" />
         </div>
       </div>
-      <div class="-ml-1.5">
-        <div>
-          <zz-toggle-check formControlName="showRGB" label="Show RGB" />
-        </div>
+      <div class="flex flex-row items-center gap-3">
+        <label [for]="showValues">Values</label>
+        <zz-select #showValues [items]="showValuesOptions" class="w-20" displayKey="text" formControlName="showValues">
+        </zz-select>
       </div>
     </div>
   </div>

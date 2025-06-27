@@ -72,7 +72,15 @@ export class ColorModel {
   }
 }
 
-export type AxisConfig = { alto: number; continuo: boolean; pasos: number; automatico: boolean; showRGB: boolean };
+export type AxisConfig = {
+  alto: number;
+  continuo: boolean;
+  pasos: number;
+  automatico: boolean;
+  showValues: showValuesOption;
+};
+
+export type showValuesOption = "no" | "yes" | "rgb";
 
 export type ColorConfig = {
   model: ColorModel;

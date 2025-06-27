@@ -4,7 +4,7 @@ import { effect, Injectable, signal } from "@angular/core";
   providedIn: "root",
 })
 export class DarkModeService {
-  readonly darkMode = signal(true);
+  readonly darkMode = signal(false);
 
   setDarkMode(darkMode: boolean) {
     this.darkMode.set(darkMode);
