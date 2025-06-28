@@ -77,8 +77,8 @@ export class SliderSlimDirective {
   constructor(private el: ElementRef, private renderer: Renderer2) {
     effect(() => {
       const accent = this.accent() ?? false;
-      this.toggleAccent[accent.toString()].forEach((clase) => this.renderer.addClass(this.el.nativeElement, clase));
-      this.toggleAccent[(!accent).toString()].forEach((clase) =>
+      this.toggleAccent[accent.toString()]?.forEach((clase) => this.renderer.addClass(this.el.nativeElement, clase));
+      this.toggleAccent[(!accent).toString()]?.forEach((clase) =>
         this.renderer.removeClass(this.el.nativeElement, clase)
       );
     });

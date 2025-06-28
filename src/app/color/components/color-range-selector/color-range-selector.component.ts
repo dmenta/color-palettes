@@ -38,7 +38,7 @@ export class ColorRangeSelectorComponent {
 
   constructor() {
     effect(() => {
-      const color = this.colorBase();
+      const color = this.colorBase() ?? [0, 0, 0];
 
       this.configGroup.patchValue(
         {
@@ -52,10 +52,11 @@ export class ColorRangeSelectorComponent {
   }
 
   ngOnInit() {
+    const colorBase = this.colorBase() ?? [0, 0, 0];
     this.configGroup = new FormGroup({
-      v0: new FormControl(this.colorBase()[0], { nonNullable: true }),
-      v1: new FormControl(this.colorBase()[1], { nonNullable: true }),
-      v2: new FormControl(this.colorBase()[2], { nonNullable: true }),
+      v0: new FormControl(colorBase[0], { nonNullable: true }),
+      v1: new FormControl(colorBase[1], { nonNullable: true }),
+      v2: new FormControl(colorBase[2], { nonNullable: true }),
     });
 
     this.configGroup.valueChanges.subscribe(() => {
@@ -67,7 +68,7 @@ export class ColorRangeSelectorComponent {
   }
   onVariableChange(minmax: Tuple<number>) {
     this.configGroup.patchValue({
-      ["v" + this.colorConfig().variableIndex]: (minmax[0] + minmax[1]) / 2,
+      ["v" + this.colorConfig()!.variableIndex]: (minmax[0] + minmax[1]) / 2,
     });
     this.rangeChange.emit(minmax);
   }

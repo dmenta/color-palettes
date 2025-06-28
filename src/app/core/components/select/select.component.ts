@@ -34,7 +34,8 @@ export class SelectComponent<T extends object | string | number, K extends keyof
   implements ControlValueAccessor
 {
   trackValue(index: number, item: T) {
-    return index + "-" + item[this.displayKey()].toString();
+    const itemDescription = item[this.displayKey()]?.toString();
+    return itemDescription ? index + "-" + itemDescription : index.toString();
   }
   static nextId = 0;
   controlType = "select";
@@ -64,13 +65,13 @@ export class SelectComponent<T extends object | string | number, K extends keyof
   get value() {
     return this._value;
   }
-  set value(value: T | null) {
+  set value(value: T | undefined) {
     this._value = value;
     if (!this.touched) {
       this.writeValue(value);
     }
   }
-  private _value: T | null = null;
+  private _value: T | undefined = undefined;
   _renderer: Renderer2 = inject(Renderer2);
 
   onValueChange(event: Event) {
@@ -91,7 +92,7 @@ export class SelectComponent<T extends object | string | number, K extends keyof
     this.onTouched?.call(this);
   }
 
-  writeValue(value: T | null): void {
+  writeValue(value: T | undefined): void {
     this._value = value;
     if (value) {
       const valueKey = value[this.displayKey()];

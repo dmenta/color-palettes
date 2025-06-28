@@ -57,7 +57,7 @@ export class ColorPaletteComponent {
   private getChannels(rgb: Triple<number>) {
     const colorModel = this.colorConfig()?.model;
 
-    if (colorModel.name === "rgb") {
+    if (!colorModel || colorModel.name === "rgb") {
       return rgb;
     }
 

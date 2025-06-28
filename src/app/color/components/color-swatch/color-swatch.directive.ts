@@ -25,7 +25,7 @@ export class ColorSwatchDirective {
       return undefined;
     }
 
-    const valores = this.values();
+    const valores = this.values() ?? [0, 0, 0];
     return colorModel.convert([valores[0], valores[1], valores[2]]);
   });
 }

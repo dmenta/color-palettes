@@ -1,10 +1,10 @@
 /* To learn more about Typescript configuration file: https://www.typescriptlang.org/docs/handbook/tsconfig-json.html. */
 /* To learn more about Angular compiler options: https://angular.dev/reference/configs/angular-compiler-options. */
 {
-  "compileOnSave": false,
+  "compileOnSave": true,
   "compilerOptions": {
     "outDir": "./dist/out-tsc",
-    "strict": false,
+    "strict": true,
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
     "noImplicitReturns": true,
@@ -12,8 +12,8 @@
     "skipLibCheck": true,
     "isolatedModules": true,
     "esModuleInterop": true,
-    "noImplicitAny": false,
-    "noUnusedLocals": false,
+    "noImplicitAny": true,
+    "noUnusedLocals": true,
 
     "forceConsistentCasingInFileNames": true,
 
@@ -32,7 +32,7 @@
       va a llevar tiempo poder activarlo pero vale la pena
       porque lo que detecta realmente son situaciones de riesgo
       */
-    "strictNullChecks": false,
+    "strictNullChecks": true,
     /* sólo se pueden activar si strictNullChecks está activado */
     "exactOptionalPropertyTypes": false,
     "strictPropertyInitialization": false,

@@ -47,7 +47,7 @@ export class ColorAxisConfigComponent {
       continuo: new FormControl<boolean>(false, { nonNullable: true }),
       pasos: new FormControl<number>(12, { nonNullable: true, validators: [Validators.min(2), Validators.max(100)] }),
       automatico: new FormControl<boolean>(true, { nonNullable: true }),
-      showValues: new FormControl<{ text: string; value: showValuesOption }>(this.showValuesOptions[0], {
+      showValues: new FormControl<{ text: string; value: showValuesOption }>(this.showValuesOptions![0]!, {
         nonNullable: true,
       }),
     });
@@ -59,13 +59,14 @@ export class ColorAxisConfigComponent {
         startWith(this.configGroup.value)
       )
       .subscribe((value) => {
-        if (this.configGroup.valid) {
+        const controls = this.configGroup?.controls;
+        if (controls && this.configGroup?.valid) {
           this.axisConfigChange.emit({
-            alto: value.alto,
-            continuo: value.continuo,
-            pasos: value.pasos,
-            automatico: value.automatico,
-            showValues: value.showValues.value,
+            alto: value.alto ?? controls.alto.value,
+            continuo: value.continuo ?? controls.continuo.value,
+            pasos: value.pasos ?? controls.pasos.value,
+            automatico: value.automatico ?? controls.automatico.value,
+            showValues: value.showValues?.value ?? controls.showValues.value.value,
           });
         }
       });

@@ -8,7 +8,7 @@
   (focusout)="onFocusOut($event)"
   (change)="onValueChange($event)">
   @for (item of items(); track trackValue($index,item)) {
-  <option [value]="item" [selected]="item[displayKey()] === value[displayKey()]">
+  <option [value]="item" [selected]="value && item[displayKey()] === value[displayKey()]">
     {{ item[displayKey()] }}
   </option>
   }

@@ -19,7 +19,7 @@ export const colorModels: ColorModel[] = [
 ];
 
 export const namedColorModels: Record<ColorModelName, ColorModel> = {
-  rgb: colorModels[0],
-  hsl: colorModels[1],
-  oklch: colorModels[2],
+  rgb: colorModels[0]!,
+  hsl: colorModels[1]!,
+  oklch: colorModels[2]!,
 };

@@ -1,12 +1,12 @@
 <div class="flex flex-row justify-between rounded-sm overflow-hidden">
-  @for(swatch of swatches(); track $index){
+  @if(axisConfig(); as axisConfig){ @for(swatch of swatches!(); track $index){
   <div
     class="grow relative flex flex-row items-center text-xs justify-center overflow-hidden"
-    [shadow]="!axisConfig().continuo"
-    [roundedSize]="axisConfig().continuo ? 'none' : 'large'"
-    [height]="axisConfig().alto"
+    [shadow]="!axisConfig.continuo"
+    [roundedSize]="axisConfig.continuo ? 'none' : 'large'"
+    [height]="axisConfig.alto"
     color-swatch-full
-    [color-model]="colorConfig().model"
+    [color-model]="colorConfig()!.model"
     [values]="swatch.valores">
     @if(showClamp()){
     <div
@@ -15,18 +15,18 @@
       [style.color]="swatch.fore">
       &#x26A0;
     </div>
-    } @if(axisConfig().showValues==='yes'){
+    } @if(axisConfig.showValues==='yes'){
     <div [style.color]="swatch.fore">
       <zz-color-values-display
-        [color-model]="colorConfig().model"
+        [color-model]="colorConfig()!.model"
         [values]="swatch.valores"
         [vertical]="true"></zz-color-values-display>
     </div>
-    }@if(axisConfig().showValues==="rgb"){
+    }@if(axisConfig.showValues==="rgb"){
     <div [style.color]="swatch.fore">
       <zz-color-values-display [values]="swatch.color" [vertical]="true"></zz-color-values-display>
     </div>
     }
   </div>
-  }
+  } }
 </div>

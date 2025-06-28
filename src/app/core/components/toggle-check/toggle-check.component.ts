@@ -1,7 +1,6 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  DebugElement,
   ElementRef,
   forwardRef,
   HostBinding,

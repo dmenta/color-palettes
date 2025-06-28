@@ -23,7 +23,8 @@ import { ColorSelectorComponent } from "../selector/color-selector.component";
 export class ColorSampleComponent {
   height = input(120);
   colorModel = input.required<ColorModel>({ alias: "color-model" });
-  currentColor = input<Triple<number> | undefined>(undefined, { alias: "color-base" });
+
+  currentColor = input<Triple<number> | undefined>(undefined, { alias: "current-color" });
 
   rgb: Signal<Triple<number>>;
 
@@ -32,7 +33,10 @@ export class ColorSampleComponent {
   @ViewChild("swatch", { static: true }) swatchEl?: ElementRef<HTMLElement>;
 
   ngOnInit() {
-    this.rgb = computed(() => toRgb(this.colorModel()?.convert(this.currentColor()) ?? "rgb(0, 0, 0)"));
+    this.rgb = computed(() => {
+      const currentColor = this.currentColor();
+      return currentColor ? toRgb(this.colorModel()?.convert(currentColor)) : [0, 0, 0];
+    });
   }
 
   changeColor(values: Triple<number>) {

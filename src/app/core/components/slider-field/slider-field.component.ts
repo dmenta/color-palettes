@@ -67,16 +67,16 @@ export class SliderFieldComponent {
     let decimales = 0;
     if ((this.step ?? 1) !== 1 && !Number.isInteger(this.step)) {
       const stepStr = this.step!.toString();
-      decimales = stepStr.split(".")[1].length;
+      decimales = stepStr.split(".")[1]?.length ?? 0;
     }
     if ((this.min ?? 0) !== 0 && !Number.isInteger(this.min)) {
       const minStr = this.min!.toString();
-      decimales = Math.max(decimales, minStr.split(".")[1].length);
+      decimales = Math.max(decimales, minStr.split(".")[1]?.length ?? 0);
     }
 
     if ((this.max ?? 10) !== 10 && !Number.isInteger(this.max)) {
       const maxStr = this.max!.toString();
-      decimales = Math.max(decimales, maxStr.split(".")[1].length);
+      decimales = Math.max(decimales, maxStr.split(".")[1]?.length ?? 0);
     }
 
     return decimales;

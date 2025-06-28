@@ -1,3 +1,5 @@
+@if(control){
+
 <div
   class="w-full p-1 bg-transparent flex flex-col"
   [class.flex-col-reverse]="!labelsAbove"
@@ -40,3 +42,4 @@
     [attr.list]="fieldName + '-list'" />
   <zz-data-list [id]="fieldName + '-list'" [values]="stops ?? []"> </zz-data-list>
 </div>
+}

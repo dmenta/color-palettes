@@ -5,14 +5,16 @@ import { Triple } from "../../model/colors.model";
 
 @Component({
   selector: "zz-color-selector",
-  template: ` <input
-    type="color"
-    class="rounded-md appearance-none [&::-webkit-color-swatch]:rounded-md
+  template: ` @if(colorControl){
+    <input
+      type="color"
+      class="rounded-md appearance-none [&::-webkit-color-swatch]:rounded-md
   [&::-webkit-color-swatch]:border-none [&::-webkit-color-swatch-wrapper]:p-0 shadow-md shadow-black/20 border-2
   focus:ring-1 focus:ring-gris-600/100"
-    [class]="{ 'border-white/40': borderColor() === 'white', 'border-black/40': borderColor() === 'black' }"
-    [formControl]="colorControl"
-    (change)="updateColor()" />`,
+      [class]="{ 'border-white/40': borderColor() === 'white', 'border-black/40': borderColor() === 'black' }"
+      [formControl]="colorControl"
+      (change)="updateColor()" />
+    }`,
   imports: [ReactiveFormsModule],
 })
 export class ColorSelectorComponent {
@@ -21,7 +23,7 @@ export class ColorSelectorComponent {
    * Color value in hexadecimal format. (e.g. #000000)
    * or a Triple<number> representing RGB values.
    */
-  value = input(undefined, {
+  value = input("#000000", {
     alias: "color",
     transform: (value?: Triple<number> | string | undefined) => {
       const color = value ?? "#000000";
@@ -49,9 +51,9 @@ export class ColorSelectorComponent {
   ngOnInit() {
     const borderColor = toContrast(this.value());
     this.borderColor.set(borderColor);
-    this.colorControl = new FormControl<string>(this.value());
+    this.colorControl = new FormControl<string>(this.value(), { nonNullable: true });
   }
   public updateColor() {
-    this.colorChange.emit(rgbFromHex(this.colorControl.value));
+    this.colorChange.emit(rgbFromHex(this.colorControl!.value));
   }
 }

@@ -4,9 +4,9 @@ import { Triple } from "../model/colors.model";
 export function toRgb(textoColor: string) {
   const color = new Color(textoColor);
 
-  const r = Math.max(0, Math.min(1, color.srgb["r"])) * 255;
-  const g = Math.max(0, Math.min(1, color.srgb["g"])) * 255;
-  const b = Math.max(0, Math.min(1, color.srgb["b"])) * 255;
+  const r = Math.max(0, Math.min(1, color.srgb["r"] ?? 0)) * 255;
+  const g = Math.max(0, Math.min(1, color.srgb["g"] ?? 0)) * 255;
+  const b = Math.max(0, Math.min(1, color.srgb["b"] ?? 0)) * 255;
 
   return [Math.round(r), Math.round(g), Math.round(b)] as Triple<number>;
 }

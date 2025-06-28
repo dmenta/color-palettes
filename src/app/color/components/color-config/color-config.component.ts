@@ -48,8 +48,8 @@ export class ColorConfigComponent {
     )
       .pipe(startWith(this.configGroup.value))
       .subscribe(() => {
-        const colorModel = this.configGroup.controls.model.value;
-        const variable = this.configGroup.controls.variable.value;
+        const colorModel = this.configGroup!.controls.model.value;
+        const variable = this.configGroup!.controls.variable.value;
         this.colorConfigChange.emit({
           model: colorModel,
           variable: variable,

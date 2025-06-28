@@ -48,11 +48,21 @@ export class DualAxisSliderComponent {
     });
 
     this.formDual.valueChanges.subscribe((value) => {
-      this.minmaxChange.emit([value.min, value.max]);
+      this.minmaxChange.emit([
+        value.min ?? this.formDual.controls.min.value,
+        value.max ?? this.formDual.controls.max.value,
+      ]);
     });
   }
 
-  minMax(config: ColorConfig, value: number) {
+  minMax(config: ColorConfig | undefined, value: number | undefined) {
+    if (config === undefined || value === undefined) {
+      return {
+        min: 0,
+        max: 0,
+      };
+    }
+
     const middle = (config.variable.max + config.variable.min) / 2;
     const max = value > middle ? config.variable.max : value * 2 - config.variable.min;
     const min = value < middle ? config.variable.min : value * 2 - config.variable.max;

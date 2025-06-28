@@ -23,16 +23,21 @@ export class ColorAxisComponent {
 
   swatches: Signal<Swatch[]> | undefined = undefined;
 
-  pasos: Signal<number | undefined> = undefined;
+  pasos: Signal<number> | undefined = undefined;
 
   ngOnInit() {
     this.pasos = computed(() => {
+      const colorConfig = this.colorConfig();
+      if (!colorConfig) {
+        return 10;
+      }
       const config = this.axisConfig();
-      const pasosConfig = config.pasos ?? 10;
-      if (config.automatico) {
-        const variable = this.colorConfig().variable;
-        const min = this.min();
-        const max = this.max();
+
+      const pasosConfig = config?.pasos ?? 10;
+      if (config?.automatico ?? true) {
+        const variable = colorConfig.variable;
+        const min = this.min() ?? 0;
+        const max = this.max() ?? 0;
 
         return Math.min(
           pasosConfig,
@@ -44,22 +49,30 @@ export class ColorAxisComponent {
     });
 
     this.swatches = computed(() => {
-      const colorModel = this.colorConfig().model;
+      const colorConfig = this.colorConfig();
+
+      if (!colorConfig) {
+        return [];
+      }
+
       const baseArray =
         this.colorBase() ??
         ([
-          colorModel.components[0].defaultValue,
-          colorModel.components[1].defaultValue,
-          colorModel.components[2].defaultValue,
+          colorConfig.model.components[0].defaultValue,
+          colorConfig.model.components[1].defaultValue,
+          colorConfig.model.components[2].defaultValue,
         ] as Triple<number>);
-      const pasos = this.pasos();
-      const step = (this.max() - this.min()) / (pasos - 1);
+      const pasos = this.pasos!();
+      const max = this.max() ?? 0;
+      const min = this.min() ?? 0;
+
+      const step = (max - min) / (pasos - 1);
 
       const valores = Array.from({ length: pasos }, (_, i) => {
-        const value = this.min() + i * step;
+        const value = min + i * step;
         const valores = [...baseArray];
-        valores[this.colorConfig().variableIndex] = value;
-        const color = colorModel.convert([valores[0], valores[1], valores[2]]);
+        valores[colorConfig.variableIndex] = value;
+        const color = colorConfig.model.convert([valores[0]!, valores[1]!, valores[2]!]);
         const rgb = toRgb(color);
         return {
           valores: valores as Triple<number>,
@@ -68,17 +81,19 @@ export class ColorAxisComponent {
         } as Swatch;
       });
 
-      let previo = valores[0].color;
-      for (let i = 1; i < valores.length; i++) {
-        const actual = valores[i].color;
-        const diff0 = Math.abs(actual[0] - previo[0]);
-        const diff1 = Math.abs(actual[1] - previo[1]);
-        const diff2 = Math.abs(actual[2] - previo[2]);
-        if (diff0 <= 7 && diff1 <= 3 && diff2 <= 14) {
-          valores[i - 1].clamp = true;
-          valores[i].clamp = true;
+      if (valores.length > 0) {
+        let previo = valores[0]!.color;
+        for (let i = 1; i < valores.length; i++) {
+          const actual = valores[i]!.color;
+          const diff0 = Math.abs(actual[0] - previo[0]);
+          const diff1 = Math.abs(actual[1] - previo[1]);
+          const diff2 = Math.abs(actual[2] - previo[2]);
+          if (diff0 <= 7 && diff1 <= 3 && diff2 <= 14) {
+            valores[i - 1]!.clamp = true;
+            valores[i]!.clamp = true;
+          }
+          previo = actual;
         }
-        previo = actual;
       }
 
       return valores;
