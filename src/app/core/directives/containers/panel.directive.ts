@@ -5,6 +5,10 @@ import { TransitionDefaultDirective } from "../transition.directive";
 
 @Directive({
   selector: "[zz-panel]",
-  hostDirectives: [RoundedContainerDirective, ShadowDirective, TransitionDefaultDirective],
+  hostDirectives: [
+    RoundedContainerDirective,
+    { directive: ShadowDirective, inputs: ["zz-shadow:shadow"] },
+    TransitionDefaultDirective,
+  ],
 })
 export class PanelDirective {}

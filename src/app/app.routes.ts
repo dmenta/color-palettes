@@ -1,7 +1,7 @@
 import { Routes } from "@angular/router";
 
 export const routes: Routes = [
-  { path: "", redirectTo: "palettes", pathMatch: "full" },
+  { path: "", redirectTo: "layout", pathMatch: "full" },
   {
     path: "palettes",
     title: "Paletas de color",
@@ -9,8 +9,8 @@ export const routes: Routes = [
       import("./color/features/color-palette/color-palette.component").then((m) => m.ColorPaletteComponent),
   },
   {
-    path: "test",
-    title: "Test de color",
-    loadComponent: () => import("./color/components/test/test.component").then((m) => m.TestComponent),
+    path: "layout",
+    title: "Palets de Color - Inicio",
+    loadComponent: () => import("./color/features/layout/layout.component").then((m) => m.LayoutComponent),
   },
 ];

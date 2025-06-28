@@ -1,14 +1,15 @@
-<div [zz-shadow]="true" zz-rounded="large" class="min-w-fit">
+<div zz-panel [shadow]="false" class="min-w-fit" style="background-color: none !important">
   <div
     [height]="height()"
     color-swatch-full
+    [shadow]="false"
     [color-model]="colorModel()"
     [values]="currentColor()"
     class="text-right p-2">
     <zz-color-selector [color]="rgb!()" (color-change)="changeColor($event)"></zz-color-selector>
   </div>
   <div
-    class="transition-all justify-center w-full min-h-10 max-h-20 py-2 flex flex-col items-center text-md dark:bg-gris-800 bg-gris-50 dark:text-gris-100 text-gris-700">
+    class="transition-all justify-center w-full min-h-10 max-h-20 py-2 flex flex-col items-center text-md dark:text-gris-100 text-gris-700">
     <zz-color-values-display
       [color-model]="colorModel()"
       style="font-variation-settings: 'wght' 450"

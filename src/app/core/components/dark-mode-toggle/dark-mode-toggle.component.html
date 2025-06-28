@@ -1,0 +1,9 @@
+<button
+  style="background-color: transparent !important"
+  class="m-1"
+  zz-icon-toggle-button
+  [focus-ring]="false"
+  falseIcon="dark_mode"
+  trueIcon="light_mode"
+  [value]="darkModeService.darkMode()"
+  (toggle)="darkModeService.setDarkMode($event)"></button>

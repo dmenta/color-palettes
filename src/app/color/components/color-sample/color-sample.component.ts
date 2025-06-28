@@ -7,6 +7,7 @@ import { ColorModel, Triple } from "../../model/colors.model";
 import { toRgb } from "../../model/color";
 import { ColorValuesDisplayComponent } from "../color-values-display/color-values-display.component";
 import { ColorSelectorComponent } from "../selector/color-selector.component";
+import { PanelDirective } from "../../../core/directives/containers/panel.directive";
 
 @Component({
   selector: "zz-color-sample",
@@ -17,6 +18,7 @@ import { ColorSelectorComponent } from "../selector/color-selector.component";
     ShadowDirective,
     ColorValuesDisplayComponent,
     ColorSelectorComponent,
+    PanelDirective,
   ],
   templateUrl: "./color-sample.component.html",
 })

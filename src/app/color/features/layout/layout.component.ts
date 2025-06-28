@@ -1,29 +1,28 @@
 import { Component, signal } from "@angular/core";
-import { ReactiveFormsModule } from "@angular/forms";
+import { LayoutHeaderComponent } from "./layout-header/layout-header.component";
+import { ColorMenuComponent } from "../../components/color-menu/color-menu.component";
+import { ColorSampleComponent } from "../../components/color-sample/color-sample.component";
+import Color from "colorjs.io";
+import { AxisConfig, ColorComponent, ColorConfig, Triple, Tuple } from "../../model/colors.model";
+import { toHsl, toOklch, toRgb } from "../../model/color";
+import { ColorRangeSelectorComponent } from "../../components/color-range-selector/color-range-selector.component";
 import { ColorAxisComponent } from "../../components/color-axis/color-axis.component";
 import { ColorAxisConfigComponent } from "../../components/color-axis-config/color-axis-config.component";
-import { ColorConfigComponent } from "../../components/color-config/color-config.component";
-import { ColorRangeSelectorComponent } from "../../components/color-range-selector/color-range-selector.component";
-import { ColorSampleComponent } from "../../components/color-sample/color-sample.component";
-import { AxisConfig, Tuple, Triple, ColorConfig, ColorComponent } from "../../model/colors.model";
-import Color from "colorjs.io";
-import { toHsl, toOklch, toRgb } from "../../model/color";
-import { ColorPaletteHeaderComponent } from "./color-palette-header/color-palette-header.component";
 
 @Component({
-  selector: "zz-color-palette",
+  selector: "zz-layout",
   imports: [
-    ReactiveFormsModule,
-    ColorAxisComponent,
+    LayoutHeaderComponent,
+    ColorMenuComponent,
     ColorSampleComponent,
     ColorRangeSelectorComponent,
+    ColorAxisComponent,
     ColorAxisConfigComponent,
-    ColorConfigComponent,
-    ColorPaletteHeaderComponent,
   ],
-  templateUrl: "./color-palette.component.html",
+  templateUrl: "./layout.component.html",
+  styleUrl: "./layout.component.css",
 })
-export class ColorPaletteComponent {
+export class LayoutComponent {
   colorConfig = signal<ColorConfig | undefined>(undefined);
   axisConfig = signal<AxisConfig | undefined>(undefined);
   colorBase = signal<Triple<number>>([0, 0, 0]);
@@ -56,6 +55,7 @@ export class ColorPaletteComponent {
           nuevo = toRgb(actual!);
       }
     }
+
     this.colorConfig.set(config);
     this.minmax.set(config.variable ? [config.variable.min, config.variable.max] : ([0, 0] as Tuple<number>));
     this.colorBase.set(nuevo);

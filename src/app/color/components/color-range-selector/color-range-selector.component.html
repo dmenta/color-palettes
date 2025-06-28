@@ -1,4 +1,8 @@
-<div zz-panel class="px-6 pt-6 pb-3 h-fit">
+<div
+  zz-panel
+  [shadow]="false"
+  class="px-6 pb-3 h-fit"
+  style="background-color: none !important; border-width: 0px !important">
   @if(colorConfig(); as config){
   <form [formGroup]="configGroup!" class="min-w-fit h-fit">
     @for(indice of indices; track $index){ @let component = config.model.components[indice];

@@ -63,6 +63,13 @@ body {
   font-variation-settings: "wdth" 95, "wght" 350;
 }
 
+.bold {
+  font-variation-settings: "wdth" 95, "wght" 450;
+}
+.semi-bold {
+  font-variation-settings: "wdth" 95, "wght" 400;
+}
+
 .axis-swatch {
   @apply relative;
   @apply flex flex-row grow items-center justify-center text-xs;

@@ -1,37 +1,42 @@
-<div
-  class="md:grid md:grid-cols-[minmax(500px,_1fr)_280px] w-screen max-w-[1300px] mx-auto p-8 h-[calc(100svh-48px)] md:gap-8 items-top flex flex-col-reverse">
-  <div class="relative flex flex-col">
-    @if(colorConfig();as colorConfig){
-    <zz-color-range-selector
-      [color-config]="colorConfig"
-      [axis-config]="{ alto: 47, continuo: true, pasos: 60, automatico: true, showValues: 'no' }"
-      [color-base]="colorBase()"
-      (colorChange)="colorChange($event)"
-      (rangeChange)="rangeChange($event)">
-    </zz-color-range-selector>
-    <zz-color-axis
-      class="block p-6 mt-6"
-      [color-config]="colorConfig"
-      [axis-config]="axisConfig()"
-      [color-base]="currentColor()"
-      [showClamp]="true"
-      [min]="minmax()[0]"
-      [max]="minmax()[1]"></zz-color-axis>
-    }
-  </div>
-  <div class="flex flex-col-reverse gap-4 md:flex-col">
-    @if(colorConfig();as colorConfig){
-    <zz-color-sample
-      [height]="200"
-      [color-model]="colorConfig.model"
-      [current-color]="currentColor()"
-      (newColor)="onNewColor($event)"></zz-color-sample>
-    }
-    <div class="w-full">
-      <zz-color-config (colorConfigChange)="colorConfigChanged($event)"></zz-color-config>
+<div class="w-screen h-screen grid grid-rows-[48px_minmax(500px,_1fr)]">
+  <zz-color-palette-header></zz-color-palette-header>
+  <main class="h-[calc(100vh-48px)] overflow-y-auto">
+    <div
+      class="md:grid md:grid-cols-[minmax(500px,_1fr)_280px] w-screen max-w-[1300px] mx-auto p-8 h-[calc(100svh-48px)] md:gap-8 items-top flex flex-col-reverse">
+      <div class="relative flex flex-col">
+        @if(colorConfig();as colorConfig){
+        <zz-color-range-selector
+          [color-config]="colorConfig"
+          [axis-config]="{ alto: 47, continuo: true, pasos: 60, automatico: true, showValues: 'no' }"
+          [color-base]="colorBase()"
+          (colorChange)="colorChange($event)"
+          (rangeChange)="rangeChange($event)">
+        </zz-color-range-selector>
+        <zz-color-axis
+          class="block p-6 mt-6"
+          [color-config]="colorConfig"
+          [axis-config]="axisConfig()"
+          [color-base]="currentColor()"
+          [showClamp]="true"
+          [min]="minmax()[0]"
+          [max]="minmax()[1]"></zz-color-axis>
+        }
+      </div>
+      <div class="flex flex-col-reverse gap-4 md:flex-col">
+        @if(colorConfig();as colorConfig){
+        <zz-color-sample
+          [height]="200"
+          [color-model]="colorConfig.model"
+          [current-color]="currentColor()"
+          (newColor)="onNewColor($event)"></zz-color-sample>
+        }
+        <div class="w-full">
+          <zz-color-config (colorConfigChange)="colorConfigChanged($event)"></zz-color-config>
+        </div>
+        <div class="w-full md:block hidden">
+          <zz-color-axis-config (axisConfigChange)="configChanged($event)"></zz-color-axis-config>
+        </div>
+      </div>
     </div>
-    <div class="w-full md:block hidden">
-      <zz-color-axis-config (axisConfigChange)="configChanged($event)"></zz-color-axis-config>
-    </div>
-  </div>
+  </main>
 </div>

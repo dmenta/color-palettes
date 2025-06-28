@@ -1,0 +1,42 @@
+<div>
+  <zz-layout-header></zz-layout-header>
+</div>
+<main class="flex flex-row items-top justify-center gap-0 m-auto max-w-[1600px] h-48">
+  <div class="w-68 p-4">
+    <zz-color-menu (colorConfigChange)="colorConfigChanged($event)"></zz-color-menu>
+  </div>
+  <div class="w-full p-4 pt-2">
+    @if(colorConfig();as colorConfig){
+    <div class="relative flex flex-col">
+      <zz-color-range-selector
+        [color-config]="colorConfig"
+        [axis-config]="{ alto: 30, continuo: true, pasos: 60, automatico: true, showValues: 'no' }"
+        [color-base]="colorBase()"
+        (colorChange)="colorChange($event)"
+        (rangeChange)="rangeChange($event)">
+      </zz-color-range-selector>
+      <zz-color-axis
+        class="block p-6 mt-6"
+        [color-config]="colorConfig"
+        [axis-config]="axisConfig()"
+        [color-base]="currentColor()"
+        [showClamp]="true"
+        [min]="minmax()[0]"
+        [max]="minmax()[1]"></zz-color-axis>
+    </div>
+    }
+  </div>
+  <div class="w-124 p-4 space-y-4">
+    @if(colorConfig(); as colorConfig) {
+    <zz-color-sample
+      class="block"
+      [height]="200"
+      [color-model]="colorConfig.model"
+      [current-color]="currentColor()"
+      (newColor)="onNewColor($event)"></zz-color-sample>
+    <div class="w-full md:block hidden">
+      <zz-color-axis-config (axisConfigChange)="configChanged($event)"></zz-color-axis-config>
+    </div>
+    }
+  </div>
+</main>

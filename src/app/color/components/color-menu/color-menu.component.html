@@ -1,0 +1,32 @@
+<ul class="space-y-2">
+  @for(model of models; track model.name){ @let modelSeleccionado= currentModel().name === model.name;
+  <li class="border-gris-200/50 dark:border-gris-800/85" [class.border-1]="modelSeleccionado">
+    <span
+      class="select-none uppercase text-lg w-full cursor-pointer inline-block transition-all p-2 rounded hover:bg-gris-100 dark:hover:bg-gris-800/95"
+      (click)="modelSelected(model)"
+      [class]="{
+        'bg-gris-100/85': modelSeleccionado,
+        'dark:bg-gris-800/85': modelSeleccionado,
+        bold: modelSeleccionado
+      }"
+      >{{ model.name }}</span
+    >
+    <ul class="space-y-1" [class.p-2]="modelSeleccionado" [zz-collapse-vertical]="!modelSeleccionado">
+      @for(variable of model.components; track variable.name){
+      <li>
+        <span
+          class="select-none w-full inline-block cursor-pointer transition-all px-2 py-1 rounded dark:hover:bg-gris-700/60"
+          (click)="variableSelected(variable)"
+          [class]="{
+            'bg-gris-100/50': currentVariable().name === variable.name,
+            'dark:bg-gris-700/45': currentVariable().name === variable.name,
+            'semi-bold': currentVariable().name === variable.name
+          }"
+          >{{ variable.name }}</span
+        >
+      </li>
+      }
+    </ul>
+  </li>
+  }
+</ul>
