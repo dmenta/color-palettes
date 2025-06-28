@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wdth,wght@75..100,100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=MuseoModerno:ital,wght@0,100..900;1,100..900&family=Offside&family=Unica+One&display=swap");
 @import "tailwindcss";
 
 @theme {
@@ -13,6 +14,10 @@
   --color-gris-800: oklch(30.3% 0.012 54);
   --color-gris-900: oklch(21.8% 0.012 54);
   --color-gris-950: oklch(13.2% 0.012 54);
+
+  --font-museo-moderno: "MuseoModerno", sans-serif;
+  --font-offside: "Offside", sans-serif;
+  --font-unica-one: "Unica One", sans-serif;
 }
 
 @custom-variant dark (&:where(.dark, .dark *));
@@ -24,7 +29,7 @@
 
 :root {
   --bg-base: #ffffff;
-  --bg-application: ffffff;
+  --bg-application: #ffffff;
   --bg-container: oklch(98.9% 0.012 54);
   --bg-hover: oklch(81.8% 0.012 54);
   --bg-button: oklch(90.3% 0.012 54);

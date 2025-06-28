@@ -1,9 +1,10 @@
-<div class="md:grid md:grid-cols-[minmax(500px,_1fr)_280px] p-6 items-top md:gap-6 flex flex-col-reverse">
+<div
+  class="md:grid md:grid-cols-[minmax(500px,_1fr)_280px] w-screen max-w-[1300px] mx-auto p-8 h-[calc(100svh-48px)] md:gap-8 items-center flex flex-col-reverse">
   <div class="relative flex flex-col">
     @if(colorConfig();as colorConfig){
     <zz-color-range-selector
       [color-config]="colorConfig"
-      [axis-config]="{ alto: 53, continuo: true, pasos: 60, automatico: true, showValues: 'no' }"
+      [axis-config]="{ alto: 47, continuo: true, pasos: 60, automatico: true, showValues: 'no' }"
       [color-base]="colorBase()"
       (colorChange)="colorChange($event)"
       (rangeChange)="rangeChange($event)">

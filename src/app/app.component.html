@@ -1,12 +1,17 @@
-<main class="w-screen h-screen">
-  <router-outlet></router-outlet>
-</main>
-
-<div class="fixed right-0 bottom-0 z-10 p-1 rounded-tl-lg block" zz-background>
-  <button
-    zz-icon-toggle-button
-    falseIcon="dark_mode"
-    trueIcon="light_mode"
-    [value]="darkModeService.darkMode()"
-    (toggle)="darkModeService.setDarkMode($event)"></button>
+<div class="w-screen h-screen grid grid-rows-[48px_minmax(500px,_1fr)]">
+  <header class="flex items-center justify-between px-6 pb-0 pt-1 bg-gris-100/50 dark:bg-gris-800 leading-8">
+    <h1 class="text-3xl m-0 font-museo-moderno leading-7 text-orange-600 dark:text-orange-500">CoLoRina</h1>
+    <button
+      style="background-color: transparent !important"
+      class="m-1"
+      zz-icon-toggle-button
+      [focus-ring]="false"
+      falseIcon="dark_mode"
+      trueIcon="light_mode"
+      [value]="darkModeService.darkMode()"
+      (toggle)="darkModeService.setDarkMode($event)"></button>
+  </header>
+  <main class="h-[calc(100vh-48px)] overflow-y-auto">
+    <router-outlet></router-outlet>
+  </main>
 </div>

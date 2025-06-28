@@ -31,7 +31,7 @@ import { ButtonHoverDirective } from "../../directives/hover.directive";
     ButtonHoverDirective,
     Opacity95Directive,
     ActiveDirective,
-    FocusRingDirective,
+    { directive: FocusRingDirective, inputs: ["show-focus-ring: focus-ring"] },
     { directive: DisabledDirective, inputs: ["zz-disabled: zzDisabled"] },
   ],
 })
