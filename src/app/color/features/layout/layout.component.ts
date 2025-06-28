@@ -7,7 +7,7 @@ import { AxisConfig, ColorComponent, ColorConfig, Triple, Tuple } from "../../mo
 import { toHsl, toOklch, toRgb } from "../../model/color";
 import { ColorRangeSelectorComponent } from "../../components/color-range-selector/color-range-selector.component";
 import { ColorAxisComponent } from "../../components/color-axis/color-axis.component";
-import { ColorAxisConfigComponent } from "../../components/color-axis-config/color-axis-config.component";
+import { ColorAxisAdvancedConfigComponent } from "../../components/axis-advanced-config/axis-advanced-config.component";
 
 @Component({
   selector: "zz-layout",
@@ -17,7 +17,7 @@ import { ColorAxisConfigComponent } from "../../components/color-axis-config/col
     ColorSampleComponent,
     ColorRangeSelectorComponent,
     ColorAxisComponent,
-    ColorAxisConfigComponent,
+    ColorAxisAdvancedConfigComponent,
   ],
   templateUrl: "./layout.component.html",
   styleUrl: "./layout.component.css",

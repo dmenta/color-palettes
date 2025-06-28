@@ -18,6 +18,8 @@
   --font-museo-moderno: "MuseoModerno", sans-serif;
   --font-offside: "Offside", sans-serif;
   --font-unica-one: "Unica One", sans-serif;
+
+  --text-smaller: 0.9em;
 }
 
 @custom-variant dark (&:where(.dark, .dark *));

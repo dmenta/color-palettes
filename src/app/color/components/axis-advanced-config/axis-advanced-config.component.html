@@ -1,0 +1,40 @@
+@if(configGroup){
+<form [formGroup]="configGroup" class="h-fit w-full text-smaller" style="line-height: 0.9rem">
+  <div zz-container class="h-fit w-full" [zzBorderSize]="'none'" style="background-color: none !important">
+    <div class="flex flex-row items-center gap-4">
+      <div class="flex flex-row items-center gap-2">
+        <label for="alto">Height </label>
+        <input
+          type="number"
+          id="alto"
+          zz-input
+          [zzDisabled]="configGroup.controls.alto.disabled"
+          formControlName="alto"
+          value="10"
+          [min]="1"
+          [max]="180" />
+      </div>
+      <div class="flex flex-row items-center gap-2">
+        <label for="pasos"> Steps </label>
+        <input
+          type="number"
+          id="pasos"
+          zz-input
+          [zzDisabled]="configGroup.controls.pasos.disabled"
+          formControlName="pasos"
+          value="10"
+          [min]="2"
+          [max]="100" />
+      </div>
+      <zz-toggle-check formControlName="automatico" label="Auto" [before]="true" />
+      <zz-toggle-check formControlName="continuo" label="Flat" [before]="true" />
+      <zz-toggle-check formControlName="separate" label="Separate" [before]="true" />
+      <div class="flex flex-row items-center gap-2">
+        <label [for]="showValues">Values</label>
+        <zz-select #showValues [items]="showValuesOptions" class="w-20" displayKey="text" formControlName="showValues">
+        </zz-select>
+      </div>
+    </div>
+  </div>
+</form>
+}

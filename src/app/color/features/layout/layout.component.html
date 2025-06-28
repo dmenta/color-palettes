@@ -1,42 +1,38 @@
 <div>
   <zz-layout-header></zz-layout-header>
 </div>
-<main class="flex flex-row items-top justify-center gap-0 m-auto max-w-[1600px] h-48">
-  <div class="w-68 p-4">
+<main class="flex flex-row items-top justify-center gap-8 pl-5 pr-6 pt-2 m-auto max-w-[1600px] w-screen">
+  <div class="min-w-36 py-2">
     <zz-color-menu (colorConfigChange)="colorConfigChanged($event)"></zz-color-menu>
   </div>
-  <div class="w-full p-4 pt-2">
+  <div class="min-w-32 w-full pt-1 relative flex flex-col">
     @if(colorConfig();as colorConfig){
-    <div class="relative flex flex-col">
-      <zz-color-range-selector
-        [color-config]="colorConfig"
-        [axis-config]="{ alto: 30, continuo: true, pasos: 60, automatico: true, showValues: 'no' }"
-        [color-base]="colorBase()"
-        (colorChange)="colorChange($event)"
-        (rangeChange)="rangeChange($event)">
-      </zz-color-range-selector>
-      <zz-color-axis
-        class="block p-6 mt-6"
-        [color-config]="colorConfig"
-        [axis-config]="axisConfig()"
-        [color-base]="currentColor()"
-        [showClamp]="true"
-        [min]="minmax()[0]"
-        [max]="minmax()[1]"></zz-color-axis>
-    </div>
+    <zz-color-range-selector
+      [color-config]="colorConfig"
+      [axis-config]="{ alto: 30, continuo: true, pasos: 60, automatico: true, showValues: 'no' }"
+      [color-base]="colorBase()"
+      (colorChange)="colorChange($event)"
+      (rangeChange)="rangeChange($event)">
+    </zz-color-range-selector>
+    <zz-axis-advanced-config class="pb-4" (axisConfigChange)="configChanged($event)"></zz-axis-advanced-config>
+    <zz-color-axis
+      class="block"
+      [color-config]="colorConfig"
+      [axis-config]="axisConfig()"
+      [color-base]="currentColor()"
+      [showClamp]="true"
+      [min]="minmax()[0]"
+      [max]="minmax()[1]"></zz-color-axis>
     }
   </div>
-  <div class="w-124 p-4 space-y-4">
+  <div class="min-w-56 py-2 hidden lg:block">
     @if(colorConfig(); as colorConfig) {
     <zz-color-sample
       class="block"
-      [height]="200"
+      [height]="220"
       [color-model]="colorConfig.model"
       [current-color]="currentColor()"
       (newColor)="onNewColor($event)"></zz-color-sample>
-    <div class="w-full md:block hidden">
-      <zz-color-axis-config (axisConfigChange)="configChanged($event)"></zz-color-axis-config>
-    </div>
     }
   </div>
 </main>

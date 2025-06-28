@@ -1,5 +1,6 @@
-<div class="flex flex-row justify-between rounded-sm overflow-hidden">
-  @if(axisConfig(); as axisConfig){ @for(swatch of swatches!(); track $index){
+@if(axisConfig(); as axisConfig){
+<div class="flex flex-row justify-between" [class.space-x-1]="axisConfig.separate ?? false">
+  @for(swatch of swatches!(); track $index){
   <div
     class="axis-swatch"
     [shadow]="!axisConfig.continuo"
@@ -28,5 +29,6 @@
     </div>
     }
   </div>
-  } }
+  }
 </div>
+}

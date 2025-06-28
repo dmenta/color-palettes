@@ -9,7 +9,10 @@ export class BorderDirective {
   size = input("thin", {
     alias: "zz-border",
     transform: (value: string | undefined) => {
-      const valor = (value ?? "thin").toLowerCase().trim();
+      const valor = (value ?? "none").toLowerCase().trim();
+      if (valor === "none") {
+        return "none";
+      }
       return ["thin", "normal", "thick"].includes(valor) ? valor : "thin";
     },
   });
@@ -54,3 +57,5 @@ export class BorderDirective {
     return this.style();
   }
 }
+
+export type borderSize = "none" | "thin" | "normal" | "thick";

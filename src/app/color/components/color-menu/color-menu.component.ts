@@ -2,10 +2,11 @@ import { Component, EventEmitter, Output, signal } from "@angular/core";
 import { colorModels, namedColorModels } from "../../model/color-models-definitions";
 import { ColorComponent, ColorConfig, ColorModel } from "../../model/colors.model";
 import { CollapseVerticalDirective } from "../../../core/directives/collapse-vertical.directive";
+import { ContainerDirective } from "../../../core/directives/containers/container.directive";
 
 @Component({
   selector: "zz-color-menu",
-  imports: [CollapseVerticalDirective],
+  imports: [CollapseVerticalDirective, ContainerDirective],
   templateUrl: "./color-menu.component.html",
   styleUrl: "./color-menu.component.css",
 })
