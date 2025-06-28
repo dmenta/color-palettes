@@ -22,7 +22,7 @@ import { ColorSelectorComponent } from "../selector/color-selector.component";
 })
 export class ColorSampleComponent {
   height = input(120);
-  colorModel = input.required<ColorModel>({ alias: "model" });
+  colorModel = input.required<ColorModel>({ alias: "color-model" });
   currentColor = input<Triple<number> | undefined>(undefined, { alias: "color-base" });
 
   rgb: Signal<Triple<number>>;

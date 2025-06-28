@@ -1,12 +1,23 @@
 <div [zz-shadow]="true" zz-rounded="large" class="min-w-fit">
-  <div [height]="height()" color-swatch-full [model]="colorModel()" [values]="currentColor()" class="text-right p-2">
+  <div
+    [height]="height()"
+    color-swatch-full
+    [color-model]="colorModel()"
+    [values]="currentColor()"
+    class="text-right p-2">
     <zz-color-selector [color]="rgb()" (color-change)="changeColor($event)"></zz-color-selector>
   </div>
   <div
-    class="justify-center w-full min-h-10 max-h-20 py-2 flex flex-col items-center text-md dark:bg-gris-900 bg-gris-200 dark:text-gris-300 text-gris-700">
-    <zz-color-values-display [model]="colorModel()" [values]="currentColor()"></zz-color-values-display>
+    class="justify-center w-full min-h-10 max-h-20 py-2 flex flex-col items-center text-md dark:bg-gris-800 bg-gris-50 dark:text-gris-100 text-gris-700">
+    <zz-color-values-display
+      [color-model]="colorModel()"
+      style="font-variation-settings: 'wght' 450"
+      [values]="currentColor()"></zz-color-values-display>
     @if(colorModel().name!=="rgb"){
-    <zz-color-values-display [values]="rgb()" class="text-sm opacity-80"></zz-color-values-display>
+    <zz-color-values-display
+      [values]="rgb()"
+      class="opacity-70"
+      style="font-size: 0.9em; line-height: 1rem"></zz-color-values-display>
     }
   </div>
 </div>

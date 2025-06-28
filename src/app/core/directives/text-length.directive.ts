@@ -3,7 +3,7 @@ import { Directive, HostBinding, input } from "@angular/core";
 @Directive({
   selector: "[zz-text-length], zzTextLength",
   host: {
-    class: "truncate",
+    class: "truncate select-none opacity-95",
   },
 })
 export class TextLengthDirective {
@@ -15,14 +15,6 @@ export class TextLengthDirective {
     },
   });
 
-  @HostBinding("style.opacity")
-  get estilosOpacity() {
-    return "0.95";
-  }
-  @HostBinding("style.userSelect")
-  get estilosUserSelect() {
-    return "none";
-  }
   @HostBinding("style.width.ch")
   get width() {
     return this.length();

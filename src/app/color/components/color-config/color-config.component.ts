@@ -48,12 +48,12 @@ export class ColorConfigComponent {
     )
       .pipe(startWith(this.configGroup.value))
       .subscribe(() => {
-        const model = this.configGroup.controls.model.value;
+        const colorModel = this.configGroup.controls.model.value;
         const variable = this.configGroup.controls.variable.value;
         this.colorConfigChange.emit({
-          model: model,
+          model: colorModel,
           variable: variable,
-          variableIndex: model.components.findIndex((c) => c.name === variable.name) as 0 | 1 | 2,
+          variableIndex: colorModel.components.findIndex((c) => c.name === variable.name) as 0 | 1 | 2,
         });
       });
   }

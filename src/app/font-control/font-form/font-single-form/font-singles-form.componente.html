@@ -7,7 +7,7 @@
     [visible]="visible()"
     (visibleChange)="visible.set($event)"
     (reset)="reset()" />
-  <form [formGroup]="formGroup" class="text-sm">
+  <form [formGroup]="formGroup">
     @for(config of configs; track config.name) {
     <div [zz-collapse-vertical]="!visible() && config.defaultValue === formGroup.controls[config.name].value">
       @switch(config.type) { @case('range') {

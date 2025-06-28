@@ -1,5 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wdth,wght,YTLC@0,6..12,75..125,200..1000,440..540;1,6..12,75..125,200..1000,440..540");
-
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wdth,wght@75..100,100..900&display=swap");
 @import "tailwindcss";
 
 @theme {
@@ -19,7 +18,7 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  --body-font-family: "Nunito Sans", sans-serif;
+  --body-font-family: "Roboto", sans-serif;
   --spacing: 0.25rem;
 }
 
@@ -31,10 +30,10 @@
   --bg-button: oklch(90.3% 0.012 54);
   --bg-button-hover: oklch(81.8% 0.012 54);
 
-  --accent-color: #ffb86a;
-  --primary-color: #19c1ff;
+  --accent-color: oklch(83.366% 0.12552 67.18);
+  --primary-color: oklch(76.147% 0.15014 231.24);
 
-  --text-color: #18181b;
+  --text-color: oklch(21.033% 0.00588 285.832);
 }
 
 :root.dark {
@@ -45,14 +44,16 @@
   --bg-button: oklch(30.3% 0.012 54);
   --bg-button-hover: oklch(38.9% 0.012 54);
 
-  --accent-color: #ff8a05;
-  --primary-color: #50a2ff;
+  --accent-color: oklch(74.743% 0.17958 67.134);
+  --primary-color: oklch(70.365% 0.15872 231.435);
 
-  --text-color: #f4f4f5;
+  --text-color: oklch(96.744% 0.00143 285.225);
 }
 
 body {
   font-family: var(--body-font-family);
   background-color: var(--bg-application);
   color: var(--text-color);
+  font-size: 15px;
+  font-variation-settings: "wdth" 95, "wght" 350;
 }

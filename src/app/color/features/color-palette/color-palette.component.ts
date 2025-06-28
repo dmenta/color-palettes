@@ -55,17 +55,17 @@ export class ColorPaletteComponent {
   }
 
   private getChannels(rgb: Triple<number>) {
-    const model = this.colorConfig()?.model;
+    const colorModel = this.colorConfig()?.model;
 
-    if (model.name === "rgb") {
+    if (colorModel.name === "rgb") {
       return rgb;
     }
 
-    const color = new Color(`rgb(${rgb[0]} ${rgb[1]} ${rgb[2]})`).to(model.name);
+    const color = new Color(`rgb(${rgb[0]} ${rgb[1]} ${rgb[2]})`).to(colorModel.name);
 
-    const a = this.ensureCoord(color.coords[0], model.components[0]);
-    const b = this.ensureCoord(color.coords[1], model.components[1]);
-    const c = this.ensureCoord(color.coords[2], model.components[2]);
+    const a = this.ensureCoord(color.coords[0], colorModel.components[0]);
+    const b = this.ensureCoord(color.coords[1], colorModel.components[1]);
+    const c = this.ensureCoord(color.coords[2], colorModel.components[2]);
 
     return [a, b, c] as Triple<number>;
   }

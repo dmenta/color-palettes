@@ -44,13 +44,13 @@ export class ColorAxisComponent {
     });
 
     this.swatches = computed(() => {
-      const model = this.colorConfig().model;
+      const colorModel = this.colorConfig().model;
       const baseArray =
         this.colorBase() ??
         ([
-          model.components[0].defaultValue,
-          model.components[1].defaultValue,
-          model.components[2].defaultValue,
+          colorModel.components[0].defaultValue,
+          colorModel.components[1].defaultValue,
+          colorModel.components[2].defaultValue,
         ] as Triple<number>);
       const pasos = this.pasos();
       const step = (this.max() - this.min()) / (pasos - 1);
@@ -59,7 +59,7 @@ export class ColorAxisComponent {
         const value = this.min() + i * step;
         const valores = [...baseArray];
         valores[this.colorConfig().variableIndex] = value;
-        const color = model.convert([valores[0], valores[1], valores[2]]);
+        const color = colorModel.convert([valores[0], valores[1], valores[2]]);
         const rgb = toRgb(color);
         return {
           valores: valores as Triple<number>,

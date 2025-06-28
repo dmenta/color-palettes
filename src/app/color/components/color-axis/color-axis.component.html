@@ -6,7 +6,7 @@
     [roundedSize]="axisConfig().continuo ? 'none' : 'large'"
     [height]="axisConfig().alto"
     color-swatch-full
-    [model]="colorConfig().model"
+    [color-model]="colorConfig().model"
     [values]="swatch.valores">
     @if(showClamp()){
     <div
@@ -18,7 +18,7 @@
     } @if(axisConfig().showValues==='yes'){
     <div [style.color]="swatch.fore">
       <zz-color-values-display
-        [model]="colorConfig().model"
+        [color-model]="colorConfig().model"
         [values]="swatch.valores"
         [vertical]="true"></zz-color-values-display>
     </div>

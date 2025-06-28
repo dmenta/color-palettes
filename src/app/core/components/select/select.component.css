@@ -15,7 +15,6 @@
   padding-inline: calc(var(--spacing) * 3);
   padding-block: calc(var(--spacing) * 1);
   color: light-dark(var(--color-gris-800), var(--color-gris-50));
-  font-size: var(--text-sm);
   transition: background-color 0.4s;
 }
 
@@ -34,13 +33,12 @@
 
 ::ng-deep .zz-select option:checked {
   color: light-dark(white, white);
-  background-color: light-dark(var(--color-red-500), var(--color-sky-700));
+  background-color: light-dark(var(--color-sky-500), var(--color-sky-700));
 }
 
 ::ng-deep .zz-select ::picker(select) {
   appearance: base-select;
   transition: all 0.4s allow-discrete;
-  /* border-radius: 0 0 var(--radius-sm) var(--radius-sm); */
   outline: none;
   background-color: light-dark(white, var(--color-gris-800));
   border-color: color-mix(in srgb, light-dark(black, white), transparent 80%);

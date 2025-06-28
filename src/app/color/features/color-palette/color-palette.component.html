@@ -3,7 +3,7 @@
     @if(colorConfig()){
     <zz-color-range-selector
       [color-config]="colorConfig()"
-      [axis-config]="{ alto: 63, continuo: true, pasos: 60, automatico: true, showValues: 'no' }"
+      [axis-config]="{ alto: 53, continuo: true, pasos: 60, automatico: true, showValues: 'no' }"
       [color-base]="colorBase()"
       (colorChange)="colorChange($event)"
       (rangeChange)="rangeChange($event)">
@@ -22,7 +22,7 @@
     @if(colorConfig()){
     <zz-color-sample
       [height]="200"
-      [model]="colorConfig().model"
+      [color-model]="colorConfig().model"
       [color-base]="currentColor()"
       (newColor)="onNewColor($event)"></zz-color-sample>
     }

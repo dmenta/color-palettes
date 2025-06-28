@@ -9,7 +9,7 @@ import { DecimalPipe } from "@angular/common";
   templateUrl: "./color-values-display.component.html",
 })
 export class ColorValuesDisplayComponent {
-  colorModel = input<ColorModel>(namedColorModels.rgb, { alias: "model" });
+  colorModel = input<ColorModel>(namedColorModels.rgb, { alias: "color-model" });
   values = input(undefined, {
     alias: "values",
     transform: (value?: Triple<number> | undefined) => value ?? ([0, 0, 0] as Triple<number>),
