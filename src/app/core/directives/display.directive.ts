@@ -1,25 +1,4 @@
-import { Directive, HostBinding, input } from "@angular/core";
-
-@Directive({
-  selector: "[zz-display], zzDisplay",
-})
-export class DisplayDirective {
-  tipo = input(undefined, {
-    alias: "zz-display",
-    transform: (value: string | undefined) => {
-      if (!value) {
-        return undefined;
-      }
-      const valor = value.toLowerCase().trim();
-      return ["inline-block", "block", "flex", "grid", "none"].includes(valor) ? valor : undefined;
-    },
-  });
-
-  @HostBinding("style.display")
-  get estilos() {
-    return this.tipo();
-  }
-}
+import { Directive, HostBinding } from "@angular/core";
 
 @Directive({
   selector: "[zz-display-base], zzDisplayBase",

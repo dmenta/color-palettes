@@ -1,7 +1,7 @@
 import { Component, computed, input, Signal } from "@angular/core";
 import { FullWidthColorSwatchDirective } from "../color-swatch/color-swatch.directive";
 import { AxisConfig, ColorConfig, Triple } from "../../model/colors.model";
-import { ColorValuesDisplayComponent } from "../rgb-display/color-values-display.component";
+import { ColorValuesDisplayComponent } from "../color-values-display/color-values-display.component";
 import { toContrast, toRgb } from "../color";
 
 @Component({

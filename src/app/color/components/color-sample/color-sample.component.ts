@@ -5,7 +5,7 @@ import { RoundedDirective } from "../../../core/directives/rounded.directive";
 import { ShadowDirective } from "../../../core/directives/shadow.directive";
 import { ColorModel, Triple } from "../../model/colors.model";
 import { toRgb } from "../color";
-import { ColorValuesDisplayComponent } from "../rgb-display/color-values-display.component";
+import { ColorValuesDisplayComponent } from "../color-values-display/color-values-display.component";
 import { ColorSelectorComponent } from "../selector/color-selector.component";
 
 @Component({

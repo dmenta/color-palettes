@@ -4,13 +4,14 @@ import { FocusRingDirective } from "../../directives/focus-ring.directive";
 import { ActiveDirective } from "../../directives/active.directive";
 import { RoundedDirective } from "../../directives/rounded.directive";
 import { InilineBlockDirective } from "../../directives/display.directive";
-import { ButtonBackgroundDirective, ButtonHoverDirective } from "../../directives/background.directive";
+import { ButtonBackgroundDirective } from "../../directives/background.directive";
 import {
   AppearanceNoneDirective,
   Opacity95Directive,
   SelectNoneDirective,
 } from "../../directives/appearance-none.directive";
 import { TransitionDefaultDirective } from "../../directives/transition.directive";
+import { ButtonHoverDirective } from "../../directives/hover.directive";
 
 @Directive({
   selector: "[zz-button]",

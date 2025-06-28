@@ -5,6 +5,8 @@
 <div class="fixed right-0 bottom-0 z-10 p-1 rounded-tl-lg block" zz-background>
   <button
     zz-icon-toggle-button
+    falseIcon="dark_mode"
+    trueIcon="light_mode"
     [value]="darkModeService.darkMode()"
     (toggle)="darkModeService.setDarkMode($event)"></button>
 </div>
