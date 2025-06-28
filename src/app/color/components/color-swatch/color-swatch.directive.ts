@@ -6,10 +6,6 @@ import { WidthFullDirective } from "../../../core/directives/width.directive";
 
 @Directive({
   selector: "[color-swatch]",
-  hostDirectives: [
-    { directive: RoundedDirective, inputs: ["zz-rounded:roundedSize"] },
-    { directive: ShadowDirective, inputs: ["zz-shadow:shadow"] },
-  ],
 })
 export class ColorSwatchDirective {
   colorModel = input<ColorModel | undefined>(undefined, { alias: "color-model" });
@@ -31,11 +27,18 @@ export class ColorSwatchDirective {
 }
 
 @Directive({
-  selector: "[color-swatch-full]",
+  selector: "[color-swatch-panel]",
   hostDirectives: [
     { directive: ColorSwatchDirective, inputs: ["color-model", "values"] },
-    { directive: WidthFullDirective },
+    { directive: RoundedDirective, inputs: ["zz-rounded:roundedSize"] },
+    { directive: ShadowDirective, inputs: ["zz-shadow:shadow"] },
   ],
+})
+export class ColorSwatchPanelDirective {}
+
+@Directive({
+  selector: "[color-swatch-full]",
+  hostDirectives: [ColorSwatchPanelDirective, { directive: WidthFullDirective }],
 })
 export class FullWidthColorSwatchDirective {
   height = input(50);
@@ -43,24 +46,5 @@ export class FullWidthColorSwatchDirective {
   @HostBinding("style.height.px")
   get heightResolved() {
     return this.height();
-  }
-}
-
-@Directive({
-  selector: "[color-swatch-square]",
-  hostDirectives: [{ directive: ColorSwatchDirective, inputs: ["color-model", "values"] }],
-})
-export class SquareColorSwatchDirective {
-  width = input<number | "full">("full");
-
-  @HostBinding("style.width")
-  get widthResolved() {
-    const width = this.width();
-    return width === "full" ? "100%" : `${width}px`;
-  }
-
-  @HostBinding("style.aspectRatio")
-  get heightResolved() {
-    return "1 / 1";
   }
 }

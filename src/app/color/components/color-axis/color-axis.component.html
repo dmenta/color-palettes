@@ -1,7 +1,7 @@
 <div class="flex flex-row justify-between rounded-sm overflow-hidden">
   @if(axisConfig(); as axisConfig){ @for(swatch of swatches!(); track $index){
   <div
-    class="grow relative flex flex-row items-center text-xs justify-center overflow-hidden"
+    class="axis-swatch"
     [shadow]="!axisConfig.continuo"
     [roundedSize]="axisConfig.continuo ? 'none' : 'large'"
     [height]="axisConfig.alto"

@@ -5,7 +5,7 @@
     [color-model]="colorModel()"
     [values]="currentColor()"
     class="text-right p-2">
-    <zz-color-selector [color]="rgb()" (color-change)="changeColor($event)"></zz-color-selector>
+    <zz-color-selector [color]="rgb!()" (color-change)="changeColor($event)"></zz-color-selector>
   </div>
   <div
     class="transition-all justify-center w-full min-h-10 max-h-20 py-2 flex flex-col items-center text-md dark:bg-gris-800 bg-gris-50 dark:text-gris-100 text-gris-700">
@@ -15,7 +15,7 @@
       [values]="currentColor()"></zz-color-values-display>
     @if(colorModel().name!=="rgb"){
     <zz-color-values-display
-      [values]="rgb()"
+      [values]="rgb!()"
       class="opacity-70"
       style="font-size: 0.9em; line-height: 1rem"></zz-color-values-display>
     }

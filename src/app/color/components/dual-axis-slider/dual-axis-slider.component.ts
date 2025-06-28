@@ -23,13 +23,13 @@ export class DualAxisSliderComponent {
 
   @Output() minmaxChange = new EventEmitter<Tuple<number>>();
 
-  formDual: FormGroup<{ min: FormControl<number>; max: FormControl<number> }>;
+  formDual: FormGroup<{ min: FormControl<number>; max: FormControl<number> }> | undefined = undefined;
 
   constructor() {
     effect(() => {
       const minmax = this.minMax(this.colorConfig(), this.value());
 
-      this.formDual.patchValue(
+      this.formDual?.patchValue(
         {
           min: minmax.min,
           max: minmax.max,
@@ -49,8 +49,8 @@ export class DualAxisSliderComponent {
 
     this.formDual.valueChanges.subscribe((value) => {
       this.minmaxChange.emit([
-        value.min ?? this.formDual.controls.min.value,
-        value.max ?? this.formDual.controls.max.value,
+        value.min ?? this.formDual?.controls.min.value ?? 0,
+        value.max ?? this.formDual?.controls.max.value ?? 0,
       ]);
     });
   }

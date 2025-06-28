@@ -1,7 +1,7 @@
 <div zz-panel class="px-6 pt-6 pb-3 h-fit">
-  <form [formGroup]="configGroup" class="min-w-fit h-fit">
-    @if(colorConfig(); as config){ @for(indice of indices; track $index){ @let component =
-    config.model.components[indice];
+  @if(colorConfig(); as config){
+  <form [formGroup]="configGroup!" class="min-w-fit h-fit">
+    @for(indice of indices; track $index){ @let component = config.model.components[indice];
     <div [style.minHeight.px]="70 + (axisConfig()?.alto ?? 0)">
       @if(indice===config.variableIndex){
       <zz-dual-axis-slider
@@ -36,6 +36,7 @@
         [color-base]="currentColor()"></zz-color-axis>
       }
     </div>
-    } }
+    }
   </form>
+  }
 </div>

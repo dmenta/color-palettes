@@ -30,17 +30,19 @@ export class ColorRangeSelectorComponent {
 
   indices: (0 | 1 | 2)[] = [0, 1, 2];
 
-  configGroup: FormGroup<{
-    v0: FormControl<number>;
-    v1: FormControl<number>;
-    v2: FormControl<number>;
-  }>;
+  configGroup:
+    | FormGroup<{
+        v0: FormControl<number>;
+        v1: FormControl<number>;
+        v2: FormControl<number>;
+      }>
+    | undefined = undefined;
 
   constructor() {
     effect(() => {
       const color = this.colorBase() ?? [0, 0, 0];
 
-      this.configGroup.patchValue(
+      this.configGroup?.patchValue(
         {
           v0: color[0],
           v1: color[1],
@@ -60,14 +62,14 @@ export class ColorRangeSelectorComponent {
     });
 
     this.configGroup.valueChanges.subscribe(() => {
-      const { v0, v1, v2 } = this.configGroup.value;
+      const { v0, v1, v2 } = this.configGroup?.value ?? { v0: 0, v1: 0, v2: 0 };
       const color: Triple<number> = [v0, v1, v2] as Triple<number>;
       this.currentColor.set(color);
       this.colorChange.emit(color);
     });
   }
   onVariableChange(minmax: Tuple<number>) {
-    this.configGroup.patchValue({
+    this.configGroup!.patchValue({
       ["v" + this.colorConfig()!.variableIndex]: (minmax[0] + minmax[1]) / 2,
     });
     this.rangeChange.emit(minmax);

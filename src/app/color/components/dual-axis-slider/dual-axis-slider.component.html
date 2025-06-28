@@ -1,3 +1,4 @@
+@if(formDual!== undefined) {
 <form [formGroup]="formDual" class="relative">
   @let config=colorConfig(); @if(config){
   <div class="absolute left-1/2 top-1">
@@ -42,3 +43,4 @@
     [valueLength]="9" />
   }
 </form>
+}

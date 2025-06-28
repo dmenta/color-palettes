@@ -1,15 +1,17 @@
 <div class="w-screen h-screen grid grid-rows-[48px_minmax(500px,_1fr)]">
-  <header class="flex items-center justify-between px-6 pb-0 pt-1 bg-gris-100/50 dark:bg-gris-800 leading-8">
-    <h1 class="text-3xl m-0 font-museo-moderno leading-7 text-orange-600 dark:text-orange-500">CoLoRina</h1>
-    <button
-      style="background-color: transparent !important"
-      class="m-1"
-      zz-icon-toggle-button
-      [focus-ring]="false"
-      falseIcon="dark_mode"
-      trueIcon="light_mode"
-      [value]="darkModeService.darkMode()"
-      (toggle)="darkModeService.setDarkMode($event)"></button>
+  <header class="bg-gris-100/50 dark:bg-gris-800">
+    <nav class="flex items-center justify-between px-8 m-auto max-w-[1300px] leading-8">
+      <h1 class="text-3xl m-0 font-museo-moderno leading-7 text-orange-600 dark:text-orange-500">CoLoRina</h1>
+      <button
+        style="background-color: transparent !important"
+        class="m-1"
+        zz-icon-toggle-button
+        [focus-ring]="false"
+        falseIcon="dark_mode"
+        trueIcon="light_mode"
+        [value]="darkModeService.darkMode()"
+        (toggle)="darkModeService.setDarkMode($event)"></button>
+    </nav>
   </header>
   <main class="h-[calc(100vh-48px)] overflow-y-auto">
     <router-outlet></router-outlet>

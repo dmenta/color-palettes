@@ -62,3 +62,9 @@ body {
   font-size: 15px;
   font-variation-settings: "wdth" 95, "wght" 350;
 }
+
+.axis-swatch {
+  @apply relative;
+  @apply flex flex-row grow items-center justify-center text-xs;
+  @apply overflow-hidden;
+}

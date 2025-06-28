@@ -35,7 +35,7 @@
     "strictNullChecks": true,
     /* sólo se pueden activar si strictNullChecks está activado */
     "exactOptionalPropertyTypes": false,
-    "strictPropertyInitialization": false,
+    "strictPropertyInitialization": true,
 
     "experimentalDecorators": true,
     "moduleResolution": "bundler",
@@ -44,9 +44,9 @@
     "module": "ES2022"
   },
   "angularCompilerOptions": {
-    "enableI18nLegacyMessageIdFormat": false,
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
-    "strictTemplates": true
+    "strictTemplates": true,
+    "strictStandalone": true
   }
 }

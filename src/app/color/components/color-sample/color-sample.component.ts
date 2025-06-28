@@ -26,7 +26,7 @@ export class ColorSampleComponent {
 
   currentColor = input<Triple<number> | undefined>(undefined, { alias: "current-color" });
 
-  rgb: Signal<Triple<number>>;
+  rgb: Signal<Triple<number>> | undefined = undefined;
 
   @Output() newColor = new EventEmitter<Triple<number>>();
 
