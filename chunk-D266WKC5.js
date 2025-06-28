@@ -1,0 +1,1 @@
+import{Ba as o}from"./chunk-64GRCL5E.js";var n=class e{static \u0275fac=function(t){return new(t||e)};static \u0275cmp=o({type:e,selectors:[["zz-test"]],decls:0,vars:0,template:function(t,p){},encapsulation:2})};export{n as TestComponent};
