@@ -1,16 +1,16 @@
 import { Routes } from "@angular/router";
 
 export const routes: Routes = [
-  { path: "", redirectTo: "layout", pathMatch: "full" },
+  { path: "", redirectTo: "palettes", pathMatch: "full" },
   {
-    path: "palettes",
+    path: "layout",
     title: "Paletas de color",
     loadComponent: () =>
       import("./color/features/color-palette/color-palette.component").then((m) => m.ColorPaletteComponent),
   },
   {
-    path: "layout",
-    title: "Palets de Color - Inicio",
+    path: "palettes",
+    title: "Palets de Color",
     loadComponent: () => import("./color/features/layout/layout.component").then((m) => m.LayoutComponent),
   },
 ];
