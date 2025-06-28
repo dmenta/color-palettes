@@ -27,10 +27,11 @@ export class ColorConfigComponent {
   @Output() colorConfigChange = new EventEmitter<ColorConfig>();
 
   ngOnInit() {
+    const defaultModel = namedColorModels["oklch"];
     this.configGroup = new FormGroup({
-      model: new FormControl<ColorModel>(namedColorModels["oklch"], { nonNullable: true }),
+      model: new FormControl<ColorModel>(defaultModel, { nonNullable: true }),
       variable: new FormControl<ColorComponent>(
-        { value: namedColorModels["oklch"].components[0], disabled: !this.variableSelection() },
+        { value: defaultModel.components[defaultModel.defaultVariableIndex], disabled: !this.variableSelection() },
         { nonNullable: true }
       ),
     });
@@ -39,7 +40,7 @@ export class ColorConfigComponent {
       this.configGroup.controls.model.valueChanges.pipe(
         tap((model) => {
           if (model) {
-            const variable = model.components[0];
+            const variable = model.components[model.defaultVariableIndex];
             this.configGroup?.controls.variable.setValue(variable);
           }
         })
