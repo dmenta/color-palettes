@@ -1,5 +1,5 @@
-@if(values(); as values){ @let components = colorModel().components;
 <div class="flex px-1" [class.flex-col]="vertical()" [class.gap-2]="!vertical()">
+  @if(values(); as values){ @let components = colorModel().components;
   <span
     >{{ components[0].label }}:
     <span class="inline-block text-right">{{ values[0] | number : "0.0-" + components[0].precision }}</span></span
@@ -12,5 +12,5 @@
     {{ components[2].label }}:
     <span class="inline-block text-right">{{ values[2] | number : "0.0-" + components[2].precision }}</span></span
   >
+  }
 </div>
-}

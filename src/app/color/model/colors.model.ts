@@ -45,6 +45,7 @@ export class ColorModel {
   constructor(
     public name: ColorModelName,
     public components: Triple<ColorComponent>,
+    public defaultVariableIndex: 0 | 1 | 2 = 0,
 
     templateFn?: (parts: Triple<string>) => string
   ) {

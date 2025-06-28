@@ -7,6 +7,7 @@ import { ColorRangeSelectorComponent } from "../../components/color-range-select
 import { ColorSampleComponent } from "../../components/color-sample/color-sample.component";
 import { AxisConfig, Tuple, Triple, ColorConfig, ColorComponent } from "../../model/colors.model";
 import Color from "colorjs.io";
+import { toHsl, toOklch, toRgb } from "../../model/color";
 
 @Component({
   selector: "zz-color-palette",
@@ -34,10 +35,29 @@ export class ColorPaletteComponent {
   }
 
   colorConfigChanged(config: ColorConfig) {
+    const actual = this.colorConfig()?.model.convert(this.currentColor());
+    let nuevo: Triple<number> = config.model?.defaultValues() ?? ([0, 0, 0] as Triple<number>);
+
+    if (config.model.name === this.colorConfig()?.model.name) {
+      nuevo = this.currentColor();
+    }
+
+    if (actual) {
+      switch (config.model.name) {
+        case "hsl":
+          nuevo = toHsl(actual!);
+          break;
+        case "oklch":
+          nuevo = toOklch(actual!);
+          break;
+        default:
+          nuevo = toRgb(actual!);
+      }
+    }
     this.colorConfig.set(config);
     this.minmax.set(config.variable ? [config.variable.min, config.variable.max] : ([0, 0] as Tuple<number>));
-    this.colorBase.set(config.model?.defaultValues() ?? ([0, 0, 0] as Triple<number>));
-    this.currentColor.set(config.model?.defaultValues() ?? ([0, 0, 0] as Triple<number>));
+    this.colorBase.set(nuevo);
+    this.currentColor.set(nuevo);
   }
 
   colorChange(valores: Triple<number>) {

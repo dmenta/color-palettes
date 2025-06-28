@@ -2,7 +2,7 @@ import { Component, computed, input, Signal } from "@angular/core";
 import { FullWidthColorSwatchDirective } from "../color-swatch/color-swatch.directive";
 import { AxisConfig, ColorConfig, Triple } from "../../model/colors.model";
 import { ColorValuesDisplayComponent } from "../color-values-display/color-values-display.component";
-import { toContrast, toRgb } from "../color";
+import { toContrast, toRgb } from "../../model/color";
 
 @Component({
   selector: "zz-color-axis",

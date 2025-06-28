@@ -10,6 +10,19 @@ export function toRgb(textoColor: string) {
 
   return [Math.round(r), Math.round(g), Math.round(b)] as Triple<number>;
 }
+
+export function toHsl(textoColor: string) {
+  const rgb = toRgb(textoColor);
+  const color = new Color(`rgb(${rgb[0]} ${rgb[1]} ${rgb[2]})`).to("hsl");
+
+  return [color.coords[0].valueOf(), color.coords[1].valueOf(), color.coords[2].valueOf()] as Triple<number>;
+}
+
+export function toOklch(textoColor: string) {
+  const color = new Color(textoColor).to("oklch");
+
+  return [color.coords[0].valueOf(), color.coords[1].valueOf(), color.coords[2].valueOf()] as Triple<number>;
+}
 export function toContrast(textoColor: string): string {
   const color = new Color(textoColor).to("srgb");
   const contraste1 = color.contrastWCAG21("white");

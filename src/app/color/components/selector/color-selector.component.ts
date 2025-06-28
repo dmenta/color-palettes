@@ -1,7 +1,7 @@
 import { Component, Output, EventEmitter, input, effect, signal } from "@angular/core";
 import { FormControl, ReactiveFormsModule } from "@angular/forms";
-import { rgbFromHex, rgbToHex, toContrast } from "../color";
 import { Triple } from "../../model/colors.model";
+import { rgbFromHex, rgbToHex, toContrast } from "../../model/color";
 
 @Component({
   selector: "zz-color-selector",
