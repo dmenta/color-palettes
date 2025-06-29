@@ -1,4 +1,4 @@
-@if(axisConfig(); as axisConfig){
+@if(state.axisConfig(); as axisConfig){
 <div class="flex flex-row justify-between" [class.space-x-1]="axisConfig.separate">
   @for(swatch of swatches!(); track $index){
   <div
@@ -7,7 +7,7 @@
     [roundedSize]="axisConfig.continuo ? 'none' : 'large'"
     [height]="axisConfig.alto"
     color-swatch-full
-    [color-model]="colorConfig()!.model"
+    [color-model]="state.colorConfig()!.model"
     [values]="swatch.valores">
     @if(showClamp()){
     <div
@@ -19,7 +19,7 @@
     } @if(axisConfig.showValues==='yes'){
     <div [style.color]="swatch.fore" class="text-smaller-2">
       <zz-color-values-display
-        [color-model]="colorConfig()!.model"
+        [color-model]="state.colorConfig()!.model"
         [values]="swatch.valores"
         [vertical]="true"></zz-color-values-display>
     </div>

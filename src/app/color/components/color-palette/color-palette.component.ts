@@ -1,8 +1,9 @@
-import { ChangeDetectionStrategy, Component, computed, input, Signal } from "@angular/core";
+import { ChangeDetectionStrategy, Component, computed, inject, input, Signal } from "@angular/core";
 import { FullWidthColorSwatchDirective } from "../color-swatch/color-swatch.directive";
-import { PaletteConfig, ColorConfig, Triple } from "../../model/colors.model";
+import { Triple } from "../../model/colors.model";
 import { ColorValuesDisplayComponent } from "../color-values-display/color-values-display.component";
 import { toContrast, toRgb } from "../../model/color";
+import { ColorStateService } from "../../services/color-state.service";
 
 @Component({
   selector: "zz-color-palette",
@@ -11,16 +12,9 @@ import { toContrast, toRgb } from "../../model/color";
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ColorPaletteComponent {
-  colorConfig = input<ColorConfig | undefined>(undefined, { alias: "color-config" });
-  axisConfig = input<PaletteConfig | undefined>(undefined, { alias: "axis-config" });
-  colorBase = input<Triple<number> | undefined>(undefined, { alias: "color-base" });
-
-  min = input<number | undefined>(undefined);
-  max = input<number | undefined>(undefined);
+  state = inject(ColorStateService);
 
   showClamp = input<boolean>(false);
-
-  width = input<number | "full">("full");
 
   swatches: Signal<Swatch[]> | undefined = undefined;
 
@@ -28,17 +22,17 @@ export class ColorPaletteComponent {
 
   ngOnInit() {
     this.pasos = computed(() => {
-      const colorConfig = this.colorConfig();
+      const colorConfig = this.state.colorConfig();
       if (!colorConfig) {
         return 10;
       }
-      const config = this.axisConfig();
+      const config = this.state.axisConfig();
 
       const pasosConfig = config?.pasos ?? 10;
       if (config?.automatico ?? true) {
         const variable = colorConfig.variable;
-        const min = this.min() ?? 0;
-        const max = this.max() ?? 0;
+        const min = this.state.minmax()[0];
+        const max = this.state.minmax()[1];
 
         return Math.min(
           pasosConfig,
@@ -50,16 +44,16 @@ export class ColorPaletteComponent {
     });
 
     this.swatches = computed(() => {
-      const colorConfig = this.colorConfig();
+      const colorConfig = this.state.colorConfig();
 
       if (!colorConfig) {
         return [];
       }
 
-      const baseArray = this.colorBase() ?? colorConfig.model.defaultValues();
+      const baseArray = this.state.currentColor() ?? colorConfig.model.defaultValues();
       const pasos = this.pasos!();
-      const max = this.max() ?? 0;
-      const min = this.min() ?? 0;
+      const min = this.state.minmax()[0];
+      const max = this.state.minmax()[1];
 
       const step = (max - min) / (pasos - 1);
 
