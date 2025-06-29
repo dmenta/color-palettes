@@ -1,8 +1,8 @@
-import { Component, effect, EventEmitter, input, Output } from "@angular/core";
+import { ChangeDetectionStrategy, Component, effect, EventEmitter, input, Output } from "@angular/core";
 import { SliderFieldComponent } from "../../../core/components/slider-field/slider-field.component";
 import { ColorAxisComponent } from "../color-axis/color-axis.component";
 import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
-import { AxisConfig, ColorConfig, Triple, Tuple } from "../../model/colors.model";
+import { ColorConfig, Triple, Tuple } from "../../model/colors.model";
 import { IconDirective } from "../../../core/components/icon/icon.directive";
 
 @Component({
@@ -12,14 +12,23 @@ import { IconDirective } from "../../../core/components/icon/icon.directive";
   host: {
     class: "block w-full",
   },
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DualAxisSliderComponent {
   colorConfig = input<ColorConfig | undefined>(undefined, { alias: "color-config" });
-  axisConfig = input<AxisConfig | undefined>(undefined, { alias: "axis-config" });
   currentColor = input<Triple<number> | undefined>(undefined);
   value = input<number | undefined>(undefined);
 
-  width = input<number | "full">("full");
+  height = input(30, {
+    transform: (value?: number) => {
+      if (value === undefined) {
+        return 30;
+      }
+      const valor = Number.isInteger(value) ? value : 30;
+
+      return Math.max(1, Math.min(400, valor));
+    },
+  });
 
   @Output() minmaxChange = new EventEmitter<Tuple<number>>();
 

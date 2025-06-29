@@ -5,7 +5,6 @@ import { SliderSlimDirective } from "../slider/slider.directive";
 import { TextLengthDirective } from "../../directives/text-length.directive";
 import { DataListComponent } from "../slider/data-list.component";
 import { OverflowVisibleDirective } from "../../directives/overflow.directive";
-import { WidthFullDirective } from "../../directives/width.directive";
 
 @Component({
   selector: "zz-slider-field",
@@ -18,7 +17,6 @@ import { WidthFullDirective } from "../../directives/width.directive";
     OverflowVisibleDirective,
   ],
   templateUrl: "./slider-field.component.html",
-  hostDirectives: [WidthFullDirective],
 })
 export class SliderFieldComponent {
   @Input({ required: true }) fieldName: string = "";

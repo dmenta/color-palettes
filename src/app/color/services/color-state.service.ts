@@ -1,6 +1,6 @@
 import { computed, Injectable, signal } from "@angular/core";
 import {
-  AxisConfig,
+  PaletteConfig,
   ColorComponent,
   ColorConfig,
   ColorModel,
@@ -32,7 +32,7 @@ export class ColorStateService {
     ) as 0 | 1 | 2,
   });
 
-  readonly axisConfig = signal<AxisConfig>({
+  readonly axisConfig = signal<PaletteConfig>({
     alto: 100,
     continuo: false,
     pasos: 12,
@@ -72,7 +72,7 @@ export class ColorStateService {
     });
   }
 
-  axisConfigChanged(config: AxisConfig) {
+  axisConfigChanged(config: PaletteConfig) {
     this.axisConfig.set(config);
   }
 

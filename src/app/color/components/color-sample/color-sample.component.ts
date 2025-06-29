@@ -1,4 +1,4 @@
-import { Component, inject, input } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, input } from "@angular/core";
 import { FullWidthColorSwatchDirective } from "../color-swatch/color-swatch.directive";
 import { ReactiveFormsModule } from "@angular/forms";
 import { RoundedDirective } from "../../../core/directives/rounded.directive";
@@ -20,6 +20,7 @@ import { ColorStateService } from "../../services/color-state.service";
     PanelDirective,
   ],
   templateUrl: "./color-sample.component.html",
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ColorSampleComponent {
   height = input(120);

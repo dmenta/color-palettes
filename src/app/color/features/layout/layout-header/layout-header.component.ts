@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { DarkModeToggleComponent } from "../../../../core/components/dark-mode-toggle/dark-mode-toggle.component";
 
 @Component({
@@ -6,5 +6,6 @@ import { DarkModeToggleComponent } from "../../../../core/components/dark-mode-t
   imports: [DarkModeToggleComponent],
   templateUrl: "./layout-header.component.html",
   styleUrl: "./layout-header.component.css",
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LayoutHeaderComponent {}

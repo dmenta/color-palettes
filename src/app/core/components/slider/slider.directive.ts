@@ -2,7 +2,6 @@ import { computed, Directive, effect, ElementRef, HostBinding, inject, input, Re
 import { KeyDetectorService } from "../../service/ctrlkey-pressed.service";
 import { AppearanceNoneDirective } from "../../directives/appearance-none.directive";
 import { FlexDirective } from "../../directives/display.directive";
-import { WidthFullDirective } from "../../directives/width.directive";
 
 @Directive({
   selector: "input[type='range'][zz-slider]",
@@ -22,14 +21,14 @@ dark:focus:[&::-webkit-slider-thumb]:outline-gris-300
 focus:[&::-webkit-slider-thumb]:outline-2
 focus:[&::-webkit-slider-thumb]:outline-offset-0
 [&::-webkit-slider-runnable-track]:h-[.125rem]
-[&::-webkit-slider-runnable-track]:rounded-full
+[&::-webkit-slider-runnable-track]:rounded-full w-full
 `,
     "[class]": `{'dark:[&::-webkit-slider-runnable-track]:bg-white/30':showTrack(), 
           '[&::-webkit-slider-runnable-track]:bg-black/20': showTrack(),
           'focus:[&::-webkit-slider-runnable-track]:bg-black/50':showTrack(), 
           'focus:dark:[&::-webkit-slider-runnable-track]:bg-white/50':showTrack()}`,
   },
-  hostDirectives: [WidthFullDirective, AppearanceNoneDirective, FlexDirective],
+  hostDirectives: [AppearanceNoneDirective, FlexDirective],
 })
 export class SliderSlimDirective {
   accent = input(false);

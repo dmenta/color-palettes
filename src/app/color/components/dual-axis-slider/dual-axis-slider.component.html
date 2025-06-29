@@ -21,10 +21,8 @@
   <zz-color-axis
     class="-mt-2.5 block rounded-md overflow-hidden"
     [color-config]="config"
-    [axis-config]="axisConfig()"
     [color-base]="currentColor()"
-    [min]="config.variable.min"
-    [max]="config.variable.max"></zz-color-axis>
+    [height]="height()"></zz-color-axis>
   <zz-slider-field
     class="relative z-2 -mt-2.5 block"
     fieldName="min"

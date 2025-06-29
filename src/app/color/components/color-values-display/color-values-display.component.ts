@@ -1,4 +1,4 @@
-import { Component, input } from "@angular/core";
+import { ChangeDetectionStrategy, Component, input } from "@angular/core";
 import { ColorModel, Triple } from "../../model/colors.model";
 import { namedColorModels } from "../../model/color-models-definitions";
 import { DecimalPipe } from "@angular/common";
@@ -7,6 +7,7 @@ import { DecimalPipe } from "@angular/common";
   selector: "zz-color-values-display",
   imports: [DecimalPipe],
   templateUrl: "./color-values-display.component.html",
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ColorValuesDisplayComponent {
   colorModel = input<ColorModel>(namedColorModels.rgb, { alias: "color-model" });

@@ -1,10 +1,10 @@
-import { Component, effect, inject } from "@angular/core";
+import { ChangeDetectionStrategy, Component, effect, inject } from "@angular/core";
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { SliderFieldComponent } from "../../../core/components/slider-field/slider-field.component";
 import { PanelDirective } from "../../../core/directives/containers/panel.directive";
 import { ColorAxisComponent } from "../color-axis/color-axis.component";
 import { DualAxisSliderComponent } from "../dual-axis-slider/dual-axis-slider.component";
-import { AxisConfig, Triple, Tuple } from "../../model/colors.model";
+import { Triple, Tuple } from "../../model/colors.model";
 import { ColorStateService } from "../../services/color-state.service";
 
 @Component({
@@ -18,18 +18,11 @@ import { ColorStateService } from "../../services/color-state.service";
     DualAxisSliderComponent,
   ],
   templateUrl: "./color-range-selector.component.html",
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ColorRangeSelectorComponent {
   state = inject(ColorStateService);
-  axisConfig = {
-    alto: 30,
-    continuo: true,
-    pasos: 60,
-    automatico: true,
-    showValues: "no",
-    separate: false,
-  } as AxisConfig;
-
+  height = 30;
   indices: (0 | 1 | 2)[] = [0, 1, 2];
 
   configGroup:

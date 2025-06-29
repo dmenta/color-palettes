@@ -5,6 +5,8 @@ export type Tuple<T> = [T, T];
 
 export class ColorComponent {
   readonly defaultValue: number;
+  readonly stepSize: number;
+  readonly stepsValues: number[];
 
   constructor(
     public name: string,
@@ -16,6 +18,9 @@ export class ColorComponent {
     public min: number = 0
   ) {
     this.defaultValue = this.average(min, max);
+
+    this.stepSize = (max - min) / (steps - 1);
+    this.stepsValues = Array.from({ length: steps }, (_, i) => min + i * this.stepSize);
   }
 
   convertAverage(min: number, max: number) {
@@ -73,7 +78,7 @@ export class ColorModel {
   }
 }
 
-export type AxisConfig = {
+export type PaletteConfig = {
   alto: number;
   continuo: boolean;
   pasos: number;

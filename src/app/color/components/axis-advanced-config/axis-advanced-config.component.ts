@@ -1,4 +1,4 @@
-import { Component, inject } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { debounceTime, distinctUntilChanged, startWith } from "rxjs";
 import { showValuesOption } from "../../model/colors.model";
@@ -11,6 +11,7 @@ import { ColorStateService } from "../../services/color-state.service";
   selector: "zz-axis-advanced-config",
   imports: [FormsModule, ReactiveFormsModule, InputDirective, SimpleCheckDirective, SelectComponent],
   templateUrl: "./axis-advanced-config.component.html",
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ColorAxisAdvancedConfigComponent {
   state = inject(ColorStateService);
