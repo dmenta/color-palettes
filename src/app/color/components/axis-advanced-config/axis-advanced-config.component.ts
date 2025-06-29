@@ -5,7 +5,7 @@ import { showValuesOption } from "../../model/colors.model";
 import { InputDirective } from "../../../core/directives/input.directive";
 import { SelectComponent } from "../../../core/components/select/select.component";
 import { SimpleCheckDirective } from "../../../core/directives/simple-check.directive";
-import { ColorStateService } from "../../services/color-statae.service";
+import { ColorStateService } from "../../services/color-state.service";
 
 @Component({
   selector: "zz-axis-advanced-config",

@@ -5,7 +5,7 @@ import { ColorSampleComponent } from "../../components/color-sample/color-sample
 import { ColorRangeSelectorComponent } from "../../components/color-range-selector/color-range-selector.component";
 import { ColorAxisComponent } from "../../components/color-axis/color-axis.component";
 import { ColorAxisAdvancedConfigComponent } from "../../components/axis-advanced-config/axis-advanced-config.component";
-import { ColorStateService } from "../../services/color-statae.service";
+import { ColorStateService } from "../../services/color-state.service";
 
 @Component({
   selector: "zz-layout",

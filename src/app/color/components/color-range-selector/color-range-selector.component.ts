@@ -5,7 +5,7 @@ import { PanelDirective } from "../../../core/directives/containers/panel.direct
 import { ColorAxisComponent } from "../color-axis/color-axis.component";
 import { DualAxisSliderComponent } from "../dual-axis-slider/dual-axis-slider.component";
 import { AxisConfig, Triple, Tuple } from "../../model/colors.model";
-import { ColorStateService } from "../../services/color-statae.service";
+import { ColorStateService } from "../../services/color-state.service";
 
 @Component({
   selector: "zz-color-range-selector",
