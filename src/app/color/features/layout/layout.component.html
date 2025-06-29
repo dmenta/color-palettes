@@ -3,36 +3,21 @@
 </div>
 <main class="flex flex-row items-top justify-center gap-8 pl-5 pr-6 pt-2 m-auto max-w-[1600px] w-screen">
   <div class="py-2">
-    <zz-color-menu (colorConfigChange)="colorConfigChanged($event)"></zz-color-menu>
+    <zz-color-menu></zz-color-menu>
   </div>
   <div class="min-w-36 w-full pt-1 relative flex flex-col">
-    @if(colorConfig();as colorConfig){
-    <zz-color-range-selector
-      [color-config]="colorConfig"
-      [axis-config]="{ alto: 30, continuo: true, pasos: 60, automatico: true, showValues: 'no' }"
-      [color-base]="colorBase()"
-      (colorChange)="colorChange($event)"
-      (rangeChange)="rangeChange($event)">
-    </zz-color-range-selector>
-    <zz-axis-advanced-config class="mt-6 mb-4" (axisConfigChange)="configChanged($event)"></zz-axis-advanced-config>
+    <zz-color-range-selector> </zz-color-range-selector>
+    <zz-axis-advanced-config class="mt-6 mb-4 opacity-80 hover:opacity-100"></zz-axis-advanced-config>
     <zz-color-axis
       class="block pb-4"
-      [color-config]="colorConfig"
-      [axis-config]="axisConfig()"
-      [color-base]="currentColor()"
+      [color-config]="state.colorConfig()"
+      [axis-config]="state.axisConfig()"
+      [color-base]="state.currentColor()"
       [showClamp]="true"
-      [min]="minmax()[0]"
-      [max]="minmax()[1]"></zz-color-axis>
-    }
+      [min]="state.minmax()[0]"
+      [max]="state.minmax()[1]"></zz-color-axis>
   </div>
   <div class="py-2 hidden lg:block">
-    @if(colorConfig(); as colorConfig) {
-    <zz-color-sample
-      class="block"
-      [height]="200"
-      [color-model]="colorConfig.model"
-      [current-color]="currentColor()"
-      (newColor)="onNewColor($event)"></zz-color-sample>
-    }
+    <zz-color-sample class="block" [height]="200"></zz-color-sample>
   </div>
 </main>

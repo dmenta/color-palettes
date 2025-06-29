@@ -1,10 +1,11 @@
-import { Component, EventEmitter, Output } from "@angular/core";
+import { Component, inject } from "@angular/core";
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { debounceTime, distinctUntilChanged, startWith } from "rxjs";
-import { AxisConfig, showValuesOption } from "../../model/colors.model";
+import { showValuesOption } from "../../model/colors.model";
 import { InputDirective } from "../../../core/directives/input.directive";
 import { SelectComponent } from "../../../core/components/select/select.component";
 import { SimpleCheckDirective } from "../../../core/directives/simple-check.directive";
+import { ColorStateService } from "../../services/color-statae.service";
 
 @Component({
   selector: "zz-axis-advanced-config",
@@ -12,6 +13,8 @@ import { SimpleCheckDirective } from "../../../core/directives/simple-check.dire
   templateUrl: "./axis-advanced-config.component.html",
 })
 export class ColorAxisAdvancedConfigComponent {
+  state = inject(ColorStateService);
+
   configGroup:
     | FormGroup<{
         alto: FormControl<number>;
@@ -23,7 +26,6 @@ export class ColorAxisAdvancedConfigComponent {
       }>
     | undefined = undefined;
 
-  @Output() axisConfigChange = new EventEmitter<AxisConfig>();
   showValuesOptions: { text: string; value: showValuesOption }[] = [
     { text: "No", value: "no" },
     { text: "Yes", value: "yes" },
@@ -31,15 +33,23 @@ export class ColorAxisAdvancedConfigComponent {
   ];
 
   ngOnInit() {
+    const axisConfig = this.state.axisConfig();
+    const valueOption = this.showValuesOptions.find((option) => option.value === axisConfig.showValues)!;
     this.configGroup = new FormGroup({
-      alto: new FormControl<number>(100, { nonNullable: true, validators: [Validators.min(1), Validators.max(180)] }),
-      continuo: new FormControl<boolean>(false, { nonNullable: true }),
-      pasos: new FormControl<number>(12, { nonNullable: true, validators: [Validators.min(2), Validators.max(100)] }),
-      automatico: new FormControl<boolean>(true, { nonNullable: true }),
-      showValues: new FormControl<{ text: string; value: showValuesOption }>(this.showValuesOptions![0]!, {
+      alto: new FormControl<number>(axisConfig.alto, {
+        nonNullable: true,
+        validators: [Validators.min(1), Validators.max(180)],
+      }),
+      continuo: new FormControl<boolean>(axisConfig.continuo, { nonNullable: true }),
+      pasos: new FormControl<number>(axisConfig.pasos, {
+        nonNullable: true,
+        validators: [Validators.min(2), Validators.max(100)],
+      }),
+      automatico: new FormControl<boolean>(axisConfig.automatico, { nonNullable: true }),
+      showValues: new FormControl<{ text: string; value: showValuesOption }>(valueOption, {
         nonNullable: true,
       }),
-      separate: new FormControl<boolean>(false, { nonNullable: true }),
+      separate: new FormControl<boolean>(axisConfig.separate, { nonNullable: true }),
     });
 
     this.configGroup.valueChanges
@@ -51,7 +61,7 @@ export class ColorAxisAdvancedConfigComponent {
       .subscribe((value) => {
         const controls = this.configGroup?.controls;
         if (controls && this.configGroup?.valid) {
-          this.axisConfigChange.emit({
+          this.state.axisConfigChanged({
             alto: value.alto ?? controls.alto.value,
             continuo: value.continuo ?? controls.continuo.value,
             pasos: value.pasos ?? controls.pasos.value,

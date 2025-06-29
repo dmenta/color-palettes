@@ -1,10 +1,11 @@
-import { Component, effect, EventEmitter, input, Output, signal } from "@angular/core";
+import { Component, effect, inject } from "@angular/core";
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { SliderFieldComponent } from "../../../core/components/slider-field/slider-field.component";
 import { PanelDirective } from "../../../core/directives/containers/panel.directive";
 import { ColorAxisComponent } from "../color-axis/color-axis.component";
 import { DualAxisSliderComponent } from "../dual-axis-slider/dual-axis-slider.component";
-import { AxisConfig, ColorConfig, Triple, Tuple } from "../../model/colors.model";
+import { AxisConfig, Triple, Tuple } from "../../model/colors.model";
+import { ColorStateService } from "../../services/color-statae.service";
 
 @Component({
   selector: "zz-color-range-selector",
@@ -19,14 +20,15 @@ import { AxisConfig, ColorConfig, Triple, Tuple } from "../../model/colors.model
   templateUrl: "./color-range-selector.component.html",
 })
 export class ColorRangeSelectorComponent {
-  colorConfig = input<ColorConfig | undefined>(undefined, { alias: "color-config" });
-  axisConfig = input<AxisConfig | undefined>(undefined, { alias: "axis-config" });
-  colorBase = input<Triple<number> | undefined>(undefined, { alias: "color-base" });
-
-  currentColor = signal<Triple<number>>([0, 0, 0]);
-
-  @Output() colorChange = new EventEmitter<Triple<number>>();
-  @Output() rangeChange = new EventEmitter<Tuple<number>>();
+  state = inject(ColorStateService);
+  axisConfig = {
+    alto: 30,
+    continuo: true,
+    pasos: 60,
+    automatico: true,
+    showValues: "no",
+    separate: false,
+  } as AxisConfig;
 
   indices: (0 | 1 | 2)[] = [0, 1, 2];
 
@@ -40,7 +42,7 @@ export class ColorRangeSelectorComponent {
 
   constructor() {
     effect(() => {
-      const color = this.colorBase() ?? [0, 0, 0];
+      const color = this.state.colorBase() ?? [0, 0, 0];
 
       this.configGroup?.patchValue(
         {
@@ -54,7 +56,7 @@ export class ColorRangeSelectorComponent {
   }
 
   ngOnInit() {
-    const colorBase = this.colorBase() ?? [0, 0, 0];
+    const colorBase = this.state.colorBase() ?? [0, 0, 0];
     this.configGroup = new FormGroup({
       v0: new FormControl(colorBase[0], { nonNullable: true }),
       v1: new FormControl(colorBase[1], { nonNullable: true }),
@@ -64,15 +66,14 @@ export class ColorRangeSelectorComponent {
     this.configGroup.valueChanges.subscribe(() => {
       const { v0, v1, v2 } = this.configGroup?.value ?? { v0: 0, v1: 0, v2: 0 };
       const color: Triple<number> = [v0, v1, v2] as Triple<number>;
-      this.currentColor.set(color);
-      this.colorChange.emit(color);
+      this.state.colorChanged(color);
     });
   }
   onVariableChange(minmax: Tuple<number>) {
     this.configGroup!.patchValue({
-      ["v" + this.colorConfig()!.variableIndex]: (minmax[0] + minmax[1]) / 2,
+      ["v" + this.state.colorConfig()!.variableIndex]: (minmax[0] + minmax[1]) / 2,
     });
-    this.rangeChange.emit(minmax);
+    this.state.rangeChanged(minmax);
   }
   componentStep(precision: number): number {
     return 1 / Math.pow(10, precision);

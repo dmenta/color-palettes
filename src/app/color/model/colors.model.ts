@@ -79,7 +79,7 @@ export type AxisConfig = {
   pasos: number;
   automatico: boolean;
   showValues: showValuesOption;
-  separate?: boolean;
+  separate: boolean;
 };
 
 export type showValuesOption = "no" | "yes" | "rgb";

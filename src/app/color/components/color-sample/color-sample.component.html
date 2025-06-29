@@ -3,21 +3,21 @@
     [height]="height()"
     color-swatch-full
     [shadow]="false"
-    [color-model]="colorModel()"
-    [values]="currentColor()"
+    [color-model]="state.colorConfig().model"
+    [values]="state.currentColor()"
     class="text-right p-4">
-    <zz-color-selector [color]="rgb!()" (color-change)="changeColor($event)"></zz-color-selector>
+    <zz-color-selector [color]="state.rgb()" (color-change)="state.colorSelected($event)"></zz-color-selector>
   </div>
   <div
     class="transition-all text-smaller justify-center w-full min-h-10 max-h-20 py-2 flex flex-col items-center text-md dark:text-gris-100 text-gris-700">
     <zz-color-values-display
       class="whitespace-nowrap w-[25ch] text-center"
-      [color-model]="colorModel()"
+      [color-model]="state.colorConfig().model"
       style="font-variation-settings: 'wght' 450"
-      [values]="currentColor()"></zz-color-values-display>
-    @if(colorModel().name!=="rgb"){
+      [values]="state.currentColor()"></zz-color-values-display>
+    @if(state.colorConfig().model.name!=="rgb"){
     <zz-color-values-display
-      [values]="rgb!()"
+      [values]="state.rgb()"
       class="opacity-70 text-smaller"
       style="line-height: 1rem"></zz-color-values-display>
     }

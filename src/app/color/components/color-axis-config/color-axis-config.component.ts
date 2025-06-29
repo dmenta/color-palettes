@@ -67,6 +67,7 @@ export class ColorAxisConfigComponent {
             pasos: value.pasos ?? controls.pasos.value,
             automatico: value.automatico ?? controls.automatico.value,
             showValues: value.showValues?.value ?? controls.showValues.value.value,
+            separate: false,
           });
         }
       });

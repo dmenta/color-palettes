@@ -1,5 +1,5 @@
 <ul class="space-y-2 min-w-36 w-[14ch]">
-  @for(model of models; track model.name){ @let modelSeleccionado= currentModel().name === model.name;
+  @for(model of models; track model.name){ @let modelSeleccionado= state.colorConfig().model.name === model.name;
   <li>
     <div
       zz-container
@@ -8,7 +8,7 @@
       style="background-color: none !important">
       <span
         class="select-none uppercase text-larger-2 w-full cursor-pointer inline-block transition-all p-2 rounded hover:bg-gris-100 dark:hover:bg-gris-800/95"
-        (click)="modelSelected(model)"
+        (click)="state.modelChanged(model)"
         [class]="{
           'bg-gris-100/85': modelSeleccionado,
           'dark:bg-gris-800/85': modelSeleccionado,
@@ -17,15 +17,16 @@
         >{{ model.name }}</span
       >
       <ul class="space-y-1" [class.p-2]="modelSeleccionado" [zz-collapse-vertical]="!modelSeleccionado">
-        @for(variable of model.components; track variable.name){
+        @for(variable of model.components; track variable.name){ @let variableSeleccionada=
+        state.colorConfig().variable.name === variable.name;
         <li>
           <span
             class="select-none w-full inline-block cursor-pointer transition-all px-2 py-1 rounded dark:hover:bg-gris-700/60"
-            (click)="variableSelected(variable)"
+            (click)="state.variableChanged(variable)"
             [class]="{
-              'bg-gris-100/50': currentVariable().name === variable.name,
-              'dark:bg-gris-700/45': currentVariable().name === variable.name,
-              'semi-bold': currentVariable().name === variable.name
+              'bg-gris-100/50': variableSeleccionada,
+              'dark:bg-gris-700/45': variableSeleccionada,
+              'semi-bold': variableSeleccionada
             }"
             >{{ variable.name }}</span
           >
