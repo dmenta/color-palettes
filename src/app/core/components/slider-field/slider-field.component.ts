@@ -1,7 +1,7 @@
 import { Component, input, Input, Optional } from "@angular/core";
 import { FieldValueComponent } from "./field-value.component";
 import { FormGroupDirective, ReactiveFormsModule } from "@angular/forms";
-import { SliderSlimDirective } from "../slider/slider.directive";
+import { SliderSlimDirective } from "../../directives/slider.directive";
 import { TextLengthDirective } from "../../directives/text-length.directive";
 import { DataListComponent } from "../slider/data-list.component";
 import { OverflowVisibleDirective } from "../../directives/overflow.directive";

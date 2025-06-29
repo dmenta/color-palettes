@@ -1,5 +1,5 @@
 import { Directive } from "@angular/core";
-import { InilineBlockDirective } from "../../directives/display.directive";
+import { InilineBlockDirective } from "./display.directive";
 
 @Directive({
   selector: "span[zz-icon]",

@@ -1,7 +1,7 @@
 import { computed, Directive, effect, ElementRef, HostBinding, inject, input, Renderer2 } from "@angular/core";
-import { KeyDetectorService } from "../../service/ctrlkey-pressed.service";
-import { AppearanceNoneDirective } from "../../directives/appearance-none.directive";
-import { FlexDirective } from "../../directives/display.directive";
+import { KeyDetectorService } from "../service/ctrlkey-pressed.service";
+import { AppearanceNoneDirective } from "./appearance-none.directive";
+import { FlexDirective } from "./display.directive";
 
 @Directive({
   selector: "input[type='range'][zz-slider]",

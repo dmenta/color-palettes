@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, input, model, output } from "@angular/core";
-import { IconButtonDirective } from "./icon-button.directive";
-import { IconDirective } from "../icon/icon.directive";
+import { IconButtonDirective } from "../../directives/icon-button.directive";
+import { IconDirective } from "../../directives/icon.directive";
 
 @Component({
   selector: "button[zz-icon-toggle-button]",

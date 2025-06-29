@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, effect, inject } from "@angular/core";
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { SliderFieldComponent } from "../../../core/components/slider-field/slider-field.component";
-import { PanelDirective } from "../../../core/directives/containers/panel.directive";
 import { ColorAxisComponent } from "../color-axis/color-axis.component";
 import { DualAxisSliderComponent } from "../dual-axis-slider/dual-axis-slider.component";
 import { Triple, Tuple } from "../../model/colors.model";
@@ -9,14 +8,7 @@ import { ColorStateService } from "../../services/color-state.service";
 
 @Component({
   selector: "zz-color-range-selector",
-  imports: [
-    SliderFieldComponent,
-    FormsModule,
-    ReactiveFormsModule,
-    PanelDirective,
-    ColorAxisComponent,
-    DualAxisSliderComponent,
-  ],
+  imports: [SliderFieldComponent, FormsModule, ReactiveFormsModule, ColorAxisComponent, DualAxisSliderComponent],
   templateUrl: "./color-range-selector.component.html",
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

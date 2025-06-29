@@ -1,23 +1,19 @@
 import { ChangeDetectionStrategy, Component, inject, input } from "@angular/core";
-import { FullWidthColorSwatchDirective } from "../color-swatch/color-swatch.directive";
+import { ColorSwatchDirective } from "../../directives/color-swatch.directive";
 import { ReactiveFormsModule } from "@angular/forms";
-import { RoundedDirective } from "../../../core/directives/rounded.directive";
-import { ShadowDirective } from "../../../core/directives/shadow.directive";
 import { ColorValuesDisplayComponent } from "../color-values-display/color-values-display.component";
 import { ColorSelectorComponent } from "../selector/color-selector.component";
-import { PanelDirective } from "../../../core/directives/containers/panel.directive";
 import { ColorStateService } from "../../services/color-state.service";
+import { ContainerDirective } from "../../../core/directives/container.directive";
 
 @Component({
   selector: "zz-color-sample",
   imports: [
     ReactiveFormsModule,
-    FullWidthColorSwatchDirective,
-    RoundedDirective,
-    ShadowDirective,
+    ColorSwatchDirective,
     ColorValuesDisplayComponent,
     ColorSelectorComponent,
-    PanelDirective,
+    ContainerDirective,
   ],
   templateUrl: "./color-sample.component.html",
   changeDetection: ChangeDetectionStrategy.OnPush,

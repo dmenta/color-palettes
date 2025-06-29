@@ -1,11 +1,10 @@
-<div zz-panel [shadow]="false" class="max-w-[25ch]" style="background-color: none !important">
+<div zz-container class="max-w-[25ch] rounded-lg">
   <div
-    [height]="height()"
-    color-swatch-full
-    [shadow]="false"
+    [style.height.px]="height()"
+    color-swatch
     [color-model]="state.colorConfig().model"
     [values]="state.currentColor()"
-    class="text-right p-4">
+    class="text-right p-4 rounded-lg">
     <zz-color-selector [color]="state.rgb()" (color-change)="state.colorSelected($event)"></zz-color-selector>
   </div>
   <div

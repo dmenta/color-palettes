@@ -57,5 +57,3 @@ export class BorderDirective {
     return this.style();
   }
 }
-
-export type borderSize = "none" | "thin" | "normal" | "thick";

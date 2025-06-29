@@ -13,7 +13,7 @@ import {
   ViewChild,
 } from "@angular/core";
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from "@angular/forms";
-import { SelectDirective } from "./select.directive";
+import { SelectDirective } from "../../directives/select.directive";
 
 @Component({
   selector: "zz-select",

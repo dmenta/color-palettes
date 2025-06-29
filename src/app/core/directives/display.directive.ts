@@ -1,15 +1,13 @@
-import { Directive, HostBinding } from "@angular/core";
+import { Directive } from "@angular/core";
 
 @Directive({
   selector: "[zz-display-base], zzDisplayBase",
+  host: {
+    "[class]": "tipo",
+  },
 })
 export abstract class DisplayBaseDirective {
   abstract tipo: string;
-
-  @HostBinding("style.display")
-  get backgroundColor(): string {
-    return this.tipo;
-  }
 }
 
 @Directive({

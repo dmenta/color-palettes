@@ -4,9 +4,10 @@ export type Triple<T> = [T, T, T];
 export type Tuple<T> = [T, T];
 
 export class ColorComponent {
+  private static readonly axisSteps: number = 50;
   readonly defaultValue: number;
   readonly stepSize: number;
-  readonly stepsValues: number[];
+  readonly axisValues: number[];
 
   constructor(
     public name: string,
@@ -14,13 +15,18 @@ export class ColorComponent {
     public max: number,
     public unit: string = "",
     public precision: number = 0,
-    public steps: number = 200,
+    public autoSteps: number = 100,
     public min: number = 0
   ) {
     this.defaultValue = this.average(min, max);
 
-    this.stepSize = (max - min) / (steps - 1);
-    this.stepsValues = Array.from({ length: steps }, (_, i) => min + i * this.stepSize);
+    this.axisValues = this.calcAxisValues(min, max, ColorComponent.axisSteps);
+    this.stepSize = (max - min) / (ColorComponent.axisSteps - 1);
+  }
+
+  private calcAxisValues(min: number, max: number, steps: number = 50): number[] {
+    const stepSize = (max - min) / (steps - 1);
+    return Array.from({ length: steps }, (_, i) => min + i * stepSize);
   }
 
   convertAverage(min: number, max: number) {

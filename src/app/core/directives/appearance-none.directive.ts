@@ -17,19 +17,3 @@ export class AppearanceBaseSelectDirective {
     return "base-select";
   }
 }
-
-@Directive({
-  selector: "[zz-select-none], zzSelectNone",
-  host: {
-    class: "select-none",
-  },
-})
-export class SelectNoneDirective {}
-
-@Directive({
-  selector: "[zz-opacity-95], zzOpacity95",
-  host: {
-    class: "opacity-95",
-  },
-})
-export class Opacity95Directive {}

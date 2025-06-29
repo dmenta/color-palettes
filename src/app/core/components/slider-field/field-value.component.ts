@@ -1,7 +1,7 @@
 import { DecimalPipe } from "@angular/common";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { TransitionDefaultDirective } from "../../directives/transition.directive";
-import { SelectNoneDirective } from "../../directives/appearance-none.directive";
+import { SelectNoneDirective } from "../../directives/user-select.directive";
 
 @Component({
   selector: "zz-field-value",

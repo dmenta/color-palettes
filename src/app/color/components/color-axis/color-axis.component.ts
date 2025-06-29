@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, input, Signal } from "@angular/core";
-import { ColorSwatchDirective } from "../color-swatch/color-swatch.directive";
+import { ColorSwatchDirective } from "../../directives/color-swatch.directive";
 import { ColorConfig, Triple } from "../../model/colors.model";
 
 @Component({
@@ -36,7 +36,7 @@ export class ColorAxisComponent {
 
       const baseArray = this.colorBase() ?? colorConfig.model.defaultValues();
 
-      return variable.stepsValues.map((value) => {
+      return variable.axisValues.map((value) => {
         const valores = [...baseArray];
         valores[colorConfig.variableIndex] = value;
         return valores as Triple<number>;

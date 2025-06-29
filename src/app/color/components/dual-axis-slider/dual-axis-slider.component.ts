@@ -3,7 +3,7 @@ import { SliderFieldComponent } from "../../../core/components/slider-field/slid
 import { ColorAxisComponent } from "../color-axis/color-axis.component";
 import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { ColorConfig, Triple, Tuple } from "../../model/colors.model";
-import { IconDirective } from "../../../core/components/icon/icon.directive";
+import { IconDirective } from "../../../core/directives/icon.directive";
 
 @Component({
   selector: "zz-dual-axis-slider",

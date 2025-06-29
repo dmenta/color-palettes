@@ -1,12 +1,11 @@
 @if(state.axisConfig(); as axisConfig){
-<div class="flex flex-row justify-between" [class.space-x-1]="axisConfig.separate">
+<div class="flex flex-row justify-between" [class.space-x-1]="axisConfig.separate" [style.height.px]="axisConfig.alto">
   @for(swatch of swatches!(); track $index){
   <div
     class="axis-swatch"
     [shadow]="!axisConfig.continuo"
     [roundedSize]="axisConfig.continuo ? 'none' : 'large'"
-    [height]="axisConfig.alto"
-    color-swatch-full
+    color-swatch-panel
     [color-model]="state.colorConfig()!.model"
     [values]="swatch.valores">
     @if(showClamp()){

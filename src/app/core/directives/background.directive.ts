@@ -13,13 +13,6 @@ export abstract class BackgroundBaseDirective {
 }
 
 @Directive({
-  selector: "[zz-background], zzBackground",
-})
-export class BackgroundDirective extends BackgroundBaseDirective {
-  varname = "bg-application";
-}
-
-@Directive({
   selector: "[zz-container-background], zzContainerBackground",
 })
 export class ContainerBackgroundDirective extends BackgroundBaseDirective {

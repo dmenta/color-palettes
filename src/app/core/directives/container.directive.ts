@@ -1,7 +1,7 @@
 import { Directive } from "@angular/core";
-import { ContainerBackgroundDirective } from "../background.directive";
-import { BorderDirective } from "../border.directive";
-import { BlockDirective } from "../display.directive";
+import { ContainerBackgroundDirective } from "./background.directive";
+import { BorderDirective } from "./border.directive";
+import { BlockDirective } from "./display.directive";
 
 @Directive({
   selector: "[zz-container]",

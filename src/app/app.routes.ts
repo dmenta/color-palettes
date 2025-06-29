@@ -5,6 +5,6 @@ export const routes: Routes = [
   {
     path: "palettes",
     title: "Color Palettes",
-    loadComponent: () => import("./color/features/layout/layout.component").then((m) => m.LayoutComponent),
+    loadComponent: () => import("./features/palettes/palettes.component").then((m) => m.PalettesComponent),
   },
 ];

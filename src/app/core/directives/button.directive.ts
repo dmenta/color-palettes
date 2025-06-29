@@ -1,17 +1,15 @@
 import { Directive } from "@angular/core";
-import { DisabledDirective } from "../../directives/disabled.directive";
-import { FocusRingDirective } from "../../directives/focus-ring.directive";
-import { ActiveDirective } from "../../directives/active.directive";
-import { RoundedDirective } from "../../directives/rounded.directive";
-import { InilineBlockDirective } from "../../directives/display.directive";
-import { ButtonBackgroundDirective } from "../../directives/background.directive";
-import {
-  AppearanceNoneDirective,
-  Opacity95Directive,
-  SelectNoneDirective,
-} from "../../directives/appearance-none.directive";
-import { TransitionDefaultDirective } from "../../directives/transition.directive";
-import { ButtonHoverDirective } from "../../directives/hover.directive";
+import { DisabledDirective } from "./disabled.directive";
+import { FocusRingDirective } from "./focus-ring.directive";
+import { ActiveDirective } from "./active.directive";
+import { RoundedDirective } from "./rounded.directive";
+import { InilineBlockDirective } from "./display.directive";
+import { ButtonBackgroundDirective } from "./background.directive";
+import { AppearanceNoneDirective } from "./appearance-none.directive";
+import { TransitionDefaultDirective } from "./transition.directive";
+import { ButtonHoverDirective } from "./hover.directive";
+import { SelectNoneDirective } from "./user-select.directive";
+import { Opacity95Directive } from "./opacity.directive";
 
 @Directive({
   selector: "[zz-button]",

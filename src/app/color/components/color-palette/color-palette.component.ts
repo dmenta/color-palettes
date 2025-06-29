@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input, Signal } from "@angular/core";
-import { FullWidthColorSwatchDirective } from "../color-swatch/color-swatch.directive";
+import { ColorSwatchPanelDirective } from "../../directives/color-swatch.directive";
 import { Triple } from "../../model/colors.model";
 import { ColorValuesDisplayComponent } from "../color-values-display/color-values-display.component";
 import { toContrast, toRgb } from "../../model/color";
@@ -7,7 +7,7 @@ import { ColorStateService } from "../../services/color-state.service";
 
 @Component({
   selector: "zz-color-palette",
-  imports: [FullWidthColorSwatchDirective, ColorValuesDisplayComponent],
+  imports: [ColorSwatchPanelDirective, ColorValuesDisplayComponent],
   templateUrl: "./color-palette.component.html",
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -36,7 +36,7 @@ export class ColorPaletteComponent {
 
         return Math.min(
           pasosConfig,
-          Math.max(2, Math.ceil((Math.abs(max - min) / (variable.max - variable.min)) * variable.steps))
+          Math.max(2, Math.ceil((Math.abs(max - min) / (variable.max - variable.min)) * variable.autoSteps))
         );
       }
 

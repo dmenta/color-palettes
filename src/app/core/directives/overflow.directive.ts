@@ -1,25 +1,4 @@
-import { Directive, HostBinding, input } from "@angular/core";
-
-@Directive({
-  selector: "[zz-overflow], zzOverflow",
-})
-export class OverflowDirective {
-  tipo = input(undefined, {
-    alias: "zz-overflow",
-    transform: (value: string | undefined) => {
-      if (!value) {
-        return undefined;
-      }
-      const valor = value.toLowerCase().trim();
-      return ["visible", "hidden", "clip", "scroll", "auto"].includes(valor) ? valor : undefined;
-    },
-  });
-
-  @HostBinding("style.overflow")
-  get estilos() {
-    return this.tipo();
-  }
-}
+import { Directive, HostBinding } from "@angular/core";
 
 @Directive({
   selector: "[zz-overflow-hidden], zzOverflowHidden",

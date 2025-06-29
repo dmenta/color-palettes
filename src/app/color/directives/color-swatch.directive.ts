@@ -1,8 +1,7 @@
 import { computed, Directive, HostBinding, input } from "@angular/core";
-import { ColorModel, Triple } from "../../model/colors.model";
-import { RoundedDirective } from "../../../core/directives/rounded.directive";
-import { ShadowDirective } from "../../../core/directives/shadow.directive";
-import { WidthFullDirective } from "../../../core/directives/width.directive";
+import { ColorModel, Triple } from "../model/colors.model";
+import { RoundedDirective } from "../../core/directives/rounded.directive";
+import { ShadowDirective } from "../../core/directives/shadow.directive";
 
 @Directive({
   selector: "[color-swatch]",
@@ -35,16 +34,3 @@ export class ColorSwatchDirective {
   ],
 })
 export class ColorSwatchPanelDirective {}
-
-@Directive({
-  selector: "[color-swatch-full]",
-  hostDirectives: [ColorSwatchPanelDirective, { directive: WidthFullDirective }],
-})
-export class FullWidthColorSwatchDirective {
-  height = input(50);
-
-  @HostBinding("style.height.px")
-  get heightResolved() {
-    return this.height();
-  }
-}

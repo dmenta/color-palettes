@@ -1,8 +1,8 @@
 import { Directive, HostBinding } from "@angular/core";
-import { AppearanceBaseSelectDirective } from "../../directives/appearance-none.directive";
-import { DisabledDirective } from "../../directives/disabled.directive";
-import { WidthFullDirective } from "../../directives/width.directive";
-import { InilineBlockDirective } from "../../directives/display.directive";
+import { AppearanceBaseSelectDirective } from "./appearance-none.directive";
+import { DisabledDirective } from "./disabled.directive";
+import { WidthFullDirective } from "./width.directive";
+import { InilineBlockDirective } from "./display.directive";
 
 @Directive({
   selector: "select[zz-select], zzSelect",
