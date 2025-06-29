@@ -11,20 +11,20 @@
     [values]="swatch.valores">
     @if(showClamp()){
     <div
-      class="text-lg absolute select-none bottom-0 right-2 opacity-0 transition-opacity duration-500 ease-in-out"
+      class="text-larger-2 absolute select-none bottom-1 right-2 opacity-0 transition-opacity duration-500 ease-in-out"
       [class.opacity-60]="swatch.clamp"
       [style.color]="swatch.fore">
       &#x26A0;
     </div>
     } @if(axisConfig.showValues==='yes'){
-    <div [style.color]="swatch.fore">
+    <div [style.color]="swatch.fore" class="text-smaller-2">
       <zz-color-values-display
         [color-model]="colorConfig()!.model"
         [values]="swatch.valores"
         [vertical]="true"></zz-color-values-display>
     </div>
     }@if(axisConfig.showValues==="rgb"){
-    <div [style.color]="swatch.fore">
+    <div [style.color]="swatch.fore" class="text-smaller-2">
       <zz-color-values-display [values]="swatch.color" [vertical]="true"></zz-color-values-display>
     </div>
     }

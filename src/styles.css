@@ -18,8 +18,25 @@
   --font-museo-moderno: "MuseoModerno", sans-serif;
   --font-offside: "Offside", sans-serif;
   --font-unica-one: "Unica One", sans-serif;
+  --font-roboto: "Roboto", sans-serif;
+  --font-roboto--font-variation-settings: "wdth" 75;
+
+  --font-icons: var(--material-icons-font);
+  --font-icons--font-variation-settings: var(--material-icons-variation-settings);
+
+  --default-font-family: var(--font-roboto);
 
   --text-smaller: 0.9em;
+  --text-smaller-1: 0.85em;
+  --text-smaller-2: 0.8em;
+  --text-smaller-3: 0.75em;
+  --text-smaller-4: 0.7em;
+
+  --text-larger: 1.1em;
+  --text-larger-2: 1.2em;
+  --text-larger-3: 1.3em;
+  --text-larger-4: 1.4em;
+  --text-larger-5: 1.5em;
 }
 
 @custom-variant dark (&:where(.dark, .dark *));
@@ -58,11 +75,11 @@
 }
 
 body {
-  font-family: var(--body-font-family);
+  /* font-family: var(--body-font-family); */
   background-color: var(--bg-application);
   color: var(--text-color);
   font-size: 15px;
-  font-variation-settings: "wdth" 95, "wght" 350;
+  /* font-variation-settings: "wdth" 75, "wght" 350; */
 }
 
 .bold {
@@ -74,6 +91,6 @@ body {
 
 .axis-swatch {
   @apply relative;
-  @apply flex flex-row grow items-center justify-center text-xs;
+  @apply flex flex-row grow items-center justify-center;
   @apply overflow-hidden;
 }

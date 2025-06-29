@@ -4,7 +4,7 @@ import { InilineBlockDirective } from "../../directives/display.directive";
 @Directive({
   selector: "span[zz-icon]",
   host: {
-    class: "material-symbols-rounded  min-w-10 w-10 aspect-square content-center",
+    class: "font-icons  text-larger-5 min-w-10 w-10 aspect-square content-center",
   },
   hostDirectives: [InilineBlockDirective],
 })

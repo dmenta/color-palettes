@@ -1,24 +1,14 @@
 import { Component, EventEmitter, Output } from "@angular/core";
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
-import { ToggleCheckComponent } from "../../../core/components/toggle-check/toggle-check.component";
-import { RoundedDirective } from "../../../core/directives/rounded.directive";
 import { debounceTime, distinctUntilChanged, startWith } from "rxjs";
 import { AxisConfig, showValuesOption } from "../../model/colors.model";
 import { InputDirective } from "../../../core/directives/input.directive";
 import { SelectComponent } from "../../../core/components/select/select.component";
-import { ContainerDirective } from "../../../core/directives/containers/container.directive";
+import { SimpleCheckDirective } from "../../../core/directives/simple-check.directive";
 
 @Component({
   selector: "zz-axis-advanced-config",
-  imports: [
-    FormsModule,
-    ReactiveFormsModule,
-    ContainerDirective,
-    RoundedDirective,
-    InputDirective,
-    ToggleCheckComponent,
-    SelectComponent,
-  ],
+  imports: [FormsModule, ReactiveFormsModule, InputDirective, SimpleCheckDirective, SelectComponent],
   templateUrl: "./axis-advanced-config.component.html",
 })
 export class ColorAxisAdvancedConfigComponent {

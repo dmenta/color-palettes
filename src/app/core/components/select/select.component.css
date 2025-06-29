@@ -1,10 +1,5 @@
 ::ng-deep .zz-select::picker-icon {
-  font-family: var(--material-icons-font);
-  font-variation-settings: var(--material-icons-variation-settings);
   content: "arrow_drop_down";
-  opacity: 0.8;
-  font-size: 1.5em;
-  line-height: 1lh;
 }
 
 ::ng-deep .zz-select:open::picker-icon {
@@ -22,10 +17,6 @@
   display: none;
 }
 
-::ng-deep option:hover {
-  background: light-dark(var(--color-gris-800), var(--color-gris-100)) !important;
-}
-
 ::ng-deep .zz-select option:focus {
   background-color: light-dark(var(--color-gris-200), var(--color-gris-600));
   outline: none;
@@ -36,7 +27,12 @@
   background-color: light-dark(var(--color-sky-500), var(--color-sky-700));
 }
 
-::ng-deep .zz-select ::picker(select) {
+::ng-deep .zz-select option:checked:hover {
+  color: light-dark(white, white);
+  background: light-dark(var(--color-sky-600), var(--color-sky-600));
+}
+
+::ng-deep .zz-select::picker(select) {
   appearance: base-select;
   transition: all 0.15s allow-discrete;
   outline: none;

@@ -1,4 +1,4 @@
-<ul class="space-y-2 min-w-32">
+<ul class="space-y-2 min-w-36 w-[14ch]">
   @for(model of models; track model.name){ @let modelSeleccionado= currentModel().name === model.name;
   <li>
     <div
@@ -7,7 +7,7 @@
       class="rounded"
       style="background-color: none !important">
       <span
-        class="select-none uppercase text-lg w-full cursor-pointer inline-block transition-all p-2 rounded hover:bg-gris-100 dark:hover:bg-gris-800/95"
+        class="select-none uppercase text-larger-2 w-full cursor-pointer inline-block transition-all p-2 rounded hover:bg-gris-100 dark:hover:bg-gris-800/95"
         (click)="modelSelected(model)"
         [class]="{
           'bg-gris-100/85': modelSeleccionado,
