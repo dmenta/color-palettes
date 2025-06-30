@@ -1,11 +1,7 @@
 <ul class="space-y-2 min-w-36 w-[14ch]">
   @for(model of models; track model.name){ @let modelSeleccionado= state.colorModel().name === model.name;
   <li>
-    <div
-      zz-container
-      [zzBorderSize]="modelSeleccionado ? 'thin' : 'none'"
-      class="rounded"
-      style="background-color: none !important">
+    <div zz-container [zzBorderSize]="modelSeleccionado ? 'thin' : 'none'" class="rounded bg-transparent">
       <span
         class="select-none uppercase text-larger-2 w-full cursor-pointer inline-block transition-all p-2 rounded hover:bg-gris-100 dark:hover:bg-gris-800/95"
         (click)="state.colorModelChanged(model)"
