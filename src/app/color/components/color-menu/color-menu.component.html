@@ -1,5 +1,5 @@
 <ul class="space-y-2 min-w-36 w-[14ch]">
-  @for(model of models; track model.name){ @let modelSeleccionado= state.colorConfig().model.name === model.name;
+  @for(model of models; track model.name){ @let modelSeleccionado= state.colorModel().name === model.name;
   <li>
     <div
       zz-container
@@ -8,7 +8,7 @@
       style="background-color: none !important">
       <span
         class="select-none uppercase text-larger-2 w-full cursor-pointer inline-block transition-all p-2 rounded hover:bg-gris-100 dark:hover:bg-gris-800/95"
-        (click)="state.modelChanged(model)"
+        (click)="state.colorModelChanged(model)"
         [class]="{
           'bg-gris-100/85': modelSeleccionado,
           'dark:bg-gris-800/85': modelSeleccionado,
@@ -18,7 +18,7 @@
       >
       <ul class="space-y-1" [class.p-2]="modelSeleccionado" [zz-collapse-vertical]="!modelSeleccionado">
         @for(variable of model.components; track variable.name){ @let variableSeleccionada=
-        state.colorConfig().variable.name === variable.name;
+        state.variableConfig().variable.name === variable.name;
         <li>
           <span
             class="select-none w-full inline-block cursor-pointer transition-all px-2 py-1 rounded dark:hover:bg-gris-700/60"

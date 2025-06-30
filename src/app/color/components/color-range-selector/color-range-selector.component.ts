@@ -56,7 +56,7 @@ export class ColorRangeSelectorComponent {
   }
   onVariableChange(minmax: Tuple<number>) {
     this.configGroup!.patchValue({
-      ["v" + this.state.colorConfig()!.variableIndex]: (minmax[0] + minmax[1]) / 2,
+      ["v" + this.state.variableConfig()!.variableIndex]: (minmax[0] + minmax[1]) / 2,
     });
     this.state.rangeChanged(minmax);
   }

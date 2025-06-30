@@ -3,9 +3,12 @@ import { PalettesHeaderComponent } from "./header/palettes-header.component";
 import { ColorMenuComponent } from "../../color/components/color-menu/color-menu.component";
 import { ColorSampleComponent } from "../../color/components/color-sample/color-sample.component";
 import { ColorRangeSelectorComponent } from "../../color/components/color-range-selector/color-range-selector.component";
-import { ColorAxisAdvancedConfigComponent } from "../../color/components/axis-advanced-config/axis-advanced-config.component";
 import { ColorStateService } from "../../color/services/color-state.service";
 import { ColorPaletteComponent } from "../../color/components/color-palette/color-palette.component";
+import { SavePaletteComponent } from "../../color/components/save-palette/save-palette.component";
+import { PaletteStepsConfigComponent } from "../../color/components/palette-steps-config/palette-steps-config.component";
+import { PaletteVisualConfigComponent } from "../../color/components/palette-visual-config/palette-visual-config.component";
+import { PaletteValuesConfigComponent } from "../../color/components/palette-values-config/palette-values-config.component";
 
 @Component({
   selector: "zz-palettes",
@@ -14,8 +17,11 @@ import { ColorPaletteComponent } from "../../color/components/color-palette/colo
     ColorMenuComponent,
     ColorSampleComponent,
     ColorRangeSelectorComponent,
-    ColorAxisAdvancedConfigComponent,
+    PaletteStepsConfigComponent,
+    PaletteVisualConfigComponent,
+    PaletteValuesConfigComponent,
     ColorPaletteComponent,
+    SavePaletteComponent,
   ],
   templateUrl: "./palettes.component.html",
   host: {

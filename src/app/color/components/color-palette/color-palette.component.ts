@@ -13,45 +13,32 @@ import { ColorStateService } from "../../services/color-state.service";
 })
 export class ColorPaletteComponent {
   state = inject(ColorStateService);
-
   showClamp = input<boolean>(false);
-
   swatches: Signal<Swatch[]> | undefined = undefined;
 
-  pasos: Signal<number> | undefined = undefined;
-
   ngOnInit() {
-    this.pasos = computed(() => {
-      const colorConfig = this.state.colorConfig();
-      if (!colorConfig) {
-        return 10;
-      }
-      const config = this.state.axisConfig();
+    this.swatches = computed(() => {
+      const colorModel = this.state.colorModel();
+      const variableConfig = this.state.variableConfig();
+      const config = this.state.paletteStepsConfig();
 
-      const pasosConfig = config?.pasos ?? 10;
+      if (!colorModel || !variableConfig) {
+        return [];
+      }
+
+      let pasos = config?.pasos ?? 10;
       if (config?.automatico ?? true) {
-        const variable = colorConfig.variable;
+        const variable = variableConfig.variable;
         const min = this.state.minmax()[0];
         const max = this.state.minmax()[1];
 
-        return Math.min(
-          pasosConfig,
+        pasos = Math.min(
+          pasos,
           Math.max(2, Math.ceil((Math.abs(max - min) / (variable.max - variable.min)) * variable.autoSteps))
         );
       }
 
-      return pasosConfig;
-    });
-
-    this.swatches = computed(() => {
-      const colorConfig = this.state.colorConfig();
-
-      if (!colorConfig) {
-        return [];
-      }
-
-      const baseArray = this.state.currentColor() ?? colorConfig.model.defaultValues();
-      const pasos = this.pasos!();
+      const baseArray = this.state.currentColor() ?? colorModel.defaultValues();
       const min = this.state.minmax()[0];
       const max = this.state.minmax()[1];
 
@@ -60,8 +47,8 @@ export class ColorPaletteComponent {
       const valores = Array.from({ length: pasos }, (_, i) => {
         const value = min + i * step;
         const valores = [...baseArray];
-        valores[colorConfig.variableIndex] = value;
-        const color = colorConfig.model.convert([valores[0]!, valores[1]!, valores[2]!]);
+        valores[variableConfig.variableIndex] = value;
+        const color = colorModel.convert([valores[0]!, valores[1]!, valores[2]!]);
         const rgb = toRgb(color);
         return {
           valores: valores as Triple<number>,

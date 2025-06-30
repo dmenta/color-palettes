@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, input, Signal } from "@angular/core";
 import { ColorSwatchDirective } from "../../directives/color-swatch.directive";
-import { ColorConfig, Triple } from "../../model/colors.model";
+import { ColorModel, Triple, VariableConfig } from "../../model/colors.model";
 
 @Component({
   selector: "zz-color-axis",
@@ -9,7 +9,9 @@ import { ColorConfig, Triple } from "../../model/colors.model";
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ColorAxisComponent {
-  colorConfig = input<ColorConfig | undefined>(undefined, { alias: "color-config" });
+  colorModel = input<ColorModel | undefined>(undefined, { alias: "color-model" });
+  variableConfig = input<VariableConfig | undefined>(undefined, { alias: "variable-config" });
+
   height = input(30, {
     transform: (value?: number) => {
       if (value === undefined) {
@@ -26,19 +28,19 @@ export class ColorAxisComponent {
 
   ngOnInit() {
     this.swatches = computed(() => {
-      const colorConfig = this.colorConfig();
+      const colorModel = this.colorModel();
 
-      if (!colorConfig) {
+      if (!colorModel) {
         return [];
       }
 
-      const variable = colorConfig.variable;
+      const variableConfig = this.variableConfig()!;
 
-      const baseArray = this.colorBase() ?? colorConfig.model.defaultValues();
+      const baseArray = this.colorBase() ?? colorModel.defaultValues();
 
-      return variable.axisValues.map((value) => {
+      return variableConfig.variable.axisValues.map((value) => {
         const valores = [...baseArray];
-        valores[colorConfig.variableIndex] = value;
+        valores[variableConfig.variableIndex] = value;
         return valores as Triple<number>;
       });
     });

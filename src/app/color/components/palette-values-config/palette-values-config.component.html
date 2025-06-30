@@ -1,0 +1,14 @@
+@if(configGroup){
+<form [formGroup]="configGroup">
+  <div class="flex flex-row items-center" style="line-height: 0.9rem">
+    <label [for]="showValues.selectId" class="select-none">Values:</label>
+    <zz-select
+      #showValues
+      [items]="this.state.showValuesOptions"
+      class="w-16"
+      displayKey="text"
+      formControlName="showValues">
+    </zz-select>
+  </div>
+</form>
+}

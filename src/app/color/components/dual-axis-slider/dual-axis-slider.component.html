@@ -1,6 +1,6 @@
 @if(formDual!== undefined) {
 <form [formGroup]="formDual" class="relative">
-  @let config=colorConfig(); @if(config){
+  @let config=state.variableConfig(); @if(config){
   <div class="absolute left-1/2 top-1">
     <span zz-icon class="h-6">arrow_range</span>
   </div>
@@ -20,7 +20,8 @@
     [valueLength]="9" />
   <zz-color-axis
     class="-mt-2.5 block rounded-md overflow-hidden"
-    [color-config]="config"
+    [color-model]="state.colorModel()"
+    [variable-config]="config"
     [color-base]="currentColor()"
     [height]="height()"></zz-color-axis>
   <zz-slider-field

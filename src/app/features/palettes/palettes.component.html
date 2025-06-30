@@ -7,7 +7,12 @@
   </div>
   <div class="min-w-36 w-full pt-1 relative flex flex-col">
     <zz-color-range-selector> </zz-color-range-selector>
-    <zz-axis-advanced-config class="mt-6 mb-4 opacity-80 hover:opacity-100"></zz-axis-advanced-config>
+    <div class="flex items-center justify-between gap-1 mt-6 mb-4">
+      <zz-palette-steps-config class="opacity-80 hover:opacity-100"></zz-palette-steps-config>
+      <zz-palette-visual-config class="opacity-80 hover:opacity-100"></zz-palette-visual-config>
+      <zz-palette-values-config class="opacity-80 hover:opacity-100"></zz-palette-values-config>
+      <zz-save-palette class="opacity-80 hover:opacity-100"></zz-save-palette>
+    </div>
     <zz-color-palette class="block pb-4" [showClamp]="true"></zz-color-palette>
   </div>
   <div class="py-2 hidden lg:block">

@@ -1,9 +1,10 @@
-import { ChangeDetectionStrategy, Component, effect, EventEmitter, input, Output } from "@angular/core";
+import { ChangeDetectionStrategy, Component, effect, EventEmitter, inject, input, Output } from "@angular/core";
 import { SliderFieldComponent } from "../../../core/components/slider-field/slider-field.component";
 import { ColorAxisComponent } from "../color-axis/color-axis.component";
 import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
-import { ColorConfig, Triple, Tuple } from "../../model/colors.model";
+import { Triple, Tuple, VariableConfig } from "../../model/colors.model";
 import { IconDirective } from "../../../core/directives/icon.directive";
+import { ColorStateService } from "../../services/color-state.service";
 
 @Component({
   selector: "zz-dual-axis-slider",
@@ -15,7 +16,7 @@ import { IconDirective } from "../../../core/directives/icon.directive";
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DualAxisSliderComponent {
-  colorConfig = input<ColorConfig | undefined>(undefined, { alias: "color-config" });
+  state = inject(ColorStateService);
   currentColor = input<Triple<number> | undefined>(undefined);
   value = input<number | undefined>(undefined);
 
@@ -36,7 +37,7 @@ export class DualAxisSliderComponent {
 
   constructor() {
     effect(() => {
-      const minmax = this.minMax(this.colorConfig(), this.value());
+      const minmax = this.minMax(this.state.variableConfig(), this.value());
 
       this.formDual?.patchValue(
         {
@@ -49,7 +50,7 @@ export class DualAxisSliderComponent {
   }
 
   ngOnInit() {
-    const minmax = this.minMax(this.colorConfig(), this.value());
+    const minmax = this.minMax(this.state.variableConfig(), this.value());
 
     this.formDual = new FormGroup({
       min: new FormControl(minmax.min, { nonNullable: true }),
@@ -64,7 +65,7 @@ export class DualAxisSliderComponent {
     });
   }
 
-  minMax(config: ColorConfig | undefined, value: number | undefined) {
+  minMax(config: VariableConfig | undefined, value: number | undefined) {
     if (config === undefined || value === undefined) {
       return {
         min: 0,

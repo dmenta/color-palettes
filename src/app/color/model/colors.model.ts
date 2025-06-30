@@ -84,19 +84,24 @@ export class ColorModel {
   }
 }
 
-export type PaletteConfig = {
-  alto: number;
-  continuo: boolean;
+export type PaletteStepsConfig = {
   pasos: number;
   automatico: boolean;
-  showValues: showValuesOption;
+};
+
+export type PaletteVisualConfig = {
+  alto: number;
+  continuo: boolean;
   separate: boolean;
+};
+
+export type PaletteValuesConfig = {
+  showValues: showValuesOption;
 };
 
 export type showValuesOption = "no" | "yes" | "rgb";
 
-export type ColorConfig = {
-  model: ColorModel;
+export type VariableConfig = {
   variable: ColorComponent;
   variableIndex: 0 | 1 | 2;
 };
