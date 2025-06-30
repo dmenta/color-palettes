@@ -199,7 +199,7 @@ export class ColorStateService {
     }
 
     return {
-      colorModel: colorModel,
+      model: colorModel.name,
       swatches: valores as Swatch[],
     } as Palette;
   });

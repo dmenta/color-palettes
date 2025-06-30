@@ -107,4 +107,4 @@ export type VariableConfig = {
 };
 
 export type Swatch = { valores: Triple<number>; color: Triple<number>; fore: string; clamp?: boolean };
-export type Palette = { colorModel: ColorModel; swatches: Swatch[] };
+export type Palette = { model: ColorModelName; swatches: Swatch[] };
