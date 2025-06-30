@@ -1,4 +1,4 @@
-import { computed, Injectable, signal } from "@angular/core";
+import { computed, Injectable, Signal, signal } from "@angular/core";
 import {
   ColorComponent,
   VariableConfig,
@@ -9,9 +9,10 @@ import {
   showValuesOption,
   Triple,
   Tuple,
+  Swatch,
 } from "../model/colors.model";
 import { namedColorModels } from "../model/color-models-definitions";
-import { toHsl, toOklch, toRgb } from "../model/color";
+import { toContrast, toHsl, toOklch, toRgb } from "../model/color";
 import Color from "colorjs.io";
 
 @Injectable({
@@ -146,4 +147,56 @@ export class ColorStateService {
     });
     this.minmax.set(variable ? [variable.min, variable.max] : ([0, 0] as Tuple<number>));
   }
+
+  swatches: Signal<Swatch[]> = computed(() => {
+    const colorModel = this.colorModel();
+    const variableConfig = this.variableConfig();
+    const stepsConfig = this.paletteStepsConfig();
+    const baseArray = this.currentColor() ?? colorModel.defaultValues();
+
+    const min = this.minmax()[0];
+    const max = this.minmax()[1];
+
+    let pasos = stepsConfig?.pasos ?? 10;
+    if (stepsConfig?.automatico ?? true) {
+      const variable = variableConfig.variable;
+
+      pasos = Math.min(
+        pasos,
+        Math.max(2, Math.ceil((Math.abs(max - min) / (variable.max - variable.min)) * variable.autoSteps))
+      );
+    }
+
+    const step = (max - min) / (pasos - 1);
+
+    const valores = Array.from({ length: pasos }, (_, i) => {
+      const value = min + i * step;
+      const valores = [...baseArray];
+      valores[variableConfig.variableIndex] = value;
+      const color = colorModel.convert([valores[0]!, valores[1]!, valores[2]!]);
+      const rgb = toRgb(color);
+      return {
+        valores: valores as Triple<number>,
+        color: rgb,
+        fore: toContrast(color),
+      } as Swatch;
+    });
+
+    if (valores.length > 0) {
+      let previo = valores[0]!.color;
+      for (let i = 1; i < valores.length; i++) {
+        const actual = valores[i]!.color;
+        const diff0 = Math.abs(actual[0] - previo[0]);
+        const diff1 = Math.abs(actual[1] - previo[1]);
+        const diff2 = Math.abs(actual[2] - previo[2]);
+        if (diff0 <= 7 && diff1 <= 3 && diff2 <= 14) {
+          valores[i - 1]!.clamp = true;
+          valores[i]!.clamp = true;
+        }
+        previo = actual;
+      }
+    }
+
+    return valores;
+  });
 }

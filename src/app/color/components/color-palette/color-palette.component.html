@@ -3,7 +3,7 @@
   class="flex flex-row justify-between"
   [class.space-x-1]="visualConfig.separate"
   [style.height.px]="visualConfig.alto">
-  @for(swatch of swatches!(); track $index){
+  @for(swatch of state.swatches(); track $index){
   <div
     class="axis-swatch"
     [shadow]="!visualConfig.continuo"
@@ -11,14 +11,13 @@
     color-swatch-panel
     [color-model]="state.colorModel()"
     [values]="swatch.valores">
-    @if(showClamp()){
     <div
       class="text-larger-2 absolute select-none bottom-1 right-2 opacity-0 transition-opacity duration-500 ease-in-out"
       [class.opacity-60]="swatch.clamp"
       [style.color]="swatch.fore">
       &#x26A0;
     </div>
-    } @let valuesConfig=state.paletteValuesConfig(); @if(valuesConfig.showValues==='yes'){
+    @let valuesConfig=state.paletteValuesConfig(); @if(valuesConfig.showValues==='yes'){
     <div [style.color]="swatch.fore" class="text-smaller-2">
       <zz-color-values-display
         [color-model]="state.colorModel()"

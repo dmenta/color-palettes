@@ -105,3 +105,5 @@ export type VariableConfig = {
   variable: ColorComponent;
   variableIndex: 0 | 1 | 2;
 };
+
+export type Swatch = { valores: Triple<number>; color: Triple<number>; fore: string; clamp?: boolean };
