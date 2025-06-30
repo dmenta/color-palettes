@@ -7,4 +7,6 @@ export const routes: Routes = [
     title: "Color Palettes",
     loadComponent: () => import("./features/palettes/palettes.component").then((m) => m.PalettesComponent),
   },
+
+  { path: "**", redirectTo: "palettes", pathMatch: "full" },
 ];

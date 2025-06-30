@@ -1,5 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wdth,wght@75..100,100..900&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=MuseoModerno:ital,wght@0,100..900;1,100..900&family=Offside&family=Unica+One&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=MuseoModerno:wght@600&display=swap");
 @import "tailwindcss";
 
 @theme {
@@ -16,8 +16,6 @@
   --color-gris-950: oklch(13.2% 0.012 54);
 
   --font-museo-moderno: "MuseoModerno", sans-serif;
-  --font-offside: "Offside", sans-serif;
-  --font-unica-one: "Unica One", sans-serif;
   --font-roboto: "Roboto", sans-serif;
   --font-roboto--font-variation-settings: "wdth" 75;
 
