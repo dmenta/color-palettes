@@ -10,6 +10,7 @@ import {
   Triple,
   Tuple,
   Swatch,
+  Palette,
 } from "../model/colors.model";
 import { namedColorModels } from "../model/color-models-definitions";
 import { toContrast, toHsl, toOklch, toRgb } from "../model/color";
@@ -148,7 +149,7 @@ export class ColorStateService {
     this.minmax.set(variable ? [variable.min, variable.max] : ([0, 0] as Tuple<number>));
   }
 
-  swatches: Signal<Swatch[]> = computed(() => {
+  palette: Signal<Palette> = computed(() => {
     const colorModel = this.colorModel();
     const variableConfig = this.variableConfig();
     const stepsConfig = this.paletteStepsConfig();
@@ -197,6 +198,9 @@ export class ColorStateService {
       }
     }
 
-    return valores;
+    return {
+      colorModel: colorModel,
+      swatches: valores as Swatch[],
+    } as Palette;
   });
 }

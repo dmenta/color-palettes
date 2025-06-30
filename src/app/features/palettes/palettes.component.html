@@ -11,9 +11,12 @@
       <zz-palette-steps-config class="opacity-80 hover:opacity-100"></zz-palette-steps-config>
       <zz-palette-visual-config class="opacity-80 hover:opacity-100"></zz-palette-visual-config>
       <zz-palette-values-config class="opacity-80 hover:opacity-100"></zz-palette-values-config>
-      <zz-save-palette class="opacity-80 hover:opacity-100"></zz-save-palette>
+      <zz-save-palette></zz-save-palette>
     </div>
-    <zz-color-palette class="block pb-4"></zz-color-palette>
+    <zz-color-palette class="block pb-4" [palette]="state.palette()"></zz-color-palette>
+    @if(store.lockedPalette(); as palette){
+    <zz-color-palette class="block pb-4" [palette]="palette"></zz-color-palette>
+    }
   </div>
   <div class="py-2 hidden lg:block">
     <zz-color-sample class="block" [height]="200"></zz-color-sample>

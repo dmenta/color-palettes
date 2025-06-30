@@ -1,15 +1,13 @@
-import { Directive, HostBinding } from "@angular/core";
+import { Directive } from "@angular/core";
 
 @Directive({
   selector: "[zz-background-base], zzBackgroundBase",
+  host: {
+    "[class]": "varname",
+  },
 })
 export abstract class BackgroundBaseDirective {
   abstract varname: string;
-
-  @HostBinding("style.backgroundColor")
-  get backgroundColor(): string {
-    return `var(--${this.varname})`;
-  }
 }
 
 @Directive({

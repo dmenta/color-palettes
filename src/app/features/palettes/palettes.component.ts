@@ -9,6 +9,7 @@ import { SavePaletteComponent } from "../../color/components/save-palette/save-p
 import { PaletteStepsConfigComponent } from "../../color/components/palette-steps-config/palette-steps-config.component";
 import { PaletteVisualConfigComponent } from "../../color/components/palette-visual-config/palette-visual-config.component";
 import { PaletteValuesConfigComponent } from "../../color/components/palette-values-config/palette-values-config.component";
+import { PaletteStoreService } from "../../color/services/palette-store.service";
 
 @Component({
   selector: "zz-palettes",
@@ -31,4 +32,5 @@ import { PaletteValuesConfigComponent } from "../../color/components/palette-val
 })
 export class PalettesComponent {
   state = inject(ColorStateService);
+  store = inject(PaletteStoreService);
 }

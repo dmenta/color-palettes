@@ -1,8 +1,17 @@
 <div class="flex items-center">
-  <button zz-icon-button (click)="savePalette()" style="background-color: transparent !important">
+  <button
+    zz-icon-button
+    (click)="lock()"
+    title="Lock palette"
+    class="not-disabled:text-green-600 dark:not-disabled:text-green-400 bg-transparent hover:bg-transparent">
     <span zz-icon>lock</span>
   </button>
-  <button zz-icon-button (click)="deletePalette()" style="background-color: transparent !important">
+  <button
+    zz-icon-button
+    (click)="unlock()"
+    title="Unlock palette"
+    [zzDisabled]="store.lockedPalette() === undefined"
+    class="not-disabled:text-red-600 dark:not-disabled:text-red-500 bg-transparent hover:bg-transparent">
     <span zz-icon>lock_open_right</span>
   </button>
 </div>

@@ -35,6 +35,10 @@
   --text-larger-3: 1.3em;
   --text-larger-4: 1.4em;
   --text-larger-5: 1.5em;
+
+  --color-container: var(--bg-container);
+  --color-button: var(--bg-button);
+  --color-button-hover: var(--bg-button-hover);
 }
 
 @custom-variant dark (&:where(.dark, .dark *));

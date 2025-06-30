@@ -9,13 +9,12 @@ import { AppearanceNoneDirective } from "./appearance-none.directive";
 import { TransitionDefaultDirective } from "./transition.directive";
 import { ButtonHoverDirective } from "./hover.directive";
 import { SelectNoneDirective } from "./user-select.directive";
-import { Opacity95Directive } from "./opacity.directive";
 
 @Directive({
   selector: "[zz-button]",
   host: {
     class: `
-          min-w-fit mx-0.5 
+          min-w-fit mx-0.5 cursor-pointer
           `,
     "(click)": "onClick($event)",
   },
@@ -27,7 +26,6 @@ import { Opacity95Directive } from "./opacity.directive";
     ButtonBackgroundDirective,
     { directive: RoundedDirective, inputs: ["zz-rounded:roundedSize"] },
     ButtonHoverDirective,
-    Opacity95Directive,
     ActiveDirective,
     { directive: FocusRingDirective, inputs: ["show-focus-ring: focus-ring"] },
     { directive: DisabledDirective, inputs: ["zz-disabled: zzDisabled"] },

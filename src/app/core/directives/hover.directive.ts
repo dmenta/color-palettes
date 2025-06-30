@@ -1,67 +1,17 @@
-import { Directive, signal, HostListener, HostBinding } from "@angular/core";
+import { Directive } from "@angular/core";
 
 @Directive({
   selector: "[zz-hover], zzHover",
+  host: {
+    class: "hover:bg-hover hover:opacity-100",
+  },
 })
-export class HoverDirective {
-  hover = signal(false);
-
-  @HostListener("mouseenter")
-  onMouseEnter() {
-    this.hover.set(true);
-  }
-
-  @HostListener("mouseleave")
-  onMouseOut() {
-    this.hover.set(false);
-  }
-
-  @HostBinding("style.backgroundColor")
-  get backgroundColor(): string | undefined {
-    if (this.hover()) {
-      return "var(--bg-hover)";
-    }
-    return undefined;
-  }
-
-  @HostBinding("style.opacity")
-  get opacity() {
-    if (this.hover()) {
-      return "1";
-    }
-    return undefined;
-  }
-}
+export class HoverDirective {}
 
 @Directive({
   selector: "[zz-button-hover], zzButtonHover",
+  host: {
+    class: "hover:bg-button-hover",
+  },
 })
-export class ButtonHoverDirective {
-  hover = signal(false);
-
-  @HostListener("mouseenter")
-  onMouseEnter() {
-    this.hover.set(true);
-  }
-
-  @HostListener("mouseleave")
-  onMouseOut() {
-    this.hover.set(false);
-  }
-
-  @HostBinding("style.backgroundColor")
-  get backgroundColor(): string | undefined {
-    if (this.hover()) {
-      return "var(--bg-button-hover)";
-    }
-    return undefined;
-  }
-
-  @HostBinding("style.opacity")
-  get opacity() {
-    if (this.hover()) {
-      return "1";
-    }
-    return undefined;
-  }
-}
+export class ButtonHoverDirective {}

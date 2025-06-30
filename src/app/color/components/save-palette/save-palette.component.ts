@@ -1,8 +1,8 @@
 import { Component, inject } from "@angular/core";
 import { IconButtonDirective } from "../../../core/directives/icon-button.directive";
 import { IconDirective } from "../../../core/directives/icon.directive";
-import { StorageService } from "../../../core/service/storage.service";
 import { ColorStateService } from "../../services/color-state.service";
+import { PaletteStoreService } from "../../services/palette-store.service";
 
 @Component({
   selector: "zz-save-palette",
@@ -10,12 +10,13 @@ import { ColorStateService } from "../../services/color-state.service";
   templateUrl: "./save-palette.component.html",
 })
 export class SavePaletteComponent {
-  store = inject(StorageService);
+  store = inject(PaletteStoreService);
   state = inject(ColorStateService);
-  savePalette() {
-    throw new Error("Method not implemented.");
+  lock() {
+    this.store.lockPalette(this.state.palette());
   }
-  deletePalette() {
-    throw new Error("Method not implemented.");
+
+  unlock() {
+    this.store.unlockPalette();
   }
 }
