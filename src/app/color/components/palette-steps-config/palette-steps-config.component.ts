@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
+import { ChangeDetectionStrategy, Component, effect, inject } from "@angular/core";
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { debounceTime, distinctUntilChanged, startWith } from "rxjs";
 import { InputDirective } from "../../../core/directives/input.directive";
@@ -21,6 +21,17 @@ export class PaletteStepsConfigComponent {
       }>
     | undefined = undefined;
 
+  constructor() {
+    effect(() => {
+      const config = this.state.paletteStepsConfig();
+      if (config.pasos !== this.configGroup?.controls.pasos.value) {
+        this.configGroup?.controls.pasos.setValue(config.pasos, { emitEvent: false });
+      }
+      if (config.automatico !== this.configGroup?.controls.automatico.value) {
+        this.configGroup?.controls.automatico.setValue(config.automatico, { emitEvent: false });
+      }
+    });
+  }
   ngOnInit() {
     const stepsConfig = this.state.paletteStepsConfig();
     this.configGroup = new FormGroup({

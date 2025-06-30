@@ -1,0 +1,7 @@
+@if(palette(); as paleta){
+<div class="flex flex-row justify-between" [style.height.px]="24">
+  @for(swatch of paleta.swatches; track $index){
+  <div class="axis-swatch" color-swatch [color-model]="colorModel()!" [values]="swatch.valores"></div>
+  }
+</div>
+}

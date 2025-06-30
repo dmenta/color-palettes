@@ -14,8 +14,8 @@
       <zz-save-palette></zz-save-palette>
     </div>
     <zz-color-palette class="block pb-4" [palette]="state.palette()"></zz-color-palette>
-    @if(store.lockedPalette(); as palette){
-    <zz-color-palette class="block pb-4" [palette]="palette"></zz-color-palette>
+    @if(store.lockedPalette(); as paletteInfo){
+    <zz-color-palette class="block pb-4" [palette]="paletteInfo.palette"></zz-color-palette>
     }
   </div>
   <div class="py-2 hidden lg:block">

@@ -1,10 +1,12 @@
-import { effect, Injectable, signal } from "@angular/core";
+import { effect, inject, Injectable, signal } from "@angular/core";
+import { StorageService } from "./storage.service";
 
 @Injectable({
   providedIn: "root",
 })
 export class DarkModeService {
-  readonly darkMode = signal(false);
+  store = inject(StorageService);
+  readonly darkMode = signal((this.store.get("darkMode") as boolean) ?? false);
 
   setDarkMode(darkMode: boolean) {
     this.darkMode.set(darkMode);
@@ -13,6 +15,8 @@ export class DarkModeService {
     effect(() => this.apply(this.darkMode()));
   }
   private apply(darkMode: boolean) {
+    this.store.save("darkMode", darkMode);
+
     if (darkMode) {
       document.documentElement.classList.add("dark");
     } else {

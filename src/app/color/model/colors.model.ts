@@ -108,3 +108,15 @@ export type VariableConfig = {
 
 export type Swatch = { valores: Triple<number>; color: Triple<number>; fore: string; clamp?: boolean };
 export type Palette = { model: ColorModelName; swatches: Swatch[] };
+
+export type PaletteState = {
+  stepsConfig: PaletteStepsConfig;
+  variableConfig: VariableConfig;
+  currentColor: Triple<number>;
+  minmax: Tuple<number>;
+};
+
+export type PaletteInfo = {
+  palette: Palette;
+  state: PaletteState;
+};

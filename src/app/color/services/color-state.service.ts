@@ -1,4 +1,4 @@
-import { computed, Injectable, Signal, signal } from "@angular/core";
+import { computed, effect, inject, Injectable, Signal, signal } from "@angular/core";
 import {
   ColorComponent,
   VariableConfig,
@@ -11,54 +11,67 @@ import {
   Tuple,
   Swatch,
   Palette,
+  ColorModelName,
+  PaletteInfo,
 } from "../model/colors.model";
 import { namedColorModels } from "../model/color-models-definitions";
 import { toContrast, toHsl, toOklch, toRgb } from "../model/color";
 import Color from "colorjs.io";
+import { StorageService } from "../../core/service/storage.service";
 
 @Injectable({
   providedIn: "root",
 })
 export class ColorStateService {
-  readonly defaultModel = namedColorModels["oklch"];
+  loadPalette(info: PaletteInfo) {
+    this.colorModelChanged(namedColorModels[info.palette.model]);
+    this.onVariableConfigChanged(info.state.variableConfig.variable);
+    this.paletteStepsConfigChanged(info.state.stepsConfig);
+    this.colorBase.set(info.state.currentColor);
+    this.currentColor.set(info.state.currentColor);
+    this.rangeChanged(info.state.minmax);
+  }
+  store = inject(StorageService);
+
+  initialState = this.store.get<ColorStateValues>("color-state") ?? defaultColorState;
+
   readonly showValuesOptions: { text: string; value: showValuesOption }[] = [
     { text: "No", value: "no" },
     { text: "Yes", value: "yes" },
     { text: "RGB", value: "rgb" },
   ];
 
-  readonly colorModel = signal<ColorModel>(this.defaultModel);
+  readonly colorModel = signal<ColorModel>(namedColorModels[this.initialState.colorModel]);
 
-  readonly variableConfig = signal<VariableConfig>({
-    variable: this.defaultModel.components[this.defaultModel.defaultVariableIndex],
-    variableIndex: this.defaultModel.components.findIndex(
-      (c) => c.name === this.defaultModel.components[this.defaultModel.defaultVariableIndex].name
-    ) as 0 | 1 | 2,
-  });
+  readonly variableConfig = signal<VariableConfig>(this.initialState.variableConfig);
 
-  readonly paletteStepsConfig = signal<PaletteStepsConfig>({
-    pasos: 12,
-    automatico: true,
-  });
-  readonly paletteVisualConfig = signal<PaletteVisualConfig>({
-    alto: 80,
-    continuo: false,
-    separate: false,
-  });
-  readonly paletteValuesConfig = signal<PaletteValuesConfig>({
-    showValues: this.showValuesOptions![0]?.value ?? "no",
-  });
+  readonly paletteStepsConfig = signal<PaletteStepsConfig>(this.initialState.paletteStepsConfig);
+  readonly paletteVisualConfig = signal<PaletteVisualConfig>(this.initialState.paletteVisualConfig);
+  readonly paletteValuesConfig = signal<PaletteValuesConfig>(this.initialState.paletteValuesConfig);
 
-  readonly colorBase = signal<Triple<number>>(this.defaultModel.defaultValues());
-  readonly currentColor = signal<Triple<number>>(this.defaultModel.defaultValues());
+  readonly colorBase = signal<Triple<number>>(this.initialState.colorBase);
+  readonly currentColor = signal<Triple<number>>(this.initialState.currentColor);
 
-  readonly minmax = signal<Tuple<number>>([
-    this.defaultModel.components[this.defaultModel.defaultVariableIndex].min,
-    this.defaultModel.components[this.defaultModel.defaultVariableIndex].max,
-  ]);
+  readonly minmax = signal<Tuple<number>>(this.initialState.minmax);
 
   readonly rgb = computed(() => toRgb(this.colorModel().convert(this.currentColor())));
 
+  readonly currentState = computed(() => {
+    return {
+      colorModel: this.colorModel().name,
+      variableConfig: this.variableConfig(),
+      paletteStepsConfig: this.paletteStepsConfig(),
+      paletteVisualConfig: this.paletteVisualConfig(),
+      paletteValuesConfig: this.paletteValuesConfig(),
+      colorBase: this.currentColor(),
+      currentColor: this.currentColor(),
+      minmax: this.minmax(),
+    } as ColorStateValues;
+  });
+
+  constructor() {
+    effect(() => this.store.save("color-state", this.currentState()));
+  }
   colorModelChanged(colorModel: ColorModel) {
     this.onColorModelChanged(colorModel);
   }
@@ -99,6 +112,8 @@ export class ColorStateService {
     if (!colorModel || colorModel.name === "rgb") {
       return rgb;
     }
+
+    console.debug("Convirtiendo a", colorModel.name, "con valores", rgb);
 
     const color = new Color(`rgb(${rgb[0]} ${rgb[1]} ${rgb[2]})`).to(colorModel.name);
 
@@ -204,3 +219,43 @@ export class ColorStateService {
     } as Palette;
   });
 }
+
+type ColorStateValues = {
+  colorModel: ColorModelName;
+  variableConfig: VariableConfig;
+  paletteStepsConfig: PaletteStepsConfig;
+  paletteVisualConfig: PaletteVisualConfig;
+  paletteValuesConfig: PaletteValuesConfig;
+  colorBase: Triple<number>;
+  currentColor: Triple<number>;
+  minmax: Tuple<number>;
+};
+
+const colorModelDefault = namedColorModels["oklch"];
+const defaultColorState: ColorStateValues = {
+  colorModel: colorModelDefault.name,
+  variableConfig: {
+    variable: colorModelDefault.components[colorModelDefault.defaultVariableIndex],
+    variableIndex: colorModelDefault.components.findIndex(
+      (c) => c.name === colorModelDefault.components[colorModelDefault.defaultVariableIndex].name
+    ) as 0 | 1 | 2,
+  },
+  paletteStepsConfig: {
+    pasos: 12,
+    automatico: true,
+  },
+  paletteVisualConfig: {
+    alto: 80,
+    continuo: false,
+    separate: false,
+  },
+  paletteValuesConfig: {
+    showValues: "no",
+  },
+  colorBase: colorModelDefault.defaultValues(),
+  currentColor: colorModelDefault.defaultValues(),
+  minmax: [
+    colorModelDefault.components[colorModelDefault.defaultVariableIndex].min,
+    colorModelDefault.components[colorModelDefault.defaultVariableIndex].max,
+  ] as Tuple<number>,
+} as ColorStateValues;

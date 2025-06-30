@@ -1,10 +1,10 @@
 import { ColorComponent, ColorModel, ColorModelName } from "./colors.model";
 
 export const colorModels: ColorModel[] = [
-  new ColorModel("rgb", [
-    new ColorComponent("Red", "R", 255, "", 0, 25),
-    new ColorComponent("Green", "G", 255, "", 0, 25),
-    new ColorComponent("Blue", "B", 255, "", 0, 25),
+  new ColorModel("oklch", [
+    new ColorComponent("Lightness", "L", 1, "", 3, 35),
+    new ColorComponent("Chroma", "C", 0.4, "", 3, 20),
+    new ColorComponent("Hue", "H", 540, "", 2, 55, -180),
   ]),
   new ColorModel(
     "hsl",
@@ -15,15 +15,15 @@ export const colorModels: ColorModel[] = [
     ],
     2
   ),
-  new ColorModel("oklch", [
-    new ColorComponent("Lightness", "L", 1, "", 3, 35),
-    new ColorComponent("Chroma", "C", 0.4, "", 3, 20),
-    new ColorComponent("Hue", "H", 540, "", 2, 55, -180),
+  new ColorModel("rgb", [
+    new ColorComponent("Red", "R", 255, "", 0, 25),
+    new ColorComponent("Green", "G", 255, "", 0, 25),
+    new ColorComponent("Blue", "B", 255, "", 0, 25),
   ]),
 ];
 
 export const namedColorModels: Record<ColorModelName, ColorModel> = {
-  rgb: colorModels[0]!,
+  oklch: colorModels[0]!,
   hsl: colorModels[1]!,
-  oklch: colorModels[2]!,
+  rgb: colorModels[2]!,
 };

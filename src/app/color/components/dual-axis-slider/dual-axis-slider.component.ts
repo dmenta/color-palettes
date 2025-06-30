@@ -34,9 +34,15 @@ export class DualAxisSliderComponent {
   @Output() minmaxChange = new EventEmitter<Tuple<number>>();
 
   formDual: FormGroup<{ min: FormControl<number>; max: FormControl<number> }> | undefined = undefined;
+  init: boolean = false;
 
   constructor() {
     effect(() => {
+      if (!this.init) {
+        this.init = true;
+        return;
+      }
+
       const minmax = this.minMax(this.state.variableConfig(), this.value());
 
       this.formDual?.patchValue(
@@ -50,11 +56,11 @@ export class DualAxisSliderComponent {
   }
 
   ngOnInit() {
-    const minmax = this.minMax(this.state.variableConfig(), this.value());
+    const minmax = this.state.minmax();
 
     this.formDual = new FormGroup({
-      min: new FormControl(minmax.min, { nonNullable: true }),
-      max: new FormControl(minmax.max, { nonNullable: true }),
+      min: new FormControl(minmax[0], { nonNullable: true }),
+      max: new FormControl(minmax[1], { nonNullable: true }),
     });
 
     this.formDual.valueChanges.subscribe((value) => {

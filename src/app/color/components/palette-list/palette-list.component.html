@@ -1,0 +1,21 @@
+<div class="max-w-96 h-fit">
+  @for(info of palettes(); track $index) {
+  <div
+    class="transition-colors duration-200 ease-in-out flex items-center gap-2 group hover:bg-gris-100/50 dark:hover:bg-gris-900/50 p-2">
+    <span
+      class="transition-opacity duration-200 ease-in-out text-smaller-2 group-hover:opacity-100 opacity-75 block w-3 text-right"
+      >{{ $index + 1 }}</span
+    >
+    <zz-mini-palette
+      [palette]="info.palette"
+      (click)="paletteClick(info)"
+      class="block w-full cursor-pointer rounded overflow-hidden"></zz-mini-palette>
+    <button
+      title="Remove palette"
+      class="transition-opacity duration-200 ease-in-out cursor-pointer group-hover:opacity-100 opacity-75 flex items-center justify-center rounded-full"
+      (click)="removePalette($event, $index)">
+      <span class="font-icons text-larger -ml-1">close</span>
+    </button>
+  </div>
+  }
+</div>
