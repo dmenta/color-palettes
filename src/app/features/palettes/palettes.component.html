@@ -23,14 +23,4 @@
   </div>
 </main>
 
-<div
-  class="fixed duration-300 m-auto left-0 right-0 w-fit shadow-lg shadow-black/30 dark:shadow-black/60 transition-all ease-in-out"
-  [class.-bottom-14]="!copyService.copyNotification()"
-  [class.bottom-12]="copyService.copyNotification()">
-  <div class="rounded-lg w-64 flex bg-gris-100 dark:bg-gris-800 items-center gap-4 pl-2 py-3">
-    <span
-      class="dark:text-green-500 text-green-700 font-bold bg-white dark:bg-gris-900 p-1 px-2 text-smaller rounded-lg"
-      >INFO</span
-    ><span class="w-full">Palette colors copied!</span>
-  </div>
-</div>
+<zz-notification></zz-notification>

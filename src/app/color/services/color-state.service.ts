@@ -54,7 +54,7 @@ export class ColorStateService {
 
   readonly minmax = signal<Tuple<number>>(this.initialState.minmax);
 
-  readonly rgb = computed(() => toRgb(this.colorModel().convert(this.currentColor())));
+  readonly rgb = computed(() => toRgb(this.colorModel().convert(this.currentColor())).values);
 
   readonly currentState = computed(() => {
     return {
@@ -143,7 +143,7 @@ export class ColorStateService {
           nuevo = toOklch(actual!);
           break;
         default:
-          nuevo = toRgb(actual!);
+          nuevo = toRgb(actual!).values;
       }
     }
 
@@ -193,15 +193,17 @@ export class ColorStateService {
       const rgb = toRgb(color);
       return {
         valores: valores as Triple<number>,
-        color: rgb,
+        color: color,
+        rgbValues: rgb.values,
+        rgb: rgb.color,
         fore: toContrast(color),
       } as Swatch;
     });
 
     if (valores.length > 0) {
-      let previo = valores[0]!.color;
+      let previo = valores[0]!.rgbValues;
       for (let i = 1; i < valores.length; i++) {
-        const actual = valores[i]!.color;
+        const actual = valores[i]!.rgbValues;
         const diff0 = Math.abs(actual[0] - previo[0]);
         const diff1 = Math.abs(actual[1] - previo[1]);
         const diff2 = Math.abs(actual[2] - previo[2]);

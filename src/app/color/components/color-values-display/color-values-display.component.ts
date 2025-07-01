@@ -1,7 +1,8 @@
-import { ChangeDetectionStrategy, Component, input } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, input } from "@angular/core";
 import { ColorModel, Triple } from "../../model/colors.model";
 import { namedColorModels } from "../../model/color-models-definitions";
 import { DecimalPipe } from "@angular/common";
+import { CopyService } from "../../services/copy.service";
 
 @Component({
   selector: "zz-color-values-display",
@@ -10,6 +11,8 @@ import { DecimalPipe } from "@angular/common";
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ColorValuesDisplayComponent {
+  copyService = inject(CopyService);
+
   colorModel = input<ColorModel>(namedColorModels.rgb, { alias: "color-model" });
   values = input(undefined, {
     alias: "values",
@@ -17,4 +20,8 @@ export class ColorValuesDisplayComponent {
   });
 
   vertical = input(false, { alias: "vertical" });
+
+  copy() {
+    this.copyService.copy(this.colorModel().convert(this.values()!), "Color copied!");
+  }
 }

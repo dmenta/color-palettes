@@ -1,16 +1,26 @@
-<div class="flex px-1 justify-center font-roboto" [class.flex-col]="vertical()" [class.gap-2]="!vertical()">
+<div
+  class="flex px-1 justify-center font-roboto cursor-copy group hover:opacity-100 opacity-85 underline-offset-2"
+  (click)="copy()"
+  [class.flex-col]="vertical()"
+  [class.gap-2]="!vertical()">
   @if(values(); as values){ @let components = colorModel().components;
-  <span
+  <span class="group-hover:underline decoration-current/70"
     >{{ components[0].label }}:
-    <span class="inline-block text-right">{{ values[0] | number : "0.0-" + components[0].precision }}</span></span
+    <span class="group-hover:underline decoration-current/70 inline-block text-right">{{
+      values[0] | number : "0.0-" + components[0].precision
+    }}</span></span
   >
-  <span>
+  <span class="group-hover:underline decoration-current/70">
     {{ components[1].label }}:
-    <span class="inline-block text-right">{{ values[1] | number : "0.0-" + components[1].precision }}</span></span
+    <span class="group-hover:underline decoration-current/70 inline-block text-right">{{
+      values[1] | number : "0.0-" + components[1].precision
+    }}</span></span
   >
-  <span>
+  <span class="group-hover:underline decoration-current/70">
     {{ components[2].label }}:
-    <span class="inline-block text-right">{{ values[2] | number : "0.0-" + components[2].precision }}</span></span
+    <span class="group-hover:underline decoration-current/70 inline-block text-right">{{
+      values[2] | number : "0.0-" + components[2].precision
+    }}</span></span
   >
   }
 </div>

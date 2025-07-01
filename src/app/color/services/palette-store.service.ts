@@ -1,12 +1,14 @@
 import { inject, Injectable, signal } from "@angular/core";
 import { StorageService } from "../../core/service/storage.service";
 import { PaletteInfo } from "../model/colors.model";
+import { NotificationService } from "./notification.service";
 
 @Injectable({
   providedIn: "root",
 })
 export class PaletteStoreService {
   store = inject(StorageService);
+  notificationService = inject(NotificationService);
 
   saved = signal<PaletteInfo[]>(this.store.get<PaletteInfo[]>("saved-palettes") ?? []);
 
@@ -15,6 +17,7 @@ export class PaletteStoreService {
   lockPalette(paletteInfo: PaletteInfo) {
     const current = this.lockedPalette();
     if (current && this.paletteEquals(current, paletteInfo)) {
+      this.notificationService.notify("Already locked!");
       return;
     }
     this.store.save("locked-palette", paletteInfo);
@@ -26,6 +29,8 @@ export class PaletteStoreService {
     }
     this.saved.update((palettes) => [paletteInfo, ...palettes].slice(0, 10));
     this.store.save("saved-palettes", this.saved());
+
+    this.notificationService.notify("Palette locked!");
   }
   unlockPalette() {
     this.store.delete("locked-palette");
@@ -41,7 +46,7 @@ export class PaletteStoreService {
     this.store.save("saved-palettes", this.saved());
   }
 
-  paletteEquals(current: PaletteInfo, next: PaletteInfo) {
+  private paletteEquals(current: PaletteInfo, next: PaletteInfo) {
     if (current.palette.model !== next.palette.model) {
       return false;
     }

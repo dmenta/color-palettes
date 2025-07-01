@@ -10,14 +10,14 @@
   <div
     class="transition-all text-smaller justify-center w-full min-h-10 max-h-20 py-2 flex flex-col items-center text-md dark:text-gris-100 text-gris-700">
     <zz-color-values-display
-      class="whitespace-nowrap w-[25ch] text-center"
+      class="whitespace-nowrap w-[25ch] text-center font-semibold"
       [color-model]="state.colorModel()"
       style="font-variation-settings: 'wght' 450"
       [values]="state.currentColor()"></zz-color-values-display>
     @if(state.colorModel().name!=="rgb"){
     <zz-color-values-display
       [values]="state.rgb()"
-      class="opacity-70 text-smaller"
+      class="opacity-80 text-smaller"
       style="line-height: 1rem"></zz-color-values-display>
     }
   </div>

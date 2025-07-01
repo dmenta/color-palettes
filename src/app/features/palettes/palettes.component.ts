@@ -9,8 +9,8 @@ import { PaletteStepsConfigComponent } from "../../color/components/palette-step
 import { PaletteVisualConfigComponent } from "../../color/components/palette-visual-config/palette-visual-config.component";
 import { PaletteValuesConfigComponent } from "../../color/components/palette-values-config/palette-values-config.component";
 import { PaletteStoreService } from "../../color/services/palette-store.service";
-import { CopyService } from "../../color/services/copy.service";
 import { PaletteActionsComponent } from "../../color/components/palette-actions/palette-actions.component";
+import { NotificationComponent } from "../../color/components/notification/notification.component";
 
 @Component({
   selector: "zz-palettes",
@@ -24,6 +24,7 @@ import { PaletteActionsComponent } from "../../color/components/palette-actions/
     PaletteValuesConfigComponent,
     ColorPaletteComponent,
     PaletteActionsComponent,
+    NotificationComponent,
   ],
   templateUrl: "./palettes.component.html",
   host: {
@@ -34,5 +35,4 @@ import { PaletteActionsComponent } from "../../color/components/palette-actions/
 export class PalettesComponent {
   state = inject(ColorStateService);
   store = inject(PaletteStoreService);
-  copyService = inject(CopyService);
 }

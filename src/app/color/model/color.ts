@@ -1,19 +1,19 @@
 import Color from "colorjs.io";
-import { Triple } from "../model/colors.model";
+import { ColorComponent, ColorModel, Triple } from "../model/colors.model";
 
-export function toRgb(textoColor: string) {
+export function toRgb(textoColor: string): { values: Triple<number>; color: string } {
   const color = new Color(textoColor);
 
-  const r = Math.max(0, Math.min(1, color.srgb["r"] ?? 0)) * 255;
-  const g = Math.max(0, Math.min(1, color.srgb["g"] ?? 0)) * 255;
-  const b = Math.max(0, Math.min(1, color.srgb["b"] ?? 0)) * 255;
+  const r = Math.round(Math.max(0, Math.min(1, color.srgb["r"] ?? 0)) * 255);
+  const g = Math.round(Math.max(0, Math.min(1, color.srgb["g"] ?? 0)) * 255);
+  const b = Math.round(Math.max(0, Math.min(1, color.srgb["b"] ?? 0)) * 255);
 
-  return [Math.round(r), Math.round(g), Math.round(b)] as Triple<number>;
+  return { values: [r, g, b] as Triple<number>, color: `rgb(${r} ${g} ${b})` };
 }
 
 export function toHsl(textoColor: string) {
   const rgb = toRgb(textoColor);
-  const color = new Color(`rgb(${rgb[0]} ${rgb[1]} ${rgb[2]})`).to("hsl");
+  const color = new Color(rgb.color).to("hsl");
 
   return [color.coords[0].valueOf(), color.coords[1].valueOf(), color.coords[2].valueOf()] as Triple<number>;
 }
@@ -49,4 +49,20 @@ export function rgbFromHex(color: string) {
   const g = (colorValue >> 8) & 0xff;
   const b = colorValue & 0xff;
   return [r, g, b] as Triple<number>;
+}
+
+export function rgbTo(rgb: Triple<number>, colorModel: ColorModel): Triple<number> {
+  const color = new Color(`rgb(${rgb[0]} ${rgb[1]} ${rgb[2]})`).to(colorModel.name);
+
+  const a = ensureCoord(color.coords[0], colorModel.components[0]);
+  const b = ensureCoord(color.coords[1], colorModel.components[1]);
+  const c = ensureCoord(color.coords[2], colorModel.components[2]);
+
+  return [a, b, c] as Triple<number>;
+}
+
+function ensureCoord(coord: number, component: ColorComponent): number {
+  const coordAsegurada = Number.isNaN(coord) ? 0 : coord;
+
+  return Math.max(0, Math.min(component.max, coordAsegurada));
 }
