@@ -1,7 +1,11 @@
+const FLOAT_EPSILON = 0.001;
 export type ColorModelName = "rgb" | "hsl" | "oklch";
 
-export type Triple<T> = [T, T, T];
-export type Tuple<T> = [T, T];
+type Triple<T> = [T, T, T];
+type Tuple<T> = [T, T];
+
+export type ColorValues = Triple<number>;
+export type MinMax = Tuple<number>;
 
 export class ColorComponent {
   private static readonly axisSteps: number = 50;
@@ -72,10 +76,10 @@ export class ColorModel {
       this.components[0].defaultValue,
       this.components[1].defaultValue,
       this.components[2].defaultValue,
-    ] as Triple<number>;
+    ] as ColorValues;
   }
 
-  convert(values: Triple<number>) {
+  convert(values: ColorValues) {
     return this.templateFn([
       this.components[0].convert(values[0]),
       this.components[1].convert(values[1]),
@@ -84,46 +88,52 @@ export class ColorModel {
   }
 }
 
-export type PaletteStepsConfig = {
-  pasos: number;
-  automatico: boolean;
-};
-
-export type PaletteVisualConfig = {
-  alto: number;
-  continuo: boolean;
-  separate: boolean;
-};
-
-export type PaletteValuesConfig = {
-  showValues: showValuesOption;
-};
-
-export type showValuesOption = "no" | "yes" | "rgb";
-
 export type VariableConfig = {
   variable: ColorComponent;
   variableIndex: 0 | 1 | 2;
 };
 
-export type Swatch = {
-  valores: Triple<number>;
-  color: string;
-  rgbValues: Triple<number>;
-  rgb: string;
-  fore: string;
-  clamp?: boolean;
-};
-export type Palette = { model: ColorModelName; swatches: Swatch[] };
+export type ColorConfig = {
+  colorModel: ColorModel;
+} & VariableConfig & {
+    color: ColorValues;
+    minmax: MinMax;
+  };
 
-export type PaletteState = {
-  stepsConfig: PaletteStepsConfig;
-  variableConfig: VariableConfig;
-  currentColor: Triple<number>;
-  minmax: Tuple<number>;
-};
+export type ColorConfigState = {
+  colorModelName: ColorModelName;
+} & VariableConfig & {
+    color: ColorValues;
+    minmax: MinMax;
+  };
 
-export type PaletteInfo = {
-  palette: Palette;
-  state: PaletteState;
-};
+export function colorConfigStateEquals(current: ColorConfigState, next: ColorConfigState) {
+  if (current.colorModelName !== next.colorModelName) {
+    return false;
+  }
+
+  if (current.variable.name !== next.variable.name) {
+    return false;
+  }
+
+  if (!colorValuesEquals(current.color, next.color)) {
+    return false;
+  }
+
+  if (
+    Math.abs(current.minmax[0] - next.minmax[0]) >= FLOAT_EPSILON ||
+    Math.abs(current.minmax[1] - next.minmax[1]) >= FLOAT_EPSILON
+  ) {
+    return false;
+  }
+
+  return true;
+}
+
+export function colorValuesEquals(current: ColorValues, next: ColorValues) {
+  return (
+    Math.abs(current[0] - next[0]) < FLOAT_EPSILON &&
+    Math.abs(current[1] - next[1]) < FLOAT_EPSILON &&
+    Math.abs(current[2] - next[2]) < FLOAT_EPSILON
+  );
+}
