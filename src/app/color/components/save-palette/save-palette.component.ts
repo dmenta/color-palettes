@@ -4,7 +4,7 @@ import { IconDirective } from "../../../core/directives/icon.directive";
 import { ColorStateService } from "../../services/color-state.service";
 import { PaletteStoreService } from "../../services/palette-store.service";
 import { PaletteInfo } from "../../model/colors.model";
-import { CopyService } from "../../services/copy.services";
+import { CopyService } from "../../services/copy.service";
 
 @Component({
   selector: "zz-save-palette",

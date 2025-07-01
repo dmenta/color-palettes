@@ -10,7 +10,7 @@ import { PaletteStepsConfigComponent } from "../../color/components/palette-step
 import { PaletteVisualConfigComponent } from "../../color/components/palette-visual-config/palette-visual-config.component";
 import { PaletteValuesConfigComponent } from "../../color/components/palette-values-config/palette-values-config.component";
 import { PaletteStoreService } from "../../color/services/palette-store.service";
-import { CopyService } from "../../color/services/copy.services";
+import { CopyService } from "../../color/services/copy.service";
 
 @Component({
   selector: "zz-palettes",
