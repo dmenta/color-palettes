@@ -1,5 +1,14 @@
-import { computed, Directive, effect, ElementRef, HostBinding, inject, input, Renderer2 } from "@angular/core";
-import { KeyDetectorService } from "../service/ctrlkey-pressed.service";
+import {
+  computed,
+  Directive,
+  effect,
+  ElementRef,
+  HostBinding,
+  HostListener,
+  input,
+  Renderer2,
+  signal,
+} from "@angular/core";
 import { AppearanceNoneDirective } from "./appearance-none.directive";
 import { FlexDirective } from "./display.directive";
 
@@ -31,6 +40,8 @@ focus:[&::-webkit-slider-thumb]:outline-offset-0
   hostDirectives: [AppearanceNoneDirective, FlexDirective],
 })
 export class SliderSlimDirective {
+  controlPressed = signal(false);
+
   accent = input(false);
 
   showTrack = input(true);
@@ -54,18 +65,31 @@ export class SliderSlimDirective {
     transform: (value?: number) => Math.max(Math.min(720, value ?? 0), -720),
   });
 
-  keyPressedService = inject(KeyDetectorService);
+  @HostListener("keydown.control", ["$event"])
+  onControlKeyDown(event: KeyboardEvent) {
+    if (!this.controlPressed()) {
+      this.controlPressed.set(true);
+      console.debug("Control key pressed", event);
+      event.preventDefault();
+    }
+  }
+
+  @HostListener("keyup.control", ["$event"])
+  onControlKeyUp(event: KeyboardEvent) {
+    if (this.controlPressed()) {
+      this.controlPressed.set(false);
+      console.debug("Control key released", event);
+      event.preventDefault();
+    }
+  }
+
   resolvedStep = computed(() => {
     const step = this.step();
-    if (!this.keyPressedService.controlPressed()) {
+    if (!this.controlPressed()) {
       return step;
     }
-    const entero = Number.isInteger(step);
-    if (entero) {
-      return 1;
-    }
 
-    return step >= 2 ? 0.5 : 0.01;
+    return 10 * step;
   });
 
   toggleAccent = {

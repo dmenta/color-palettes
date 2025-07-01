@@ -4,7 +4,7 @@ export const colorModels: ColorModel[] = [
   new ColorModel("oklch", [
     new ColorComponent("Lightness", "L", 1, "", 3, 35),
     new ColorComponent("Chroma", "C", 0.4, "", 3, 20),
-    new ColorComponent("Hue", "H", 540, "", 2, 55, -180),
+    new ColorComponent("Hue", "H", 540, "", 1, 55, -180),
   ]),
   new ColorModel(
     "hsl",
