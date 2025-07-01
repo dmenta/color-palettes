@@ -1,16 +1,21 @@
-import { Injectable, signal } from "@angular/core";
+import { Injectable, OnDestroy, signal } from "@angular/core";
 
 @Injectable({
   providedIn: "root",
 })
-export class NotificationService {
+export class NotificationService implements OnDestroy {
   showNotification = signal(false);
-  notificationMessage = signal("");
+  notificationMessage = signal<{ type: "success" | "warn"; message?: string }>({ type: "success", message: "" });
   private lastTimeoutId: number | undefined = undefined;
   private abort: AbortController | undefined = undefined;
 
-  notify(message?: string) {
-    this.notificationMessage.set(message ?? "");
+  success(message?: string) {
+    this.notificationMessage.set({ type: "success", message: message ?? "" });
+    this.setNotification(true);
+  }
+
+  warn(message?: string) {
+    this.notificationMessage.set({ type: "warn", message: message ?? "" });
     this.setNotification(true);
   }
 
