@@ -1,4 +1,4 @@
-import { Component, inject, signal } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, signal } from "@angular/core";
 import { BaseButtonDirective } from "../../../core/directives/button.directive";
 import { PaletteListComponent } from "../palette-list/palette-list.component";
 import { PaletteStoreService } from "../../services/palette-store.service";
@@ -11,6 +11,7 @@ import { ShadowDirective } from "../../../core/directives/shadow.directive";
   selector: "zz-palette-selector",
   imports: [BaseButtonDirective, PaletteListComponent, CollapseVerticalDirective, BorderDirective, ShadowDirective],
   templateUrl: "./palette-selector.component.html",
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PaletteSelectorComponent {
   store = inject(PaletteStoreService);

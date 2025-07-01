@@ -69,7 +69,6 @@ export class SliderSlimDirective {
   onControlKeyDown(event: KeyboardEvent) {
     if (!this.controlPressed()) {
       this.controlPressed.set(true);
-      console.debug("Control key pressed", event);
       event.preventDefault();
     }
   }
@@ -78,7 +77,6 @@ export class SliderSlimDirective {
   onControlKeyUp(event: KeyboardEvent) {
     if (this.controlPressed()) {
       this.controlPressed.set(false);
-      console.debug("Control key released", event);
       event.preventDefault();
     }
   }

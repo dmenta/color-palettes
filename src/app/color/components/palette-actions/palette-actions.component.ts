@@ -1,4 +1,4 @@
-import { Component, inject } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import { IconButtonDirective } from "../../../core/directives/icon-button.directive";
 import { IconDirective } from "../../../core/directives/icon.directive";
 import { ColorStateService } from "../../services/color-state.service";
@@ -10,6 +10,7 @@ import { Palette } from "../../model/palette.model";
   selector: "zz-palette-actions",
   imports: [IconButtonDirective, IconDirective],
   templateUrl: "./palette-actions.component.html",
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PaletteActionsComponent {
   store = inject(PaletteStoreService);
