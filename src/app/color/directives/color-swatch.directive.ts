@@ -1,5 +1,5 @@
 import { computed, Directive, HostBinding, input } from "@angular/core";
-import { ColorModel, Triple } from "../model/colors.model";
+import { ColorModel, ColorValues } from "../model/colors.model";
 import { RoundedDirective } from "../../core/directives/rounded.directive";
 import { ShadowDirective } from "../../core/directives/shadow.directive";
 
@@ -8,7 +8,7 @@ import { ShadowDirective } from "../../core/directives/shadow.directive";
 })
 export class ColorSwatchDirective {
   colorModel = input<ColorModel | undefined>(undefined, { alias: "color-model" });
-  values = input<Triple<number> | undefined>(undefined);
+  values = input<ColorValues | undefined>(undefined);
 
   @HostBinding("style.backgroundColor")
   get background() {

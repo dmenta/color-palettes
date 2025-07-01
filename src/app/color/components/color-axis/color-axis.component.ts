@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, input, Signal } from "@angular/core";
 import { ColorSwatchDirective } from "../../directives/color-swatch.directive";
-import { ColorModel, Triple, VariableConfig } from "../../model/colors.model";
+import { ColorConfig, ColorValues } from "../../model/colors.model";
 
 @Component({
   selector: "zz-color-axis",
@@ -9,8 +9,7 @@ import { ColorModel, Triple, VariableConfig } from "../../model/colors.model";
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ColorAxisComponent {
-  colorModel = input<ColorModel | undefined>(undefined, { alias: "color-model" });
-  variableConfig = input<VariableConfig | undefined>(undefined, { alias: "variable-config" });
+  colorConfig = input<ColorConfig | undefined>(undefined, { alias: "color-config" });
 
   height = input(30, {
     transform: (value?: number) => {
@@ -22,26 +21,24 @@ export class ColorAxisComponent {
       return Math.max(1, Math.min(400, valor));
     },
   });
-  colorBase = input<Triple<number> | undefined>(undefined, { alias: "color-base" });
+  currentColor = input<ColorValues | undefined>(undefined, { alias: "current-color" });
 
-  swatches: Signal<Triple<number>[]> | undefined = undefined;
+  swatches: Signal<ColorValues[]> | undefined = undefined;
 
   ngOnInit() {
     this.swatches = computed(() => {
-      const colorModel = this.colorModel();
+      const config = this.colorConfig();
 
-      if (!colorModel) {
+      if (!config) {
         return [];
       }
 
-      const variableConfig = this.variableConfig()!;
+      const baseArray = this.currentColor() ?? config.colorModel.defaultValues();
 
-      const baseArray = this.colorBase() ?? colorModel.defaultValues();
-
-      return variableConfig.variable.axisValues.map((value) => {
+      return config.variable.axisValues.map((value) => {
         const valores = [...baseArray];
-        valores[variableConfig.variableIndex] = value;
-        return valores as Triple<number>;
+        valores[config.variableIndex] = value;
+        return valores as ColorValues;
       });
     });
   }

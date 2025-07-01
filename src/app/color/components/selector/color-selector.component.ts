@@ -1,6 +1,6 @@
 import { Component, Output, EventEmitter, input, effect, signal } from "@angular/core";
 import { FormControl, ReactiveFormsModule } from "@angular/forms";
-import { Triple } from "../../model/colors.model";
+import { ColorValues } from "../../model/colors.model";
 import { rgbFromHex, rgbToHex, toContrast } from "../../model/color";
 
 @Component({
@@ -21,11 +21,11 @@ export class ColorSelectorComponent {
   colorControl: FormControl<string> | undefined = undefined;
   /**
    * Color value in hexadecimal format. (e.g. #000000)
-   * or a Triple<number> representing RGB values.
+   * or a ColorValues representing RGB values.
    */
   value = input("#000000", {
     alias: "color",
-    transform: (value?: Triple<number> | string | undefined) => {
+    transform: (value?: ColorValues | string | undefined) => {
       const color = value ?? "#000000";
       if (typeof color === "string") {
         return color.startsWith("#") ? color : `#${color}`;
@@ -36,9 +36,9 @@ export class ColorSelectorComponent {
 
   /**
    * Emits the color value when it changes.
-   * @type {EventEmitter<Triple<number>>}
+   * @type {EventEmitter<ColorValues>}
    */
-  @Output("color-change") public colorChange = new EventEmitter<Triple<number>>();
+  @Output("color-change") public colorChange = new EventEmitter<ColorValues>();
   borderColor = signal("");
 
   constructor() {

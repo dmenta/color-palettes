@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, effect, EventEmitter, inject, input
 import { SliderFieldComponent } from "../../../core/components/slider-field/slider-field.component";
 import { ColorAxisComponent } from "../color-axis/color-axis.component";
 import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
-import { Triple, Tuple, VariableConfig } from "../../model/colors.model";
+import { ColorValues, MinMax } from "../../model/colors.model";
 import { IconDirective } from "../../../core/directives/icon.directive";
 import { ColorStateService } from "../../services/color-state.service";
 
@@ -17,8 +17,7 @@ import { ColorStateService } from "../../services/color-state.service";
 })
 export class DualAxisSliderComponent {
   state = inject(ColorStateService);
-  currentColor = input<Triple<number> | undefined>(undefined);
-  value = input<number | undefined>(undefined);
+  currentColor = input<ColorValues | undefined>(undefined, { alias: "current-color" });
 
   height = input(30, {
     transform: (value?: number) => {
@@ -31,24 +30,16 @@ export class DualAxisSliderComponent {
     },
   });
 
-  @Output() minmaxChange = new EventEmitter<Tuple<number>>();
+  @Output() minmaxChange = new EventEmitter<MinMax>();
 
   formDual: FormGroup<{ min: FormControl<number>; max: FormControl<number> }> | undefined = undefined;
-  init: boolean = false;
 
   constructor() {
     effect(() => {
-      if (!this.init) {
-        this.init = true;
-        return;
-      }
-
-      const minmax = this.minMax(this.state.variableConfig(), this.value());
-
       this.formDual?.patchValue(
         {
-          min: minmax.min,
-          max: minmax.max,
+          min: this.state.colorConfig().minmax[0],
+          max: this.state.colorConfig().minmax[1],
         },
         { emitEvent: true }
       );
@@ -56,11 +47,9 @@ export class DualAxisSliderComponent {
   }
 
   ngOnInit() {
-    const minmax = this.state.minmax();
-
     this.formDual = new FormGroup({
-      min: new FormControl(minmax[0], { nonNullable: true }),
-      max: new FormControl(minmax[1], { nonNullable: true }),
+      min: new FormControl(this.state.colorConfig().minmax[0], { nonNullable: true }),
+      max: new FormControl(this.state.colorConfig().minmax[1], { nonNullable: true }),
     });
 
     this.formDual.valueChanges.subscribe((value) => {
@@ -71,23 +60,6 @@ export class DualAxisSliderComponent {
     });
   }
 
-  minMax(config: VariableConfig | undefined, value: number | undefined) {
-    if (config === undefined || value === undefined) {
-      return {
-        min: 0,
-        max: 0,
-      };
-    }
-
-    const middle = (config.variable.max + config.variable.min) / 2;
-    const max = value > middle ? config.variable.max : value * 2 - config.variable.min;
-    const min = value < middle ? config.variable.min : value * 2 - config.variable.max;
-
-    return {
-      min: min,
-      max: max,
-    };
-  }
   componentStep(precision: number): number {
     return 1 / Math.pow(10, precision);
   }

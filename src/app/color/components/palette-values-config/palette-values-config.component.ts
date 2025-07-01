@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { debounceTime, distinctUntilChanged, startWith } from "rxjs";
-import { showValuesOption } from "../../model/colors.model";
 import { SelectComponent } from "../../../core/components/select/select.component";
 import { ColorStateService } from "../../services/color-state.service";
+import { showValuesOption } from "../../model/palette.model";
 
 @Component({
   selector: "zz-palette-values-config",
@@ -22,7 +22,7 @@ export class PaletteValuesConfigComponent {
 
   ngOnInit() {
     const valuesConfig = this.state.paletteValuesConfig();
-    const valueOption = this.state.showValuesOptions.find((option) => option.value === valuesConfig.showValues)!;
+    const valueOption = this.state.showValuesOption(valuesConfig.showValues);
 
     this.configGroup = new FormGroup({
       showValues: new FormControl<{ text: string; value: showValuesOption }>(valueOption, {

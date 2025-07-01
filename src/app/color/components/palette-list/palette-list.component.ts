@@ -1,6 +1,6 @@
 import { Component, input, NO_ERRORS_SCHEMA, output } from "@angular/core";
 import { MiniPaletteComponent } from "../mini-palette/mini-palette.component";
-import { PaletteInfo } from "../../model/colors.model";
+import { PaletteInfo } from "../../model/palette.model";
 
 @Component({
   selector: "zz-palette-list",
@@ -20,6 +20,7 @@ export class PaletteListComponent {
     this.paletteSelected.emit(info);
   }
   removePalette(event: MouseEvent, index: number) {
+    event.stopImmediatePropagation();
     event.stopPropagation();
     event.preventDefault();
     this.paletteRemoved.emit(index);

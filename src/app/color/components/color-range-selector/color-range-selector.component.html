@@ -1,13 +1,12 @@
 <div class="h-fit" style="background-color: none !important; border-width: 0px !important">
-  @if(state.variableConfig(); as variableConfig) {
+  @if(state.colorConfig(); as config) {
   <form [formGroup]="configGroup!" class="min-w-fit h-fit">
-    @for(indice of indices; track $index){ @let component = state.colorModel().components[indice];
+    @for(indice of indices; track $index){ @let component = config.colorModel.components[indice];
     <div [style.minHeight.px]="70 + height">
-      @if(indice===variableConfig.variableIndex){
+      @if(indice===config.variableIndex){
       <zz-dual-axis-slider
         class="block"
-        [value]="state.colorBase()[indice]"
-        [currentColor]="state.currentColor()"
+        [current-color]="state.currentColor()"
         [height]="height"
         (minmaxChange)="onVariableChange($event)">
       </zz-dual-axis-slider>
@@ -28,9 +27,14 @@
         [valueLength]="9" />
       <zz-color-axis
         class="-mt-2.5 block rounded-md overflow-hidden"
-        [color-model]="state.colorModel()"
-        [variable-config]="{ variable: component, variableIndex: indice }"
-        [color-base]="state.currentColor()"
+        [color-config]="{
+          colorModel: config.colorModel,
+          variable: component,
+          variableIndex: indice,
+          color: state.currentColor(),
+          minmax: config.minmax,
+        }"
+        [current-color]="state.currentColor()"
         [height]="height"></zz-color-axis>
       }
     </div>

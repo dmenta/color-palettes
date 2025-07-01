@@ -11,7 +11,7 @@
   @if(store.saved().length>0){
   <div
     [zz-collapse-vertical]="!open()"
-    class="absolute top-10 left-0 z-10 rounded"
+    class="absolute top-10 left-0 z-32 rounded"
     [zz-border]="open() ? 'thin' : 'none'"
     [zz-shadow]="true">
     <zz-palette-list
@@ -21,4 +21,7 @@
       class="block bg-white dark:bg-gris-800 w-56"></zz-palette-list>
   </div>
   }
+  <div
+    class="fixed top-0 left-0 z-30 bg-black/10 dark:bg-black/20 block opacity-100 w-screen h-screen"
+    [class.hidden]="!open()"></div>
 </div>

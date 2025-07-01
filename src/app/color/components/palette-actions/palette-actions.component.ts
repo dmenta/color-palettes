@@ -3,8 +3,8 @@ import { IconButtonDirective } from "../../../core/directives/icon-button.direct
 import { IconDirective } from "../../../core/directives/icon.directive";
 import { ColorStateService } from "../../services/color-state.service";
 import { PaletteStoreService } from "../../services/palette-store.service";
-import { PaletteInfo } from "../../model/colors.model";
 import { CopyService } from "../../services/copy.service";
+import { Palette } from "../../model/palette.model";
 
 @Component({
   selector: "zz-palette-actions",
@@ -17,21 +17,27 @@ export class PaletteActionsComponent {
   copyService = inject(CopyService);
 
   lock() {
-    this.store.lockPalette({
-      palette: this.state.palette(),
-      state: {
-        variableConfig: this.state.variableConfig(),
-        stepsConfig: this.state.paletteStepsConfig(),
-        currentColor: this.state.currentColor(),
-        minmax: this.state.minmax(),
-      },
-    } as PaletteInfo);
+    this.store.lockPalette(this.state.currentPaletteInfo());
   }
 
   unlock() {
     this.store.unlockPalette();
   }
+
   copy() {
-    this.copyService.copyCurrentPalette();
+    const valores = this.paletteValues(this.state.palette());
+    this.copyService.copy(valores, "Palette colors copied!");
+  }
+
+  private paletteValues(palette: Palette) {
+    const colores = palette.swatches.map((swatch) => swatch.color).join("\r\n");
+
+    if (colores?.startsWith("rgb")) {
+      return colores;
+    } else {
+      const coloresRgb = palette.swatches.map((swatch) => swatch.rgb).join("\r\n");
+
+      return `${colores}\r\n\r\n${coloresRgb}`;
+    }
   }
 }

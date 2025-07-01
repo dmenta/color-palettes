@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, input } from "@angular/core";
-import { ColorModel, Triple } from "../../model/colors.model";
+import { ColorModel, ColorValues } from "../../model/colors.model";
 import { namedColorModels } from "../../model/color-models-definitions";
 import { DecimalPipe } from "@angular/common";
 import { CopyService } from "../../services/copy.service";
@@ -16,7 +16,7 @@ export class ColorValuesDisplayComponent {
   colorModel = input<ColorModel>(namedColorModels.rgb, { alias: "color-model" });
   values = input(undefined, {
     alias: "values",
-    transform: (value?: Triple<number> | undefined) => value ?? ([0, 0, 0] as Triple<number>),
+    transform: (value?: ColorValues | undefined) => value ?? ([0, 0, 0] as ColorValues),
   });
 
   vertical = input(false, { alias: "vertical" });

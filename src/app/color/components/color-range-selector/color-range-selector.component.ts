@@ -3,7 +3,7 @@ import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from "@angul
 import { SliderFieldComponent } from "../../../core/components/slider-field/slider-field.component";
 import { ColorAxisComponent } from "../color-axis/color-axis.component";
 import { DualAxisSliderComponent } from "../dual-axis-slider/dual-axis-slider.component";
-import { Triple, Tuple } from "../../model/colors.model";
+import { ColorValues, MinMax } from "../../model/colors.model";
 import { ColorStateService } from "../../services/color-state.service";
 
 @Component({
@@ -27,13 +27,13 @@ export class ColorRangeSelectorComponent {
 
   constructor() {
     effect(() => {
-      const color = this.state.colorBase() ?? [0, 0, 0];
+      const config = this.state.colorConfig();
 
       this.configGroup?.patchValue(
         {
-          v0: color[0],
-          v1: color[1],
-          v2: color[2],
+          v0: config.color[0],
+          v1: config.color[1],
+          v2: config.color[2],
         },
         { emitEvent: true }
       );
@@ -41,24 +41,28 @@ export class ColorRangeSelectorComponent {
   }
 
   ngOnInit() {
-    const colorBase = this.state.colorBase() ?? [0, 0, 0];
+    const currentColor = this.state.colorConfig().color ?? [0, 0, 0];
     this.configGroup = new FormGroup({
-      v0: new FormControl(colorBase[0], { nonNullable: true }),
-      v1: new FormControl(colorBase[1], { nonNullable: true }),
-      v2: new FormControl(colorBase[2], { nonNullable: true }),
+      v0: new FormControl(currentColor[0], { nonNullable: true }),
+      v1: new FormControl(currentColor[1], { nonNullable: true }),
+      v2: new FormControl(currentColor[2], { nonNullable: true }),
     });
 
     this.configGroup.valueChanges.subscribe(() => {
       const { v0, v1, v2 } = this.configGroup?.value ?? { v0: 0, v1: 0, v2: 0 };
-      const color: Triple<number> = [v0, v1, v2] as Triple<number>;
+      const color: ColorValues = [v0, v1, v2] as ColorValues;
+
       this.state.colorChanged(color);
     });
   }
-  onVariableChange(minmax: Tuple<number>) {
-    this.configGroup!.patchValue({
-      ["v" + this.state.variableConfig()!.variableIndex]: (minmax[0] + minmax[1]) / 2,
-    });
+  onVariableChange(minmax: MinMax) {
     this.state.rangeChanged(minmax);
+    this.configGroup!.patchValue(
+      {
+        ["v" + this.state.colorConfig()!.variableIndex]: (minmax[0] + minmax[1]) / 2,
+      },
+      { emitEvent: true }
+    );
   }
   componentStep(precision: number): number {
     return 1 / Math.pow(10, precision);

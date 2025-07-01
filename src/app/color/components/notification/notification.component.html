@@ -4,12 +4,20 @@
   [class.top-8]="notificationService.showNotification()"
   [class.scale-100]="notificationService.showNotification()">
   <div class="rounded-lg w-64 flex bg-gris-50 dark:bg-gris-800 items-center gap-4 pl-2 py-3">
+    @if(notificationService.notificationMessage().type === 'warn') {
+    <span
+      class="dark:bg-yellow-700 bg-yellow-600font-museo-moderno font-semibold text-white p-0.5 px-1.5 text-smaller-2 rounded-lg"
+      >WARN</span
+    >
+    } @else {
     <span
       class="dark:bg-green-700 bg-green-600 font-museo-moderno font-semibold text-white p-0.5 px-1.5 text-smaller-2 rounded-lg"
       >OK</span
-    ><span class="w-full">{{ notificationService.notificationMessage() }}</span>
+    >
+    }
+    <span class="w-full">{{ notificationService.notificationMessage().message }}</span>
   </div>
 </div>
 <div
-  class="fixed top-0 z-30 bg-black/10 dark:bg-black/20 block opacity-100 w-screen h-screen"
+  class="fixed top-0 left-0 z-30 bg-black/10 dark:bg-black/20 block opacity-100 w-screen h-screen"
   [class.hidden]="!notificationService.showNotification()"></div>

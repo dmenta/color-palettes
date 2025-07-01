@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, input } from "@angular/core";
 import { ColorSwatchDirective } from "../../directives/color-swatch.directive";
-import { Palette } from "../../model/colors.model";
+import { Palette } from "../../model/palette.model";
 import { namedColorModels } from "../../model/color-models-definitions";
 
 @Component({

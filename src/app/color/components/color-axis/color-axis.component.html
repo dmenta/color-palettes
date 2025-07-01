@@ -1,5 +1,5 @@
 <div class="flex flex-row justify-between" [style.height.px]="height()">
   @for(valores of swatches!(); track $index){
-  <div class="axis-swatch" color-swatch [color-model]="colorModel()" [values]="valores"></div>
+  <div class="axis-swatch" color-swatch [color-model]="colorConfig()?.colorModel" [values]="valores"></div>
   }
 </div>
