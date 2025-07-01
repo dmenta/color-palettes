@@ -11,7 +11,7 @@
       <zz-palette-steps-config class="opacity-80 hover:opacity-100"></zz-palette-steps-config>
       <zz-palette-visual-config class="opacity-80 hover:opacity-100"></zz-palette-visual-config>
       <zz-palette-values-config class="opacity-80 hover:opacity-100"></zz-palette-values-config>
-      <zz-save-palette></zz-save-palette>
+      <zz-palette-actions></zz-palette-actions>
     </div>
     <zz-color-palette class="block pb-4" [palette]="state.palette()"></zz-color-palette>
     @if(store.lockedPalette(); as paletteInfo){
@@ -28,8 +28,9 @@
   [class.-bottom-14]="!copyService.copyNotification()"
   [class.bottom-12]="copyService.copyNotification()">
   <div class="rounded-lg w-64 flex bg-gris-100 dark:bg-gris-800 items-center gap-4 pl-2 py-3">
-    <span class="dark:text-green-500 text-green-800 bg-white dark:bg-gris-900 p-1 px-2 text-smaller rounded-lg"
-      >info</span
+    <span
+      class="dark:text-green-500 text-green-700 font-bold bg-white dark:bg-gris-900 p-1 px-2 text-smaller rounded-lg"
+      >INFO</span
     ><span class="w-full">Palette colors copied!</span>
   </div>
 </div>

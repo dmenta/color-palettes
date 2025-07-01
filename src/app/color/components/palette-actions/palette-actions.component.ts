@@ -7,11 +7,11 @@ import { PaletteInfo } from "../../model/colors.model";
 import { CopyService } from "../../services/copy.service";
 
 @Component({
-  selector: "zz-save-palette",
+  selector: "zz-palette-actions",
   imports: [IconButtonDirective, IconDirective],
-  templateUrl: "./save-palette.component.html",
+  templateUrl: "./palette-actions.component.html",
 })
-export class SavePaletteComponent {
+export class PaletteActionsComponent {
   store = inject(PaletteStoreService);
   state = inject(ColorStateService);
   copyService = inject(CopyService);

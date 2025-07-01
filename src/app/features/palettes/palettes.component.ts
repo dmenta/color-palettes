@@ -5,12 +5,12 @@ import { ColorSampleComponent } from "../../color/components/color-sample/color-
 import { ColorRangeSelectorComponent } from "../../color/components/color-range-selector/color-range-selector.component";
 import { ColorStateService } from "../../color/services/color-state.service";
 import { ColorPaletteComponent } from "../../color/components/color-palette/color-palette.component";
-import { SavePaletteComponent } from "../../color/components/save-palette/save-palette.component";
 import { PaletteStepsConfigComponent } from "../../color/components/palette-steps-config/palette-steps-config.component";
 import { PaletteVisualConfigComponent } from "../../color/components/palette-visual-config/palette-visual-config.component";
 import { PaletteValuesConfigComponent } from "../../color/components/palette-values-config/palette-values-config.component";
 import { PaletteStoreService } from "../../color/services/palette-store.service";
 import { CopyService } from "../../color/services/copy.service";
+import { PaletteActionsComponent } from "../../color/components/palette-actions/palette-actions.component";
 
 @Component({
   selector: "zz-palettes",
@@ -23,7 +23,7 @@ import { CopyService } from "../../color/services/copy.service";
     PaletteVisualConfigComponent,
     PaletteValuesConfigComponent,
     ColorPaletteComponent,
-    SavePaletteComponent,
+    PaletteActionsComponent,
   ],
   templateUrl: "./palettes.component.html",
   host: {
