@@ -16,26 +16,34 @@ export class PaletteSelectorComponent {
   store = inject(PaletteStoreService);
   state = inject(ColorStateService);
 
+  abort: AbortController | undefined = undefined;
   open = signal(false);
   toggleOpen() {
-    this.open.update((value) => !value);
+    this.openState(!this.open());
+  }
+  openState(open: boolean) {
+    this.abort?.abort();
+
+    this.open.set(open);
+
     if (this.open()) {
-      window.addEventListener("keydown", this.onKeyDown.bind(this));
-      window.addEventListener("click", this.onClick.bind(this));
-    } else {
-      window.removeEventListener("click", this.onClick);
-      window.removeEventListener("keydown", this.onKeyDown);
+      this.abort = new AbortController();
+      const abortar = this.abort.signal;
+      window.addEventListener("keydown", this.onKeyDown.bind(this), { once: true, signal: abortar, capture: true });
+      window.addEventListener("click", this.onClick.bind(this), { once: true, signal: abortar });
     }
   }
   onKeyDown(event: KeyboardEvent) {
     if (event.key === "Escape") {
-      this.open.set(false);
-      event.stopPropagation();
+      this.openState(false);
     }
   }
 
-  onClick(event: MouseEvent) {
-    this.open.set(false);
-    event.stopPropagation();
+  onClick(_event: MouseEvent) {
+    this.openState(false);
+  }
+
+  ngOnDestroy() {
+    this.abort?.abort();
   }
 }
