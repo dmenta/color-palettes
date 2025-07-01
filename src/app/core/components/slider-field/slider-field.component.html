@@ -20,9 +20,9 @@
     } @if(showValue) {
     <zz-field-value
       [value]="control.value"
-      [length]="valueLength"
+      [length]="valueLength ?? 10"
       [decimals]="decimales"
-      [unit]="unit"
+      [unit]="unit ?? ''"
       [class.opacity-70]="defaultValue !== undefined && control.value === defaultValue">
     </zz-field-value>
     }

@@ -34,7 +34,7 @@
       */
     "strictNullChecks": true,
     /* sólo se pueden activar si strictNullChecks está activado */
-    "exactOptionalPropertyTypes": false,
+    "exactOptionalPropertyTypes": true,
     "strictPropertyInitialization": true,
 
     "experimentalDecorators": true,
