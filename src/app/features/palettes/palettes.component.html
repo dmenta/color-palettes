@@ -1,4 +1,4 @@
-<div class="sticky bg-application z-20 top-0 left-0 right-0 shadow-md dark:shadow-black/50">
+<div class="sticky bg-application z-20 top-0 left-0 right-0 shadow-md dark:shadow-black/60">
   <zz-palettes-header></zz-palettes-header>
 </div>
 <main class="flex flex-row items-top justify-center gap-8 px-6 pt-2 m-auto max-w-[1600px] w-screen">
@@ -22,3 +22,14 @@
     <zz-color-sample class="block" [height]="200"></zz-color-sample>
   </div>
 </main>
+
+<div
+  class="fixed duration-300 m-auto left-0 right-0 w-fit shadow-lg shadow-black/30 dark:shadow-black/60 transition-all ease-in-out"
+  [class.-bottom-14]="!copyService.copyNotification()"
+  [class.bottom-12]="copyService.copyNotification()">
+  <div class="rounded-lg w-64 flex bg-gris-100 dark:bg-gris-800 items-center gap-4 pl-2 py-3">
+    <span class="dark:text-green-500 text-green-800 bg-white dark:bg-gris-900 p-1 px-2 text-smaller rounded-lg"
+      >info</span
+    ><span class="w-full">Palette colors copied!</span>
+  </div>
+</div>
