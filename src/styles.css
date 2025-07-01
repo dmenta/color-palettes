@@ -49,6 +49,10 @@
   --color-container: var(--bg-container);
   --color-button: var(--bg-button);
   --color-button-hover: var(--bg-button-hover);
+
+  --width-marca: 1.25em;
+  --leading-marca: 1.25em;
+  --gap-marca: 0.125em;
 }
 
 @custom-variant dark (&:where(.dark, .dark *));
