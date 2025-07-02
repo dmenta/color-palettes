@@ -11,7 +11,7 @@ import { ColorStateService } from "../../services/color-state.service";
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ColorMenuComponent {
-  models = colorModels;
+  models = colorModels.filter((model) => model.name !== "hex");
 
   state = inject(ColorStateService);
 }

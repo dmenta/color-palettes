@@ -9,15 +9,6 @@ export class OverflowHiddenDirective {
     return "hidden";
   }
 }
-@Directive({
-  selector: "[zz-overflow-visible], zzOverflowVisible",
-})
-export class OverflowVisibleDirective {
-  @HostBinding("style.overflow")
-  get estilos() {
-    return "visible";
-  }
-}
 
 @Directive({
   selector: "[zz-overflow-y-hidden], zzOverflowYHidden",

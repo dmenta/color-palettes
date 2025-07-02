@@ -5,6 +5,7 @@ import { ColorStateService } from "../../services/color-state.service";
 import { PaletteStoreService } from "../../services/palette-store.service";
 import { CopyService } from "../../services/copy.service";
 import { Palette } from "../../model/palette.model";
+import { rgbToHex } from "../../model/color";
 
 @Component({
   selector: "zz-palette-actions",
@@ -31,14 +32,23 @@ export class PaletteActionsComponent {
   }
 
   private paletteValues(palette: Palette) {
-    const colores = palette.swatches.map((swatch) => swatch.color).join("\r\n");
+    const rgbParts = [] as string[];
+    const hexParts = [] as string[];
+    const colorParts = [] as string[];
+    for (const swatch of palette.swatches) {
+      rgbParts.push(swatch.rgb);
+      hexParts.push(rgbToHex(swatch.rgbValues));
+      colorParts.push(swatch.color);
+    }
+    const colors = colorParts.join("\r\n");
+    const hexs = hexParts.join("\r\n");
 
-    if (colores?.startsWith("rgb")) {
-      return colores;
+    if (colors?.startsWith("rgb")) {
+      return `${colors}\r\n\r\n${hexs}`;
     } else {
-      const coloresRgb = palette.swatches.map((swatch) => swatch.rgb).join("\r\n");
+      const rgbs = rgbParts.join("\r\n");
 
-      return `${colores}\r\n\r\n${coloresRgb}`;
+      return `${colors}\r\n\r\n${rgbs}\r\n\r\n${hexs}`;
     }
   }
 }

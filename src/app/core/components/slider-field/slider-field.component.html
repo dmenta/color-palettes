@@ -1,23 +1,19 @@
 @if(control){
-
-<div
-  class="w-full p-1 bg-transparent flex flex-col select-none"
-  [class.flex-col-reverse]="!labelsAbove"
-  zz-overflow-visible
-  [formGroup]="formGroup">
-  <div class="flex flex-row items-base justify-between" [class.flex-row-reverse]="labelsReverse" zz-overflow-visible>
-    @if(showLabel) {
-    <label
-      [for]="fieldName"
-      [zz-text-length]="labelLength"
-      [class.text-right]="labelsReverse"
-      [class.opacity-80]="defaultValue !== undefined && control.value === defaultValue"
-      (dblclick)="control.reset()">
-      {{ label }}
-    </label>
-    }@else{
-    <div></div>
-    } @if(showValue) {
+<div class="w-full p-1 flex flex-col select-none" [class.flex-col-reverse]="!labelsAbove" [formGroup]="formGroup">
+  <div class="flex flex-row items-base justify-between" [class.flex-row-reverse]="labelsReverse">
+    <div>
+      @if(showLabel) {
+      <label
+        [for]="fieldName"
+        [zz-text-length]="labelLength"
+        [class.text-right]="labelsReverse"
+        [class.opacity-80]="defaultValue !== undefined && control.value === defaultValue"
+        (dblclick)="control.reset()">
+        {{ label }}
+      </label>
+      }
+    </div>
+    @if(showValue) {
     <zz-field-value
       [value]="control.value"
       [length]="valueLength ?? 10"

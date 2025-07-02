@@ -1,14 +1,16 @@
 const FLOAT_EPSILON = 0.001;
-export type ColorModelName = "rgb" | "hsl" | "oklch";
+export type ColorModelName = "rgb" | "hsl" | "oklch" | "hex";
 
 type Triple<T> = [T, T, T];
 type Tuple<T> = [T, T];
 
 export type ColorValues = Triple<number>;
+export type ColorParts = Triple<string>;
+
 export type MinMax = Tuple<number>;
 
 export class ColorComponent {
-  private static readonly axisSteps: number = 50;
+  readonly templateFn = this.template;
   readonly defaultValue: number;
   readonly stepSize: number;
   readonly axisValues: number[];
@@ -20,12 +22,16 @@ export class ColorComponent {
     public unit: string = "",
     public precision: number = 0,
     public autoSteps: number = 100,
-    public min: number = 0
+    public min: number = 0,
+    public axisSteps: number = 3,
+    templateFn?: (value: number) => string
   ) {
+    this.templateFn = templateFn?.bind(this) || this.templateFn;
+
     this.defaultValue = this.average(min, max);
 
-    this.axisValues = this.calcAxisValues(min, max, ColorComponent.axisSteps);
-    this.stepSize = (max - min) / (ColorComponent.axisSteps - 1);
+    this.axisValues = this.calcAxisValues(min, max, this.axisSteps);
+    this.stepSize = (max - min) / (this.axisSteps - 1);
   }
 
   private calcAxisValues(min: number, max: number, steps: number = 50): number[] {
@@ -38,9 +44,12 @@ export class ColorComponent {
   }
 
   convert(value: number) {
-    return `${this.clampValue(value).toFixed(this.precision)}${this.unit}`;
+    return this.templateFn(this.clampValue(value));
   }
 
+  template(value: number): string {
+    return `${value.toFixed(this.precision)}${this.unit}`;
+  }
   average(min: number, max: number) {
     return Number.parseFloat(this.internalAverage(min, max).toFixed(this.precision));
   }
@@ -62,12 +71,12 @@ export class ColorModel {
     public components: Triple<ColorComponent>,
     public defaultVariableIndex: 0 | 1 | 2 = 0,
 
-    templateFn?: (parts: Triple<string>) => string
+    templateFn?: (parts: ColorParts) => string
   ) {
     this.templateFn = templateFn?.bind(this) || this.templateFn;
   }
 
-  private template(parts: Triple<string>): string {
+  private template(parts: ColorParts): string {
     return `${this.name}(${parts[0]} ${parts[1]} ${parts[2]})`;
   }
 

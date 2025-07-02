@@ -34,6 +34,7 @@ export class ColorStateService {
     { text: "No", value: "no" },
     { text: "Yes", value: "yes" },
     { text: "RGB", value: "rgb" },
+    { text: "HEX", value: "hex" },
   ];
 
   private readonly colorModel = signal<ColorModel>(namedColorModels[this.initialState.colorConfig.colorModelName]);
@@ -230,7 +231,7 @@ export class ColorStateService {
   private getChannels(rgb: ColorValues) {
     const colorModel = this.colorModel();
 
-    if (!colorModel || colorModel.name === "rgb") {
+    if (!colorModel || colorModel.name === "rgb" || colorModel.name === "hex") {
       return rgb;
     }
 

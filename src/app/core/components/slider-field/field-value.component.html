@@ -1,16 +1,1 @@
-<div class="flex flex-row justify-end opacity-95">
-  @if(this.value!==null){
-  <span class="field-value-number">
-    {{ this.value | number : "1." + decimals + "-" + decimals }}
-  </span>
-  <span class="field-value-unit">
-    @if(showUnit){
-    {{ unit }}
-    }</span
-  >
-  }@else{
-  <span class="field-value-number">
-    {{ nullValueText }}
-  </span>
-  }
-</div>
+<div>{{ this.text }}</div>

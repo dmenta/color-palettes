@@ -6,7 +6,7 @@ import {
   colorValuesEquals,
 } from "./colors.model";
 
-export type showValuesOption = "no" | "yes" | "rgb";
+export type showValuesOption = "no" | "yes" | "rgb" | "hex";
 
 export type PaletteStepsConfig = {
   pasos: number;

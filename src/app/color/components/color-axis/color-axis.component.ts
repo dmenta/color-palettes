@@ -1,10 +1,8 @@
 import { ChangeDetectionStrategy, Component, computed, input, Signal } from "@angular/core";
-import { ColorSwatchDirective } from "../../directives/color-swatch.directive";
-import { ColorConfig, ColorValues } from "../../model/colors.model";
+import { ColorConfig, ColorModelName, ColorValues } from "../../model/colors.model";
 
 @Component({
   selector: "zz-color-axis",
-  imports: [ColorSwatchDirective],
   templateUrl: "./color-axis.component.html",
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -23,23 +21,35 @@ export class ColorAxisComponent {
   });
   currentColor = input<ColorValues | undefined>(undefined, { alias: "current-color" });
 
-  swatches: Signal<ColorValues[]> | undefined = undefined;
+  gradient: Signal<string> | undefined = undefined;
+
+  colorSpaces: Record<ColorModelName, string> = {
+    oklch: "oklch",
+    rgb: "srgb",
+    hsl: "hsl",
+    hex: "srgb",
+  };
 
   ngOnInit() {
-    this.swatches = computed(() => {
+    this.gradient = computed(() => {
       const config = this.colorConfig();
 
       if (!config) {
-        return [];
+        return "";
       }
 
-      const baseArray = this.currentColor() ?? config.colorModel.defaultValues();
+      const colorModel = config.colorModel!;
+      const baseArray = this.currentColor() ?? colorModel.defaultValues();
 
-      return config.variable.axisValues.map((value) => {
+      const ratio = 100 / (config.variable.axisValues.length - 1);
+
+      const puntos = config.variable.axisValues.map((value, i) => {
         const valores = [...baseArray];
         valores[config.variableIndex] = value;
-        return valores as ColorValues;
+        return `${colorModel.convert(valores as ColorValues)} ${(i * ratio).toFixed(2)}%`;
       });
+
+      return `linear-gradient(to right in ${this.colorSpaces[colorModel.name]}, ${puntos})`;
     });
   }
 }
