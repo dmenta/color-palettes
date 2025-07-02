@@ -1,8 +1,8 @@
 @if(formDual!== undefined) {
 <form [formGroup]="formDual" class="relative select-none">
   @let config=state.colorConfig(); @if(config){
-  <div class="absolute left-1/2 top-1">
-    <span zz-icon class="h-6">arrow_range</span>
+  <div class="absolute left-1/2 -top-1">
+    <span zz-icon class="leading-2">arrow_range</span>
   </div>
   <zz-slider-field
     class="relative z-2 font-bold"

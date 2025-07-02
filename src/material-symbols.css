@@ -2,7 +2,7 @@
 
 :root {
   --material-icons-font: "Material Symbols Rounded", sans-serif;
-  --material-icons-variation-settings: "opsz" 36, "FILL" 0, "GRAD" -25;
+  --material-icons-variation-settings: "opsz" 36, "FILL" 0, "GRAD" 100;
 }
 
 .material-symbols-rounded {
