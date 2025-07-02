@@ -16,7 +16,7 @@
     [zz-shadow]="true">
     <zz-palette-list
       (paletteSelected)="state.loadPalette($event)"
-      (paletteRemoved)="store.removePalette($event)"
+      (paletteRemoved)="store.remove($event)"
       [palettes]="store.saved()"
       class="block bg-white dark:bg-gris-800 w-56"></zz-palette-list>
   </div>
