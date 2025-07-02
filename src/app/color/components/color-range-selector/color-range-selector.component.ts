@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, effect, inject } from "@angular/core";
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { SliderFieldComponent } from "../../../core/components/slider-field/slider-field.component";
-import { ColorAxisComponent } from "../color-axis/color-axis.component";
-import { DualAxisSliderComponent } from "../dual-axis-slider/dual-axis-slider.component";
+import { ColorAxisComponent } from "./color-axis/color-axis.component";
+import { DualAxisSliderComponent } from "./dual-axis-slider/dual-axis-slider.component";
 import { ColorValues, MinMax } from "../../model/colors.model";
 import { ColorStateService } from "../../services/color-state.service";
 

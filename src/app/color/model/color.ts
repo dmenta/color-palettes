@@ -52,6 +52,10 @@ export function rgbFromHex(color: string) {
 }
 
 export function rgbTo(rgb: ColorValues, colorModel: ColorModel): ColorValues {
+  if (!colorModel || colorModel.name === "rgb" || colorModel.name === "hex") {
+    return rgb;
+  }
+
   const color = new Color(`rgb(${rgb[0]} ${rgb[1]} ${rgb[2]})`).to(colorModel.name);
 
   const a = ensureCoord(color.coords[0], colorModel.components[0]);
@@ -65,4 +69,12 @@ function ensureCoord(coord: number, component: ColorComponent): number {
   const coordAsegurada = Number.isNaN(coord) ? 0 : coord;
 
   return Math.max(0, Math.min(component.max, coordAsegurada));
+}
+
+export function colorClamping(a: ColorValues, b: ColorValues) {
+  const diff0 = Math.abs(a[0] - b[0]);
+  const diff1 = Math.abs(a[1] - b[1]);
+  const diff2 = Math.abs(a[2] - b[2]);
+
+  return diff0 <= 7 && diff1 <= 3 && diff2 <= 14;
 }

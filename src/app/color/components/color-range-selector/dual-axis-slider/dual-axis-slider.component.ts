@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, effect, EventEmitter, inject, input, Output } from "@angular/core";
-import { SliderFieldComponent } from "../../../core/components/slider-field/slider-field.component";
+import { SliderFieldComponent } from "../../../../core/components/slider-field/slider-field.component";
 import { ColorAxisComponent } from "../color-axis/color-axis.component";
 import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
-import { ColorValues, MinMax } from "../../model/colors.model";
-import { IconDirective } from "../../../core/directives/icon.directive";
-import { ColorStateService } from "../../services/color-state.service";
+import { ColorValues, MinMax } from "../../../model/colors.model";
+import { IconDirective } from "../../../../core/directives/icon.directive";
+import { ColorStateService } from "../../../services/color-state.service";
 
 @Component({
   selector: "zz-dual-axis-slider",

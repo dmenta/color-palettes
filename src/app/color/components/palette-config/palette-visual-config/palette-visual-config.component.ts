@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { debounceTime, distinctUntilChanged, startWith } from "rxjs";
-import { InputDirective } from "../../../core/directives/input.directive";
-import { SimpleCheckDirective } from "../../../core/directives/simple-check.directive";
-import { ColorStateService } from "../../services/color-state.service";
+import { InputDirective } from "../../../../core/directives/input.directive";
+import { SimpleCheckDirective } from "../../../../core/directives/simple-check.directive";
+import { ColorStateService } from "../../../services/color-state.service";
 
 @Component({
   selector: "zz-palette-visual-config",

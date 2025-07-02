@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, input, Signal } from "@angular/core";
-import { ColorConfig, ColorModelName, ColorValues } from "../../model/colors.model";
+import { ColorConfig, ColorModelName, ColorValues } from "../../../model/colors.model";
 
 @Component({
   selector: "zz-color-axis",

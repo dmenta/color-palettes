@@ -1,16 +1,7 @@
 import { computed, effect, inject, Injectable, Signal, signal } from "@angular/core";
-import {
-  ColorComponent,
-  VariableConfig,
-  ColorModel,
-  ColorValues,
-  ColorConfig,
-  ColorConfigState,
-  MinMax,
-} from "../model/colors.model";
+import { ColorComponent, VariableConfig, ColorModel, ColorValues, ColorConfig, MinMax } from "../model/colors.model";
 import { namedColorModels } from "../model/color-models-definitions";
-import { toContrast, toHsl, toOklch, toRgb } from "../model/color";
-import Color from "colorjs.io";
+import { colorClamping, rgbTo, toContrast, toHsl, toOklch, toRgb } from "../model/color";
 import { StorageService } from "../../core/service/storage.service";
 import {
   Palette,
@@ -21,6 +12,7 @@ import {
   showValuesOption,
   Swatch,
 } from "../model/palette.model";
+import { ColorStateValues, defaultColorState } from "../model/default-values";
 
 @Injectable({
   providedIn: "root",
@@ -44,13 +36,13 @@ export class ColorStateService {
     variableIndex: this.initialState.colorConfig.variableIndex as 0 | 1 | 2,
   });
 
+  private readonly minmax = signal<MinMax>(this.initialState.colorConfig.minmax as MinMax);
+
   get showValuesOptions() {
     return this._showValuesOptions;
   }
 
   readonly currentColor = signal<ColorValues>(this.initialState.colorConfig.color);
-
-  readonly minmax = signal<MinMax>(this.initialState.colorConfig.minmax as MinMax);
 
   readonly colorConfig = signal<ColorConfig>({
     colorModel: this.colorModel(),
@@ -65,12 +57,12 @@ export class ColorStateService {
 
   readonly rgb = computed(() => toRgb(this.colorModel().convert(this.currentColor())).values);
 
-  readonly currentState = computed(() => {
+  private readonly currentState = computed(() => {
     return {
       colorConfig: {
         colorModelName: this.colorModel().name,
-        variable: this.variableConfig().variable,
-        variableIndex: this.variableConfig().variableIndex,
+        variable: this.colorConfig().variable,
+        variableIndex: this.colorConfig().variableIndex,
         color: this.currentColor(),
         minmax: this.minmax(),
       },
@@ -119,13 +111,12 @@ export class ColorStateService {
       let previo = valores[0]!.rgbValues;
       for (let i = 1; i < valores.length; i++) {
         const actual = valores[i]!.rgbValues;
-        const diff0 = Math.abs(actual[0] - previo[0]);
-        const diff1 = Math.abs(actual[1] - previo[1]);
-        const diff2 = Math.abs(actual[2] - previo[2]);
-        if (diff0 <= 7 && diff1 <= 3 && diff2 <= 14) {
+
+        if (colorClamping(actual, previo)) {
           valores[i - 1]!.clamp = true;
           valores[i]!.clamp = true;
         }
+
         previo = actual;
       }
     }
@@ -158,6 +149,7 @@ export class ColorStateService {
   showValuesOption(value: showValuesOption): { text: string; value: showValuesOption } {
     return this._showValuesOptions.find((option) => option.value === value)!;
   }
+
   colorModelChanged(colorModel: ColorModel) {
     this.onColorModelChanged(colorModel);
 
@@ -203,12 +195,12 @@ export class ColorStateService {
   }
 
   colorSelected(rgb: ColorValues) {
-    const color = this.getChannels(rgb);
+    const color = rgbTo(rgb, this.colorModel());
 
     this.colorConfig.update((curr) => ({
       ...curr,
       color: color,
-      minmax: this.calcMinMax(color),
+      minmax: curr.variable.minMax(color[curr.variableIndex]!),
     }));
   }
 
@@ -226,28 +218,6 @@ export class ColorStateService {
         stepsConfig: this.paletteStepsConfig(),
       },
     } as PaletteInfo;
-  }
-
-  private getChannels(rgb: ColorValues) {
-    const colorModel = this.colorModel();
-
-    if (!colorModel || colorModel.name === "rgb" || colorModel.name === "hex") {
-      return rgb;
-    }
-
-    const color = new Color(`rgb(${rgb[0]} ${rgb[1]} ${rgb[2]})`).to(colorModel.name);
-
-    const a = this.ensureCoord(color.coords[0], colorModel.components[0]);
-    const b = this.ensureCoord(color.coords[1], colorModel.components[1]);
-    const c = this.ensureCoord(color.coords[2], colorModel.components[2]);
-
-    return [a, b, c] as ColorValues;
-  }
-
-  private ensureCoord(coord: number, component: ColorComponent): number {
-    const coordAsegurada = Number.isNaN(coord) ? 0 : coord;
-
-    return Math.max(0, Math.min(component.max, coordAsegurada));
   }
 
   private onColorModelChanged(colorModel: ColorModel) {
@@ -278,52 +248,7 @@ export class ColorStateService {
       variable: variable,
       variableIndex: indice,
     });
-    this.minmax.set(this.calcMinMax(currentColor));
-  }
 
-  private calcMinMax(currentColor: ColorValues) {
-    const config = this.variableConfig();
-    const value = currentColor[config.variableIndex];
-
-    const middle = (config.variable.max + config.variable.min) / 2;
-    const max = value > middle ? config.variable.max : value * 2 - config.variable.min;
-    const min = value < middle ? config.variable.min : value * 2 - config.variable.max;
-
-    return [min, max] as MinMax;
+    this.minmax.set(variable.minMax(currentColor[indice]!));
   }
 }
-
-type ColorStateValues = {
-  colorConfig: ColorConfigState;
-  paletteStepsConfig: PaletteStepsConfig;
-  paletteVisualConfig: PaletteVisualConfig;
-  paletteValuesConfig: PaletteValuesConfig;
-};
-
-const colorModelDefault = namedColorModels["oklch"];
-const defaultColorState: ColorStateValues = {
-  colorConfig: {
-    colorModelName: colorModelDefault.name,
-    variable: colorModelDefault.components[colorModelDefault.defaultVariableIndex],
-    variableIndex: colorModelDefault.components.findIndex(
-      (c) => c.name === colorModelDefault.components[colorModelDefault.defaultVariableIndex].name
-    ) as 0 | 1 | 2,
-    color: colorModelDefault.defaultValues() as ColorValues,
-    minmax: [
-      colorModelDefault.components[colorModelDefault.defaultVariableIndex].min,
-      colorModelDefault.components[colorModelDefault.defaultVariableIndex].max,
-    ] as MinMax,
-  },
-  paletteStepsConfig: {
-    pasos: 12,
-    automatico: true,
-  },
-  paletteVisualConfig: {
-    alto: 80,
-    continuo: false,
-    separate: false,
-  },
-  paletteValuesConfig: {
-    showValues: "no",
-  },
-} as ColorStateValues;

@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from "@angular/core";
-import { BaseButtonDirective } from "../../../core/directives/button.directive";
+import { BaseButtonDirective } from "../../../../core/directives/button.directive";
 import { PaletteListComponent } from "../palette-list/palette-list.component";
-import { PaletteStoreService } from "../../services/palette-store.service";
-import { ColorStateService } from "../../services/color-state.service";
-import { CollapseVerticalDirective } from "../../../core/directives/collapse-vertical.directive";
-import { BorderDirective } from "../../../core/directives/border.directive";
-import { ShadowDirective } from "../../../core/directives/shadow.directive";
+import { PaletteStoreService } from "../../../services/palette-store.service";
+import { ColorStateService } from "../../../services/color-state.service";
+import { CollapseVerticalDirective } from "../../../../core/directives/collapse-vertical.directive";
+import { BorderDirective } from "../../../../core/directives/border.directive";
+import { ShadowDirective } from "../../../../core/directives/shadow.directive";
 
 @Component({
   selector: "zz-palette-selector",

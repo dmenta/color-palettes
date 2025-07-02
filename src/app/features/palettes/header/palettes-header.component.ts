@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { DarkModeToggleComponent } from "../../../core/components/dark-mode-toggle/dark-mode-toggle.component";
-import { PaletteSelectorComponent } from "../../../color/components/palette-selector/palette-selector.component";
+import { PaletteSelectorComponent } from "../../../color/components/palette-drop/palette-selector/palette-selector.component";
 import { MarcaComponent } from "../../../core/components/marca/marca.component";
 
 @Component({

@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, inject, input } from "@angular/core
 import { ColorSwatchDirective } from "../../directives/color-swatch.directive";
 import { ReactiveFormsModule } from "@angular/forms";
 import { ColorValuesDisplayComponent } from "../color-values-display/color-values-display.component";
-import { ColorSelectorComponent } from "../selector/color-selector.component";
+import { ColorSelectorComponent } from "./color-selector/color-selector.component";
 import { ColorStateService } from "../../services/color-state.service";
 import { ContainerDirective } from "../../../core/directives/container.directive";
 

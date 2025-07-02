@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, input, NO_ERRORS_SCHEMA, output } from "@angular/core";
 import { MiniPaletteComponent } from "../mini-palette/mini-palette.component";
-import { PaletteInfo } from "../../model/palette.model";
+import { PaletteInfo } from "../../../model/palette.model";
 
 @Component({
   selector: "zz-palette-list",

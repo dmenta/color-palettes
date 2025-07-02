@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { debounceTime, distinctUntilChanged, startWith } from "rxjs";
-import { SelectComponent } from "../../../core/components/select/select.component";
-import { ColorStateService } from "../../services/color-state.service";
-import { showValuesOption } from "../../model/palette.model";
+import { SelectComponent } from "../../../../core/components/select/select.component";
+import { ColorStateService } from "../../../services/color-state.service";
+import { showValuesOption } from "../../../model/palette.model";
 
 @Component({
   selector: "zz-palette-values-config",

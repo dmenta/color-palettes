@@ -58,6 +58,14 @@ export class ColorComponent {
     return value === undefined ? this.defaultValue : Math.max(this.min, Math.min(this.max, value));
   }
 
+  minMax(value: number) {
+    const middle = (this.max + this.min) / 2;
+    const max = value > middle ? this.max : value * 2 - this.min;
+    const min = value < middle ? this.min : value * 2 - this.max;
+
+    return [min, max] as MinMax;
+  }
+
   private internalAverage(min: number, max: number): number {
     return (Math.max(this.min, min) + Math.min(this.max, max)) / 2;
   }
