@@ -18,12 +18,16 @@ export class PaletteActionsComponent {
   state = inject(ColorStateService);
   copyService = inject(CopyService);
 
+  save() {
+    this.store.save(this.state.currentPaletteInfo());
+  }
+
   lock() {
-    this.store.lockPalette(this.state.currentPaletteInfo());
+    this.store.lock(this.state.currentPaletteInfo());
   }
 
   unlock() {
-    this.store.unlockPalette();
+    this.store.unlock();
   }
 
   copy() {

@@ -1,6 +1,6 @@
 @if( colorModelName() !== 'hex' ){
 <div
-  class="flex justify-center font-roboto cursor-copy group hover:opacity-100 opacity-85 underline-offset-2"
+  class="flex justify-center font-noto cursor-copy group hover:opacity-100 opacity-85 underline-offset-2"
   (click)="copy()"
   [class.flex-col]="vertical()"
   [class.gap-2]="!vertical()"
@@ -11,7 +11,7 @@
 </div>
 } @else{
 <div
-  class="flex px-1 justify-center font-roboto cursor-copy hover:opacity-100 opacity-85 underline-offset-2 hover:underline decoration-current/70"
+  class="flex px-1 justify-center font-noto cursor-copy hover:opacity-100 opacity-85 underline-offset-2 hover:underline decoration-current/70"
   (click)="copy()">
   {{ full() }}
 </div>

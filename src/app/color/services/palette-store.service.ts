@@ -14,7 +14,7 @@ export class PaletteStoreService {
 
   lockedPalette = signal<PaletteInfo | undefined>(this.store.get<PaletteInfo>("locked-palette") ?? undefined);
 
-  lockPalette(paletteInfo: PaletteInfo) {
+  lock(paletteInfo: PaletteInfo) {
     const current = this.lockedPalette();
     if (current && paletteInfoEquals(current, paletteInfo)) {
       this.notificationService.warn("Already locked!");
@@ -24,22 +24,14 @@ export class PaletteStoreService {
     this.store.save("locked-palette", paletteInfo);
     this.lockedPalette.set(paletteInfo);
 
-    const saved = this.saved();
-    if (saved.length > 0 && paletteInfoEquals(saved[0]!, paletteInfo)) {
-      return;
-    }
-
-    this.saved.update((palettes) => [paletteInfo, ...palettes].slice(0, 10));
-    this.store.save("saved-palettes", this.saved());
-
     this.notificationService.success("Palette locked!");
   }
 
-  unlockPalette() {
+  unlock() {
     this.store.delete("locked-palette");
     this.lockedPalette.set(undefined);
   }
-  removePalette(index: number) {
+  remove(index: number) {
     this.saved.update((palettes) => {
       const newPalettes = [...palettes];
       newPalettes.splice(index, 1);
@@ -47,5 +39,19 @@ export class PaletteStoreService {
     });
 
     this.store.save("saved-palettes", this.saved());
+  }
+
+  save(paletteInfo: PaletteInfo) {
+    const indice = this.saved().findIndex((p) => paletteInfoEquals(p, paletteInfo));
+    if (indice >= 0) {
+      this.notificationService.warn(`Already saved at #${indice + 1}`);
+
+      return;
+    }
+
+    this.saved.update((palettes) => [paletteInfo, ...palettes].slice(0, 10));
+    this.store.save("saved-palettes", this.saved());
+
+    this.notificationService.success("Palette saved!");
   }
 }

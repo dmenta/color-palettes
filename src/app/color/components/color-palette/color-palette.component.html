@@ -18,21 +18,21 @@
       &#x26A0;
     </div>
     @let valuesConfig=state.paletteValuesConfig(); @if(valuesConfig.showValues==='yes'){
-    <div [style.color]="swatch.fore" class="text-smaller-2">
+    <div [style.color]="swatch.fore" class="text-smaller-1">
       <zz-color-values-display
         [color-model-name]="colorModel()!.name"
         [values]="swatch.valores"
         [vertical]="true"></zz-color-values-display>
     </div>
     }@if(valuesConfig.showValues==="rgb"){
-    <div [style.color]="swatch.fore" class="text-smaller-2">
+    <div [style.color]="swatch.fore" class="text-smaller-1">
       <zz-color-values-display
         color-model-name="rgb"
         [values]="swatch.rgbValues"
         [vertical]="true"></zz-color-values-display>
     </div>
     } @if(valuesConfig.showValues==="hex"){
-    <div [style.color]="swatch.fore" class="text-smaller-2">
+    <div [style.color]="swatch.fore" class="text-smaller-1">
       <zz-color-values-display
         color-model-name="hex"
         [values]="swatch.rgbValues"

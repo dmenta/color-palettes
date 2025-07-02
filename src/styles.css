@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wdth,wght@75..100,100..900&display=swap&text=ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789:.,-");
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans:wdth,wght@62.5..100,100..900&display=swap&text=ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789:.,-");
 @import url("https://fonts.googleapis.com/css2?family=MuseoModerno:wght@800&display=swap&text=CoLoRina");
 @import "tailwindcss";
 
@@ -28,10 +29,13 @@
   --font-roboto: "Roboto", sans-serif;
   --font-roboto--font-variation-settings: "wdth" 75;
 
+  --font-noto: "Noto Sans", sans-serif;
+  --font-noto--font-variation-settings: "wdth" 85;
+
   --font-icons: var(--material-icons-font);
   --font-icons--font-variation-settings: var(--material-icons-variation-settings);
 
-  --default-font-family: var(--font-roboto);
+  --default-font-family: var(--font-noto);
 
   --text-smaller: 0.9em;
   --text-smaller-1: 0.85em;
@@ -58,7 +62,7 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  --body-font-family: "Roboto", sans-serif;
+  --body-font-family: "Noto Sans", sans-serif;
   --spacing: 0.25rem;
 }
 
@@ -91,11 +95,9 @@
 }
 
 body {
-  /* font-family: var(--body-font-family); */
   background-color: var(--bg-application);
   color: var(--text-color);
   font-size: 15px;
-  /* font-variation-settings: "wdth" 75, "wght" 350; */
 }
 
 .bold {
@@ -103,6 +105,10 @@ body {
 }
 .semi-bold {
   font-variation-settings: "wdth" 95, "wght" 400;
+}
+
+.icon-bold {
+  font-weight: 600;
 }
 
 .axis-swatch {
