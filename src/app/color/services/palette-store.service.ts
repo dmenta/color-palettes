@@ -1,6 +1,6 @@
 import { inject, Injectable, signal } from "@angular/core";
 import { StorageService } from "../../core/service/storage.service";
-import { NotificationService } from "./notification.service";
+import { NotificationService } from "../../core/service/notification.service";
 import { PaletteInfo, paletteInfoEquals } from "../model/palette.model";
 
 @Injectable({

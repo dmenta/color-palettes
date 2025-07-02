@@ -3,7 +3,7 @@ import { IconButtonDirective } from "../../../core/directives/icon-button.direct
 import { IconDirective } from "../../../core/directives/icon.directive";
 import { ColorStateService } from "../../services/color-state.service";
 import { PaletteStoreService } from "../../services/palette-store.service";
-import { CopyService } from "../../services/copy.service";
+import { CopyService } from "../../../core/service/copy.service";
 import { Palette } from "../../model/palette.model";
 import { rgbToHex } from "../../model/color";
 

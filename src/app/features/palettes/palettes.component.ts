@@ -10,7 +10,7 @@ import { PaletteVisualConfigComponent } from "../../color/components/palette-con
 import { PaletteValuesConfigComponent } from "../../color/components/palette-config/palette-values-config/palette-values-config.component";
 import { PaletteStoreService } from "../../color/services/palette-store.service";
 import { PaletteActionsComponent } from "../../color/components/palette-actions/palette-actions.component";
-import { NotificationComponent } from "../../color/components/notification/notification.component";
+import { NotificationComponent } from "../../core/components/notification/notification.component";
 
 @Component({
   selector: "zz-palettes",

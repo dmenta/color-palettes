@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input } from "@angular/core";
 import { ColorModelName, ColorValues } from "../../model/colors.model";
-import { CopyService } from "../../services/copy.service";
+import { CopyService } from "../../../core/service/copy.service";
 import { namedColorModels } from "../../model/color-models-definitions";
 
 @Component({

@@ -32,7 +32,7 @@ export class ColorStateService {
   private readonly colorModel = signal<ColorModel>(namedColorModels[this.initialState.colorConfig.colorModelName]);
 
   private readonly variableConfig = signal<VariableConfig>({
-    variable: this.initialState.colorConfig.variable,
+    variable: this.colorModel().components[this.initialState.colorConfig.variableIndex],
     variableIndex: this.initialState.colorConfig.variableIndex as 0 | 1 | 2,
   });
 
