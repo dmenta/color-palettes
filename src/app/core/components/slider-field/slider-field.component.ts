@@ -1,4 +1,4 @@
-import { Component, input, Input, Optional } from "@angular/core";
+import { ChangeDetectionStrategy, Component, input, Input, Optional } from "@angular/core";
 import { FieldValueComponent } from "./field-value.component";
 import { FormGroupDirective, ReactiveFormsModule } from "@angular/forms";
 import { SliderSlimDirective } from "../../directives/slider.directive";
@@ -9,6 +9,7 @@ import { DataListComponent } from "../slider/data-list.component";
   selector: "zz-slider-field",
   imports: [ReactiveFormsModule, SliderSlimDirective, FieldValueComponent, TextLengthDirective, DataListComponent],
   templateUrl: "./slider-field.component.html",
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SliderFieldComponent {
   @Input({ required: true }) fieldName: string = "";

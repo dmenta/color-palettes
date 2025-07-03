@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { PaletteActionsComponent } from "../palette-actions/palette-actions.component";
 import { PaletteStepsConfigComponent } from "../palette-config/palette-steps-config/palette-steps-config.component";
 import { PaletteValuesConfigComponent } from "../palette-config/palette-values-config/palette-values-config.component";
@@ -13,5 +13,6 @@ import { PaletteVisualConfigComponent } from "../palette-config/palette-visual-c
     PaletteActionsComponent,
   ],
   templateUrl: "./palette-menu.component.html",
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PaletteMenuComponent {}
