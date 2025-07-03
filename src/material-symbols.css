@@ -4,8 +4,3 @@
   --material-icons-font: "Material Symbols Rounded", sans-serif;
   --material-icons-variation-settings: "opsz" 36, "FILL" 0, "GRAD" 100;
 }
-
-.material-symbols-rounded {
-  font-family: var(--material-icons-font);
-  font-variation-settings: var(--material-icons-variation-settings);
-}

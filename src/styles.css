@@ -1,6 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Roboto:wdth,wght@75..100,100..900&display=swap&text=ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789:.,-");
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans:wdth,wght@62.5..100,100..900&display=swap&text=ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789:.,-");
-@import url("https://fonts.googleapis.com/css2?family=MuseoModerno:wght@800&display=swap&text=CoLoRina");
 @import "tailwindcss";
 
 @theme {
@@ -25,12 +23,11 @@
   --color-marca-7: oklch(0.641 0.161 454.38);
   --color-marca-8: oklch(0.641 0.161 498.32);
 
+  /* Font Marca */
   --font-museo-moderno: "MuseoModerno", sans-serif;
-  --font-roboto: "Roboto", sans-serif;
-  --font-roboto--font-variation-settings: "wdth" 75;
 
   --font-noto: "Noto Sans", sans-serif;
-  --font-noto--font-variation-settings: "wdth" 85;
+  --font-noto--font-variation-settings: "wght" 500, "wdth" 85;
 
   --font-icons: var(--material-icons-font);
   --font-icons--font-variation-settings: var(--material-icons-variation-settings);
@@ -57,6 +54,10 @@
   --width-marca: 1.25em;
   --leading-marca: 1.25em;
   --gap-marca: 0.125em;
+}
+
+@utility appearance-base-select {
+  appearance: base-select;
 }
 
 @custom-variant dark (&:where(.dark, .dark *));
