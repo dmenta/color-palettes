@@ -3,10 +3,11 @@ import { colorModels } from "../../model/color-models-definitions";
 import { CollapseVerticalDirective } from "../../../core/directives/collapse-vertical.directive";
 import { ContainerDirective } from "../../../core/directives/container.directive";
 import { ColorStateService } from "../../services/color-state.service";
+import { NgClass } from "@angular/common";
 
 @Component({
   selector: "zz-color-menu",
-  imports: [CollapseVerticalDirective, ContainerDirective],
+  imports: [CollapseVerticalDirective, ContainerDirective, NgClass],
   templateUrl: "./color-menu.component.html",
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

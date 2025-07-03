@@ -7,14 +7,14 @@
           class="select-none uppercase text-larger-2 appearance-base-select w-full cursor-pointer inline-block transition-all p-2 rounded hover:bg-gris-100 dark:hover:bg-gris-800/95"
           (click)="state.colorModelChanged(model)"
           [class.pointer-events-none]="modelSeleccionado"
-          [class]="{
-            'bg-gris-100/85': modelSeleccionado,
-            'dark:bg-gris-800/85': modelSeleccionado,
-            bold: modelSeleccionado
-          }">
+          [ngClass]="{ 'bg-gris-100/85 dark:bg-gris-800/85 bold': modelSeleccionado }">
           {{ model.name }}
         </div>
-        <ul class="space-y-1" [class.p-2]="modelSeleccionado" [zz-collapse-vertical]="!modelSeleccionado">
+        <ul
+          class="space-y-1"
+          [class.bg-red-500_50]="modelSeleccionado"
+          [class.p-2]="modelSeleccionado"
+          [zz-collapse-vertical]="!modelSeleccionado">
           @for(variable of model.components; track variable.name.caption){ @let variableSeleccionada=
           state.colorConfig().variable.name.caption === variable.name.caption;
           <li>
@@ -22,11 +22,7 @@
               class="select-none w-full inline-block cursor-pointer transition-all px-2 py-1 rounded dark:hover:bg-gris-700/60"
               [class.pointer-events-none]="variableSeleccionada"
               (click)="state.variableChanged(variable)"
-              [class]="{
-                'bg-gris-100/50': variableSeleccionada,
-                'dark:bg-gris-700/45': variableSeleccionada,
-                'semi-bold': variableSeleccionada
-              }">
+              [ngClass]="{ 'bg-gris-100/50 dark:bg-gris-700/45 semi-bold': variableSeleccionada }">
               {{ variable.name.caption }}
             </div>
           </li>

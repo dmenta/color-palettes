@@ -2,13 +2,13 @@
   zz-select
   [zzDisabled]="disabled"
   [class.uppercase]="upperCase()"
-  class="py-1 pl-2 pr-1 group cursor-pointer transition-all ease-in-out text-gris-900 group-focus-within:text-black dark:bg-gris-900 dark:text-gris-100 group-focus-within:dark:text-white"
+  class="select-slim py-1 pl-2 pr-1 group cursor-pointer transition-all ease-in-out text-gris-900 group-focus-within:text-black dark:bg-gris-900 dark:text-gris-100 group-focus-within:dark:text-white"
   #valor
   [id]="selectId"
   (focusout)="onFocusOut($event)"
   (change)="onValueChange($event)">
   @for (item of items(); track trackValue($index,item)) {
-  <option [value]="item" [selected]="value && item[displayKey()] === value[displayKey()]">
+  <option [value]="item" class="select-slim-option" [selected]="value && item[displayKey()] === value[displayKey()]">
     {{ item[displayKey()] }}
   </option>
   }

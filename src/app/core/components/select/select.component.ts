@@ -20,7 +20,6 @@ import { SelectDirective } from "../../directives/select.directive";
   schemas: [NO_ERRORS_SCHEMA],
   imports: [CommonModule, FormsModule, SelectDirective],
   templateUrl: "./select.component.html",
-  styleUrls: ["./select.component.css"],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,

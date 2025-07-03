@@ -2,12 +2,11 @@ import { ChangeDetectionStrategy, Component, effect, inject } from "@angular/cor
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { debounceTime, distinctUntilChanged, startWith } from "rxjs";
 import { InputDirective } from "../../../../core/directives/input.directive";
-import { SimpleCheckDirective } from "../../../../core/directives/simple-check.directive";
 import { ColorStateService } from "../../../services/color-state.service";
 
 @Component({
   selector: "zz-palette-steps-config",
-  imports: [FormsModule, ReactiveFormsModule, InputDirective, SimpleCheckDirective],
+  imports: [FormsModule, ReactiveFormsModule, InputDirective],
   templateUrl: "./palette-steps-config.component.html",
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
