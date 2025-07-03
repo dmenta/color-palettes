@@ -9,5 +9,11 @@ export const routes: Routes = [
 
   { path: "palettes", redirectTo: "", pathMatch: "full" },
 
+  {
+    path: "test",
+    title: "Test",
+    loadComponent: () => import("./features/test-col/test-col.component").then((m) => m.TestColComponent),
+  },
+
   { path: "**", redirectTo: "" },
 ];
