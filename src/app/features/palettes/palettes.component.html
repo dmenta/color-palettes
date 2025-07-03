@@ -1,26 +1,33 @@
-<div class="sticky bg-application z-20 top-0 left-0 right-0 shadow-md dark:shadow-black/60">
-  <zz-palettes-header></zz-palettes-header>
-</div>
-<main class="flex flex-row items-top justify-center gap-8 px-6 pt-2 m-auto max-w-[1600px] w-screen">
-  <div class="py-4">
-    <zz-color-menu></zz-color-menu>
+<div class="bg-application w-screen h-screen overflow-x-hidden">
+  <div class="sticky bg-application z-20 top-0 left-0 right-0 shadow-md dark:shadow-black/60">
+    <zz-palettes-header></zz-palettes-header>
   </div>
-  <div class="min-w-36 w-full pt-3 relative flex flex-col">
-    <zz-color-range-selector> </zz-color-range-selector>
-    <div class="flex items-center justify-between gap-1 mt-6 mb-4">
-      <zz-palette-steps-config class="opacity-80 hover:opacity-100"></zz-palette-steps-config>
-      <zz-palette-visual-config class="opacity-80 hover:opacity-100"></zz-palette-visual-config>
-      <zz-palette-values-config class="opacity-80 hover:opacity-100"></zz-palette-values-config>
-      <zz-palette-actions></zz-palette-actions>
+  <main class="flex flex-row items-top justify-center gap-8 px-6 pt-2 m-auto max-w-[1600px] w-screen">
+    <div class="py-4">
+      <div class="py-4 block lg:hidden">
+        <zz-color-sample class="block w-42" [height]="150"></zz-color-sample>
+      </div>
+      <zz-color-menu class="w-full"></zz-color-menu>
     </div>
-    <zz-color-palette class="block pb-4" [palette]="state.palette()"></zz-color-palette>
-    @if(store.lockedPalette(); as paletteInfo){
-    <zz-color-palette class="block pb-4" [palette]="paletteInfo.palette"></zz-color-palette>
-    }
-  </div>
-  <div class="py-4 hidden lg:block">
-    <zz-color-sample class="block" [height]="200"></zz-color-sample>
-  </div>
-</main>
+    <div class="@container min-w-36 w-full pt-3 relative flex flex-col">
+      <zz-color-range-selector> </zz-color-range-selector>
+      <div class="flex items-center @min-[760px]:justify-between @max-[760px]:flex-col-reverse mt-6 mb-2">
+        <div class="flex items-center justify-between w-full gap-2">
+          <zz-palette-steps-config class="opacity-80 hover:opacity-100"></zz-palette-steps-config>
+          <zz-palette-visual-config class="opacity-80 hover:opacity-100"></zz-palette-visual-config>
+          <zz-palette-values-config class="opacity-80 hover:opacity-100"></zz-palette-values-config>
+        </div>
+        <zz-palette-actions class="ml-6"></zz-palette-actions>
+      </div>
+      <zz-color-palette class="block pb-4" [palette]="state.palette()"></zz-color-palette>
+      @if(store.lockedPalette(); as paletteInfo){
+      <zz-color-palette class="block pb-4" [palette]="paletteInfo.palette"></zz-color-palette>
+      }
+    </div>
+    <div class="py-4 hidden lg:block">
+      <zz-color-sample class="block" [height]="200"></zz-color-sample>
+    </div>
+  </main>
+</div>
 
 <zz-notification></zz-notification>

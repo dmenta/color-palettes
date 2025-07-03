@@ -2,37 +2,36 @@
 <div
   class="flex flex-row justify-between"
   [class.space-x-1]="visualConfig.separate"
-  [style.height.px]="visualConfig.alto">
+  [style.height.px]="visualConfig.height">
   @for(swatch of paleta.swatches; track $index){
   <div
     class="axis-swatch"
-    [shadow]="!visualConfig.continuo"
-    [roundedSize]="visualConfig.continuo ? 'none' : 'large'"
+    [shadow]="!visualConfig.flat"
+    [roundedSize]="visualConfig.flat ? 'none' : 'large'"
     color-swatch-panel
     [color-model]="colorModel()!"
     [values]="swatch.valores">
     <div
       class="text-larger-2 absolute select-none bottom-1 right-2 opacity-0 transition-opacity duration-500 ease-in-out"
-      [class.opacity-60]="swatch.clamp"
-      [style.color]="swatch.fore">
+      [class.opacity-60]="swatch.clamp">
       &#x26A0;
     </div>
     @let valuesConfig=state.paletteValuesConfig(); @if(valuesConfig.showValues==='yes'){
-    <div [style.color]="swatch.fore" class="text-smaller-1">
+    <div class="text-smaller-1">
       <zz-color-values-display
         [color-model-name]="colorModel()!.name"
         [values]="swatch.valores"
         [vertical]="true"></zz-color-values-display>
     </div>
     }@if(valuesConfig.showValues==="rgb"){
-    <div [style.color]="swatch.fore" class="text-smaller-1">
+    <div class="text-smaller-1">
       <zz-color-values-display
         color-model-name="rgb"
         [values]="swatch.rgbValues"
         [vertical]="true"></zz-color-values-display>
     </div>
     } @if(valuesConfig.showValues==="hex"){
-    <div [style.color]="swatch.fore" class="text-smaller-1">
+    <div class="text-smaller-1">
       <zz-color-values-display
         color-model-name="hex"
         [values]="swatch.rgbValues"

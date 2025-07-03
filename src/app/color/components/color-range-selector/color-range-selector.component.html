@@ -8,34 +8,35 @@
         class="block"
         [current-color]="state.currentColor()"
         [height]="height"
-        (minmaxChange)="onVariableChange($event)">
+        (rangeChange)="onVariableChange($event)">
       </zz-dual-axis-slider>
       }@else {
       <zz-slider-field
         class="relative z-2"
         [showTrack]="false"
         [fieldName]="'v' + indice"
-        [min]="component.min"
-        [max]="component.max"
-        [step]="componentStep(component.precision)"
-        [label]="component.name"
+        [min]="component.range.min"
+        [max]="component.range.max"
+        [step]="component.valueStep"
+        [label]="component.name.caption"
         [defaultValue]="component.defaultValue"
         [showLabel]="true"
         [labelLength]="10"
         [unit]="component.unit"
         [showValue]="true"
         [valueLength]="9" />
-      <zz-color-axis
+      <div
+        zz-color-axis
         class="-mt-2.5 block rounded-md overflow-hidden"
         [color-config]="{
           colorModel: config.colorModel,
           variable: component,
           variableIndex: indice,
           color: state.currentColor(),
-          minmax: config.minmax,
+          range: config.range,
         }"
         [current-color]="state.currentColor()"
-        [height]="height"></zz-color-axis>
+        [height]="height"></div>
       }
     </div>
     }

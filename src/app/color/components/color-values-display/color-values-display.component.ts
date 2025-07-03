@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, inject, input } from "@an
 import { ColorModelName, ColorValues } from "../../model/colors.model";
 import { CopyService } from "../../../core/service/copy.service";
 import { namedColorModels } from "../../model/color-models-definitions";
+import { toContrast } from "../../model/color";
 
 @Component({
   selector: "zz-color-values-display",
@@ -17,19 +18,17 @@ export class ColorValuesDisplayComponent {
     transform: (value?: ColorValues | undefined) => value ?? ([0, 0, 0] as ColorValues),
   });
 
+  useContrast = input(true, { alias: "use-contrast" });
+
   vertical = input(false, { alias: "vertical" });
 
   full = computed(() => namedColorModels[this.colorModelName()].convert(this.values()!));
 
   parts = computed(() => {
-    const values = this.values() ?? [0, 0, 0];
-    return namedColorModels[this.colorModelName()].components.map((component, index) => {
-      return {
-        label: component.label,
-        value: component.convert(values[index]!),
-      };
-    });
+    return namedColorModels[this.colorModelName()].displayValues(this.values() ?? [0, 0, 0]);
   });
+
+  contrast = computed(() => toContrast(this.full()));
 
   copy() {
     this.copyService.copy(this.full(), "Color copied!");

@@ -1,14 +1,14 @@
 import { ChangeDetectionStrategy, Component, effect, EventEmitter, inject, input, Output } from "@angular/core";
 import { SliderFieldComponent } from "../../../../core/components/slider-field/slider-field.component";
-import { ColorAxisComponent } from "../color-axis/color-axis.component";
+import { AxisGradientDirective } from "../../../directives/axis-gradient.directive";
 import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
-import { ColorValues, MinMax } from "../../../model/colors.model";
+import { ColorValues, Range } from "../../../model/colors.model";
 import { IconDirective } from "../../../../core/directives/icon.directive";
 import { ColorStateService } from "../../../services/color-state.service";
 
 @Component({
   selector: "zz-dual-axis-slider",
-  imports: [SliderFieldComponent, ColorAxisComponent, ReactiveFormsModule, IconDirective],
+  imports: [SliderFieldComponent, AxisGradientDirective, ReactiveFormsModule, IconDirective],
   templateUrl: "./dual-axis-slider.component.html",
   host: {
     class: "block w-full",
@@ -30,7 +30,7 @@ export class DualAxisSliderComponent {
     },
   });
 
-  @Output() minmaxChange = new EventEmitter<MinMax>();
+  @Output() rangeChange = new EventEmitter<Range>();
 
   formDual: FormGroup<{ min: FormControl<number>; max: FormControl<number> }> | undefined = undefined;
 
@@ -38,8 +38,8 @@ export class DualAxisSliderComponent {
     effect(() => {
       this.formDual?.patchValue(
         {
-          min: this.state.colorConfig().minmax[0],
-          max: this.state.colorConfig().minmax[1],
+          min: this.state.colorConfig().range.min,
+          max: this.state.colorConfig().range.max,
         },
         { emitEvent: true }
       );
@@ -48,19 +48,15 @@ export class DualAxisSliderComponent {
 
   ngOnInit() {
     this.formDual = new FormGroup({
-      min: new FormControl(this.state.colorConfig().minmax[0], { nonNullable: true }),
-      max: new FormControl(this.state.colorConfig().minmax[1], { nonNullable: true }),
+      min: new FormControl(this.state.colorConfig().range.min, { nonNullable: true }),
+      max: new FormControl(this.state.colorConfig().range.max, { nonNullable: true }),
     });
 
     this.formDual.valueChanges.subscribe((value) => {
-      this.minmaxChange.emit([
-        value.min ?? this.formDual?.controls.min.value ?? 0,
-        value.max ?? this.formDual?.controls.max.value ?? 0,
-      ]);
+      this.rangeChange.emit({
+        min: value.min ?? this.formDual?.controls.min.value ?? 0,
+        max: value.max ?? this.formDual?.controls.max.value ?? 0,
+      });
     });
-  }
-
-  componentStep(precision: number): number {
-    return 1 / Math.pow(10, precision);
   }
 }

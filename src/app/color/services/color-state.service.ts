@@ -1,7 +1,16 @@
 import { computed, effect, inject, Injectable, Signal, signal } from "@angular/core";
-import { ColorComponent, VariableConfig, ColorModel, ColorValues, ColorConfig, MinMax } from "../model/colors.model";
+import {
+  ColorComponent,
+  VariableConfig,
+  ColorModel,
+  ColorValues,
+  ColorConfig,
+  Range,
+  ColorValueKey,
+  rangeTotal,
+} from "../model/colors.model";
 import { namedColorModels } from "../model/color-models-definitions";
-import { colorClamping, rgbTo, toContrast, toHsl, toOklch, toRgb } from "../model/color";
+import { colorClamping, rgbTo, toHsl, toOklch, toRgb } from "../model/color";
 import { StorageService } from "../../core/service/storage.service";
 import {
   Palette,
@@ -33,10 +42,10 @@ export class ColorStateService {
 
   private readonly variableConfig = signal<VariableConfig>({
     variable: this.colorModel().components[this.initialState.colorConfig.variableIndex],
-    variableIndex: this.initialState.colorConfig.variableIndex as 0 | 1 | 2,
+    variableIndex: this.initialState.colorConfig.variableIndex,
   });
 
-  private readonly minmax = signal<MinMax>(this.initialState.colorConfig.minmax as MinMax);
+  private readonly range = signal<Range>(this.initialState.colorConfig.range as Range);
 
   get showValuesOptions() {
     return this._showValuesOptions;
@@ -48,7 +57,7 @@ export class ColorStateService {
     colorModel: this.colorModel(),
     ...this.variableConfig(),
     color: this.currentColor(),
-    minmax: this.minmax(),
+    range: this.range(),
   });
 
   readonly paletteStepsConfig = signal<PaletteStepsConfig>(this.initialState.paletteStepsConfig);
@@ -64,7 +73,7 @@ export class ColorStateService {
         variable: this.colorConfig().variable,
         variableIndex: this.colorConfig().variableIndex,
         color: this.currentColor(),
-        minmax: this.minmax(),
+        range: this.range(),
       },
       paletteStepsConfig: this.paletteStepsConfig(),
       paletteVisualConfig: this.paletteVisualConfig(),
@@ -73,28 +82,28 @@ export class ColorStateService {
   });
 
   palette: Signal<Palette> = computed(() => {
-    const config = { ...this.colorConfig(), color: this.currentColor(), minmax: this.minmax() } as ColorConfig;
+    const config = { ...this.colorConfig(), color: this.currentColor(), range: this.range() } as ColorConfig;
     const stepsConfig = this.paletteStepsConfig();
     const baseArray = this.currentColor() ?? config.colorModel.defaultValues();
 
-    const min = config.minmax[0];
-    const max = config.minmax[1];
+    const min = config.range.min;
+    const max = config.range.max;
 
-    let pasos = stepsConfig?.pasos ?? 10;
-    if (stepsConfig?.automatico ?? true) {
+    let steps = stepsConfig?.steps ?? 10;
+    if (stepsConfig?.automatic ?? true) {
       const variable = config.variable;
 
-      pasos = Math.min(
-        pasos,
-        Math.max(2, Math.ceil((Math.abs(max - min) / (variable.max - variable.min)) * variable.autoSteps))
+      steps = Math.min(
+        steps,
+        Math.max(2, Math.ceil((Math.abs(max - min) / rangeTotal(variable.range)) * variable.autoSteps))
       );
     }
 
-    const step = (max - min) / (pasos - 1);
+    const step = (max - min) / (steps - 1);
 
-    const valores = Array.from({ length: pasos }, (_, i) => {
+    const valores = Array.from({ length: steps }, (_, i) => {
       const value = min + i * step;
-      const valores = [...baseArray];
+      const valores = { ...baseArray };
       valores[config.variableIndex] = value;
       const color = config.colorModel.convert([valores[0]!, valores[1]!, valores[2]!]);
       const rgb = toRgb(color);
@@ -103,7 +112,6 @@ export class ColorStateService {
         color: color,
         rgbValues: rgb.values,
         rgb: rgb.color,
-        fore: toContrast(color),
       } as Swatch;
     });
 
@@ -136,13 +144,13 @@ export class ColorStateService {
     this.colorModel.set(namedColorModels[info.palette.model]);
     this.variableConfig.set(info.state.colorConfig);
     this.currentColor.set(info.state.colorConfig.color);
-    this.minmax.set(info.state.colorConfig.minmax as MinMax);
+    this.range.set(info.state.colorConfig.range as Range);
     this.colorConfig.set({
       colorModel: this.colorModel(),
       variable: this.variableConfig().variable,
       variableIndex: this.variableConfig().variableIndex,
       color: this.currentColor(),
-      minmax: this.minmax(),
+      range: this.range(),
     });
   }
 
@@ -158,7 +166,7 @@ export class ColorStateService {
       variable: this.variableConfig().variable,
       variableIndex: this.variableConfig().variableIndex,
       color: this.currentColor(),
-      minmax: this.minmax(),
+      range: this.range(),
     });
   }
 
@@ -170,7 +178,7 @@ export class ColorStateService {
       variable: this.variableConfig().variable,
       variableIndex: this.variableConfig().variableIndex,
       color: this.currentColor(),
-      minmax: this.minmax(),
+      range: this.range(),
     }));
   }
 
@@ -186,8 +194,8 @@ export class ColorStateService {
     this.paletteValuesConfig.set(config);
   }
 
-  rangeChanged(minmax: MinMax) {
-    this.minmax.set(minmax);
+  rangeChanged(range: Range) {
+    this.range.set(range);
   }
 
   colorChanged(valores: ColorValues) {
@@ -200,7 +208,7 @@ export class ColorStateService {
     this.colorConfig.update((curr) => ({
       ...curr,
       color: color,
-      minmax: curr.variable.minMax(color[curr.variableIndex]!),
+      range: curr.variable.bestRange(color[curr.variableIndex]!),
     }));
   }
 
@@ -213,7 +221,7 @@ export class ColorStateService {
           variable: this.variableConfig().variable,
           variableIndex: this.variableConfig().variableIndex,
           color: this.currentColor(),
-          minmax: this.minmax(),
+          range: this.range(),
         },
         stepsConfig: this.paletteStepsConfig(),
       },
@@ -242,13 +250,13 @@ export class ColorStateService {
   }
 
   private onVariableConfigChanged(variable: ColorComponent, currentColor: ColorValues) {
-    const indice = this.colorModel().components.findIndex((c) => c.name === variable.name) as 0 | 1 | 2;
+    const indice = this.colorModel().components.findIndex((c) => c.name === variable.name) as ColorValueKey;
 
     this.variableConfig.set({
       variable: variable,
       variableIndex: indice,
     });
 
-    this.minmax.set(variable.minMax(currentColor[indice]!));
+    this.range.set(variable.bestRange(currentColor[indice]!));
   }
 }

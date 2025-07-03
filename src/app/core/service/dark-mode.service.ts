@@ -6,7 +6,7 @@ import { StorageService } from "./storage.service";
 })
 export class DarkModeService {
   store = inject(StorageService);
-  readonly darkMode = signal((this.store.get("darkMode") as boolean) ?? false);
+  readonly darkMode = signal((this.store.get("darkMode") as boolean) ?? this.darkModeSystem());
 
   setDarkMode(darkMode: boolean) {
     this.darkMode.set(darkMode);
@@ -23,5 +23,8 @@ export class DarkModeService {
       document.documentElement.classList.remove("dark");
     }
     document.querySelector("meta[name='color-scheme']")?.setAttribute("content", darkMode ? "dark" : "light");
+  }
+  private darkModeSystem() {
+    return window.matchMedia("(prefers-color-scheme: dark)").matches;
   }
 }

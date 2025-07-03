@@ -1,11 +1,10 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
-import { TransitionDefaultDirective } from "../../directives/transition.directive";
 import { SelectNoneDirective } from "../../directives/user-select.directive";
 
 @Component({
   selector: "zz-field-value",
   templateUrl: "./field-value.component.html",
-  hostDirectives: [TransitionDefaultDirective, SelectNoneDirective],
+  hostDirectives: [SelectNoneDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FieldValueComponent {

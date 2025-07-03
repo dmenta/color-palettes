@@ -1,21 +1,21 @@
 import { ChangeDetectionStrategy, Component, effect, inject } from "@angular/core";
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { SliderFieldComponent } from "../../../core/components/slider-field/slider-field.component";
-import { ColorAxisComponent } from "./color-axis/color-axis.component";
+import { AxisGradientDirective } from "../../directives/axis-gradient.directive";
 import { DualAxisSliderComponent } from "./dual-axis-slider/dual-axis-slider.component";
-import { ColorValues, MinMax } from "../../model/colors.model";
+import { ColorValueKey, ColorValues, Range } from "../../model/colors.model";
 import { ColorStateService } from "../../services/color-state.service";
 
 @Component({
+  imports: [SliderFieldComponent, FormsModule, ReactiveFormsModule, AxisGradientDirective, DualAxisSliderComponent],
   selector: "zz-color-range-selector",
-  imports: [SliderFieldComponent, FormsModule, ReactiveFormsModule, ColorAxisComponent, DualAxisSliderComponent],
   templateUrl: "./color-range-selector.component.html",
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ColorRangeSelectorComponent {
   state = inject(ColorStateService);
   height = 30;
-  indices: (0 | 1 | 2)[] = [0, 1, 2];
+  indices: ColorValueKey[] = [0, 1, 2];
 
   configGroup:
     | FormGroup<{
@@ -55,16 +55,13 @@ export class ColorRangeSelectorComponent {
       this.state.colorChanged(color);
     });
   }
-  onVariableChange(minmax: MinMax) {
-    this.state.rangeChanged(minmax);
+  onVariableChange(range: Range) {
+    this.state.rangeChanged(range);
     this.configGroup!.patchValue(
       {
-        ["v" + this.state.colorConfig()!.variableIndex]: (minmax[0] + minmax[1]) / 2,
+        ["v" + this.state.colorConfig()!.variableIndex]: (range.min + range.max) / 2,
       },
       { emitEvent: true }
     );
-  }
-  componentStep(precision: number): number {
-    return 1 / Math.pow(10, precision);
   }
 }
