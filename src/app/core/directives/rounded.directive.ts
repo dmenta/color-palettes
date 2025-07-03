@@ -1,11 +1,12 @@
 import { Directive, HostBinding, input } from "@angular/core";
-import { OverflowHiddenDirective } from "./overflow.directive";
 
 const baseRadius = 0.125;
 
 @Directive({
   selector: "[zz-rounded], zzRounded",
-  hostDirectives: [OverflowHiddenDirective],
+  host: {
+    class: "overflow-hidden",
+  },
 })
 export class RoundedDirective {
   radius = input("small", {

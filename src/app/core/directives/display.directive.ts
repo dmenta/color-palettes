@@ -23,9 +23,3 @@ export class InilineBlockDirective extends DisplayBaseDirective {
 export class BlockDirective extends DisplayBaseDirective {
   override tipo = "block";
 }
-@Directive({
-  selector: "[zz-flex], zzFlex",
-})
-export class FlexDirective extends DisplayBaseDirective {
-  override tipo = "flex";
-}

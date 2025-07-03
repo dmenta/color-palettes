@@ -9,13 +9,11 @@ import {
   Renderer2,
   signal,
 } from "@angular/core";
-import { AppearanceNoneDirective } from "./appearance-none.directive";
-import { FlexDirective } from "./display.directive";
 
 @Directive({
   selector: "input[type='range'][zz-slider]",
   host: {
-    class: `h-[.75rem]  cursor-pointer flex-row items-center focus:outline-none 
+    class: `appearance-none flex h-[.75rem]  cursor-pointer flex-row items-center focus:outline-none 
 [&::-webkit-slider-thumb]:shadow-md
 [&::-webkit-slider-thumb]:shadow-black 
 [&::-webkit-slider-thumb]:transition-all
@@ -37,7 +35,6 @@ focus:[&::-webkit-slider-thumb]:outline-offset-0
           'focus:[&::-webkit-slider-runnable-track]:bg-black/50':showTrack(), 
           'focus:dark:[&::-webkit-slider-runnable-track]:bg-white/50':showTrack()}`,
   },
-  hostDirectives: [AppearanceNoneDirective, FlexDirective],
 })
 export class SliderSlimDirective {
   controlPressed = signal(false);

@@ -1,5 +1,4 @@
 import { Directive, HostBinding } from "@angular/core";
-import { AppearanceBaseSelectDirective } from "./appearance-none.directive";
 import { DisabledDirective } from "./disabled.directive";
 import { WidthFullDirective } from "./width.directive";
 import { InilineBlockDirective } from "./display.directive";
@@ -7,13 +6,12 @@ import { InilineBlockDirective } from "./display.directive";
 @Directive({
   selector: "select[zz-select], zzSelect",
   hostDirectives: [
-    AppearanceBaseSelectDirective,
     InilineBlockDirective,
     WidthFullDirective,
     { directive: DisabledDirective, inputs: ["zz-disabled:zzDisabled"] },
   ],
   host: {
-    class: `[&::picker-icon]:font-icons    
+    class: `appearance-base-select [&::picker-icon]:font-icons    
   [&::picker-icon]:opacity-80
 [&::picker-icon]:text-larger-5
 [&::picker-icon]:leading-[1lh]
