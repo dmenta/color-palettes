@@ -2,19 +2,19 @@
 <form [formGroup]="configGroup">
   <div class="flex flex-row items-center gap-4" style="line-height: 0.9rem">
     <div class="flex flex-row items-center">
-      <label for="alto" class="select-none">Height:</label>
+      <label for="height" class="select-none">Height:</label>
       <input
         type="number"
-        id="alto"
+        id="height"
         zz-input
-        [zzDisabled]="configGroup.controls.alto.disabled"
-        formControlName="alto"
+        [zzDisabled]="configGroup.controls.height.disabled"
+        formControlName="height"
         value="10"
         [min]="1"
         [max]="180" />
     </div>
     <label class="flex flex-row items-center gap-2 select-none cursor-pointer">
-      <input type="checkbox" zz-simple-check formControlName="continuo" />
+      <input type="checkbox" zz-simple-check formControlName="flat" />
       <span>Flat</span>
     </label>
     <label class="flex flex-row items-center gap-2 select-none cursor-pointer">

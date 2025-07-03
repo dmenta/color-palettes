@@ -16,44 +16,44 @@ export class PaletteStepsConfigComponent {
 
   configGroup:
     | FormGroup<{
-        pasos: FormControl<number>;
-        automatico: FormControl<boolean>;
+        steps: FormControl<number>;
+        automatic: FormControl<boolean>;
       }>
     | undefined = undefined;
 
   constructor() {
     effect(() => {
       const config = this.state.paletteStepsConfig();
-      if (config.pasos !== this.configGroup?.controls.pasos.value) {
-        this.configGroup?.controls.pasos.setValue(config.pasos, { emitEvent: false });
+      if (config.steps !== this.configGroup?.controls.steps.value) {
+        this.configGroup?.controls.steps.setValue(config.steps, { emitEvent: false });
       }
-      if (config.automatico !== this.configGroup?.controls.automatico.value) {
-        this.configGroup?.controls.automatico.setValue(config.automatico, { emitEvent: false });
+      if (config.automatic !== this.configGroup?.controls.automatic.value) {
+        this.configGroup?.controls.automatic.setValue(config.automatic, { emitEvent: false });
       }
     });
   }
   ngOnInit() {
     const stepsConfig = this.state.paletteStepsConfig();
     this.configGroup = new FormGroup({
-      pasos: new FormControl<number>(stepsConfig.pasos, {
+      steps: new FormControl<number>(stepsConfig.steps, {
         nonNullable: true,
         validators: [Validators.min(2), Validators.max(100)],
       }),
-      automatico: new FormControl<boolean>(stepsConfig.automatico, { nonNullable: true }),
+      automatic: new FormControl<boolean>(stepsConfig.automatic, { nonNullable: true }),
     });
 
     this.configGroup.valueChanges
       .pipe(
         debounceTime(30),
-        distinctUntilChanged((prev, curr) => prev.pasos === curr.pasos && prev.automatico === curr.automatico),
+        distinctUntilChanged((prev, curr) => prev.steps === curr.steps && prev.automatic === curr.automatic),
         startWith(this.configGroup.value)
       )
       .subscribe((value) => {
         const controls = this.configGroup?.controls;
         if (controls && this.configGroup?.valid) {
           this.state.paletteStepsConfigChanged({
-            pasos: value.pasos ?? controls.pasos.value,
-            automatico: value.automatico ?? controls.automatico.value,
+            steps: value.steps ?? controls.steps.value,
+            automatic: value.automatic ?? controls.automatic.value,
           });
         }
       });
