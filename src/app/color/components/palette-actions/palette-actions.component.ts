@@ -1,6 +1,4 @@
 import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
-import { IconButtonDirective } from "../../../core/directives/icon-button.directive";
-import { IconDirective } from "../../../core/directives/icon.directive";
 import { ColorStateService } from "../../services/color-state.service";
 import { PaletteStoreService } from "../../services/palette-store.service";
 import { CopyService } from "../../../core/service/copy.service";
@@ -9,7 +7,6 @@ import { rgbToHex } from "../../model/color";
 
 @Component({
   selector: "zz-palette-actions",
-  imports: [IconButtonDirective, IconDirective],
   templateUrl: "./palette-actions.component.html",
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

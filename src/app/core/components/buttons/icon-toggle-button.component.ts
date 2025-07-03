@@ -1,15 +1,12 @@
 import { ChangeDetectionStrategy, Component, computed, input, model, output } from "@angular/core";
-import { IconButtonDirective } from "../../directives/icon-button.directive";
-import { IconDirective } from "../../directives/icon.directive";
 
 @Component({
   selector: "button[zz-icon-toggle-button]",
-  imports: [IconDirective],
-  template: ` <span zz-icon>{{ iconName() }}</span> `,
+  template: ` {{ iconName() }} `,
   host: {
     "(click)": "onClick($event)",
+    class: "icon-button",
   },
-  hostDirectives: [IconButtonDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class IconToggleButtonComponent {

@@ -6,6 +6,9 @@ import { DarkModeService } from "../../service/dark-mode.service";
   selector: "zz-dark-mode-toggle",
   imports: [IconToggleButtonComponent],
   templateUrl: "./dark-mode-toggle.component.html",
+  host: {
+    class: "h-8 inline-block",
+  },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DarkModeToggleComponent {

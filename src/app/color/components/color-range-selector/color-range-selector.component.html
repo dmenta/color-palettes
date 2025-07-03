@@ -20,6 +20,7 @@
         [step]="component.valueStep"
         [label]="component.name.caption"
         [defaultValue]="component.defaultValue"
+        [stops]="[component.range.min, component.defaultValue, component.range.max]"
         [showLabel]="true"
         [labelLength]="10"
         [unit]="component.unit"

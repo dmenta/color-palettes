@@ -3,12 +3,11 @@ import { SliderFieldComponent } from "../../../../core/components/slider-field/s
 import { AxisGradientDirective } from "../../../directives/axis-gradient.directive";
 import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { ColorValues, Range } from "../../../model/colors.model";
-import { IconDirective } from "../../../../core/directives/icon.directive";
 import { ColorStateService } from "../../../services/color-state.service";
 
 @Component({
   selector: "zz-dual-axis-slider",
-  imports: [SliderFieldComponent, AxisGradientDirective, ReactiveFormsModule, IconDirective],
+  imports: [SliderFieldComponent, AxisGradientDirective, ReactiveFormsModule],
   templateUrl: "./dual-axis-slider.component.html",
   host: {
     class: "block w-full",

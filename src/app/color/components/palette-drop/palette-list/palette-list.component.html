@@ -11,10 +11,10 @@
       (click)="paletteClick(info)"
       class="block w-full cursor-pointer rounded overflow-hidden"></zz-mini-palette>
     <button
+      (click)="removePalette($event, $index)"
       title="Remove palette"
-      class="transition-opacity duration-200 ease-in-out cursor-pointer group-hover:opacity-100 opacity-75 flex items-center justify-center rounded-full"
-      (click)="removePalette($event, $index)">
-      <span class="font-icons icon-bold text-larger -ml-1">close</span>
+      class="-mx-1 icon-button text-larger group-hover:opacity-100 rounded-full">
+      close
     </button>
   </div>
   }

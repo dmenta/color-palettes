@@ -1,9 +1,7 @@
 @if(formDual!== undefined) {
 <form [formGroup]="formDual" class="relative select-none">
   @let config=state.colorConfig(); @if(config){
-  <div class="absolute left-1/2 -top-1">
-    <span zz-icon class="leading-2">arrow_range</span>
-  </div>
+  <div class="absolute left-24 right-24 text-center top-0 font-icons text-larger-5 min-w-8 h-10">arrow_range</div>
   <zz-slider-field
     class="relative z-2 font-bold"
     [showTrack]="false"
@@ -13,6 +11,7 @@
     [step]="config.variable.valueStep"
     [label]="config.variable.name.caption"
     [defaultValue]="config.variable.range.max"
+    [stops]="[config.variable.range.min, config.variable.defaultValue, config.variable.range.max]"
     [showLabel]="true"
     [labelLength]="10"
     [unit]="config.variable.unit"
@@ -35,6 +34,7 @@
     [step]="config.variable.valueStep"
     [label]="config.variable.name.caption"
     [defaultValue]="config.variable.range.min"
+    [stops]="[config.variable.range.min, config.variable.defaultValue, config.variable.range.max]"
     [showLabel]="false"
     [labelLength]="10"
     [unit]="config.variable.unit"
