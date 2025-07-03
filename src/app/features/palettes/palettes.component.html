@@ -2,30 +2,23 @@
   <div class="sticky bg-application z-20 top-0 left-0 right-0 shadow-md dark:shadow-black/60">
     <zz-palettes-header></zz-palettes-header>
   </div>
-  <main class="flex flex-row items-top justify-center gap-8 px-6 pt-2 m-auto max-w-[1600px] w-screen">
-    <div class="py-4">
-      <div class="pb-4 block lg:hidden">
-        <zz-color-sample class="block w-42" [height]="150"></zz-color-sample>
-      </div>
-      <zz-color-menu class="w-full"></zz-color-menu>
+  <main
+    class="grid grid-rows-[minmax(min-content,200px)_auto] grid-cols-[200px_auto] lg:grid-cols-[200px_auto_200px] gap-4 px-6 pt-2 m-auto max-w-[1600px] w-screen">
+    <div class="col-1 lg:col-3 row-1 pt-4">
+      <zz-color-sample class="block w-full h-fit" [height]="150"></zz-color-sample>
     </div>
-    <div class="@container min-w-36 w-full pt-3 relative flex flex-col">
+    <div class="col-1 row-2 lg:row-1 lg:pt-4">
+      <zz-color-menu></zz-color-menu>
+    </div>
+    <div class="min-w-36 w-full pt-3 pl-4 pr-0 lg:pr-4 relative col-2 row-span-2">
       <zz-color-range-selector> </zz-color-range-selector>
-      <div class="flex items-center @min-[760px]:justify-between @max-[760px]:flex-col-reverse mt-6 mb-2">
-        <div class="flex items-center justify-between w-full gap-2">
-          <zz-palette-steps-config class="opacity-80 hover:opacity-100"></zz-palette-steps-config>
-          <zz-palette-visual-config class="opacity-80 hover:opacity-100"></zz-palette-visual-config>
-          <zz-palette-values-config class="opacity-80 hover:opacity-100"></zz-palette-values-config>
-        </div>
-        <zz-palette-actions class="ml-6"></zz-palette-actions>
+      <div class="mt-6 mb-2">
+        <zz-palette-menu></zz-palette-menu>
       </div>
       <zz-color-palette class="block pb-4" [palette]="state.palette()"></zz-color-palette>
       @if(store.lockedPalette(); as paletteInfo){
       <zz-color-palette class="block pb-4" [palette]="paletteInfo.palette"></zz-color-palette>
       }
-    </div>
-    <div class="py-4 hidden lg:block">
-      <zz-color-sample class="block" [height]="200"></zz-color-sample>
     </div>
   </main>
 </div>
