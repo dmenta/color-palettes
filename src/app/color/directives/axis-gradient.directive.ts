@@ -1,12 +1,14 @@
-import { ChangeDetectionStrategy, Component, computed, input, Signal } from "@angular/core";
-import { ColorConfig, ColorModelName, ColorValues } from "../../../model/colors.model";
+import { computed, Directive, input, Signal } from "@angular/core";
+import { ColorConfig, ColorModelName, ColorValues } from "../model/colors.model";
 
-@Component({
-  selector: "zz-color-axis",
-  templateUrl: "./color-axis.component.html",
-  changeDetection: ChangeDetectionStrategy.OnPush,
+@Directive({
+  selector: "[zz-color-axis]",
+  host: {
+    "[style.height.px]": "height()",
+    "[style.background]": "gradient!()",
+  },
 })
-export class ColorAxisComponent {
+export class AxisGradientDirective {
   colorConfig = input<ColorConfig | undefined>(undefined, { alias: "color-config" });
 
   height = input(30, {
@@ -44,7 +46,7 @@ export class ColorAxisComponent {
       const ratio = 100 / (config.variable.axisValues.length - 1);
 
       const puntos = config.variable.axisValues.map((value, i) => {
-        const valores = [...baseArray];
+        const valores = { ...baseArray };
         valores[config.variableIndex] = value;
         return `${colorModel.convert(valores as ColorValues)} ${(i * ratio).toFixed(2)}%`;
       });
