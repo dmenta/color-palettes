@@ -2,34 +2,34 @@ import { ColorComponent, ColorModel, ColorModelName, ColorParts } from "./colors
 
 export const colorModels: ColorModel[] = [
   new ColorModel("oklch", [
-    new ColorComponent("Lightness", "L", 1, "", 3, 35, 0, 3),
-    new ColorComponent("Chroma", "C", 0.4, "", 3, 20, 0, 6),
-    new ColorComponent("Hue", "H", 540, "", 1, 55, -180, 9),
+    new ColorComponent({ caption: "Lightness", label: "L" }, { min: 0, max: 1 }, 0.005, "", 35),
+    new ColorComponent({ caption: "Chroma", label: "C" }, { min: 0, max: 0.44 }, 0.004, "", 20),
+    new ColorComponent({ caption: "Hue", label: "H" }, { min: -180, max: 540 }, 1, "", 55, 9),
   ]),
   new ColorModel(
     "hsl",
     [
-      new ColorComponent("Hue", "H", 540, "deg", 0, 55, -180, 9),
-      new ColorComponent("Saturation", "S", 100, "%", 0, 20),
-      new ColorComponent("Lightness", "L", 100, "%", 1, 35, 0, 5),
+      new ColorComponent({ caption: "Hue", label: "H" }, { min: -180, max: 540 }, 1, "deg", 55, 9),
+      new ColorComponent({ caption: "Saturation", label: "S" }, { min: 0, max: 100 }, 1, "%", 20),
+      new ColorComponent({ caption: "Lightness", label: "L" }, { min: 0, max: 100 }, 1, "%", 35),
     ],
     2
   ),
   new ColorModel("rgb", [
-    new ColorComponent("Red", "R", 255, "", 0, 25, 0, 2),
-    new ColorComponent("Green", "G", 255, "", 0, 25, 0, 2),
-    new ColorComponent("Blue", "B", 255, "", 0, 25, 0, 2),
+    new ColorComponent({ caption: "Red", label: "R" }, { min: 0, max: 255 }, 1, "", 25),
+    new ColorComponent({ caption: "Green", label: "G" }, { min: 0, max: 255 }, 1, "", 25),
+    new ColorComponent({ caption: "Blue", label: "B" }, { min: 0, max: 255 }, 1, "", 25),
   ]),
   new ColorModel(
     "hex",
     [
-      new ColorComponent("Red", "R", 255, "", 0, 25, 0, 2, (value: number) =>
+      new ColorComponent({ caption: "Red", label: "R" }, { min: 0, max: 255 }, 1, "", 25, 2, (value: number) =>
         Math.round(value).toString(16).padStart(2, "0").toUpperCase()
       ),
-      new ColorComponent("Green", "G", 255, "", 0, 25, 0, 2, (value: number) =>
+      new ColorComponent({ caption: "Green", label: "G" }, { min: 0, max: 255 }, 1, "", 25, 2, (value: number) =>
         Math.round(value).toString(16).padStart(2, "0").toUpperCase()
       ),
-      new ColorComponent("Blue", "B", 255, "", 0, 25, 0, 2, (value: number) =>
+      new ColorComponent({ caption: "Blue", label: "B" }, { min: 0, max: 255 }, 1, "", 25, 2, (value: number) =>
         Math.round(value).toString(16).padStart(2, "0").toUpperCase()
       ),
     ],

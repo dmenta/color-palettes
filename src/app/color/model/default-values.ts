@@ -1,5 +1,5 @@
 import { namedColorModels } from "./color-models-definitions";
-import { ColorConfigState, ColorValues, MinMax } from "./colors.model";
+import { ColorConfigState, ColorValues } from "./colors.model";
 import { PaletteStepsConfig, PaletteValuesConfig, PaletteVisualConfig } from "./palette.model";
 
 export type ColorStateValues = {
@@ -10,27 +10,25 @@ export type ColorStateValues = {
 };
 
 export const colorModelDefault = namedColorModels["oklch"];
+
 export const defaultColorState: ColorStateValues = {
   colorConfig: {
     colorModelName: colorModelDefault.name,
-    variable: colorModelDefault.components[colorModelDefault.defaultVariableIndex],
+    variable: colorModelDefault.components[2],
     variableIndex: colorModelDefault.components.findIndex(
-      (c) => c.name === colorModelDefault.components[colorModelDefault.defaultVariableIndex].name
-    ) as 0 | 1 | 2,
-    color: colorModelDefault.defaultValues() as ColorValues,
-    minmax: [
-      colorModelDefault.components[colorModelDefault.defaultVariableIndex].min,
-      colorModelDefault.components[colorModelDefault.defaultVariableIndex].max,
-    ] as MinMax,
+      (c) => c.name.caption === colorModelDefault.components[2].name.caption
+    ),
+    color: { 0: 0.641, 1: 0.161, 2: 344.6 } as ColorValues,
+    range: { min: 191, max: 498 },
   },
   paletteStepsConfig: {
-    pasos: 12,
-    automatico: true,
+    steps: 8,
+    automatic: true,
   },
   paletteVisualConfig: {
-    alto: 80,
-    continuo: false,
-    separate: false,
+    height: 100,
+    flat: false,
+    separate: true,
   },
   paletteValuesConfig: {
     showValues: "no",

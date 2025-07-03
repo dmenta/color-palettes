@@ -24,11 +24,9 @@ export function toOklch(textoColor: string) {
   return [color.coords[0].valueOf(), color.coords[1].valueOf(), color.coords[2].valueOf()] as ColorValues;
 }
 export function toContrast(textoColor: string): string {
-  const color = new Color(textoColor).to("srgb");
-  const contraste1 = color.contrastWCAG21("white");
-  const contraste2 = color.contrastWCAG21("black");
+  const color = new Color(textoColor);
 
-  return contraste1 > 2.4 && contraste2 < 7.5 ? "white" : "black";
+  return color.luminance < 0.35 ? "white" : "black";
 }
 
 export function rgbToHex(rgb: ColorValues) {
@@ -68,7 +66,7 @@ export function rgbTo(rgb: ColorValues, colorModel: ColorModel): ColorValues {
 function ensureCoord(coord: number, component: ColorComponent): number {
   const coordAsegurada = Number.isNaN(coord) ? 0 : coord;
 
-  return Math.max(0, Math.min(component.max, coordAsegurada));
+  return Math.max(0, Math.min(component.range.max, coordAsegurada));
 }
 
 export function colorClamping(a: ColorValues, b: ColorValues) {

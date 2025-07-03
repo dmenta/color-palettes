@@ -9,13 +9,13 @@ import {
 export type showValuesOption = "no" | "yes" | "rgb" | "hex";
 
 export type PaletteStepsConfig = {
-  pasos: number;
-  automatico: boolean;
+  steps: number;
+  automatic: boolean;
 };
 
 export type PaletteVisualConfig = {
-  alto: number;
-  continuo: boolean;
+  height: number;
+  flat: boolean;
   separate: boolean;
 };
 
@@ -26,9 +26,8 @@ export type PaletteValuesConfig = {
 export type Swatch = {
   valores: ColorValues;
   color: string;
-  rgbValues: ColorValues;
   rgb: string;
-  fore: string;
+  rgbValues: ColorValues;
   clamp?: boolean;
 };
 export type Palette = { model: ColorModelName; swatches: Swatch[] };
@@ -107,13 +106,9 @@ function swatchEquals(current: Swatch | undefined, next: Swatch | undefined) {
     return false;
   }
 
-  if (current.fore !== next.fore) {
-    return false;
-  }
-
   return true;
 }
 
 function stepsConfigEquals(current: PaletteStepsConfig, next: PaletteStepsConfig) {
-  return current.pasos === next.pasos && current.automatico === next.automatico;
+  return current.steps === next.steps && current.automatic === next.automatic;
 }
