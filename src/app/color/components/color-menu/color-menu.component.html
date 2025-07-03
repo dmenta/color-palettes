@@ -1,38 +1,40 @@
-<ul class="space-y-2 min-w-36 w-full">
-  @for(model of models; track model.name){ @let modelSeleccionado= state.colorConfig().colorModel.name === model.name;
-  <li>
-    <div zz-container [zzBorderSize]="modelSeleccionado ? 'thin' : 'none'" class="rounded bg-transparent">
-      <div
-        class="select-none uppercase text-larger-2 appearance-base-select w-full cursor-pointer inline-block transition-all p-2 rounded hover:bg-gris-100 dark:hover:bg-gris-800/95"
-        (click)="state.colorModelChanged(model)"
-        [class.pointer-events-none]="modelSeleccionado"
-        [class]="{
-          'bg-gris-100/85': modelSeleccionado,
-          'dark:bg-gris-800/85': modelSeleccionado,
-          bold: modelSeleccionado
-        }">
-        {{ model.name }}
+<nav>
+  <menu class="space-y-2 min-w-36 w-full">
+    @for(model of models; track model.name){ @let modelSeleccionado= state.colorConfig().colorModel.name === model.name;
+    <li>
+      <div zz-container [zzBorderSize]="modelSeleccionado ? 'thin' : 'none'" class="rounded bg-transparent">
+        <div
+          class="select-none uppercase text-larger-2 appearance-base-select w-full cursor-pointer inline-block transition-all p-2 rounded hover:bg-gris-100 dark:hover:bg-gris-800/95"
+          (click)="state.colorModelChanged(model)"
+          [class.pointer-events-none]="modelSeleccionado"
+          [class]="{
+            'bg-gris-100/85': modelSeleccionado,
+            'dark:bg-gris-800/85': modelSeleccionado,
+            bold: modelSeleccionado
+          }">
+          {{ model.name }}
+        </div>
+        <ul class="space-y-1" [class.p-2]="modelSeleccionado" [zz-collapse-vertical]="!modelSeleccionado">
+          @for(variable of model.components; track variable.name.caption){ @let variableSeleccionada=
+          state.colorConfig().variable.name.caption === variable.name.caption;
+          <li>
+            <div
+              class="select-none w-full inline-block cursor-pointer transition-all px-2 py-1 rounded dark:hover:bg-gris-700/60"
+              [class.pointer-events-none]="variableSeleccionada"
+              (click)="state.variableChanged(variable)"
+              [class]="{
+                'bg-gris-100/50': variableSeleccionada,
+                'dark:bg-gris-700/45': variableSeleccionada,
+                'semi-bold': variableSeleccionada
+              }">
+              {{ variable.name.caption }}
+            </div>
+          </li>
+          }
+        </ul>
       </div>
-      <ul class="space-y-1" [class.p-2]="modelSeleccionado" [zz-collapse-vertical]="!modelSeleccionado">
-        @for(variable of model.components; track variable.name.caption){ @let variableSeleccionada=
-        state.colorConfig().variable.name.caption === variable.name.caption;
-        <li>
-          <div
-            class="select-none w-full inline-block cursor-pointer transition-all px-2 py-1 rounded dark:hover:bg-gris-700/60"
-            [class.pointer-events-none]="variableSeleccionada"
-            (click)="state.variableChanged(variable)"
-            [class]="{
-              'bg-gris-100/50': variableSeleccionada,
-              'dark:bg-gris-700/45': variableSeleccionada,
-              'semi-bold': variableSeleccionada
-            }">
-            {{ variable.name.caption }}
-          </div>
-        </li>
-        }
-      </ul>
-    </div>
-  </li>
+    </li>
 
-  }
-</ul>
+    }
+  </menu>
+</nav>
