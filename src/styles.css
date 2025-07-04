@@ -112,6 +112,12 @@
 }
 
 @layer base {
+  kbd {
+    opacity: 0.6;
+    font-size: 0.8em;
+    @apply font-noto;
+  }
+
   input[type="number"] {
     display: inline-block;
     @apply py-1 ring-0 px-1 transition-all transition-discrete outline-none border-b-1 border-b-gris-500/80  w-12 text-right  text-gris-900;

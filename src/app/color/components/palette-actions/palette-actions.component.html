@@ -1,17 +1,17 @@
 <div class="flex items-center">
   <button
     (click)="lock()"
-    title="Save palette"
+    title="Unlock palette (Ctrl+Alt+U)"
     class="icon-button not-disabled:text-green-600 dark:not-disabled:text-green-400">
     cached
   </button>
   <button
     (click)="unlock()"
-    title="Save palette"
+    title="Lock palette (Ctrl+Alt+L)"
     class="icon-button not-disabled:text-red-600 dark:not-disabled:text-red-500"
     [disabled]="store.lockedPalette() === undefined">
     sync_disabled
   </button>
-  <button (click)="save()" title="Save palette" class="icon-button">save</button>
-  <button (click)="copy()" title="Copy palette values" class="icon-button">content_copy</button>
+  <button (click)="save()" title="Save palette  (Ctrl+Shift+S)" class="icon-button">save</button>
+  <button (click)="copy()" title="Copy palette values (Ctrl+Shift+C)" class="icon-button">content_copy</button>
 </div>
