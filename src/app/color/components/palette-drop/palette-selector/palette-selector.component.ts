@@ -16,7 +16,7 @@ export class PaletteSelectorComponent {
   abort: AbortController | undefined = undefined;
   open = signal(false);
 
-  @HostListener("document:keydown.control.k", ["$event"])
+  @HostListener("document:keydown.control.shift.p", ["$event"])
   handleKeyboardEvent(event: KeyboardEvent) {
     event.preventDefault();
     this.openState(!this.open());

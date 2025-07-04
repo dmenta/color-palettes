@@ -1,13 +1,13 @@
 <div class="flex items-center">
   <button
     (click)="lock()"
-    title="Unlock palette (Ctrl+Alt+U)"
+    title="Unlock palette (Ctrl+Shift+U)"
     class="icon-button not-disabled:text-green-600 dark:not-disabled:text-green-400">
     cached
   </button>
   <button
     (click)="unlock()"
-    title="Lock palette (Ctrl+Alt+L)"
+    title="Lock palette (Ctrl+Shift+L)"
     class="icon-button not-disabled:text-red-600 dark:not-disabled:text-red-500"
     [disabled]="store.lockedPalette() === undefined">
     sync_disabled

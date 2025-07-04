@@ -27,13 +27,13 @@ export class PaletteActionsComponent {
     this.save();
   }
 
-  @HostListener("document:keydown.control.alt.l", ["$event"])
+  @HostListener("document:keydown.control.shift.k", ["$event"])
   handleLockShortcut(event: KeyboardEvent) {
     event.preventDefault();
     this.lock();
   }
 
-  @HostListener("document:keydown.control.alt.u", ["$event"])
+  @HostListener("document:keydown.control.shift.u", ["$event"])
   handleUnlockShortcut(event: KeyboardEvent) {
     event.preventDefault();
     this.unlock();
