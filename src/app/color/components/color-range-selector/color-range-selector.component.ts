@@ -55,7 +55,7 @@ export class ColorRangeSelectorComponent {
 
   ngOnInit() {
     const currentColor = this.state.colorConfig().color ?? [0, 0, 0];
-    console.debug("ColorRangeSelectorComponent: currentColor", currentColor);
+
     this.configGroup = new FormGroup({
       v0: new FormControl(currentColor[0], { nonNullable: true }),
       v1: new FormControl(currentColor[1], { nonNullable: true }),

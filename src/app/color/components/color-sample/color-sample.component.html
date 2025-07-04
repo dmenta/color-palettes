@@ -15,14 +15,13 @@
       [use-contrast]="false"
       style="font-variation-settings: 'wght' 450"
       [values]="state.currentColor()"></zz-color-values-display>
-    @if(state.colorConfig().colorModel.name!=="rgb"){
     <zz-color-values-display
       [values]="state.rgb()"
+      [class.hidden]="state.colorConfig().colorModel.name === 'rgb'"
       color-model-name="rgb"
       [use-contrast]="false"
       class="opacity-80 text-smaller"
       style="line-height: 1rem"></zz-color-values-display>
-    }
     <zz-color-values-display
       [values]="state.rgb()"
       color-model-name="hex"

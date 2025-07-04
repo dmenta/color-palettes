@@ -1,6 +1,6 @@
 <div class="h-fit select-none" (keydown)="onKeydown($event)">
   @for(info of palettes(); track $index) {
-  <button class="block w-full" #item>
+  <button class="block w-full" #item (click)="paletteClick(info)">
     <div
       class="last:pb-3 first:pt-3 transition-colors duration-200 ease-in-out flex items-center gap-2 group hover:bg-gris-100/50 dark:hover:bg-gris-900/70 px-2 py-1.5">
       <span
@@ -9,7 +9,6 @@
       >
       <zz-mini-palette
         [palette]="info.palette"
-        (click)="paletteClick(info)"
         class="block w-full cursor-pointer rounded overflow-hidden"></zz-mini-palette>
       <button
         (click)="removePalette($event, $index)"
