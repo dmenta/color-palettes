@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
+import { ChangeDetectionStrategy, Component, computed, input, Input } from "@angular/core";
 
 @Component({
-  selector: "zz-field-value",
+  selector: "[zz-field-value]",
   templateUrl: "./field-value.component.html",
   host: {
     class: "select-none",
@@ -9,17 +9,18 @@ import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FieldValueComponent {
-  @Input({ required: true }) value: number | null = null;
+  value = input<number | null>(null);
   @Input() unit?: string = "";
   @Input() length?: number | null;
   @Input() nullValueText?: string = "";
 
   @Input() decimals?: number = 0;
 
-  get text() {
-    if (this.value === null) {
+  text = computed(() => {
+    const value = this.value();
+    if (value === null) {
       return this.nullValueText ?? "N/A";
     }
-    return this.value.toFixed(this.decimals ?? 0) + (this.unit ?? "");
-  }
+    return value.toFixed(this.decimals ?? 0) + (this.unit ?? "");
+  });
 }

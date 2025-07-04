@@ -3,12 +3,13 @@ import { FieldValueComponent } from "./field-value.component";
 import { FormGroupDirective, ReactiveFormsModule } from "@angular/forms";
 import { SliderSlimDirective } from "../../directives/slider.directive";
 import { DataListComponent } from "../slider/data-list.component";
+import { AsyncPipe } from "@angular/common";
 
 @Component({
   selector: "zz-slider-field",
-  imports: [ReactiveFormsModule, SliderSlimDirective, FieldValueComponent, DataListComponent],
+  imports: [ReactiveFormsModule, SliderSlimDirective, FieldValueComponent, AsyncPipe, DataListComponent],
   templateUrl: "./slider-field.component.html",
-  changeDetection: ChangeDetectionStrategy.Default,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SliderFieldComponent {
   @Input({ required: true }) fieldName: string = "";

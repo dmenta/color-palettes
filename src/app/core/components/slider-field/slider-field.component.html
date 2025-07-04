@@ -13,13 +13,13 @@
       }
     </div>
     @if(showValue) {
-    <zz-field-value
-      [value]="control.value"
+    <div
+      zz-field-value
+      [value]="(control.valueChanges | async) ?? control.value"
       [length]="valueLength ?? 10"
       [decimals]="decimales"
       [unit]="unit ?? ''"
-      [class.opacity-70]="defaultValue !== undefined && control.value === defaultValue">
-    </zz-field-value>
+      [class.opacity-70]="defaultValue !== undefined && control.value === defaultValue"></div>
     }
   </div>
   <input
