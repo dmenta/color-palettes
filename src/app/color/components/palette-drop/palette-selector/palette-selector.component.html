@@ -14,6 +14,7 @@
     [class.collapsable-collapsed]="!open()"
     class="collapsable absolute top-10 left-0 z-32 rounded shadow-md/50 shadow-black">
     <zz-palette-list
+      [active]="open()"
       (paletteSelected)="state.loadPalette($event)"
       (paletteRemoved)="store.remove($event)"
       [palettes]="store.saved()"

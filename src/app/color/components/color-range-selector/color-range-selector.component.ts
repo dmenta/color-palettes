@@ -29,11 +29,24 @@ export class ColorRangeSelectorComponent {
     effect(() => {
       const config = this.state.colorConfig();
 
+      const color = config.color ?? [0, 0, 0];
+      const indice = config.variableIndex;
+
+      if (indice === 0) {
+        const mover = color[0];
+        color[0] = color[1];
+        color[1] = color[2];
+        color[2] = mover;
+      } else if (indice === 1) {
+        const mover = color[1];
+        color[1] = color[2];
+        color[2] = mover;
+      }
       this.configGroup?.patchValue(
         {
-          v0: config.color[0],
-          v1: config.color[1],
-          v2: config.color[2],
+          v0: color[0],
+          v1: color[1],
+          v2: color[2],
         },
         { emitEvent: true }
       );
@@ -42,6 +55,7 @@ export class ColorRangeSelectorComponent {
 
   ngOnInit() {
     const currentColor = this.state.colorConfig().color ?? [0, 0, 0];
+    console.debug("ColorRangeSelectorComponent: currentColor", currentColor);
     this.configGroup = new FormGroup({
       v0: new FormControl(currentColor[0], { nonNullable: true }),
       v1: new FormControl(currentColor[1], { nonNullable: true }),
@@ -52,6 +66,17 @@ export class ColorRangeSelectorComponent {
       const { v0, v1, v2 } = this.configGroup?.value ?? { v0: 0, v1: 0, v2: 0 };
       const color: ColorValues = [v0, v1, v2] as ColorValues;
 
+      const indice = this.state.colorConfig().variableIndex;
+      if (indice === 0) {
+        const mover = color[2];
+        color[2] = color[1];
+        color[1] = color[0];
+        color[0] = mover;
+      } else if (indice === 1) {
+        const mover = color[2];
+        color[2] = color[1];
+        color[1] = mover;
+      }
       this.state.colorChanged(color);
     });
   }
@@ -59,7 +84,7 @@ export class ColorRangeSelectorComponent {
     this.state.rangeChanged(range);
     this.configGroup!.patchValue(
       {
-        ["v" + this.state.colorConfig()!.variableIndex]: (range.min + range.max) / 2,
+        ["v2"]: (range.min + range.max) / 2,
       },
       { emitEvent: true }
     );

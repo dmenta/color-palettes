@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
+import { ChangeDetectionStrategy, Component, HostListener, inject } from "@angular/core";
 import { ColorStateService } from "../../services/color-state.service";
 import { PaletteStoreService } from "../../services/palette-store.service";
 import { CopyService } from "../../../core/service/copy.service";
@@ -14,6 +14,30 @@ export class PaletteActionsComponent {
   store = inject(PaletteStoreService);
   state = inject(ColorStateService);
   copyService = inject(CopyService);
+
+  @HostListener("document:keydown.control.shift.c", ["$event"])
+  handleCopyShortcut(event: KeyboardEvent) {
+    event.preventDefault();
+    this.copy();
+  }
+
+  @HostListener("document:keydown.control.shift.s", ["$event"])
+  handleSaveShortcut(event: KeyboardEvent) {
+    event.preventDefault();
+    this.save();
+  }
+
+  @HostListener("document:keydown.control.alt.l", ["$event"])
+  handleLockShortcut(event: KeyboardEvent) {
+    event.preventDefault();
+    this.lock();
+  }
+
+  @HostListener("document:keydown.control.alt.u", ["$event"])
+  handleUnlockShortcut(event: KeyboardEvent) {
+    event.preventDefault();
+    this.unlock();
+  }
 
   save() {
     this.store.save(this.state.currentPaletteInfo());

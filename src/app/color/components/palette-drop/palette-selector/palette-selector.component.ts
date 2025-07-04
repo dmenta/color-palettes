@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, effect, inject, signal } from "@angular/core";
+import { ChangeDetectionStrategy, Component, effect, HostListener, inject, signal } from "@angular/core";
 import { PaletteListComponent } from "../palette-list/palette-list.component";
 import { PaletteStoreService } from "../../../services/palette-store.service";
 import { ColorStateService } from "../../../services/color-state.service";
@@ -15,6 +15,12 @@ export class PaletteSelectorComponent {
 
   abort: AbortController | undefined = undefined;
   open = signal(false);
+
+  @HostListener("document:keydown.control.k", ["$event"])
+  handleKeyboardEvent(event: KeyboardEvent) {
+    event.preventDefault();
+    this.openState(!this.open());
+  }
 
   constructor() {
     effect(() => {

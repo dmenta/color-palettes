@@ -1,46 +1,77 @@
 <div class="h-fit" style="background-color: none !important; border-width: 0px !important">
   @if(state.colorConfig(); as config) {
   <form [formGroup]="configGroup!" class="min-w-fit h-fit">
-    @for(indice of indices; track $index){ @let component = config.colorModel.components[indice];
-    <div [style.minHeight.px]="70 + height">
-      @if(indice===config.variableIndex){
+    <div class="grid grid-rows-3" [style.minHeight.px]="3 * (70 + height)">
       <zz-dual-axis-slider
         class="block"
         [current-color]="state.currentColor()"
+        [class.row-2]="config.variableIndex === 1"
+        [class.row-3]="config.variableIndex === 2"
         [height]="height"
         (rangeChange)="onVariableChange($event)">
       </zz-dual-axis-slider>
-      }@else {
-      <zz-slider-field
-        class="relative z-2"
-        [showTrack]="false"
-        [fieldName]="'v' + indice"
-        [min]="component.range.min"
-        [max]="component.range.max"
-        [step]="component.valueStep"
-        [label]="component.name.caption"
-        [defaultValue]="component.defaultValue"
-        [stops]="[component.range.min, component.defaultValue, component.range.max]"
-        [showLabel]="true"
-        [labelLength]="10"
-        [unit]="component.unit"
-        [showValue]="true"
-        [valueLength]="9" />
-      <div
-        zz-color-axis
-        class="-mt-2.5 block rounded-md overflow-hidden"
-        [color-config]="{
+
+      <div>
+        @let indice0= config.variableIndex===0 ? 1 : 0; @let component0=config.colorModel.components[indice0];
+        <zz-slider-field
+          class="relative z-2"
+          [showTrack]="false"
+          fieldName="v0"
+          [min]="component0.range.min"
+          [max]="component0.range.max"
+          [step]="component0.valueStep"
+          [label]="component0.name.caption"
+          [defaultValue]="component0.defaultValue"
+          [stops]="[component0.range.min, component0.defaultValue, component0.range.max]"
+          [showLabel]="true"
+          [labelLength]="10"
+          [unit]="component0.unit"
+          [showValue]="true"
+          [valueLength]="9" />
+        <div
+          zz-color-axis
+          class="-mt-2.5 block rounded-md overflow-hidden"
+          [color-config]="{
           colorModel: config.colorModel,
-          variable: component,
-          variableIndex: indice,
+          variable: component0,
+          variableIndex: indice0,
           color: state.currentColor(),
-          range: config.range,
+          range: component0.range,
         }"
-        [current-color]="state.currentColor()"
-        [height]="height"></div>
-      }
+          [current-color]="state.currentColor()"
+          [height]="height"></div>
+      </div>
+      <div>
+        @let indice1= config.variableIndex===2 ? 1 : 2; @let component1=config.colorModel.components[indice1];
+        <zz-slider-field
+          class="relative z-2"
+          [showTrack]="false"
+          fieldName="v1"
+          [min]="component1.range.min"
+          [max]="component1.range.max"
+          [step]="component1.valueStep"
+          [label]="component1.name.caption"
+          [defaultValue]="component1.defaultValue"
+          [stops]="[component1.range.min, component1.defaultValue, component1.range.max]"
+          [showLabel]="true"
+          [labelLength]="10"
+          [unit]="component1.unit"
+          [showValue]="true"
+          [valueLength]="9" />
+        <div
+          zz-color-axis
+          class="-mt-2.5 block rounded-md overflow-hidden"
+          [color-config]="{
+          colorModel: config.colorModel,
+          variable: component1,
+          variableIndex: indice1,
+          color: state.currentColor(),
+          range: component1.range,
+        }"
+          [current-color]="state.currentColor()"
+          [height]="height"></div>
+      </div>
     </div>
-    }
   </form>
   }
 </div>
