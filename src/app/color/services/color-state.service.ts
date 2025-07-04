@@ -140,9 +140,13 @@ export class ColorStateService {
   }
 
   loadPalette(info: PaletteInfo) {
+    const varConfig = {
+      variable: namedColorModels[info.palette.model].components[info.state.colorConfig.variableIndex],
+      variableIndex: info.state.colorConfig.variableIndex,
+    } as VariableConfig;
     this.paletteStepsConfigChanged(info.state.stepsConfig);
     this.colorModel.set(namedColorModels[info.palette.model]);
-    this.variableConfig.set(info.state.colorConfig);
+    this.variableConfig.set(varConfig);
     this.currentColor.set(info.state.colorConfig.color);
     this.range.set(info.state.colorConfig.range as Range);
     this.colorConfig.set({
