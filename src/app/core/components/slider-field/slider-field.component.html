@@ -5,7 +5,6 @@
       @if(showLabel) {
       <label
         [for]="fieldName"
-        [zz-text-length]="labelLength"
         [class.text-right]="labelsReverse"
         [class.opacity-80]="defaultValue !== undefined && control.value === defaultValue"
         (dblclick)="control.reset()">

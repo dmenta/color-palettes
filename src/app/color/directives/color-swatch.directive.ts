@@ -1,7 +1,5 @@
 import { computed, Directive, HostBinding, input } from "@angular/core";
 import { ColorModel, ColorValues } from "../model/colors.model";
-import { RoundedDirective } from "../../core/directives/rounded.directive";
-import { ShadowDirective } from "../../core/directives/shadow.directive";
 
 @Directive({
   selector: "[color-swatch]",
@@ -27,10 +25,6 @@ export class ColorSwatchDirective {
 
 @Directive({
   selector: "[color-swatch-panel]",
-  hostDirectives: [
-    { directive: ColorSwatchDirective, inputs: ["color-model", "values"] },
-    { directive: RoundedDirective, inputs: ["zz-rounded:roundedSize"] },
-    { directive: ShadowDirective, inputs: ["zz-shadow:shadow"] },
-  ],
+  hostDirectives: [{ directive: ColorSwatchDirective, inputs: ["color-model", "values"] }],
 })
 export class ColorSwatchPanelDirective {}

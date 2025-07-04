@@ -2,12 +2,11 @@ import { ChangeDetectionStrategy, Component, input, Input, Optional } from "@ang
 import { FieldValueComponent } from "./field-value.component";
 import { FormGroupDirective, ReactiveFormsModule } from "@angular/forms";
 import { SliderSlimDirective } from "../../directives/slider.directive";
-import { TextLengthDirective } from "../../directives/text-length.directive";
 import { DataListComponent } from "../slider/data-list.component";
 
 @Component({
   selector: "zz-slider-field",
-  imports: [ReactiveFormsModule, SliderSlimDirective, FieldValueComponent, TextLengthDirective, DataListComponent],
+  imports: [ReactiveFormsModule, SliderSlimDirective, FieldValueComponent, DataListComponent],
   templateUrl: "./slider-field.component.html",
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

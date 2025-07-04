@@ -1,4 +1,4 @@
-<div zz-container class="max-w-[25ch] rounded-lg">
+<div class="border-panel max-w-[25ch] rounded-lg">
   <div
     [style.height.px]="height()"
     color-swatch
@@ -8,7 +8,7 @@
     <zz-color-selector [color]="state.rgb()" (color-change)="state.colorSelected($event)"></zz-color-selector>
   </div>
   <div
-    class="transition-all text-smaller justify-center w-full min-h-10 max-h-20 py-2 flex flex-col items-center text-md dark:text-gris-100 text-gris-700">
+    class="transition-all text-smaller justify-center w-full min-h-18 max-h-20 py-2 flex flex-col items-center text-md dark:text-gris-100 text-gris-700">
     <zz-color-values-display
       class="whitespace-nowrap w-[25ch] text-center font-semibold"
       [color-model-name]="state.colorConfig().colorModel.name"

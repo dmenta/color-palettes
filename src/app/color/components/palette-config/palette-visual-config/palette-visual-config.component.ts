@@ -1,12 +1,11 @@
 import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { debounceTime, distinctUntilChanged, startWith } from "rxjs";
-import { InputDirective } from "../../../../core/directives/input.directive";
 import { ColorStateService } from "../../../services/color-state.service";
 
 @Component({
   selector: "zz-palette-visual-config",
-  imports: [FormsModule, ReactiveFormsModule, InputDirective],
+  imports: [FormsModule, ReactiveFormsModule],
   templateUrl: "./palette-visual-config.component.html",
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

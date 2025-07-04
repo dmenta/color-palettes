@@ -1,10 +1,11 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
-import { SelectNoneDirective } from "../../directives/user-select.directive";
 
 @Component({
   selector: "zz-field-value",
   templateUrl: "./field-value.component.html",
-  hostDirectives: [SelectNoneDirective],
+  host: {
+    class: "select-none",
+  },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FieldValueComponent {

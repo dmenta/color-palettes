@@ -5,10 +5,9 @@
   [style.height.px]="visualConfig.height">
   @for(swatch of paleta.swatches; track $index){
   <div
-    class="axis-swatch"
-    [shadow]="!visualConfig.flat"
-    [roundedSize]="visualConfig.flat ? 'none' : 'large'"
-    color-swatch-panel
+    class="palette-swatch"
+    [ngClass]="{ 'rounded-lg shadow-md/50  shadow-black': !visualConfig.flat }"
+    color-swatch
     [color-model]="colorModel()!"
     [values]="swatch.valores">
     <div

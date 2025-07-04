@@ -3,23 +3,15 @@
   <div class="flex flex-row items-center gap-4" style="line-height: 0.9rem">
     <div class="flex flex-row items-center">
       <label for="height" class="select-none">Height:</label>
-      <input
-        type="number"
-        id="height"
-        zz-input
-        [zzDisabled]="configGroup.controls.height.disabled"
-        formControlName="height"
-        value="10"
-        [min]="1"
-        [max]="180" />
+      <input type="number" id="height" formControlName="height" value="10" [min]="1" [max]="180" />
     </div>
-    <label class="flex flex-row items-center gap-2 select-none cursor-pointer">
-      <input type="checkbox" class="simple-check" formControlName="flat" />
-      <span>Flat</span>
+    <label class="flex flex-row items-center gap-2 select-none cursor-pointer has-disabled:cursor-default">
+      <input type="checkbox" class="peer" formControlName="flat" />
+      <span class="peer-disabled:opacity-50">Flat</span>
     </label>
-    <label class="flex flex-row items-center gap-2 select-none cursor-pointer">
-      <input type="checkbox" class="simple-check" formControlName="separate" />
-      <span>Separate</span>
+    <label class="flex flex-row items-center gap-2 select-none cursor-pointer has-disabled:cursor-default">
+      <input type="checkbox" class="peer" formControlName="separate" />
+      <span class="peer-disabled:opacity-50">Separate</span>
     </label>
   </div>
 </form>
