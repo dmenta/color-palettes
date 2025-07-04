@@ -29,19 +29,26 @@ export class ColorRangeSelectorComponent {
     effect(() => {
       const config = this.state.colorConfig();
 
-      const color = config.color ?? [0, 0, 0];
+      const colorOrig = config.color ?? [0, 0, 0];
+      const v0 = colorOrig[0];
+      const v1 = colorOrig[1];
+      const v2 = colorOrig[2];
+
       const indice = config.variableIndex;
 
+      console.debug("ColorRangeSelectorComponent: colorConfig", config.color);
+      const color = [v0, v1, v2] as ColorValues;
       if (indice === 0) {
-        const mover = color[0];
-        color[0] = color[1];
-        color[1] = color[2];
-        color[2] = mover;
+        color[2] = v0!;
+        color[0] = v1!;
+        color[1] = v2!;
       } else if (indice === 1) {
-        const mover = color[1];
-        color[1] = color[2];
-        color[2] = mover;
+        color[0] = v0!;
+        color[1] = v2!;
+        color[2] = v1!;
       }
+
+      console.debug("ColorRangeSelectorComponent: color", color);
       this.configGroup?.patchValue(
         {
           v0: color[0],
@@ -68,14 +75,12 @@ export class ColorRangeSelectorComponent {
 
       const indice = this.state.colorConfig().variableIndex;
       if (indice === 0) {
-        const mover = color[2];
-        color[2] = color[1];
-        color[1] = color[0];
-        color[0] = mover;
+        color[0] = v2!;
+        color[1] = v0!;
+        color[2] = v1!;
       } else if (indice === 1) {
-        const mover = color[2];
-        color[2] = color[1];
-        color[1] = mover;
+        color[1] = v2!;
+        color[2] = v1!;
       }
       this.state.colorChanged(color);
     });

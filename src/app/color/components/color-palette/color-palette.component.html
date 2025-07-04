@@ -11,29 +11,19 @@
     [color-model]="colorModel()!"
     [values]="swatch.valores">
     <div
+      [style.color]="constrasts()![$index]"
       class="text-larger-2 absolute select-none bottom-1 right-2 opacity-0 transition-opacity duration-500 ease-in-out"
       [class.opacity-60]="swatch.clamp">
       &#x26A0;
     </div>
-    @let valuesConfig=state.paletteValuesConfig(); @if(valuesConfig.showValues==='yes'){
+    @let valuesConfig=state.paletteValuesConfig(); @if(valuesConfig.showValues!=='no'){
     <div class="text-smaller-1">
       <zz-color-values-display
-        [color-model-name]="colorModel()!.name"
-        [values]="swatch.valores"
-        [vertical]="true"></zz-color-values-display>
-    </div>
-    }@if(valuesConfig.showValues==="rgb"){
-    <div class="text-smaller-1">
-      <zz-color-values-display
-        color-model-name="rgb"
-        [values]="swatch.rgbValues"
-        [vertical]="true"></zz-color-values-display>
-    </div>
-    } @if(valuesConfig.showValues==="hex"){
-    <div class="text-smaller-1">
-      <zz-color-values-display
-        color-model-name="hex"
-        [values]="swatch.rgbValues"
+        [use-contrast]="true"
+        [color-model-name]="
+          valuesConfig.showValues === 'rgb' ? 'rgb' : valuesConfig.showValues === 'hex' ? 'hex' : colorModel()!.name
+        "
+        [values]="valuesConfig.showValues === 'yes' ? swatch.valores : swatch.rgbValues"
         [vertical]="true"></zz-color-values-display>
     </div>
     }
