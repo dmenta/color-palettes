@@ -1,15 +1,11 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from "@angular/core";
-import { BaseButtonDirective } from "../../../../core/directives/button.directive";
+import { ChangeDetectionStrategy, Component, effect, inject, signal } from "@angular/core";
 import { PaletteListComponent } from "../palette-list/palette-list.component";
 import { PaletteStoreService } from "../../../services/palette-store.service";
 import { ColorStateService } from "../../../services/color-state.service";
-import { CollapseVerticalDirective } from "../../../../core/directives/collapse-vertical.directive";
-import { BorderDirective } from "../../../../core/directives/border.directive";
-import { ShadowDirective } from "../../../../core/directives/shadow.directive";
 
 @Component({
   selector: "zz-palette-selector",
-  imports: [BaseButtonDirective, PaletteListComponent, CollapseVerticalDirective, BorderDirective, ShadowDirective],
+  imports: [PaletteListComponent],
   templateUrl: "./palette-selector.component.html",
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -19,7 +15,19 @@ export class PaletteSelectorComponent {
 
   abort: AbortController | undefined = undefined;
   open = signal(false);
-  toggleOpen() {
+
+  constructor() {
+    effect(() => {
+      if (this.store.saved().length === 0) {
+        this.openState(false);
+      }
+    });
+  }
+
+  toggleOpen(event: MouseEvent) {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+
     this.openState(!this.open());
   }
   openState(open: boolean) {

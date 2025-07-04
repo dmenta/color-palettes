@@ -13,12 +13,11 @@ import {
   ViewChild,
 } from "@angular/core";
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from "@angular/forms";
-import { SelectDirective } from "../../directives/select.directive";
 
 @Component({
   selector: "zz-select",
   schemas: [NO_ERRORS_SCHEMA],
-  imports: [CommonModule, FormsModule, SelectDirective],
+  imports: [CommonModule, FormsModule],
   templateUrl: "./select.component.html",
   providers: [
     {

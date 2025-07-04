@@ -3,9 +3,8 @@ import { computed, Directive, HostBinding, HostListener, input, signal } from "@
 @Directive({
   selector: "input[type='range'][zz-slider]",
   host: {
-    class: `slider-slim `,
-    "[class.slider-slim-track]": "showTrack()",
-    "[class.slider-slim-accent]": "accent()",
+    "[class.slider-track]": "showTrack()",
+    "[class.slider-accent]": "accent()",
   },
 })
 export class SliderSlimDirective {

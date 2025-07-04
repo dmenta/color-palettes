@@ -1,9 +1,9 @@
 <div class="relative">
   <button
-    zz-button
-    [zzDisabled]="store.saved().length === 0"
-    (click)="toggleOpen()"
-    class="ring-0 outline-none bg-transparent hover:bg-gris-100/50 dark:hover:bg-gris-950/50 px-4 py-1 w-24">
+    type="button"
+    [disabled]="store.saved().length === 0"
+    (click)="toggleOpen($event)"
+    class="not-disabled:hover:bg-gris-100/50 not-disabled:dark:hover:bg-gris-950/50 px-4 py-1 w-24">
     <span class="flex flex-row items-center gap-2 justify-between">
       <span class="whitespace-nowrap">Saved palettes</span>
       <span class="font-icons">{{ open() ? "arrow_drop_up" : "arrow_drop_down" }}</span>
@@ -11,15 +11,13 @@
   </button>
   @if(store.saved().length>0){
   <div
-    [zz-collapse-vertical]="!open()"
-    class="absolute top-10 left-0 z-32 rounded"
-    [zz-border]="open() ? 'thin' : 'none'"
-    [zz-shadow]="true">
+    [class.collapsable-collapsed]="!open()"
+    class="collapsable absolute top-10 left-0 z-32 rounded shadow-md/50 shadow-black">
     <zz-palette-list
       (paletteSelected)="state.loadPalette($event)"
       (paletteRemoved)="store.remove($event)"
       [palettes]="store.saved()"
-      class="block bg-white dark:bg-gris-800 w-56"></zz-palette-list>
+      class="border-panel block bg-white dark:bg-gris-800 w-56"></zz-palette-list>
   </div>
   }
   <div

@@ -4,17 +4,10 @@ import { ReactiveFormsModule } from "@angular/forms";
 import { ColorValuesDisplayComponent } from "../color-values-display/color-values-display.component";
 import { ColorSelectorComponent } from "./color-selector/color-selector.component";
 import { ColorStateService } from "../../services/color-state.service";
-import { ContainerDirective } from "../../../core/directives/container.directive";
 
 @Component({
   selector: "zz-color-sample",
-  imports: [
-    ReactiveFormsModule,
-    ColorSwatchDirective,
-    ColorValuesDisplayComponent,
-    ColorSelectorComponent,
-    ContainerDirective,
-  ],
+  imports: [ReactiveFormsModule, ColorSwatchDirective, ColorValuesDisplayComponent, ColorSelectorComponent],
   templateUrl: "./color-sample.component.html",
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
