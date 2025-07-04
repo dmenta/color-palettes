@@ -1,6 +1,6 @@
 @if(configGroup){
 <form [formGroup]="configGroup">
-  <div class="flex flex-row items-center gap-4" style="line-height: 0.9rem">
+  <div class="flex flex-row items-center gap-4">
     <div class="flex flex-row items-center">
       <label for="height" class="select-none">Height:</label>
       <input type="number" id="height" formControlName="height" value="10" [min]="1" [max]="180" />
