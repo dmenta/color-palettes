@@ -8,7 +8,7 @@ import { DataListComponent } from "../slider/data-list.component";
   selector: "zz-slider-field",
   imports: [ReactiveFormsModule, SliderSlimDirective, FieldValueComponent, DataListComponent],
   templateUrl: "./slider-field.component.html",
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.Default,
 })
 export class SliderFieldComponent {
   @Input({ required: true }) fieldName: string = "";
