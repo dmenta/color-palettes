@@ -3,6 +3,7 @@ import {
   Component,
   effect,
   ElementRef,
+  HostListener,
   input,
   NO_ERRORS_SCHEMA,
   output,
@@ -30,6 +31,17 @@ export class PaletteListComponent {
   paletteSelected = output<PaletteInfo>();
   paletteRemoved = output<number>();
 
+  @HostListener("document:keydown.arrowdown", ["$event"])
+  handleDownEvent(_event: KeyboardEvent) {
+    this.focusedIndex = Math.min(this.focusedIndex + 1, this.items.length - 1);
+    this.focusItem();
+  }
+  @HostListener("document:keydown.arrowup", ["$event"])
+  handleUpEvent(_event: KeyboardEvent) {
+    this.focusedIndex = Math.max(this.focusedIndex - 1, 0);
+    this.focusItem();
+  }
+
   constructor() {
     effect(() => {
       if (this.active()) {
@@ -49,17 +61,7 @@ export class PaletteListComponent {
     this.paletteRemoved.emit(index);
   }
 
-  onKeydown(event: KeyboardEvent) {
-    if (event.key === "ArrowDown") {
-      this.focusedIndex = Math.min(this.focusedIndex + 1, this.items.length - 1);
-      this.focusItem();
-    } else if (event.key === "ArrowUp") {
-      this.focusedIndex = Math.max(this.focusedIndex - 1, 0);
-      this.focusItem();
-    }
-  }
-
-  focusItem() {
+  private focusItem() {
     setTimeout(() => {
       this.items.toArray()[this.focusedIndex]!.nativeElement.focus();
     });

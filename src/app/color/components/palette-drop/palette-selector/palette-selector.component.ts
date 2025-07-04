@@ -22,6 +22,11 @@ export class PaletteSelectorComponent {
     this.openState(!this.open());
   }
 
+  @HostListener("document:keydown.escape", ["$event"])
+  handleEscapeEvent(_event: KeyboardEvent) {
+    this.openState(false);
+  }
+
   constructor() {
     effect(() => {
       if (this.store.saved().length === 0) {
@@ -44,13 +49,7 @@ export class PaletteSelectorComponent {
     if (this.open()) {
       this.abort = new AbortController();
       const abortar = this.abort.signal;
-      window.addEventListener("keydown", this.onKeyDown.bind(this), { once: true, signal: abortar, capture: true });
       window.addEventListener("click", this.onClick.bind(this), { once: true, signal: abortar });
-    }
-  }
-  onKeyDown(event: KeyboardEvent) {
-    if (event.key === "Escape") {
-      this.openState(false);
     }
   }
 
