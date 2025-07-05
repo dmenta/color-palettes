@@ -4,7 +4,7 @@ import { ChangeDetectionStrategy, Component, computed, input, Input } from "@ang
   selector: "[zz-field-value]",
   templateUrl: "./field-value.component.html",
   host: {
-    class: "select-none",
+    class: "select-none transition-colors",
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

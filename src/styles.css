@@ -51,6 +51,9 @@
   --color-button: var(--bg-button);
   --color-button-hover: var(--bg-button-hover);
 
+  --color-slider-track: color-mix(in oklab, currentColor, transparent 70%);
+  --color-slider-track-focus: color-mix(in oklab, currentColor, transparent 50%);
+
   --width-marca: 1.25em;
   --leading-marca: 1.25em;
   --gap-marca: 0.125em;
@@ -81,25 +84,34 @@
 
 @utility slider-track {
   &::-webkit-slider-runnable-track {
-    @apply bg-black/20;
-  }
-  @variant dark {
-    &::-webkit-slider-runnable-track {
-      @apply bg-white/30;
-    }
+    @apply bg-slider-track transition-colors;
   }
   @variant focus {
     &::-webkit-slider-runnable-track {
-      @apply bg-black/50;
+      @apply bg-slider-track-focus;
+    }
+  }
+}
+@utility slider-thumb {
+  &::-webkit-slider-thumb {
+    @apply bg-sky-400/90 shadow-md shadow-black transition-all duration-150 -mt-[0.35rem] h-[0.75rem] w-[0.75rem] rounded-full;
+  }
+  @variant dark {
+    &::-webkit-slider-thumb {
+      @apply bg-sky-400;
+    }
+  }
+  @variant focus {
+    &::-webkit-slider-thumb {
+      @apply outline-gris-500 outline-2 outline-offset-0;
     }
     @variant dark {
-      &::-webkit-slider-runnable-track {
-        @apply bg-white/50;
+      &::-webkit-slider-thumb {
+        @apply outline-gris-300;
       }
     }
   }
 }
-
 @utility slider-accent {
   &::-webkit-slider-thumb {
     @apply bg-orange-300;

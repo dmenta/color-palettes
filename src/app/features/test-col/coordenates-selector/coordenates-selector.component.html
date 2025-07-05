@@ -1,0 +1,55 @@
+@if(coordenadasGroup){
+<form [formGroup]="coordenadasGroup">
+  <div class="flex flex-col items-center gap-4">
+    <div class="flex flex-col w-64 text-smaller-3">
+      <zz-slider-field
+        fieldName="x1"
+        [min]="0"
+        [max]="100"
+        [label]="'x1'"
+        [defaultValue]="50"
+        [stops]="[0, 25, 50, 75, 100]"
+        [showLabel]="true"
+        [showValue]="true"
+        [step]="1"
+        [showValue]="true"></zz-slider-field>
+      <zz-slider-field
+        fieldName="y1"
+        [min]="0"
+        [max]="100"
+        [label]="'y1'"
+        [defaultValue]="50"
+        [stops]="[0, 25, 50, 75, 100]"
+        [showLabel]="true"
+        [showValue]="true"
+        [step]="1"
+        [showValue]="true"></zz-slider-field>
+    </div>
+    <div class="flex flex-col w-64 text-smaller-2">
+      <zz-slider-field
+        fieldName="x2"
+        [min]="0"
+        [max]="100"
+        [label]="'x2'"
+        [defaultValue]="50"
+        [stops]="[0, 25, 50, 75, 100]"
+        [showLabel]="true"
+        [showValue]="true"
+        [step]="1"
+        [showValue]="true"></zz-slider-field>
+      <zz-slider-field
+        fieldName="y2"
+        [min]="0"
+        [max]="100"
+        [label]="'y2'"
+        [defaultValue]="50"
+        [stops]="[0, 25, 50, 75, 100]"
+        [showLabel]="true"
+        [showValue]="true"
+        [step]="1"
+        [showValue]="true"></zz-slider-field>
+    </div>
+  </div>
+</form>
+
+}

@@ -8,10 +8,10 @@ import { rgbFromHex, rgbToHex, toContrast } from "../../../model/color";
   template: ` @if(colorControl){
     <input
       type="color"
-      class="rounded-md appearance-none [&::-webkit-color-swatch]:rounded-md
+      class="rounded-md appearance-none [&::-webkit-color-swatch]:rounded-
   [&::-webkit-color-swatch]:border-none [&::-webkit-color-swatch-wrapper]:p-0 shadow-md shadow-black/20 border-2
   focus:ring-1 focus:ring-gris-600/100"
-      [class]="{ 'border-white/40': borderColor() === 'white', 'border-black/40': borderColor() === 'black' }"
+      [class]="borderColor()"
       [formControl]="colorControl"
       (change)="updateColor()" />
     }`,
@@ -20,6 +20,8 @@ import { rgbFromHex, rgbToHex, toContrast } from "../../../model/color";
 })
 export class ColorSelectorComponent {
   colorControl: FormControl<string> | undefined = undefined;
+
+  border = input<string | undefined>(undefined);
   /**
    * Color value in hexadecimal format. (e.g. #000000)
    * or a ColorValues representing RGB values.
@@ -45,13 +47,21 @@ export class ColorSelectorComponent {
   constructor() {
     effect(() => {
       this.colorControl?.setValue(this.value());
-      const borderColor = toContrast(this.value());
-      this.borderColor.set(borderColor);
+      if (!this.border()) {
+        const borderColor = toContrast(this.value());
+        this.borderColor.set(borderColor === "white" ? "border-white/40" : "border-black/40");
+      } else {
+        this.borderColor.set(this.border()!);
+      }
     });
   }
   ngOnInit() {
-    const borderColor = toContrast(this.value());
-    this.borderColor.set(borderColor);
+    if (!this.border()) {
+      const borderColor = toContrast(this.value());
+      this.borderColor.set(borderColor);
+    } else {
+      this.borderColor.set(this.border()!);
+    }
     this.colorControl = new FormControl<string>(this.value(), { nonNullable: true });
   }
   public updateColor() {

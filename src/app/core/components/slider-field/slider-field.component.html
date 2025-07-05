@@ -5,6 +5,7 @@
       @if(showLabel) {
       <label
         [for]="fieldName"
+        class="transition-colors"
         [class.text-right]="labelsReverse"
         [class.opacity-80]="defaultValue !== undefined && control.value === defaultValue"
         (dblclick)="control.reset()">
