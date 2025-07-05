@@ -4,20 +4,15 @@
   </div>
   <main
     class="w-screen min-h-[calc(100svh_-_50px)] flex flex-col items-center justify-center gap-4"
-    [style.color]="gradient().contrast"
-    [style.background]="gradient().gradient">
+    [style.color]="this.state.gradient().contrast"
+    [style.background]="this.state.gradient().gradient">
     <div class="flex flex-col items-center justify-center gap-4 w-[130px]">
-      <zz-bezier-panel
-        [size]="size"
-        [color]="gradient().contrast"
-        [coords]="changingCoords()"
-        (coordsChanged)="onCoordsChanged($event)"
-        (coordsChanging)="onCoordsChanging($event)"></zz-bezier-panel>
-      <zz-gradient-colors
-        class=""
-        (sourceColorChanged)="onColorSourceChanged($event)"
-        (destinationColorChanged)="onColorDestinationChanged($event)"></zz-gradient-colors>
-      <zz-orientation-selector (orientationChanged)="onOrientationChanged($event)"></zz-orientation-selector>
+      <zz-bezier-panel [size]="size" [color]="this.state.gradient().contrast"></zz-bezier-panel>
+      <div class="flex flex-row items-center justify-between gap-4 w-full">
+        <zz-gradient-colors></zz-gradient-colors>
+        <zz-gradient-actions></zz-gradient-actions>
+      </div>
+      <zz-orientation-selector></zz-orientation-selector>
     </div>
   </main>
 </div>

@@ -1,6 +1,7 @@
-import { Component, effect, ElementRef, HostListener, input, output, ViewChild } from "@angular/core";
+import { Component, ElementRef, HostListener, inject, input, ViewChild } from "@angular/core";
 import { Coordenates, Point } from "../models/bezier-curve";
 import { drawBezierPanel } from "./bezier-panel-drawing";
+import { GradientStateService } from "../services/gradient-state.service";
 
 @Component({
   selector: "zz-bezier-panel",
@@ -12,16 +13,11 @@ export class BezierPanelComponent {
   private lastTimeoutId: number | null = null;
 
   canvasOffset = 30;
+
+  state = inject(GradientStateService);
   size = input(200);
 
   color = input<string>("black");
-  coords = input({
-    point1: { x: 50, y: 50 },
-    point2: { x: 50, y: 50 },
-  });
-
-  coordsChanging = output<Coordenates>();
-  coordsChanged = output<Coordenates>();
 
   @ViewChild("canvas") canvas?: ElementRef<HTMLCanvasElement>;
 
@@ -32,15 +28,8 @@ export class BezierPanelComponent {
     }
   }
 
-  constructor() {
-    effect(() => {
-      const coords = this.coords();
-      this.dibujar(coords);
-    });
-  }
-
   ngAfterViewInit() {
-    this.dibujar(this.coords(), this.size());
+    this.dibujar(this.state.handlers(), this.size());
   }
 
   onMouseDown(event: MouseEvent): void {
@@ -71,10 +60,11 @@ export class BezierPanelComponent {
     const y = this.convertYFromCanvas(rawY);
 
     if (this.currentHandler === "H1") {
-      this.coordsChanging.emit({ ...this.coords(), point1: { x, y } });
+      this.state.onHandlersChange({ ...this.state.handlers(), point1: { x, y } });
     } else if (this.currentHandler === "H2") {
-      this.coordsChanging.emit({ ...this.coords(), point2: { x, y } });
+      this.state.onHandlersChange({ ...this.state.handlers(), point2: { x, y } });
     }
+    this.dibujar(this.state.handlers(), this.size());
   }
 
   onMouseUp(): void {
@@ -108,7 +98,6 @@ export class BezierPanelComponent {
     if (this.currentHandler !== null) {
       this.currentHandler = null;
       this.clearStopTimeout();
-      this.coordsChanged.emit(this.coords());
     }
   }
 
@@ -118,7 +107,7 @@ export class BezierPanelComponent {
 
     const test = { x, y };
 
-    const coords = this.coords();
+    const coords = this.state.handlers();
     if (this.checkCoordsMatch(test, coords.point1)) {
       this.currentHandler = "H1";
       return;

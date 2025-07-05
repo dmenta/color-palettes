@@ -2,9 +2,9 @@
   <zz-color-selector
     (color-change)="onColorSourceChange($event)"
     [border]="'border-current/40'"
-    [color]="colorSource()"></zz-color-selector>
+    [color]="this.state.sourceColor()"></zz-color-selector>
   <zz-color-selector
     (color-change)="onColorDestinationChange($event)"
     [border]="'border-current/40'"
-    [color]="colorDestination()"></zz-color-selector>
+    [color]="this.state.destinationColor()"></zz-color-selector>
 </div>

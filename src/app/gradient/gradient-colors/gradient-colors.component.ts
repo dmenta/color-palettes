@@ -1,7 +1,7 @@
-import { Component, output, signal } from "@angular/core";
+import { Component, inject } from "@angular/core";
 import { ColorSelectorComponent } from "../../color/components/color-sample/color-selector/color-selector.component";
 import { ColorValues } from "../../color/model/colors.model";
-import { toOklch } from "../../color/model/color";
+import { GradientStateService } from "../services/gradient-state.service";
 
 @Component({
   selector: "zz-gradient-colors",
@@ -12,25 +12,12 @@ import { toOklch } from "../../color/model/color";
   },
 })
 export class GradientColorsComponent {
-  colorSource = signal<ColorValues>([208, 22, 130]);
-  colorDestination = signal<ColorValues>([37, 24, 119]);
-
-  sourceColorChanged = output<ColorValues>();
-  destinationColorChanged = output<ColorValues>();
+  state = inject(GradientStateService);
 
   onColorDestinationChange(rgb: ColorValues) {
-    this.destinationColorChanged.emit(toOklch(this.rgbText(rgb)));
+    this.state.onDestinationColorChange(rgb);
   }
   onColorSourceChange(rgb: ColorValues) {
-    this.sourceColorChanged.emit(toOklch(this.rgbText(rgb)));
-  }
-
-  private rgbText(rgb: ColorValues): string {
-    return `rgb(${Math.round(rgb[0])} ${Math.round(rgb[1])} ${Math.round(rgb[2])})`;
-  }
-
-  ngAfterViewInit() {
-    this.onColorSourceChange(this.colorSource());
-    this.onColorDestinationChange(this.colorDestination());
+    this.state.onSourceColorChange(rgb);
   }
 }
