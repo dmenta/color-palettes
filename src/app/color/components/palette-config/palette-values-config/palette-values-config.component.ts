@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, OnDestroy, OnInit } from "@angular/core";
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { debounceTime, distinctUntilChanged, startWith } from "rxjs";
+import { debounceTime, distinctUntilChanged, startWith, Subscription } from "rxjs";
 import { SelectComponent } from "../../../../core/components/select/select.component";
 import { ColorStateService } from "../../../services/color-state.service";
 import { showValuesOption } from "../../../model/palette.model";
@@ -11,7 +11,8 @@ import { showValuesOption } from "../../../model/palette.model";
   templateUrl: "./palette-values-config.component.html",
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PaletteValuesConfigComponent {
+export class PaletteValuesConfigComponent implements OnInit, OnDestroy {
+  valueChangeSubscription: Subscription | null = null;
   state = inject(ColorStateService);
 
   configGroup:
@@ -30,7 +31,7 @@ export class PaletteValuesConfigComponent {
       }),
     });
 
-    this.configGroup.valueChanges
+    this.valueChangeSubscription = this.configGroup.valueChanges
       .pipe(
         debounceTime(30),
         distinctUntilChanged((prev, curr) => prev.showValues?.value === curr.showValues?.value),
@@ -44,5 +45,9 @@ export class PaletteValuesConfigComponent {
           });
         }
       });
+  }
+
+  ngOnDestroy() {
+    this.valueChangeSubscription?.unsubscribe();
   }
 }

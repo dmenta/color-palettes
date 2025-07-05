@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, OnDestroy, OnInit } from "@angular/core";
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
-import { debounceTime, distinctUntilChanged, startWith } from "rxjs";
+import { debounceTime, distinctUntilChanged, startWith, Subscription } from "rxjs";
 import { ColorStateService } from "../../../services/color-state.service";
 
 @Component({
@@ -9,7 +9,8 @@ import { ColorStateService } from "../../../services/color-state.service";
   templateUrl: "./palette-visual-config.component.html",
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PaletteVisualConfigComponent {
+export class PaletteVisualConfigComponent implements OnInit, OnDestroy {
+  valueChangeSubscription: Subscription | null = null;
   state = inject(ColorStateService);
 
   configGroup:
@@ -32,7 +33,7 @@ export class PaletteVisualConfigComponent {
       separate: new FormControl<boolean>(visualConfig.separate, { nonNullable: true }),
     });
 
-    this.configGroup.valueChanges
+    this.valueChangeSubscription = this.configGroup.valueChanges
       .pipe(
         debounceTime(30),
         distinctUntilChanged(
@@ -50,5 +51,9 @@ export class PaletteVisualConfigComponent {
           });
         }
       });
+  }
+
+  ngOnDestroy() {
+    this.valueChangeSubscription?.unsubscribe();
   }
 }

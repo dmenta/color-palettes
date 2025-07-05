@@ -1,10 +1,11 @@
-import { ChangeDetectionStrategy, Component, effect, inject } from "@angular/core";
+import { ChangeDetectionStrategy, Component, effect, inject, OnDestroy, OnInit } from "@angular/core";
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { SliderFieldComponent } from "../../../core/components/slider-field/slider-field.component";
 import { AxisGradientDirective } from "../../directives/axis-gradient.directive";
 import { DualAxisSliderComponent } from "./dual-axis-slider/dual-axis-slider.component";
 import { ColorValueKey, ColorValues, Range } from "../../model/colors.model";
 import { ColorStateService } from "../../services/color-state.service";
+import { Subscription } from "rxjs";
 
 @Component({
   imports: [SliderFieldComponent, FormsModule, ReactiveFormsModule, AxisGradientDirective, DualAxisSliderComponent],
@@ -12,7 +13,8 @@ import { ColorStateService } from "../../services/color-state.service";
   templateUrl: "./color-range-selector.component.html",
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ColorRangeSelectorComponent {
+export class ColorRangeSelectorComponent implements OnInit, OnDestroy {
+  valueChangeSubscription: Subscription | null = null;
   state = inject(ColorStateService);
   height = 30;
   indices: ColorValueKey[] = [0, 1, 2];
@@ -62,7 +64,7 @@ export class ColorRangeSelectorComponent {
       v2: new FormControl(currentColor[2], { nonNullable: true }),
     });
 
-    this.configGroup.valueChanges.subscribe(() => {
+    this.valueChangeSubscription = this.configGroup.valueChanges.subscribe(() => {
       const { v0, v1, v2 } = this.configGroup?.value ?? { v0: 0, v1: 0, v2: 0 };
       const color: ColorValues = [v0, v1, v2] as ColorValues;
 
@@ -87,5 +89,8 @@ export class ColorRangeSelectorComponent {
       },
       { emitEvent: true }
     );
+  }
+  ngOnDestroy() {
+    this.valueChangeSubscription?.unsubscribe();
   }
 }

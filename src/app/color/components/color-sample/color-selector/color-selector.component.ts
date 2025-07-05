@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, input, effect, signal, ChangeDetectionStrategy } from "@angular/core";
+import { Component, Output, EventEmitter, input, effect, signal, ChangeDetectionStrategy, OnInit } from "@angular/core";
 import { FormControl, ReactiveFormsModule } from "@angular/forms";
 import { ColorValues } from "../../../model/colors.model";
 import { rgbFromHex, rgbToHex, toContrast } from "../../../model/color";
@@ -18,7 +18,7 @@ import { rgbFromHex, rgbToHex, toContrast } from "../../../model/color";
   imports: [ReactiveFormsModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ColorSelectorComponent {
+export class ColorSelectorComponent implements OnInit {
   colorControl: FormControl<string> | undefined = undefined;
 
   border = input<string | undefined>(undefined);

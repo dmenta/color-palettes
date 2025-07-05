@@ -1,4 +1,4 @@
-import { computed, Directive, input, Signal } from "@angular/core";
+import { computed, Directive, input, OnInit, Signal } from "@angular/core";
 import { ColorConfig, ColorModelName, ColorValues } from "../model/colors.model";
 
 @Directive({
@@ -8,7 +8,7 @@ import { ColorConfig, ColorModelName, ColorValues } from "../model/colors.model"
     "[style.background]": "gradient!()",
   },
 })
-export class AxisGradientDirective {
+export class AxisGradientDirective implements OnInit {
   colorConfig = input<ColorConfig | undefined>(undefined, { alias: "color-config" });
 
   height = input(30, {

@@ -2,13 +2,9 @@
   <canvas
     id="canvas"
     (mousedown)="onMouseDown($event)"
-    (mousemove)="onMouseMove($event)"
-    (mouseup)="onMouseUp()"
-    (mouseleave)="onMouseLeave()"
-    (mouseenter)="onMouseEnter()"
     #canvas
     [width]="size()"
-    [class.cursor-grab]="overHandler()"
+    [class.cursor-grab]="overHandler() !== null"
     [class.cursor-grabbing]="currentHandler() !== null"
     [height]="size()"
     [style.padding.px]="size() / 10"

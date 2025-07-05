@@ -1,9 +1,20 @@
-import { ChangeDetectionStrategy, Component, effect, EventEmitter, inject, input, Output } from "@angular/core";
+import {
+  ChangeDetectionStrategy,
+  Component,
+  effect,
+  EventEmitter,
+  inject,
+  input,
+  OnDestroy,
+  OnInit,
+  Output,
+} from "@angular/core";
 import { SliderFieldComponent } from "../../../../core/components/slider-field/slider-field.component";
 import { AxisGradientDirective } from "../../../directives/axis-gradient.directive";
 import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { ColorValues, Range } from "../../../model/colors.model";
 import { ColorStateService } from "../../../services/color-state.service";
+import { Subscription } from "rxjs";
 
 @Component({
   selector: "zz-dual-axis-slider",
@@ -14,7 +25,8 @@ import { ColorStateService } from "../../../services/color-state.service";
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DualAxisSliderComponent {
+export class DualAxisSliderComponent implements OnInit, OnDestroy {
+  valueChangeSubscription: Subscription | null = null;
   state = inject(ColorStateService);
   currentColor = input<ColorValues | undefined>(undefined, { alias: "current-color" });
 
@@ -51,11 +63,14 @@ export class DualAxisSliderComponent {
       max: new FormControl(this.state.colorConfig().range.max, { nonNullable: true }),
     });
 
-    this.formDual.valueChanges.subscribe((value) => {
+    this.valueChangeSubscription = this.formDual.valueChanges.subscribe((value) => {
       this.rangeChange.emit({
         min: value.min ?? this.formDual?.controls.min.value ?? 0,
         max: value.max ?? this.formDual?.controls.max.value ?? 0,
       });
     });
+  }
+  ngOnDestroy(): void {
+    this.valueChangeSubscription?.unsubscribe();
   }
 }

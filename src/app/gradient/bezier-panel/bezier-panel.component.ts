@@ -1,17 +1,20 @@
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   effect,
   ElementRef,
-  HostListener,
   inject,
   input,
+  OnDestroy,
+  Renderer2,
   signal,
   ViewChild,
 } from "@angular/core";
 import { Handler, Handlers, Point, pointsMatch } from "../models/bezier-curve";
 import { drawBezierPanel, pointFromCanvas, pointToCanvas } from "./bezier-panel-drawing";
 import { GradientStateService } from "../services/gradient-state.service";
+import { debounceTime, fromEvent, map, Subscription } from "rxjs";
 
 @Component({
   selector: "zz-bezier-panel",
@@ -19,25 +22,24 @@ import { GradientStateService } from "../services/gradient-state.service";
   templateUrl: "./bezier-panel.component.html",
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BezierPanelComponent {
+export class BezierPanelComponent implements AfterViewInit, OnDestroy {
+  private mouseMoveSubscription: Subscription | null = null;
+  private removeDocumentClickListenerFn: (() => void) | null = null;
+  private removeMouseLeaveListenerFn: (() => void) | null = null;
+  private removeMouseEnterListenerFn: (() => void) | null = null;
   private lastTimeoutId: number | null = null;
+
   private state = inject(GradientStateService);
 
-  overHandler = signal(false);
+  overHandler = signal<Handler | null>(null);
   currentHandler = signal<Handler | null>(null);
   size = input(200);
   color = input<string>("black");
 
   @ViewChild("canvas") canvas?: ElementRef<HTMLCanvasElement>;
+  canvasContext: ImageBitmapRenderingContext | null = null;
 
-  @HostListener("document:mouseup")
-  onDocumentMouseUp(): void {
-    if (this.currentHandler()) {
-      this.stopTracking();
-    }
-  }
-
-  constructor() {
+  constructor(private renderer: Renderer2) {
     effect(() => {
       const coords = this.handlersToCanvas(this.state.handlers());
 
@@ -46,51 +48,43 @@ export class BezierPanelComponent {
   }
 
   ngAfterViewInit() {
+    this.mouseMoveSubscription = fromEvent(this.canvas!.nativeElement, "mousemove")
+      .pipe(
+        debounceTime(1),
+        map((event) => event as MouseEvent)
+      )
+      .subscribe((event) => {
+        this.onMouseMove(event);
+      });
+
+    this.canvas!.nativeElement.oncontextlost = (event: Event) => {
+      console.warn("Context lost", event);
+    };
     this.dibujar(this.handlersToCanvas(this.state.handlers()));
   }
 
-  onMouseDown(event: MouseEvent): void {
-    const canvas = this.canvas?.nativeElement;
-    if (!canvas) {
+  onMouseDown(_event: MouseEvent): void {
+    const overHandler = this.overHandler();
+    if (overHandler === null) {
       return;
     }
 
-    this.setHandlerSelected(this.pointFromEvent(event));
+    this.setHandlerSelected(overHandler);
   }
 
   onMouseMove(event: MouseEvent): void {
+    const point = this.pointFromEvent(event);
     if (!this.currentHandler()) {
-      const isOverHandler = this.isOverHandler(this.pointFromEvent(event));
-      this.overHandler.set(isOverHandler !== null);
-      return;
+      const overHandler = this.overHandler();
+      const isOverHandler = this.isOverHandler(point);
+      if (overHandler === isOverHandler) {
+        return;
+      } else {
+        this.overHandler.set(isOverHandler);
+      }
     }
 
-    const canvas = this.canvas?.nativeElement;
-    if (!canvas) {
-      return;
-    }
-
-    this.updateHandlerCoords(this.pointFromEvent(event));
-  }
-
-  onMouseUp(): void {
-    if (this.currentHandler() === null) {
-      return;
-    }
-    this.stopTracking();
-  }
-
-  onMouseLeave(): void {
-    if (this.currentHandler() === null) {
-      return;
-    }
-    this.setStopTimeout();
-  }
-
-  onMouseEnter(): void {
-    if (this.currentHandler() !== null) {
-      this.clearStopTimeout();
-    }
+    this.updateHandlerCoords(point);
   }
 
   private setStopTimeout() {
@@ -107,13 +101,19 @@ export class BezierPanelComponent {
 
   private stopTracking() {
     if (this.currentHandler() !== null) {
+      this.removeDocumentClickListenerFn?.();
+      this.removeMouseLeaveListenerFn?.();
+      this.removeMouseEnterListenerFn?.();
+
       this.currentHandler.set(null);
       this.clearStopTimeout();
     }
   }
 
-  private setHandlerSelected(point: Point) {
-    this.currentHandler.set(this.isOverHandler(point));
+  private setHandlerSelected(handler: Handler) {
+    this.setListeners();
+
+    this.currentHandler.set(handler);
   }
 
   private updateHandlerCoords(point: Point): void {
@@ -135,18 +135,41 @@ export class BezierPanelComponent {
     }
     return null;
   }
+
+  private setListeners() {
+    this.removeDocumentClickListenerFn = this.renderer.listen("document", "mouseup", () => {
+      if (this.currentHandler()) {
+        this.stopTracking();
+      }
+    });
+    this.removeMouseLeaveListenerFn = this.renderer.listen(this.canvas!.nativeElement, "mouseleave", () => {
+      if (this.currentHandler() === null) {
+        return;
+      }
+      this.setStopTimeout();
+    });
+    this.removeMouseEnterListenerFn = this.renderer.listen(this.canvas!.nativeElement, "mouseenter", () => {
+      if (this.currentHandler() !== null) {
+        this.clearStopTimeout();
+      }
+    });
+  }
+
   private dibujar(
     coords: Handlers,
     active: Handler | null = this.currentHandler(),
     size: number = this.size(),
     mode: string = this.color()
   ) {
-    const ctx = this.canvas?.nativeElement.getContext("bitmaprenderer");
-    if (ctx) {
-      requestAnimationFrame(() => {
-        drawBezierPanel(ctx, coords, size, active, mode);
-      });
+    if (this.canvasContext === null && this.canvas) {
+      this.canvasContext = this.canvas.nativeElement.getContext("bitmaprenderer");
     }
+
+    const ctx = this.canvasContext!;
+
+    requestAnimationFrame(() => {
+      drawBezierPanel(ctx, coords, size, active, mode);
+    });
   }
 
   private handlersToCanvas(handlers: Handlers): Handlers {
@@ -176,5 +199,14 @@ export class BezierPanelComponent {
       { x: event.clientX - rect.left - padingLeft, y: event.clientY - rect.top - padingTop },
       size
     );
+  }
+
+  ngOnDestroy() {
+    this.removeDocumentClickListenerFn?.();
+    this.removeMouseLeaveListenerFn?.();
+    this.removeMouseEnterListenerFn?.();
+    this.clearStopTimeout();
+
+    this.mouseMoveSubscription?.unsubscribe();
   }
 }

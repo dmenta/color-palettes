@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, effect, HostListener, inject, signal } from "@angular/core";
+import { ChangeDetectionStrategy, Component, effect, HostListener, inject, OnDestroy, signal } from "@angular/core";
 import { PaletteListComponent } from "../palette-list/palette-list.component";
 import { PaletteStoreService } from "../../../services/palette-store.service";
 import { ColorStateService } from "../../../services/color-state.service";
@@ -9,7 +9,7 @@ import { ColorStateService } from "../../../services/color-state.service";
   templateUrl: "./palette-selector.component.html",
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PaletteSelectorComponent {
+export class PaletteSelectorComponent implements OnDestroy {
   store = inject(PaletteStoreService);
   state = inject(ColorStateService);
 

@@ -15,13 +15,13 @@ export function drawBezierPanel(
   const handlersColors = handlerColors(color);
   const colorCurve = curveColor(color);
 
-  drawHandlerLine(offCtx, { x: 0, y: size }, coords.h1, handlersColors.line);
-
-  drawHandler(offCtx, coords.h1, handlersColors.h1);
-
   drawHandlerLine(offCtx, { x: size, y: 0 }, coords.h2, handlersColors.line);
 
   drawHandler(offCtx, coords.h2, handlersColors.h2);
+
+  drawHandlerLine(offCtx, { x: 0, y: size }, coords.h1, handlersColors.line);
+
+  drawHandler(offCtx, coords.h1, handlersColors.h1);
 
   if (active === "h1") {
     drawHandlerActive(offCtx, coords.h1, handlersColors.h1);
