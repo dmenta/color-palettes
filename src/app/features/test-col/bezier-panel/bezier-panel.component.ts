@@ -1,5 +1,5 @@
 import { Component, effect, ElementRef, HostListener, input, output, ViewChild } from "@angular/core";
-import { Coordenates } from "../bezier-curve";
+import { Coordenates, Point } from "../models/bezier-curve";
 
 @Component({
   selector: "zz-bezier-panel",
@@ -15,10 +15,8 @@ export class BezierPanelComponent {
 
   color = input<string>("black");
   coords = input({
-    x1: 50,
-    y1: 50,
-    x2: 50,
-    y2: 50,
+    point1: { x: 50, y: 50 },
+    point2: { x: 50, y: 50 },
   });
 
   coordsChanging = output<Coordenates>();
@@ -72,9 +70,9 @@ export class BezierPanelComponent {
     const y = this.convertYFromCanvas(rawY);
 
     if (this.currentHandler === "H1") {
-      this.coordsChanging.emit({ ...this.coords(), x1: x, y1: y });
+      this.coordsChanging.emit({ ...this.coords(), point1: { x, y } });
     } else if (this.currentHandler === "H2") {
-      this.coordsChanging.emit({ ...this.coords(), x2: x, y2: y });
+      this.coordsChanging.emit({ ...this.coords(), point2: { x, y } });
     }
   }
 
@@ -117,21 +115,23 @@ export class BezierPanelComponent {
     const x = this.convertXFromCanvas(rawX);
     const y = this.convertYFromCanvas(rawY);
 
+    const test = { x, y };
+
     const coords = this.coords();
-    if (this.checkCoordsMatch(x, y, coords.x1, coords.y1)) {
+    if (this.checkCoordsMatch(test, coords.point1)) {
       this.currentHandler = "H1";
       return;
     }
 
-    if (this.checkCoordsMatch(x, y, coords.x2, coords.y2)) {
+    if (this.checkCoordsMatch(test, coords.point2)) {
       this.currentHandler = "H2";
       return;
     }
   }
 
-  private checkCoordsMatch(testX: number, testY: number, x: number, y: number) {
+  private checkCoordsMatch(test: Point, pos: Point) {
     const offset = 6;
-    return x + offset > testX && x - offset < testX && y + offset > testY && y - offset < testY;
+    return pos.x + offset > test.x && pos.x - offset < test.x && pos.y + offset > test.y && pos.y - offset < test.y;
   }
 
   private convertXFromCanvas(value: number): number {
@@ -156,10 +156,8 @@ export class BezierPanelComponent {
 
   private dibujar(coordsRaw: Coordenates, size: number = this.size()) {
     const coords = {
-      x1: this.convertXToCanvas(coordsRaw.x1),
-      y1: this.convertYToCanvas(coordsRaw.y1),
-      x2: this.convertXToCanvas(coordsRaw.x2),
-      y2: this.convertYToCanvas(coordsRaw.y2),
+      point1: { x: this.convertXToCanvas(coordsRaw.point1.x), y: this.convertYToCanvas(coordsRaw.point1.y) },
+      point2: { x: this.convertXToCanvas(coordsRaw.point2.x), y: this.convertYToCanvas(coordsRaw.point2.y) },
     };
     const ctx = this.canvas?.nativeElement.getContext("bitmaprenderer");
     if (ctx) {
@@ -213,25 +211,25 @@ function drawBezier(
   const colorCurve = color === "black" ? "#303030" : "#D0D0D0";
   const colorHandlerLine = color === "black" ? "#505050" : "#B0B0B0";
 
-  drawHandlerLine(offCtx, 0, size, coords.x1, coords.y1, colorHandlerLine);
+  drawHandlerLine(offCtx, { x: 0, y: size }, coords.point1, colorHandlerLine);
 
-  drawHandler(offCtx, coords.x1, coords.y1, colorH1);
+  drawHandler(offCtx, coords.point1, colorH1);
 
-  drawHandlerLine(offCtx, size, 0, coords.x2, coords.y2, colorHandlerLine);
+  drawHandlerLine(offCtx, { x: size, y: 0 }, coords.point2, colorHandlerLine);
 
-  drawHandler(offCtx, coords.x2, coords.y2, colorH2);
+  drawHandler(offCtx, coords.point2, colorH2);
 
   if (active === "H1") {
-    drawHandlerActive(offCtx, coords.x1, coords.y1, colorH1);
+    drawHandlerActive(offCtx, coords.point1, colorH1);
   } else if (active === "H2") {
-    drawHandlerActive(offCtx, coords.x2, coords.y2, colorH2);
+    drawHandlerActive(offCtx, coords.point2, colorH2);
   }
 
   offCtx.beginPath();
   offCtx.moveTo(0, size);
   offCtx.strokeStyle = colorCurve;
 
-  offCtx.bezierCurveTo(coords.x1, coords.y1, coords.x2, coords.y2, size, 0);
+  offCtx.bezierCurveTo(coords.point1.x, coords.point1.y, coords.point2.x, coords.point2.y, size, 0);
   offCtx.lineWidth = 2;
   offCtx.stroke();
 
@@ -239,31 +237,24 @@ function drawBezier(
   ctx.transferFromImageBitmap(bitmapOne);
 }
 
-function drawHandler(ctx: OffscreenCanvasRenderingContext2D, x: number, y: number, color: string) {
+function drawHandler(ctx: OffscreenCanvasRenderingContext2D, point: Point, color: string) {
   ctx.beginPath();
-  ctx.arc(x, y, 5, 0, Math.PI * 2);
+  ctx.arc(point.x, point.y, 5, 0, Math.PI * 2);
   ctx.fillStyle = color;
   ctx.fill();
 }
 
-function drawHandlerActive(ctx: OffscreenCanvasRenderingContext2D, x: number, y: number, color: string) {
+function drawHandlerActive(ctx: OffscreenCanvasRenderingContext2D, point: Point, color: string) {
   ctx.beginPath();
-  ctx.arc(x, y, 7, 0, Math.PI * 2);
+  ctx.arc(point.x, point.y, 7, 0, Math.PI * 2);
   ctx.strokeStyle = color;
   ctx.stroke();
 }
 
-function drawHandlerLine(
-  ctx: OffscreenCanvasRenderingContext2D,
-  startX: number,
-  startY: number,
-  endX: number,
-  endY: number,
-  color: string
-) {
+function drawHandlerLine(ctx: OffscreenCanvasRenderingContext2D, start: Point, end: Point, color: string) {
   ctx.beginPath();
-  ctx.moveTo(startX, startY);
-  ctx.lineTo(endX, endY);
+  ctx.moveTo(start.x, start.y);
+  ctx.lineTo(end.x, end.y);
   ctx.strokeStyle = color;
   ctx.stroke();
 }

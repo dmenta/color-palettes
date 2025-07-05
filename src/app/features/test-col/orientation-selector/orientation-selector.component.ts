@@ -7,7 +7,7 @@ import { map } from "rxjs";
   imports: [ReactiveFormsModule],
   templateUrl: "./orientation-selector.component.html",
 })
-export class OrientationSelectorComponent {
+export class GradientOrientationSelectorComponent {
   orientationsValues = orientations;
 
   orientationGroup = new FormGroup<{ orientation: FormControl<string> }>({

@@ -2,19 +2,17 @@ import { Component, effect, input, Output } from "@angular/core";
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { SliderFieldComponent } from "../../../core/components/slider-field/slider-field.component";
 import { map } from "rxjs";
-import { Coordenates } from "../bezier-curve";
+import { Coordenates } from "../models/bezier-curve";
 
 @Component({
   selector: "zz-coordenates-selector",
   imports: [ReactiveFormsModule, SliderFieldComponent],
   templateUrl: "./coordenates-selector.component.html",
 })
-export class CoordenatesSelectorComponent {
+export class BezierCoordenatesSelectorComponent {
   coords = input<Coordenates>({
-    x1: 50,
-    y1: 50,
-    x2: 50,
-    y2: 50,
+    point1: { x: 50, y: 50 },
+    point2: { x: 50, y: 50 },
   });
   coordenadasGroup: FormGroup<{
     x1: FormControl<number>;
@@ -32,10 +30,8 @@ export class CoordenatesSelectorComponent {
     map((values) => {
       const { x1, y1, x2, y2 } = values;
       const coords: Coordenates = {
-        x1: x1 ?? 0,
-        y1: y1 ?? 0,
-        x2: x2 ?? 0,
-        y2: y2 ?? 0,
+        point1: { x: x1 ?? 0, y: y1 ?? 0 },
+        point2: { x: x2 ?? 0, y: y2 ?? 0 },
       };
 
       return coords;
@@ -43,6 +39,12 @@ export class CoordenatesSelectorComponent {
   );
 
   constructor() {
-    effect(() => this.coordenadasGroup.patchValue(this.coords(), { emitEvent: true }));
+    effect(() => {
+      const coords = this.coords();
+      this.coordenadasGroup.patchValue(
+        { x1: coords.point1.x, y1: coords.point1.y, x2: coords.point2.x, y2: coords.point2.y },
+        { emitEvent: true }
+      );
+    });
   }
 }

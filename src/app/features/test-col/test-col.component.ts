@@ -3,10 +3,10 @@ import { NotificationComponent } from "../../core/components/notification/notifi
 import { GradientHeaderComponent } from "./header/gradient-header.component";
 import { ReactiveFormsModule } from "@angular/forms";
 import { ColorValues } from "../../color/model/colors.model";
-import { gradientFromPoints } from "./gradient-points";
-import { bezierPoints, Coordenates } from "./bezier-curve";
-import { OrientationSelectorComponent } from "./orientation-selector/orientation-selector.component";
-import { CoordenatesSelectorComponent } from "./coordenates-selector/coordenates-selector.component";
+import { GradientDefinition, gradientFromPoints } from "./models/gradient-points";
+import { bezierPoints, Coordenates } from "./models/bezier-curve";
+import { GradientOrientationSelectorComponent } from "./orientation-selector/orientation-selector.component";
+import { BezierCoordenatesSelectorComponent } from "./coordenates-selector/coordenates-selector.component";
 import { GradientColorsComponent } from "./gradient-colors/gradient-colors.component";
 import { BezierPanelComponent } from "./bezier-panel/bezier-panel.component";
 
@@ -16,35 +16,31 @@ import { BezierPanelComponent } from "./bezier-panel/bezier-panel.component";
     NotificationComponent,
     GradientHeaderComponent,
     ReactiveFormsModule,
-    OrientationSelectorComponent,
-    CoordenatesSelectorComponent,
+    GradientOrientationSelectorComponent,
+    BezierCoordenatesSelectorComponent,
     GradientColorsComponent,
     BezierPanelComponent,
   ],
   templateUrl: "./test-col.component.html",
 })
-export class TestColComponent {
+export class BezierGradientComponent {
   size = 200;
   private sourceColor = signal<ColorValues>([0, 0, 0]);
   private destinationColor = signal<ColorValues>([0, 0, 0]);
 
   coords = signal<Coordenates>({
-    x1: 50,
-    y1: 50,
-    x2: 50,
-    y2: 50,
+    point1: { x: 50, y: 50 },
+    point2: { x: 50, y: 50 },
   });
 
   changingCoords = signal<Coordenates>({
-    x1: 50,
-    y1: 50,
-    x2: 50,
-    y2: 50,
+    point1: { x: 50, y: 50 },
+    point2: { x: 50, y: 50 },
   });
 
   orientation = signal("to right");
   points = computed(() => bezierPoints(this.changingCoords()));
-  gradient: Signal<{ gradient: string; contrast: string }> = computed(() =>
+  gradient: Signal<GradientDefinition> = computed(() =>
     gradientFromPoints(this.sourceColor(), this.destinationColor(), this.points!(), this.orientation())
   );
 

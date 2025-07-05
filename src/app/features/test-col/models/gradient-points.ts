@@ -1,14 +1,21 @@
-import { toContrast } from "../../color/model/color";
-import { ColorValues } from "../../color/model/colors.model";
+import { toContrast } from "../../../color/model/color";
+import { ColorValues } from "../../../color/model/colors.model";
+import { Point } from "./bezier-curve";
 
 export function gradientFromPoints(
   source: ColorValues,
   destination: ColorValues,
-  valores: { x: number[]; y: number[] },
+  valores: Point[],
   orientation: string
 ) {
-  const menores = valores.x.filter((x) => x <= 50).sort((a, b) => b - a);
-  const mayores = valores.x.filter((x) => x > 50).sort((a, b) => a - b);
+  const menores = valores
+    .map((val) => val.x)
+    .filter((x) => x <= 50)
+    .sort((a, b) => b - a);
+  const mayores = valores
+    .map((val) => val.x)
+    .filter((x) => x > 50)
+    .sort((a, b) => a - b);
 
   let indiceMedio = 0;
   if (50 - menores[0]! < mayores[0]! - 50) {
@@ -41,8 +48,8 @@ export function gradientFromPoints(
   let midColor = "";
 
   const pasos = [] as string[];
-  for (let i = 0; i < valores.x.length; i++) {
-    const stepRatio = valores.y[i]!;
+  for (let i = 0; i < valores.length; i++) {
+    const stepRatio = valores[i]!.y;
     const lSource = (stepRatio * lRange) / 100 + lMin;
     const cSource = (stepRatio * cRange) / 100 + cMin;
     const hSource = (multiplier * (stepRatio * hRange)) / 100 + hDelta;
@@ -51,9 +58,17 @@ export function gradientFromPoints(
       midColor = `oklch(${lSource.toFixed(3)} ${cSource.toFixed(3)} ${hSource.toFixed(1)})`;
     }
 
-    const pos = valores.x[i]!;
+    const pos = valores[i]!.x;
     pasos.push(`oklch(${lSource.toFixed(3)} ${cSource.toFixed(3)} ${hSource.toFixed(1)}) ${pos.toFixed(1)}%`);
   }
 
-  return { gradient: `linear-gradient(${orientation} in oklch, ${pasos})`, contrast: toContrast(midColor) };
+  return {
+    gradient: `linear-gradient(${orientation} in oklch, ${pasos})`,
+    contrast: toContrast(midColor),
+  } as GradientDefinition;
 }
+
+export type GradientDefinition = {
+  gradient: string;
+  contrast: string;
+};
