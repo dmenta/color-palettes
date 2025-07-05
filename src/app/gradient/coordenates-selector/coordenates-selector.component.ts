@@ -1,6 +1,6 @@
 import { Component, effect, input, Output } from "@angular/core";
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
-import { SliderFieldComponent } from "../../../core/components/slider-field/slider-field.component";
+import { SliderFieldComponent } from "../../core/components/slider-field/slider-field.component";
 import { map } from "rxjs";
 import { Coordenates } from "../models/bezier-curve";
 

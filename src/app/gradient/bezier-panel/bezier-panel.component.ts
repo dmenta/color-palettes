@@ -1,5 +1,6 @@
 import { Component, effect, ElementRef, HostListener, input, output, ViewChild } from "@angular/core";
 import { Coordenates, Point } from "../models/bezier-curve";
+import { drawBezierPanel } from "./bezier-panel-drawing";
 
 @Component({
   selector: "zz-bezier-panel",
@@ -162,99 +163,8 @@ export class BezierPanelComponent {
     const ctx = this.canvas?.nativeElement.getContext("bitmaprenderer");
     if (ctx) {
       requestAnimationFrame(() => {
-        drawBezier(ctx, coords, size, this.currentHandler, this.color());
+        drawBezierPanel(ctx, coords, size, this.currentHandler, this.color());
       });
     }
   }
-}
-
-function drawBase(ctx: OffscreenCanvasRenderingContext2D, size: number, color: string) {
-  const lineColor = color === "black" ? "#606060" : "#C0C0C0";
-  ctx.beginPath();
-  ctx.rect(0, 0, size, size);
-  ctx.strokeStyle = color === "black" ? "#101010" : "#F0F0F0";
-  ctx.lineWidth = 1;
-  ctx.stroke();
-
-  const ratio = size / 100;
-
-  for (let i = 10; i <= 90; i += 10) {
-    ctx.beginPath();
-    ctx.moveTo(0, i * ratio);
-    ctx.lineTo(size, i * ratio);
-    ctx.strokeStyle = lineColor;
-    ctx.lineWidth = 0.5;
-    ctx.stroke();
-
-    ctx.beginPath();
-    ctx.moveTo(i * ratio, 0);
-    ctx.lineTo(i * ratio, size);
-    ctx.strokeStyle = lineColor;
-    ctx.lineWidth = 0.5;
-    ctx.stroke();
-  }
-}
-function drawBezier(
-  ctx: ImageBitmapRenderingContext,
-  coords: Coordenates,
-  size: number,
-  active: "H1" | "H2" | null,
-  color: string
-) {
-  const offscreen = new OffscreenCanvas(size, size);
-  const offCtx = offscreen.getContext("2d")!;
-
-  drawBase(offCtx, size, color);
-
-  const colorH1 = color === "black" ? "darkred" : "red";
-  const colorH2 = color === "black" ? "navy" : "blue";
-  const colorCurve = color === "black" ? "#303030" : "#D0D0D0";
-  const colorHandlerLine = color === "black" ? "#505050" : "#B0B0B0";
-
-  drawHandlerLine(offCtx, { x: 0, y: size }, coords.point1, colorHandlerLine);
-
-  drawHandler(offCtx, coords.point1, colorH1);
-
-  drawHandlerLine(offCtx, { x: size, y: 0 }, coords.point2, colorHandlerLine);
-
-  drawHandler(offCtx, coords.point2, colorH2);
-
-  if (active === "H1") {
-    drawHandlerActive(offCtx, coords.point1, colorH1);
-  } else if (active === "H2") {
-    drawHandlerActive(offCtx, coords.point2, colorH2);
-  }
-
-  offCtx.beginPath();
-  offCtx.moveTo(0, size);
-  offCtx.strokeStyle = colorCurve;
-
-  offCtx.bezierCurveTo(coords.point1.x, coords.point1.y, coords.point2.x, coords.point2.y, size, 0);
-  offCtx.lineWidth = 2;
-  offCtx.stroke();
-
-  const bitmapOne = offscreen.transferToImageBitmap();
-  ctx.transferFromImageBitmap(bitmapOne);
-}
-
-function drawHandler(ctx: OffscreenCanvasRenderingContext2D, point: Point, color: string) {
-  ctx.beginPath();
-  ctx.arc(point.x, point.y, 5, 0, Math.PI * 2);
-  ctx.fillStyle = color;
-  ctx.fill();
-}
-
-function drawHandlerActive(ctx: OffscreenCanvasRenderingContext2D, point: Point, color: string) {
-  ctx.beginPath();
-  ctx.arc(point.x, point.y, 7, 0, Math.PI * 2);
-  ctx.strokeStyle = color;
-  ctx.stroke();
-}
-
-function drawHandlerLine(ctx: OffscreenCanvasRenderingContext2D, start: Point, end: Point, color: string) {
-  ctx.beginPath();
-  ctx.moveTo(start.x, start.y);
-  ctx.lineTo(end.x, end.y);
-  ctx.strokeStyle = color;
-  ctx.stroke();
 }

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
-import { PalettesHeaderComponent } from "./header/palettes-header.component";
+import { PalettesHeaderComponent } from "../../color/components/header/palettes-header.component";
 import { ColorMenuComponent } from "../../color/components/color-menu/color-menu.component";
 import { ColorSampleComponent } from "../../color/components/color-sample/color-sample.component";
 import { ColorRangeSelectorComponent } from "../../color/components/color-range-selector/color-range-selector.component";

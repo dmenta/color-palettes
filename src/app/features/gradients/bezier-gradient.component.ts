@@ -1,14 +1,14 @@
 import { Component, computed, Signal, signal } from "@angular/core";
 import { NotificationComponent } from "../../core/components/notification/notification.component";
-import { GradientHeaderComponent } from "./header/gradient-header.component";
+import { GradientHeaderComponent } from "../../gradient/header/gradient-header.component";
 import { ReactiveFormsModule } from "@angular/forms";
 import { ColorValues } from "../../color/model/colors.model";
-import { GradientDefinition, gradientFromPoints } from "./models/gradient-points";
-import { bezierPoints, Coordenates } from "./models/bezier-curve";
-import { GradientOrientationSelectorComponent } from "./orientation-selector/orientation-selector.component";
-import { BezierCoordenatesSelectorComponent } from "./coordenates-selector/coordenates-selector.component";
-import { GradientColorsComponent } from "./gradient-colors/gradient-colors.component";
-import { BezierPanelComponent } from "./bezier-panel/bezier-panel.component";
+import { GradientDefinition, gradientFromPoints } from "../../gradient/models/gradient-points";
+import { bezierPoints, Coordenates } from "../../gradient/models/bezier-curve";
+import { GradientOrientationSelectorComponent } from "../../gradient/orientation-selector/orientation-selector.component";
+import { BezierCoordenatesSelectorComponent } from "../../gradient/coordenates-selector/coordenates-selector.component";
+import { GradientColorsComponent } from "../../gradient/gradient-colors/gradient-colors.component";
+import { BezierPanelComponent } from "../../gradient/bezier-panel/bezier-panel.component";
 
 @Component({
   selector: "zz-test-col",
@@ -21,7 +21,7 @@ import { BezierPanelComponent } from "./bezier-panel/bezier-panel.component";
     GradientColorsComponent,
     BezierPanelComponent,
   ],
-  templateUrl: "./test-col.component.html",
+  templateUrl: "./bezier-gradient.component.html",
 })
 export class BezierGradientComponent {
   size = 200;

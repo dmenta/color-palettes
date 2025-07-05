@@ -1,5 +1,5 @@
-import { toContrast } from "../../../color/model/color";
-import { ColorValues } from "../../../color/model/colors.model";
+import { toContrast } from "../../color/model/color";
+import { ColorValues } from "../../color/model/colors.model";
 import { Point } from "./bezier-curve";
 
 export function gradientFromPoints(

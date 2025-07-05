@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { DarkModeToggleComponent } from "../../../core/components/dark-mode-toggle/dark-mode-toggle.component";
-import { MarcaComponent } from "../../../core/components/marca/marca.component";
+import { DarkModeToggleComponent } from "../../core/components/dark-mode-toggle/dark-mode-toggle.component";
+import { MarcaComponent } from "../../core/components/marca/marca.component";
 
 @Component({
   selector: "zz-gradients-header",
