@@ -1,5 +1,5 @@
 import { ColorValues } from "../../color/model/colors.model";
-import { Coordenates } from "./bezier-curve";
+import { Handlers } from "./bezier-curve";
 import { GradientOrientation } from "./orientations";
 
 export type GradientStateValues = {
@@ -7,6 +7,6 @@ export type GradientStateValues = {
     source: ColorValues;
     destination: ColorValues;
   };
-  handlers: Coordenates;
+  handlers: Handlers;
   orientation: GradientOrientation;
 };

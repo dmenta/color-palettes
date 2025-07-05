@@ -1,35 +1,52 @@
-import { Component, ElementRef, HostListener, inject, input, ViewChild } from "@angular/core";
-import { Coordenates, Point } from "../models/bezier-curve";
-import { drawBezierPanel } from "./bezier-panel-drawing";
+import {
+  ChangeDetectionStrategy,
+  Component,
+  effect,
+  ElementRef,
+  HostListener,
+  inject,
+  input,
+  signal,
+  ViewChild,
+} from "@angular/core";
+import { Handler, Handlers, Point, pointsMatch } from "../models/bezier-curve";
+import { drawBezierPanel, pointFromCanvas, pointToCanvas } from "./bezier-panel-drawing";
 import { GradientStateService } from "../services/gradient-state.service";
 
 @Component({
   selector: "zz-bezier-panel",
   imports: [],
   templateUrl: "./bezier-panel.component.html",
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BezierPanelComponent {
-  private currentHandler: "H1" | "H2" | null = null;
   private lastTimeoutId: number | null = null;
+  private state = inject(GradientStateService);
 
-  canvasOffset = 30;
-
-  state = inject(GradientStateService);
+  overHandler = signal(false);
+  currentHandler = signal<Handler | null>(null);
   size = input(200);
-
   color = input<string>("black");
 
   @ViewChild("canvas") canvas?: ElementRef<HTMLCanvasElement>;
 
   @HostListener("document:mouseup")
   onDocumentMouseUp(): void {
-    if (this.currentHandler) {
+    if (this.currentHandler()) {
       this.stopTracking();
     }
   }
 
+  constructor() {
+    effect(() => {
+      const coords = this.handlersToCanvas(this.state.handlers());
+
+      this.dibujar(coords, this.currentHandler(), this.size(), this.color());
+    });
+  }
+
   ngAfterViewInit() {
-    this.dibujar(this.state.handlers(), this.size());
+    this.dibujar(this.handlersToCanvas(this.state.handlers()));
   }
 
   onMouseDown(event: MouseEvent): void {
@@ -38,53 +55,47 @@ export class BezierPanelComponent {
       return;
     }
 
-    const rect = canvas.getBoundingClientRect();
-    this.setHandlerSelected(event.clientX - rect.left, event.clientY - rect.top);
+    this.setHandlerSelected(this.pointFromEvent(event));
   }
 
   onMouseMove(event: MouseEvent): void {
-    if (!this.currentHandler) {
+    if (!this.currentHandler()) {
+      const isOverHandler = this.isOverHandler(this.pointFromEvent(event));
+      this.overHandler.set(isOverHandler !== null);
       return;
     }
+
     const canvas = this.canvas?.nativeElement;
     if (!canvas) {
       return;
     }
 
-    const rect = canvas.getBoundingClientRect();
-    this.updateHandlerCoords(event.clientX - rect.left, event.clientY - rect.top);
-  }
-
-  private updateHandlerCoords(rawX: number, rawY: number): void {
-    const x = this.convertXFromCanvas(rawX);
-    const y = this.convertYFromCanvas(rawY);
-
-    if (this.currentHandler === "H1") {
-      this.state.onHandlersChange({ ...this.state.handlers(), point1: { x, y } });
-    } else if (this.currentHandler === "H2") {
-      this.state.onHandlersChange({ ...this.state.handlers(), point2: { x, y } });
-    }
-    this.dibujar(this.state.handlers(), this.size());
+    this.updateHandlerCoords(this.pointFromEvent(event));
   }
 
   onMouseUp(): void {
+    if (this.currentHandler() === null) {
+      return;
+    }
     this.stopTracking();
   }
 
   onMouseLeave(): void {
+    if (this.currentHandler() === null) {
+      return;
+    }
     this.setStopTimeout();
   }
+
   onMouseEnter(): void {
-    if (this.currentHandler !== null) {
+    if (this.currentHandler() !== null) {
       this.clearStopTimeout();
     }
   }
 
   private setStopTimeout() {
-    if (this.currentHandler !== null) {
-      this.clearStopTimeout();
-      this.lastTimeoutId = window.setTimeout(() => this.stopTracking(), 1000);
-    }
+    this.clearStopTimeout();
+    this.lastTimeoutId = window.setTimeout(() => this.stopTracking(), 1000);
   }
 
   private clearStopTimeout() {
@@ -95,65 +106,75 @@ export class BezierPanelComponent {
   }
 
   private stopTracking() {
-    if (this.currentHandler !== null) {
-      this.currentHandler = null;
+    if (this.currentHandler() !== null) {
+      this.currentHandler.set(null);
       this.clearStopTimeout();
     }
   }
 
-  private setHandlerSelected(rawX: number, rawY: number) {
-    const x = this.convertXFromCanvas(rawX);
-    const y = this.convertYFromCanvas(rawY);
+  private setHandlerSelected(point: Point) {
+    this.currentHandler.set(this.isOverHandler(point));
+  }
 
-    const test = { x, y };
+  private updateHandlerCoords(point: Point): void {
+    const handler = this.currentHandler();
+    if (handler === null) {
+      return;
+    }
 
+    this.state.onHandlersChange({ ...this.state.handlers(), [handler]: point });
+  }
+
+  private isOverHandler(point: Point): Handler | null {
     const coords = this.state.handlers();
-    if (this.checkCoordsMatch(test, coords.point1)) {
-      this.currentHandler = "H1";
-      return;
+
+    if (pointsMatch(point, coords.h1)) {
+      return "h1";
+    } else if (pointsMatch(point, coords.h2)) {
+      return "h2";
     }
-
-    if (this.checkCoordsMatch(test, coords.point2)) {
-      this.currentHandler = "H2";
-      return;
-    }
+    return null;
   }
-
-  private checkCoordsMatch(test: Point, pos: Point) {
-    const offset = 6;
-    return pos.x + offset > test.x && pos.x - offset < test.x && pos.y + offset > test.y && pos.y - offset < test.y;
-  }
-
-  private convertXFromCanvas(value: number): number {
-    const size = this.size();
-    return (Math.max(0, Math.min(value - this.canvasOffset, size)) / size) * 100;
-  }
-
-  private convertYFromCanvas(value: number): number {
-    const size = this.size();
-    return (Math.max(0, Math.min(size - value + this.canvasOffset, size)) / size) * 100;
-  }
-
-  private convertXToCanvas(value: number): number {
-    const size = this.size();
-    return (Math.max(0, Math.min(value, 100)) * size) / 100;
-  }
-
-  private convertYToCanvas(value: number): number {
-    const size = this.size();
-    return size - (Math.max(0, Math.min(value, size)) * size) / 100;
-  }
-
-  private dibujar(coordsRaw: Coordenates, size: number = this.size()) {
-    const coords = {
-      point1: { x: this.convertXToCanvas(coordsRaw.point1.x), y: this.convertYToCanvas(coordsRaw.point1.y) },
-      point2: { x: this.convertXToCanvas(coordsRaw.point2.x), y: this.convertYToCanvas(coordsRaw.point2.y) },
-    };
+  private dibujar(
+    coords: Handlers,
+    active: Handler | null = this.currentHandler(),
+    size: number = this.size(),
+    mode: string = this.color()
+  ) {
     const ctx = this.canvas?.nativeElement.getContext("bitmaprenderer");
     if (ctx) {
       requestAnimationFrame(() => {
-        drawBezierPanel(ctx, coords, size, this.currentHandler, this.color());
+        drawBezierPanel(ctx, coords, size, active, mode);
       });
     }
+  }
+
+  private handlersToCanvas(handlers: Handlers): Handlers {
+    return {
+      h1: pointToCanvas(handlers.h1, this.size()),
+      h2: pointToCanvas(handlers.h2, this.size()),
+    } as Handlers;
+  }
+
+  private pointFromEvent(event: MouseEvent): Point {
+    const el = this.canvas?.nativeElement;
+    if (!el) {
+      return { x: 0, y: 0 };
+    }
+
+    const style = window.getComputedStyle(el);
+
+    const padingLeft = parseFloat(style.paddingLeft.replace("px", "")) || 0;
+    const padingTop = parseFloat(style.paddingTop.replace("px", "")) || 0;
+    const paddingBottom = parseFloat(style.paddingBottom.replace("px", "")) || 0;
+    const canvasPadding = paddingBottom + padingTop;
+
+    const rect = el.getBoundingClientRect();
+    const size = rect.bottom - rect.top - canvasPadding;
+
+    return pointFromCanvas(
+      { x: event.clientX - rect.left - padingLeft, y: event.clientY - rect.top - padingTop },
+      size
+    );
   }
 }

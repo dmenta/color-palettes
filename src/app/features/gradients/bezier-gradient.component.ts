@@ -1,4 +1,4 @@
-import { Component, inject } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import { NotificationComponent } from "../../core/components/notification/notification.component";
 import { GradientHeaderComponent } from "../../gradient/header/gradient-header.component";
 import { ReactiveFormsModule } from "@angular/forms";
@@ -20,6 +20,7 @@ import { GradientStateService } from "../../gradient/services/gradient-state.ser
     GradientActionsComponent,
   ],
   templateUrl: "./bezier-gradient.component.html",
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BezierGradientComponent {
   state = inject(GradientStateService);

@@ -1,4 +1,4 @@
-import { Component, inject } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import { FormGroup, FormControl, ReactiveFormsModule } from "@angular/forms";
 import { GradientOrientation, orientationsDefinitions } from "../models/orientations";
 import { GradientStateService } from "../services/gradient-state.service";
@@ -7,6 +7,7 @@ import { GradientStateService } from "../services/gradient-state.service";
   selector: "zz-orientation-selector",
   imports: [ReactiveFormsModule],
   templateUrl: "./orientation-selector.component.html",
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GradientOrientationSelectorComponent {
   orientationsValues = orientationsDefinitions;

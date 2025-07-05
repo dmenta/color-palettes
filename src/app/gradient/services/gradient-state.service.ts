@@ -4,7 +4,7 @@ import { defaultGradientState } from "../models/default-gradient-state";
 import { GradientStateValues } from "../models/gradient-state-values";
 import { GradientOrientation } from "../models/orientations";
 import { ColorValues } from "../../color/model/colors.model";
-import { bezierPoints, Coordenates } from "../models/bezier-curve";
+import { bezierPoints, Handlers } from "../models/bezier-curve";
 import { GradientDefinition, gradientFromPoints } from "../models/gradient-points";
 import { toOklch } from "../../color/model/color";
 
@@ -58,7 +58,7 @@ export class GradientStateService {
     this.destinationColor.set(color);
   }
 
-  onHandlersChange(handlers: Coordenates) {
+  onHandlersChange(handlers: Handlers) {
     this.handlers.set({ ...handlers });
   }
 

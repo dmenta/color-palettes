@@ -8,7 +8,9 @@
     (mouseenter)="onMouseEnter()"
     #canvas
     [width]="size()"
+    [class.cursor-grab]="overHandler()"
+    [class.cursor-grabbing]="currentHandler() !== null"
     [height]="size()"
-    [style.padding.px]="canvasOffset"
+    [style.padding.px]="size() / 10"
     class="bg-gris-500/20 rounded-lg"></canvas>
 </div>

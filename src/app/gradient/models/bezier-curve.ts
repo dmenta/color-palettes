@@ -1,12 +1,12 @@
-export function bezierPoints(coords: Coordenates) {
+export function bezierPoints(coords: Handlers) {
   // P = (1−t)3P1 + 3(1−t)2tP2 +3(1−t)t2P3 + t3P4
   const x0 = 0;
-  const x1 = coords.point1.x;
-  const x2 = coords.point2.x;
+  const x1 = coords.h1.x;
+  const x2 = coords.h2.x;
   const x3 = 100;
   const y0 = 0;
-  const y1 = coords.point1.y;
-  const y2 = coords.point2.y;
+  const y1 = coords.h1.y;
+  const y2 = coords.h2.y;
   const y3 = 100;
   const values: Point[] = [];
   for (let t = 0; t <= 1; t += 0.05) {
@@ -29,12 +29,18 @@ export function bezierPoints(coords: Coordenates) {
   return values;
 }
 
-export type Coordenates = {
-  point1: Point;
-  point2: Point;
+export type Handlers = {
+  h1: Point;
+  h2: Point;
 };
 
 export type Point = {
   x: number;
   y: number;
 };
+
+export type Handler = keyof Handlers;
+
+export function pointsMatch(a: Point, b: Point, tolerance: number = 6) {
+  return b.x + tolerance > a.x && b.x - tolerance < a.x && b.y + tolerance > a.y && b.y - tolerance < a.y;
+}

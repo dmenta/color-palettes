@@ -1,4 +1,4 @@
-import { Component, inject } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import { ColorSelectorComponent } from "../../color/components/color-sample/color-selector/color-selector.component";
 import { ColorValues } from "../../color/model/colors.model";
 import { GradientStateService } from "../services/gradient-state.service";
@@ -10,6 +10,7 @@ import { GradientStateService } from "../services/gradient-state.service";
   host: {
     class: "w-full",
   },
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GradientColorsComponent {
   state = inject(GradientStateService);

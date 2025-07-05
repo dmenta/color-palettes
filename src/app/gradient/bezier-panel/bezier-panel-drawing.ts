@@ -1,10 +1,10 @@
-import { Coordenates, Point } from "../models/bezier-curve";
+import { Handlers, Handler, Point } from "../models/bezier-curve";
 
 export function drawBezierPanel(
   ctx: ImageBitmapRenderingContext,
-  coords: Coordenates,
+  coords: Handlers,
   size: number,
-  active: "H1" | "H2" | null,
+  active: Handler | null,
   color: string
 ) {
   const offscreen = new OffscreenCanvas(size, size);
@@ -15,25 +15,25 @@ export function drawBezierPanel(
   const handlersColors = handlerColors(color);
   const colorCurve = curveColor(color);
 
-  drawHandlerLine(offCtx, { x: 0, y: size }, coords.point1, handlersColors.line);
+  drawHandlerLine(offCtx, { x: 0, y: size }, coords.h1, handlersColors.line);
 
-  drawHandler(offCtx, coords.point1, handlersColors.h1);
+  drawHandler(offCtx, coords.h1, handlersColors.h1);
 
-  drawHandlerLine(offCtx, { x: size, y: 0 }, coords.point2, handlersColors.line);
+  drawHandlerLine(offCtx, { x: size, y: 0 }, coords.h2, handlersColors.line);
 
-  drawHandler(offCtx, coords.point2, handlersColors.h2);
+  drawHandler(offCtx, coords.h2, handlersColors.h2);
 
-  if (active === "H1") {
-    drawHandlerActive(offCtx, coords.point1, handlersColors.h1);
-  } else if (active === "H2") {
-    drawHandlerActive(offCtx, coords.point2, handlersColors.h2);
+  if (active === "h1") {
+    drawHandlerActive(offCtx, coords.h1, handlersColors.h1);
+  } else if (active === "h2") {
+    drawHandlerActive(offCtx, coords.h2, handlersColors.h2);
   }
 
   offCtx.beginPath();
   offCtx.moveTo(0, size);
   offCtx.strokeStyle = colorCurve;
 
-  offCtx.bezierCurveTo(coords.point1.x, coords.point1.y, coords.point2.x, coords.point2.y, size, 0);
+  offCtx.bezierCurveTo(coords.h1.x, coords.h1.y, coords.h2.x, coords.h2.y, size, 0);
   offCtx.lineWidth = 2;
   offCtx.stroke();
 
@@ -67,17 +67,19 @@ function drawGrid(ctx: OffscreenCanvasRenderingContext2D, size: number, color: s
     ctx.stroke();
   }
 }
+
 function drawHandler(ctx: OffscreenCanvasRenderingContext2D, point: Point, color: string) {
   ctx.beginPath();
-  ctx.arc(point.x, point.y, 5, 0, Math.PI * 2);
+  ctx.arc(point.x, point.y, 7, 0, Math.PI * 2);
   ctx.fillStyle = color;
   ctx.fill();
 }
 
 function drawHandlerActive(ctx: OffscreenCanvasRenderingContext2D, point: Point, color: string) {
   ctx.beginPath();
-  ctx.arc(point.x, point.y, 7, 0, Math.PI * 2);
+  ctx.arc(point.x, point.y, 10, 0, Math.PI * 2);
   ctx.strokeStyle = color;
+  ctx.lineWidth = 2;
   ctx.stroke();
 }
 
@@ -91,9 +93,9 @@ function drawHandlerLine(ctx: OffscreenCanvasRenderingContext2D, start: Point, e
 
 function handlerColors(color: string): { h1: string; h2: string; line: string } {
   return {
-    h1: color === "black" ? "darkred" : "red",
-    h2: color === "black" ? "navy" : "blue",
-    line: color === "black" ? "#405040" : "#E0FFE0",
+    h1: color === "black" ? "oklch(0.355 0.146 29)" : "oklch(0.634 0.254 18)",
+    h2: color === "black" ? "oklch(0.377 0.1 247)" : "oklch(0.858 0.146 197)",
+    line: color === "black" ? "#305030" : "#E0FFE0",
   };
 }
 
@@ -105,5 +107,21 @@ function gridColors(color: string): { lines: string; border: string } {
   return {
     lines: color === "black" ? "#606060" : "#C0C0C0",
     border: color === "black" ? "#101010" : "#F0F0F0",
+  };
+}
+
+export function pointFromCanvas(point: Point, size: number): Point {
+  const ratio = 100 / size;
+  return {
+    x: Math.max(0, Math.min(point.x, size)) * ratio,
+    y: Math.max(0, Math.min(size - point.y, size)) * ratio,
+  };
+}
+
+export function pointToCanvas(point: Point, size: number): Point {
+  const ratio = size / 100;
+  return {
+    x: Math.max(0, Math.min(point.x, 100)) * ratio,
+    y: size - Math.max(0, Math.min(point.y, size)) * ratio,
   };
 }

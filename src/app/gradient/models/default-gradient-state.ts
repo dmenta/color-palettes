@@ -4,12 +4,12 @@ import { GradientOrientation } from "./orientations";
 
 export const defaultGradientState: GradientStateValues = {
   colors: {
-    source: [208, 22, 130] as ColorValues,
-    destination: [37, 24, 119] as ColorValues,
+    source: [249, 147, 52] as ColorValues,
+    destination: [7, 10, 95] as ColorValues,
   },
   handlers: {
-    point1: { x: 20, y: 80 },
-    point2: { x: 40, y: 70 },
+    h1: { x: 3.4, y: 60 },
+    h2: { x: 20, y: 96.8 },
   },
-  orientation: "to right bottom" as GradientOrientation,
+  orientation: "to top" as GradientOrientation,
 };
