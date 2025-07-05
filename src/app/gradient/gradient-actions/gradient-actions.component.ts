@@ -6,6 +6,9 @@ import { GradientStateService } from "../services/gradient-state.service";
   selector: "zz-gradient-actions",
   imports: [],
   templateUrl: "./gradient-actions.component.html",
+  host: {
+    class: "block w-full",
+  },
 })
 export class GradientActionsComponent {
   copyService = inject(CopyService);
@@ -17,11 +20,19 @@ export class GradientActionsComponent {
     this.copy();
   }
 
-  copy() {
-    this.onSaveFile("gradient", "svg", this.toSVG());
-    // this.copyService.copy(this.toSVG(), "Gradient  copied!");
+  @HostListener("document:keydown.control.shift.g", ["$event"])
+  handleSvgShortcut(event: KeyboardEvent) {
+    event.preventDefault();
+    this.copy();
+  }
 
-    // this.copyService.copy(this.state.gradient().gradient, "Gradient  copied!");
+  copy() {
+    this.copyService.copy(this.state.gradient().gradient, "Gradient  copied!");
+  }
+
+  saveSVG() {
+    const svgContent = this.toSVG();
+    this.onSaveFile(`colorina-gradient-${new Date().valueOf()}`, "svg", svgContent);
   }
 
   public onSaveFile(name: string, extension: string, content: string): void {
