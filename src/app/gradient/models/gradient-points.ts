@@ -1,4 +1,4 @@
-import { toContrast } from "../../color/model/color";
+import { toContrast, toRgb } from "../../color/model/color";
 import { ColorValues } from "../../color/model/colors.model";
 import { Point } from "./bezier-curve";
 
@@ -48,6 +48,7 @@ export function gradientFromPoints(
   let midColor = "";
 
   const pasos = [] as string[];
+  const pasosRGB = [] as { offset: number; color: string }[];
   for (let i = 0; i < valores.length; i++) {
     const stepRatio = valores[i]!.y;
     const lSource = (stepRatio * lRange) / 100 + lMin;
@@ -59,16 +60,28 @@ export function gradientFromPoints(
     }
 
     const pos = valores[i]!.x;
-    pasos.push(`oklch(${lSource.toFixed(3)} ${cSource.toFixed(3)} ${hSource.toFixed(1)}) ${pos.toFixed(1)}%`);
+    const color = `oklch(${lSource.toFixed(3)} ${cSource.toFixed(3)} ${hSource.toFixed(1)})`;
+    const rgb = toRgb(color).color;
+
+    pasosRGB.push({ offset: pos, color: rgb });
+    pasos.push(`${color} ${pos.toFixed(1)}%`);
   }
 
   return {
     gradient: `linear-gradient(${orientation} in oklch, ${pasos})`,
     contrast: toContrast(midColor),
+    gradientRGB: `linear-gradient(${orientation} in srgb, ${pasosRGB
+      .map((p) => `${p.color} ${p.offset.toFixed(1)}%`)
+      .join(", ")})`,
+    pasosRGB: pasosRGB,
   } as GradientDefinition;
 }
 
 export type GradientDefinition = {
   gradient: string;
   contrast: string;
+  gradientRGB: string;
+  pasosRGB: { offset: number; color: string }[];
 };
+
+// <stop offset="1" style="stop-color:rgb(140,140,20);stop-opacity:1"/>
