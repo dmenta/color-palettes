@@ -11,11 +11,11 @@ export class GradientOrientationSelectorComponent {
   orientationsValues = orientations;
 
   orientationGroup = new FormGroup<{ orientation: FormControl<string> }>({
-    orientation: new FormControl("to right", { nonNullable: true }),
+    orientation: new FormControl("to right bottom", { nonNullable: true }),
   });
 
   @Output() orientationChanged = this.orientationGroup.valueChanges.pipe(
-    map((values) => values.orientation ?? "to right")
+    map((values) => values.orientation ?? "to right bottom")
   );
 }
 export const orientations = [

@@ -6,7 +6,6 @@ import { ColorValues } from "../../color/model/colors.model";
 import { GradientDefinition, gradientFromPoints } from "../../gradient/models/gradient-points";
 import { bezierPoints, Coordenates } from "../../gradient/models/bezier-curve";
 import { GradientOrientationSelectorComponent } from "../../gradient/orientation-selector/orientation-selector.component";
-import { BezierCoordenatesSelectorComponent } from "../../gradient/coordenates-selector/coordenates-selector.component";
 import { GradientColorsComponent } from "../../gradient/gradient-colors/gradient-colors.component";
 import { BezierPanelComponent } from "../../gradient/bezier-panel/bezier-panel.component";
 
@@ -17,28 +16,27 @@ import { BezierPanelComponent } from "../../gradient/bezier-panel/bezier-panel.c
     GradientHeaderComponent,
     ReactiveFormsModule,
     GradientOrientationSelectorComponent,
-    BezierCoordenatesSelectorComponent,
     GradientColorsComponent,
     BezierPanelComponent,
   ],
   templateUrl: "./bezier-gradient.component.html",
 })
 export class BezierGradientComponent {
-  size = 200;
+  size = 350;
   private sourceColor = signal<ColorValues>([0, 0, 0]);
   private destinationColor = signal<ColorValues>([0, 0, 0]);
 
   coords = signal<Coordenates>({
-    point1: { x: 50, y: 50 },
-    point2: { x: 50, y: 50 },
+    point1: { x: 20, y: 80 },
+    point2: { x: 40, y: 70 },
   });
 
   changingCoords = signal<Coordenates>({
-    point1: { x: 50, y: 50 },
-    point2: { x: 50, y: 50 },
+    point1: { x: 20, y: 80 },
+    point2: { x: 40, y: 70 },
   });
 
-  orientation = signal("to right");
+  orientation = signal("to right bottom");
   points = computed(() => bezierPoints(this.changingCoords()));
   gradient: Signal<GradientDefinition> = computed(() =>
     gradientFromPoints(this.sourceColor(), this.destinationColor(), this.points!(), this.orientation())
@@ -52,7 +50,7 @@ export class BezierGradientComponent {
   }
 
   onOrientationChanged(orientation: string) {
-    this.orientation.set(orientation ?? "to right");
+    this.orientation.set(orientation ?? "to right bottom");
   }
 
   onCoordsChanging(coords: Coordenates) {

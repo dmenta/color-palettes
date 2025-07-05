@@ -7,10 +7,13 @@ import { toOklch } from "../../color/model/color";
   selector: "zz-gradient-colors",
   imports: [ColorSelectorComponent],
   templateUrl: "./gradient-colors.component.html",
+  host: {
+    class: "w-full",
+  },
 })
 export class GradientColorsComponent {
-  colorSource = signal<ColorValues>([23, 132, 186]);
-  colorDestination = signal<ColorValues>([78, 208, 86]);
+  colorSource = signal<ColorValues>([208, 22, 130]);
+  colorDestination = signal<ColorValues>([37, 24, 119]);
 
   sourceColorChanged = output<ColorValues>();
   destinationColorChanged = output<ColorValues>();

@@ -3,25 +3,20 @@
     <zz-gradients-header></zz-gradients-header>
   </div>
   <main
-    class="max-w-[1600px] w-screen h-[calc(100svh_-_50px)] flex flex-col items-center justify-center gap-4"
+    class="w-screen min-h-[calc(100svh_-_50px)] flex flex-col items-center justify-center gap-4"
     [style.color]="gradient().contrast"
     [style.background]="gradient().gradient">
-    <div class="p-8 rounded-xl flex flex-col items-center justify-center gap-8">
-      <div class="flex flex-row items-start gap-4">
-        <zz-gradient-colors
-          class="mt-8 h-31"
-          (sourceColorChanged)="onColorSourceChanged($event)"
-          (destinationColorChanged)="onColorDestinationChanged($event)"></zz-gradient-colors>
-        <zz-coordenates-selector
-          (coordsChanged)="onCoordsChanging($event)"
-          [coords]="coords()"></zz-coordenates-selector>
-        <zz-bezier-panel
-          [size]="size"
-          [color]="gradient().contrast"
-          [coords]="changingCoords()"
-          (coordsChanged)="onCoordsChanged($event)"
-          (coordsChanging)="onCoordsChanging($event)"></zz-bezier-panel>
-      </div>
+    <div class="flex flex-col items-center justify-center gap-4 w-[130px]">
+      <zz-bezier-panel
+        [size]="size"
+        [color]="gradient().contrast"
+        [coords]="changingCoords()"
+        (coordsChanged)="onCoordsChanged($event)"
+        (coordsChanging)="onCoordsChanging($event)"></zz-bezier-panel>
+      <zz-gradient-colors
+        class=""
+        (sourceColorChanged)="onColorSourceChanged($event)"
+        (destinationColorChanged)="onColorDestinationChanged($event)"></zz-gradient-colors>
       <zz-orientation-selector (orientationChanged)="onOrientationChanged($event)"></zz-orientation-selector>
     </div>
   </main>
