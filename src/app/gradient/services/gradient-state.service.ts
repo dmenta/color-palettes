@@ -18,6 +18,8 @@ export class GradientStateService {
 
   orientation = signal<GradientOrientation>(this.initialState.orientation);
 
+  angleDegrees = signal<number>(this.initialState.angle);
+
   startRGBColor = signal(this.initialState.colors.start);
   endRGBColor = signal(this.initialState.colors.end);
 
@@ -31,7 +33,7 @@ export class GradientStateService {
   endColor = computed(() => this.oklchText(this.endOklch()));
 
   gradient: Signal<GradientDefinition> = computed(() =>
-    gradientFromPoints(this.startOklch(), this.endOklch(), this.points!(), this.orientation())
+    gradientFromPoints(this.startOklch(), this.endOklch(), this.points!(), this.angleDegrees())
   );
 
   private readonly currentState = computed(() => {
@@ -42,6 +44,7 @@ export class GradientStateService {
       },
       handlers: this.handlers(),
       orientation: this.orientation(),
+      angle: this.angleDegrees(),
     };
   });
 
@@ -51,6 +54,10 @@ export class GradientStateService {
 
   onOrientationChange(orientation: GradientOrientation) {
     this.orientation.set(orientation);
+  }
+
+  onAngleDegreesChange(angle: number) {
+    this.angleDegrees.set(angle);
   }
 
   onStartColorChange(color: ColorValues) {

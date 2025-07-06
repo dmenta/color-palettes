@@ -2,6 +2,7 @@ import { Component, Output, EventEmitter, input, effect, signal, ChangeDetection
 import { FormControl, ReactiveFormsModule } from "@angular/forms";
 import { ColorValues } from "../../../model/colors.model";
 import { rgbFromHex, rgbToHex, toContrast } from "../../../model/color";
+import { debounceTime } from "rxjs";
 
 @Component({
   selector: "zz-color-selector",
@@ -12,8 +13,7 @@ import { rgbFromHex, rgbToHex, toContrast } from "../../../model/color";
   [&::-webkit-color-swatch]:border-none [&::-webkit-color-swatch-wrapper]:p-0 shadow-md shadow-black/40 border-2
   focus:ring-1 focus:ring-gris-600/100"
       [class]="borderColor()"
-      [formControl]="colorControl"
-      (change)="updateColor()" />
+      [formControl]="colorControl" />
     }`,
   imports: [ReactiveFormsModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -63,8 +63,9 @@ export class ColorSelectorComponent implements OnInit {
       this.borderColor.set(this.border()!);
     }
     this.colorControl = new FormControl<string>(this.value(), { nonNullable: true });
-  }
-  public updateColor() {
-    this.colorChange.emit(rgbFromHex(this.colorControl!.value));
+
+    this.colorControl.valueChanges.pipe(debounceTime(3)).subscribe((value) => {
+      this.colorChange.emit(rgbFromHex(value));
+    });
   }
 }

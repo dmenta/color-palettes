@@ -12,4 +12,5 @@ export const defaultGradientState: GradientStateValues = {
     h2: { x: 20, y: 96.8 },
   },
   orientation: "to top" as GradientOrientation,
+  angle: 0,
 };

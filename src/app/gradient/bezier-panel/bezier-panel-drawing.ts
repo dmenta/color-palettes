@@ -53,6 +53,8 @@ function drawGrid(ctx: OffscreenCanvasRenderingContext2D, size: number, darkMode
 
   ctx.strokeStyle = colors.lines;
 
+  ctx.setLineDash([2, 2]);
+
   for (let i = 10; i <= 90; i += 10) {
     ctx.beginPath();
     ctx.moveTo(0, i * ratio);
@@ -66,6 +68,7 @@ function drawGrid(ctx: OffscreenCanvasRenderingContext2D, size: number, darkMode
     ctx.lineWidth = 0.5;
     ctx.stroke();
   }
+  ctx.setLineDash([]);
 }
 
 function drawHandler(ctx: OffscreenCanvasRenderingContext2D, point: Point, color: string) {

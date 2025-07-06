@@ -1,4 +1,8 @@
-export const orientationsDefinitions = [
+export const orientationsDefinitions: {
+  value: GradientOrientation;
+  icon: string;
+  class: string;
+}[] = [
   { value: "to right", icon: "&#x2192;", class: "rotate-90" },
   { value: "to right bottom", icon: "&#x2198;", class: "rotate-135" },
   { value: "to bottom", icon: "&#x2193;", class: "rotate-180" },

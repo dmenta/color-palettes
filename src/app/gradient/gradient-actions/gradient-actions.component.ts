@@ -76,7 +76,7 @@ export class GradientActionsComponent {
 
     const pasos = this.state
       .gradient()
-      .pasosRGB.map(
+      .rgbStops.map(
         (p) => `        <stop offset="${(p.offset / 100).toFixed(3)}" style="stop-color:${p.color};stop-opacity:1"/>`
       )
       .join("\n");

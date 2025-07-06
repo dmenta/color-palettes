@@ -9,4 +9,5 @@ export type GradientStateValues = {
   };
   handlers: Handlers;
   orientation: GradientOrientation;
+  angle: number;
 };

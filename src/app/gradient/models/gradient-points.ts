@@ -7,14 +7,15 @@ export function gradientFromPoints(
   start: ColorValues,
   end: ColorValues,
   valores: Point[],
-  orientation: GradientOrientation
+  angleDegrees: number | null = null,
+  orientation: GradientOrientation = "to right"
 ) {
   const lVariation = lightnessVariation(start, end);
   const cVariation = chromaVariation(start, end);
   const hVariation = hueVariation(start, end);
 
-  const pasos: GradientStep[] = [];
-  const pasosRGB: GradientStep[] = [];
+  const stops: GradientStop[] = [];
+  const rgbStops: GradientStop[] = [];
 
   for (let i = 0; i < valores.length; i++) {
     const point = valores[i]!;
@@ -25,17 +26,20 @@ export function gradientFromPoints(
 
     const color = `oklch(${lStart} ${cStart} ${hStart})`;
 
-    pasos.push({ offset: point.x, color: color });
-    pasosRGB.push({ offset: point.x, color: toRgb(color).color });
+    stops.push({ offset: point.x, color: color });
+    rgbStops.push({ offset: point.x, color: toRgb(color).color });
   }
 
   const indiceMedio = indiceValorMedio(valores);
 
+  const solvedAngle = angleDegrees !== null ? angleDegrees + "deg" : orientation;
+
   return {
-    gradient: gradientString(pasos, orientation, "oklch"),
-    darkMode: toContrast(pasos[indiceMedio]!.color) === "white",
-    gradientRGB: gradientString(pasosRGB, orientation, "srgb"),
-    pasosRGB: pasosRGB,
+    stops: stops,
+    gradient: gradientString(stops, solvedAngle, "oklch"),
+    darkMode: toContrast(stops[indiceMedio]!.color) === "white",
+    gradientRGB: gradientString(rgbStops, solvedAngle, "srgb"),
+    rgbStops: rgbStops,
   } as GradientDefinition;
 }
 
@@ -54,8 +58,8 @@ function hueVariation(start: ColorValues, end: ColorValues) {
 
   return { range: hEnd - hStart, delta: hStart };
 }
-function gradientString(steps: GradientStep[], orientation: GradientOrientation, space: string) {
-  return `linear-gradient(${orientation} in ${space}, ${steps
+export function gradientString(stops: GradientStop[], orientation: string, space: string) {
+  return `linear-gradient(${orientation} in ${space}, ${stops
     .map((p) => `${p.color} ${p.offset.toFixed(1)}%`)
     .join(", ")})`;
 }
@@ -77,13 +81,14 @@ function indiceValorMedio(valores: Point[]): number {
 }
 
 export type GradientDefinition = {
+  stops: GradientStop[];
   gradient: string;
   darkMode: boolean;
   gradientRGB: string;
-  pasosRGB: GradientStep[];
+  rgbStops: GradientStop[];
 };
 
-type GradientStep = {
+type GradientStop = {
   offset: number;
   color: string;
 };
