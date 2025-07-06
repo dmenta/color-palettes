@@ -4,14 +4,14 @@ import { Point } from "./bezier-curve";
 import { GradientOrientation } from "./orientations";
 
 export function gradientFromPoints(
-  source: ColorValues,
-  destination: ColorValues,
+  start: ColorValues,
+  end: ColorValues,
   valores: Point[],
   orientation: GradientOrientation
 ) {
-  const lVariation = lightnessVariation(source, destination);
-  const cVariation = chromaVariation(source, destination);
-  const hVariation = hueVariation(source, destination);
+  const lVariation = lightnessVariation(start, end);
+  const cVariation = chromaVariation(start, end);
+  const hVariation = hueVariation(start, end);
 
   const pasos: GradientStep[] = [];
   const pasosRGB: GradientStep[] = [];
@@ -19,11 +19,11 @@ export function gradientFromPoints(
   for (let i = 0; i < valores.length; i++) {
     const point = valores[i]!;
     const stepRatio = point.y / 100;
-    const lSource = (stepRatio * lVariation.range + lVariation.delta).toFixed(3);
-    const cSource = (stepRatio * cVariation.range + cVariation.delta).toFixed(3);
-    const hSource = (stepRatio * hVariation.range + hVariation.delta).toFixed(1);
+    const lStart = (stepRatio * lVariation.range + lVariation.delta).toFixed(3);
+    const cStart = (stepRatio * cVariation.range + cVariation.delta).toFixed(3);
+    const hStart = (stepRatio * hVariation.range + hVariation.delta).toFixed(1);
 
-    const color = `oklch(${lSource} ${cSource} ${hSource})`;
+    const color = `oklch(${lStart} ${cStart} ${hStart})`;
 
     pasos.push({ offset: point.x, color: color });
     pasosRGB.push({ offset: point.x, color: toRgb(color).color });
@@ -39,20 +39,20 @@ export function gradientFromPoints(
   } as GradientDefinition;
 }
 
-function chromaVariation(source: ColorValues, destination: ColorValues) {
-  return { range: destination[1]! - source[1]!, delta: source[1]! };
+function chromaVariation(start: ColorValues, end: ColorValues) {
+  return { range: end[1]! - start[1]!, delta: start[1]! };
 }
 
-function lightnessVariation(source: ColorValues, destination: ColorValues) {
-  return { range: destination[0]! - source[0]!, delta: source[0]! };
+function lightnessVariation(start: ColorValues, end: ColorValues) {
+  return { range: end[0]! - start[0]!, delta: start[0]! };
 }
 
-function hueVariation(source: ColorValues, destination: ColorValues) {
-  const path = destination[2]! - source[2]!;
-  const hSource = path > 180 ? source[2]! + 360 : source[2]!;
-  const hDestination = path < -180 ? destination[2]! + 360 : destination[2]!;
+function hueVariation(start: ColorValues, end: ColorValues) {
+  const path = end[2]! - start[2]!;
+  const hStart = path > 180 ? start[2]! + 360 : start[2]!;
+  const hEnd = path < -180 ? end[2]! + 360 : end[2]!;
 
-  return { range: hDestination - hSource, delta: hSource };
+  return { range: hEnd - hStart, delta: hStart };
 }
 function gradientString(steps: GradientStep[], orientation: GradientOrientation, space: string) {
   return `linear-gradient(${orientation} in ${space}, ${steps

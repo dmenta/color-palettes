@@ -15,10 +15,10 @@ import { GradientStateService } from "../services/gradient-state.service";
 export class GradientColorsComponent {
   state = inject(GradientStateService);
 
-  onColorDestinationChange(rgb: ColorValues) {
-    this.state.onDestinationColorChange(rgb);
+  onColorEndChange(rgb: ColorValues) {
+    this.state.onEndColorChange(rgb);
   }
-  onColorSourceChange(rgb: ColorValues) {
-    this.state.onSourceColorChange(rgb);
+  onColorStartChange(rgb: ColorValues) {
+    this.state.onStartColorChange(rgb);
   }
 }

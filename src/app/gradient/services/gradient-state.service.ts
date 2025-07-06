@@ -18,27 +18,27 @@ export class GradientStateService {
 
   orientation = signal<GradientOrientation>(this.initialState.orientation);
 
-  sourceColor = signal(this.initialState.colors.source);
-  destinationColor = signal(this.initialState.colors.destination);
+  startRGBColor = signal(this.initialState.colors.start);
+  endRGBColor = signal(this.initialState.colors.end);
 
   handlers = signal(this.initialState.handlers);
 
-  private sourceOklch = computed(() => toOklch(this.rgbText(this.sourceColor())));
-  private destinationOklch = computed(() => toOklch(this.rgbText(this.destinationColor())));
+  private startOklch = computed(() => toOklch(this.rgbText(this.startRGBColor())));
+  private endOklch = computed(() => toOklch(this.rgbText(this.endRGBColor())));
   private points = computed(() => bezierPoints(this.handlers()));
 
-  startColor = computed(() => this.oklchText(this.sourceOklch()));
-  endColor = computed(() => this.oklchText(this.destinationOklch()));
+  startColor = computed(() => this.oklchText(this.startOklch()));
+  endColor = computed(() => this.oklchText(this.endOklch()));
 
   gradient: Signal<GradientDefinition> = computed(() =>
-    gradientFromPoints(this.sourceOklch(), this.destinationOklch(), this.points!(), this.orientation())
+    gradientFromPoints(this.startOklch(), this.endOklch(), this.points!(), this.orientation())
   );
 
   private readonly currentState = computed(() => {
     return {
       colors: {
-        source: this.sourceColor(),
-        destination: this.destinationColor(),
+        start: this.startRGBColor(),
+        end: this.endRGBColor(),
       },
       handlers: this.handlers(),
       orientation: this.orientation(),
@@ -53,12 +53,12 @@ export class GradientStateService {
     this.orientation.set(orientation);
   }
 
-  onSourceColorChange(color: ColorValues) {
-    this.sourceColor.set(color);
+  onStartColorChange(color: ColorValues) {
+    this.startRGBColor.set(color);
   }
 
-  onDestinationColorChange(color: ColorValues) {
-    this.destinationColor.set(color);
+  onEndColorChange(color: ColorValues) {
+    this.endRGBColor.set(color);
   }
 
   onHandlersChange(handlers: Handlers) {

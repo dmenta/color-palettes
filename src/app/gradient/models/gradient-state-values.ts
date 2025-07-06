@@ -4,8 +4,8 @@ import { GradientOrientation } from "./orientations";
 
 export type GradientStateValues = {
   colors: {
-    source: ColorValues;
-    destination: ColorValues;
+    start: ColorValues;
+    end: ColorValues;
   };
   handlers: Handlers;
   orientation: GradientOrientation;

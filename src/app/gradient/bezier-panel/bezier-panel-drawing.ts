@@ -78,7 +78,7 @@ function drawHandler(ctx: OffscreenCanvasRenderingContext2D, point: Point, color
 function drawHandlerActive(ctx: OffscreenCanvasRenderingContext2D, point: Point, color: string, shadowColor: string) {
   // Shadow
   ctx.shadowColor = shadowColor;
-  ctx.shadowBlur = 6;
+  ctx.shadowBlur = 7;
   ctx.shadowOffsetX = 5;
   ctx.shadowOffsetY = 5;
 
@@ -89,9 +89,6 @@ function drawHandlerActive(ctx: OffscreenCanvasRenderingContext2D, point: Point,
   ctx.stroke();
 
   ctx.shadowColor = "transparent"; // Reset shadow
-  ctx.shadowBlur = 0;
-  ctx.shadowOffsetX = 0;
-  ctx.shadowOffsetY = 0;
 }
 
 function drawHandlerLine(ctx: OffscreenCanvasRenderingContext2D, start: Point, end: Point, color: string) {

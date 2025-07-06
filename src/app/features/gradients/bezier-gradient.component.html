@@ -13,11 +13,7 @@
       <zz-gradient-actions></zz-gradient-actions>
     </div>
     <zz-orientation-selector></zz-orientation-selector>
-    <div
-      class="absolute top-0 left-0 right-0 h-[50px] z-1"
-      [style.background]="
-        'linear-gradient(to right in oklch, ' + this.state.startColor() + ' 0%, ' + this.state.endColor() + ' 100%)'
-      "></div>
+    <div zz-gradient-reference class="absolute top-0 left-0 right-0 h-[50px] z-1"></div>
   </main>
 </div>
 

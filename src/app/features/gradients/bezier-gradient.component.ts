@@ -7,6 +7,7 @@ import { GradientColorsComponent } from "../../gradient/gradient-colors/gradient
 import { BezierPanelComponent } from "../../gradient/bezier-panel/bezier-panel.component";
 import { GradientActionsComponent } from "../../gradient/gradient-actions/gradient-actions.component";
 import { GradientStateService } from "../../gradient/services/gradient-state.service";
+import { GradientReferenceDirective } from "../../gradient/directives/gradient-reference.directive";
 
 @Component({
   selector: "zz-test-col",
@@ -18,6 +19,7 @@ import { GradientStateService } from "../../gradient/services/gradient-state.ser
     GradientColorsComponent,
     BezierPanelComponent,
     GradientActionsComponent,
+    GradientReferenceDirective,
   ],
   templateUrl: "./bezier-gradient.component.html",
   changeDetection: ChangeDetectionStrategy.OnPush,

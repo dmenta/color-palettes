@@ -1,10 +1,10 @@
 <div class="flex flex-row items-center gap-4 w-full">
   <zz-color-selector
-    (color-change)="onColorSourceChange($event)"
+    (color-change)="onColorStartChange($event)"
     [border]="'border-current/40'"
-    [color]="this.state.sourceColor()"></zz-color-selector>
+    [color]="this.state.startRGBColor()"></zz-color-selector>
   <zz-color-selector
-    (color-change)="onColorDestinationChange($event)"
+    (color-change)="onColorEndChange($event)"
     [border]="'border-current/40'"
-    [color]="this.state.destinationColor()"></zz-color-selector>
+    [color]="this.state.endRGBColor()"></zz-color-selector>
 </div>
