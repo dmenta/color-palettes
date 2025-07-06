@@ -65,7 +65,7 @@ export class OrientationCompassComponent {
     this.mouseMoveSubscription = fromEvent(this.canvas!.nativeElement, "mousemove")
       .pipe(
         filter(() => this.handler()),
-        debounceTime(3),
+        debounceTime(1),
         map((event) => this.angleDegreesFromPoint(this.pointFromEvent(event as MouseEvent))),
         map((angle) => (this.controlPressed() ? Math.round(angle / 45) * 45 : angle)),
         distinctUntilChanged()
