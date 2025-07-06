@@ -9,7 +9,7 @@ import { rgbFromHex, rgbToHex, toContrast } from "../../../model/color";
     <input
       type="color"
       class="rounded-md appearance-none [&::-webkit-color-swatch]:rounded-
-  [&::-webkit-color-swatch]:border-none [&::-webkit-color-swatch-wrapper]:p-0 shadow-md shadow-black/20 border-2
+  [&::-webkit-color-swatch]:border-none [&::-webkit-color-swatch-wrapper]:p-0 shadow-md shadow-black/40 border-2
   focus:ring-1 focus:ring-gris-600/100"
       [class]="borderColor()"
       [formControl]="colorControl"

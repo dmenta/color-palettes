@@ -4,8 +4,8 @@
   </div>
   <main
     class="relative w-screen min-h-[calc(100svh_-_50px)] flex flex-col items-center justify-center gap-4"
-    [class.text-gris-100]="!this.state.gradient().darkMode"
-    [class.text-gris-900]="this.state.gradient().darkMode"
+    [class.text-gris-900]="!this.state.gradient().darkMode"
+    [class.text-gris-100]="this.state.gradient().darkMode"
     [style.background]="this.state.gradient().gradient">
     <zz-bezier-panel [size]="size" [darkMode]="this.state.gradient().darkMode"></zz-bezier-panel>
     <div class="flex flex-row items-center justify-between gap-4 w-[350px]">
