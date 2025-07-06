@@ -121,7 +121,7 @@ export class OrientationCompassComponent {
     const deltaX = (point.x - radio) / radio;
     const deltaY = (point.y - radio) / radio;
 
-    if (Math.abs(deltaX) < 0.4 && Math.abs(deltaY) < 0.4) {
+    if (Math.abs(deltaX) < 0.3 && Math.abs(deltaY) < 0.3) {
       return this.state.angleDegrees();
     }
 
@@ -135,9 +135,9 @@ export class OrientationCompassComponent {
       let distancia = Math.abs(currentAngle - angleDegrees);
       if (Math.abs(distancia) > 180) {
         distancia = 360 - Math.abs(distancia);
-        newAngle = Math.min(currentAngle, angleDegrees) - distancia / 10;
+        newAngle = Math.min(currentAngle, angleDegrees) - distancia / 15;
       } else {
-        newAngle = Math.min(currentAngle, angleDegrees) + distancia / 10;
+        newAngle = Math.min(currentAngle, angleDegrees) + distancia / 15;
       }
     }
 

@@ -26,7 +26,7 @@ function drawAngle(ctx: OffscreenCanvasRenderingContext2D, angleDeg: number, dia
   const radio = Math.round(diameter / 2);
 
   ctx.font = "20px 'Noto Sans'";
-  ctx.fillStyle = darkMode ? "oklch(0.754 0.164 18 / 0.9)" : "oklch(0.534 0.204 18 / 0.8)";
+  ctx.fillStyle = darkMode ? "oklch(0.904 0.104 18 / 0.9)" : "oklch(0.334 0.244 18 / 0.8)";
 
   const textSize = ctx.measureText(angleDeg.toFixed(0) + "°");
   const posicion = angleDeg >= 90 && angleDeg <= 270 ? -10 : 5 + textSize.fontBoundingBoxAscent;
