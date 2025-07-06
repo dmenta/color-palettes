@@ -5,15 +5,15 @@ export function drawBezierPanel(
   coords: Handlers,
   size: number,
   active: Handler | null,
-  color: string
+  darkMode: boolean
 ) {
   const offscreen = new OffscreenCanvas(size, size);
   const offCtx = offscreen.getContext("2d")!;
 
-  drawGrid(offCtx, size, color);
+  drawGrid(offCtx, size, darkMode);
 
-  const handlersColors = handlerColors(color);
-  const colorCurve = curveColor(color);
+  const handlersColors = handlerColors(darkMode);
+  const colorCurve = curveColor(darkMode);
 
   drawHandlerLine(offCtx, { x: size, y: 0 }, coords.h2, handlersColors.line);
 
@@ -41,8 +41,8 @@ export function drawBezierPanel(
   ctx.transferFromImageBitmap(bitmapOne);
 }
 
-function drawGrid(ctx: OffscreenCanvasRenderingContext2D, size: number, color: string) {
-  const colors = gridColors(color);
+function drawGrid(ctx: OffscreenCanvasRenderingContext2D, size: number, darkMode: boolean) {
+  const colors = gridColors(darkMode);
   ctx.beginPath();
   ctx.rect(0, 0, size, size);
   ctx.strokeStyle = colors.border;
@@ -91,22 +91,22 @@ function drawHandlerLine(ctx: OffscreenCanvasRenderingContext2D, start: Point, e
   ctx.stroke();
 }
 
-function handlerColors(color: string): { h1: string; h2: string; line: string } {
+function handlerColors(darkMode: boolean): { h1: string; h2: string; line: string } {
   return {
-    h1: color === "black" ? "oklch(0.355 0.146 29)" : "oklch(0.634 0.254 18)",
-    h2: color === "black" ? "oklch(0.377 0.1 247)" : "oklch(0.858 0.146 197)",
-    line: color === "black" ? "#305030" : "#E0FFE0",
+    h1: !darkMode ? "oklch(0.355 0.146 29)" : "oklch(0.634 0.254 18)",
+    h2: !darkMode ? "oklch(0.377 0.1 247)" : "oklch(0.858 0.146 197)",
+    line: !darkMode ? "#305030" : "#E0FFE0",
   };
 }
 
-function curveColor(color: string): string {
-  return color === "black" ? "#303030" : "#D0D0D0";
+function curveColor(darkMode: boolean): string {
+  return !darkMode ? "#303030" : "#D0D0D0";
 }
 
-function gridColors(color: string): { lines: string; border: string } {
+function gridColors(darkMode: boolean): { lines: string; border: string } {
   return {
-    lines: color === "black" ? "#606060" : "#C0C0C0",
-    border: color === "black" ? "#101010" : "#F0F0F0",
+    lines: !darkMode ? "#606060" : "#C0C0C0",
+    border: !darkMode ? "#101010" : "#F0F0F0",
   };
 }
 

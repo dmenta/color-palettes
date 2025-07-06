@@ -27,6 +27,9 @@ export class GradientStateService {
   private destinationOklch = computed(() => toOklch(this.rgbText(this.destinationColor())));
   private points = computed(() => bezierPoints(this.handlers()));
 
+  startColor = computed(() => this.oklchText(this.sourceOklch()));
+  endColor = computed(() => this.oklchText(this.destinationOklch()));
+
   gradient: Signal<GradientDefinition> = computed(() =>
     gradientFromPoints(this.sourceOklch(), this.destinationOklch(), this.points!(), this.orientation())
   );
@@ -64,5 +67,8 @@ export class GradientStateService {
 
   private rgbText(rgb: ColorValues): string {
     return `rgb(${Math.round(rgb[0])} ${Math.round(rgb[1])} ${Math.round(rgb[2])})`;
+  }
+  private oklchText(lch: ColorValues): string {
+    return `oklch(${lch[0].toFixed(3)} ${lch[1].toFixed(3)} ${lch[2].toFixed(1)})`;
   }
 }

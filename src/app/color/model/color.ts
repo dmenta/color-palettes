@@ -21,7 +21,11 @@ export function toHsl(textoColor: string) {
 export function toOklch(textoColor: string) {
   const color = new Color(textoColor).to("oklch");
 
-  return [color.coords[0].valueOf(), color.coords[1].valueOf(), color.coords[2].valueOf()] as ColorValues;
+  return [
+    color.coords[0].valueOf(),
+    color.coords[1].valueOf(),
+    Number.isNaN(color.coords[2].valueOf()) ? 0 : color.coords[2].valueOf(),
+  ] as ColorValues;
 }
 export function toContrast(textoColor: string): string {
   const color = new Color(textoColor);

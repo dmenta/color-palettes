@@ -34,7 +34,7 @@ export class BezierPanelComponent implements AfterViewInit, OnDestroy {
   overHandler = signal<Handler | null>(null);
   currentHandler = signal<Handler | null>(null);
   size = input(200);
-  color = input<string>("black");
+  darkMode = input(false);
 
   @ViewChild("canvas") canvas?: ElementRef<HTMLCanvasElement>;
   canvasContext: ImageBitmapRenderingContext | null = null;
@@ -43,7 +43,7 @@ export class BezierPanelComponent implements AfterViewInit, OnDestroy {
     effect(() => {
       const coords = this.handlersToCanvas(this.state.handlers());
 
-      this.dibujar(coords, this.currentHandler(), this.size(), this.color());
+      this.dibujar(coords, this.currentHandler(), this.size(), this.darkMode());
     });
   }
 
@@ -61,6 +61,14 @@ export class BezierPanelComponent implements AfterViewInit, OnDestroy {
       console.warn("Context lost", event);
     };
     this.dibujar(this.handlersToCanvas(this.state.handlers()));
+  }
+
+  onDoubleClick(_event: MouseEvent) {
+    const overHandler = this.overHandler();
+    if (overHandler === null) {
+      return;
+    }
+    this.state.onHandlersChange({ ...this.state.handlers(), [overHandler]: { x: 50, y: 50 } });
   }
 
   onMouseDown(_event: MouseEvent): void {
@@ -159,7 +167,7 @@ export class BezierPanelComponent implements AfterViewInit, OnDestroy {
     coords: Handlers,
     active: Handler | null = this.currentHandler(),
     size: number = this.size(),
-    mode: string = this.color()
+    mode: boolean = this.darkMode()
   ) {
     if (!this.canvas) {
       return;
