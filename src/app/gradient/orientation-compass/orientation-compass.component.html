@@ -1,0 +1,12 @@
+<div>
+  <canvas
+    id="canvas"
+    (mousedown)="onMouseDown($event)"
+    (dblclick)="onDoubleClick($event)"
+    #canvas
+    [width]="size()"
+    [class.cursor-grabbing]="handler()"
+    [height]="size()"
+    [style.padding.px]="size() / 2"
+    class="rounded-full cursor-grab"></canvas>
+</div>

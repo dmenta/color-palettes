@@ -3,17 +3,21 @@
     <zz-gradients-header></zz-gradients-header>
   </div>
   <main
-    class="relative w-screen min-h-[calc(100svh_-_50px)] flex flex-col items-center justify-center gap-4"
+    class="relative w-screen min-h-[calc(100svh_-_50px)] p-4 flex flex-col items-center justify-center gap-4"
     [class.text-gris-900]="!this.state.gradient().darkMode"
     [class.text-gris-100]="this.state.gradient().darkMode"
     [style.background]="this.state.gradient().gradient">
-    <zz-bezier-panel [size]="size" [darkMode]="this.state.gradient().darkMode"></zz-bezier-panel>
+    <zz-orientation-compass
+      [size]="compassSize"
+      [darkMode]="this.state.gradient().darkMode"
+      class="absolute bottom-0 right-0"></zz-orientation-compass>
+    <zz-bezier-panel [size]="bezierSize" [darkMode]="this.state.gradient().darkMode"></zz-bezier-panel>
     <div class="flex flex-row items-center justify-between gap-4 w-[350px]">
       <zz-gradient-colors></zz-gradient-colors>
       <zz-gradient-actions></zz-gradient-actions>
     </div>
-    <zz-orientation-selector></zz-orientation-selector>
-    <div zz-gradient-reference class="absolute top-0 left-0 right-0 h-[50px] z-1"></div>
+    <zz-orientation-selector class="hidden"></zz-orientation-selector>
+    <div zz-gradient-reference class="hidden absolute top-0 left-0 right-0 h-[50px] z-1"></div>
   </main>
 </div>
 

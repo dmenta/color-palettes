@@ -8,6 +8,7 @@ import { BezierPanelComponent } from "../../gradient/bezier-panel/bezier-panel.c
 import { GradientActionsComponent } from "../../gradient/gradient-actions/gradient-actions.component";
 import { GradientStateService } from "../../gradient/services/gradient-state.service";
 import { GradientReferenceDirective } from "../../gradient/directives/gradient-reference.directive";
+import { OrientationCompassComponent } from "../../gradient/orientation-compass/orientation-compass.component";
 
 @Component({
   selector: "zz-test-col",
@@ -20,11 +21,13 @@ import { GradientReferenceDirective } from "../../gradient/directives/gradient-r
     BezierPanelComponent,
     GradientActionsComponent,
     GradientReferenceDirective,
+    OrientationCompassComponent,
   ],
   templateUrl: "./bezier-gradient.component.html",
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BezierGradientComponent {
   state = inject(GradientStateService);
-  size = 350;
+  bezierSize = 350;
+  compassSize = 100;
 }
