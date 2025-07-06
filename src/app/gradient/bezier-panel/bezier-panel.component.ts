@@ -161,7 +161,10 @@ export class BezierPanelComponent implements AfterViewInit, OnDestroy {
     size: number = this.size(),
     mode: string = this.color()
   ) {
-    if (this.canvasContext === null && this.canvas) {
+    if (!this.canvas) {
+      return;
+    }
+    if (this.canvasContext === null) {
       this.canvasContext = this.canvas.nativeElement.getContext("bitmaprenderer");
     }
 
