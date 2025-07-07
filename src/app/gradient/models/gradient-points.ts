@@ -1,15 +1,8 @@
 import { toContrast, toRgb } from "../../color/model/color";
 import { ColorValues } from "../../color/model/colors.model";
 import { Point } from "./bezier-curve";
-import { GradientOrientation } from "./orientations";
 
-export function gradientFromPoints(
-  start: ColorValues,
-  end: ColorValues,
-  valores: Point[],
-  angleDegrees: number | null = null,
-  orientation: GradientOrientation = "to right"
-) {
+export function gradientFromPoints(start: ColorValues, end: ColorValues, valores: Point[], angleDegrees: number = 0) {
   const lVariation = lightnessVariation(start, end);
   const cVariation = chromaVariation(start, end);
   const hVariation = hueVariation(start, end);
@@ -32,13 +25,11 @@ export function gradientFromPoints(
 
   const indiceMedio = indiceValorMedio(valores);
 
-  const solvedAngle = angleDegrees !== null ? angleDegrees + "deg" : orientation;
-
   return {
     stops: stops,
-    gradient: gradientString(stops, solvedAngle, "oklch"),
+    gradient: gradientString(stops, angleDegrees, "oklch"),
     darkMode: toContrast(stops[indiceMedio]!.color) === "white",
-    gradientRGB: gradientString(rgbStops, solvedAngle, "srgb"),
+    gradientRGB: gradientString(rgbStops, angleDegrees, "srgb"),
     rgbStops: rgbStops,
   } as GradientDefinition;
 }
@@ -58,11 +49,13 @@ function hueVariation(start: ColorValues, end: ColorValues) {
 
   return { range: hEnd - hStart, delta: hStart };
 }
-export function gradientString(stops: GradientStop[], orientation: string, space: string) {
-  return `linear-gradient(${orientation} in ${space}, ${stops
+
+export function gradientString(stops: GradientStop[], angleDegrees: number, space: string) {
+  return `linear-gradient(${angleDegrees}deg in ${space}, ${stops
     .map((p) => `${p.color} ${p.offset.toFixed(1)}%`)
     .join(", ")})`;
 }
+
 function indiceValorMedio(valores: Point[]): number {
   const menores = valores
     .map((val) => val.x)

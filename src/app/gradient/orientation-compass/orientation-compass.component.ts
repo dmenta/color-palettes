@@ -22,19 +22,20 @@ import { debounceTime, distinctUntilChanged, filter, fromEvent, map, Subscriptio
 export class OrientationCompassComponent {
   private readonly maxMovement = 12; // Maximum movement in degrees when not holding control
   private mouseMoveSubscription: Subscription | null = null;
-
   private removeDocumentClickListenerFn: (() => void) | null = null;
 
   private state = inject(GradientStateService);
 
+  private presetAngles: { angle: number; point: Point }[] = [];
+
+  private shiftPressed = signal(false);
+  private canvasContext: ImageBitmapRenderingContext | null = null;
+
   handler = signal(false);
   size = input(100);
   darkMode = input(false);
-  shiftPressed = signal(false);
 
   @ViewChild("canvas") canvas?: ElementRef<HTMLCanvasElement>;
-  canvasContext: ImageBitmapRenderingContext | null = null;
-  presetAngles: { angle: number; point: Point }[] = [];
 
   @HostListener("window:keydown.shift", ["$event"])
   onShiftKeyDown(event: KeyboardEvent) {
@@ -75,6 +76,7 @@ export class OrientationCompassComponent {
     const radius = Math.round((this.size() * 0.84) / 2);
     const center = Math.round(this.size() / 2);
     const is45 = radius * 0.7071;
+
     this.presetAngles.push({ angle: 0, point: { x: center, y: center + radius } });
     this.presetAngles.push({ angle: 45, point: { x: center + is45, y: center + is45 } });
     this.presetAngles.push({ angle: 90, point: { x: center + radius, y: center } });

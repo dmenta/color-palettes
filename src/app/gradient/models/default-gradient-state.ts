@@ -1,6 +1,5 @@
 import { ColorValues } from "../../color/model/colors.model";
 import { GradientStateValues } from "./gradient-state-values";
-import { GradientOrientation } from "./orientations";
 
 export const defaultGradientState: GradientStateValues = {
   colors: {
@@ -11,6 +10,5 @@ export const defaultGradientState: GradientStateValues = {
     h1: { x: 3.4, y: 60 },
     h2: { x: 20, y: 96.8 },
   },
-  orientation: "to top" as GradientOrientation,
   angle: 0,
 };

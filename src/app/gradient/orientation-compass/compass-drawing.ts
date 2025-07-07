@@ -14,22 +14,11 @@ export function drawCompass(
 
   drawGrid(offCtx, diameter, darkMode);
 
-  // drawAngle(offCtx, angleDeg, diameter, darkMode);
-
   drawArrow(offCtx, angleDeg, diameter, active, darkMode);
 
   const image = offscreenCanvas.transferToImageBitmap();
   ctx.transferFromImageBitmap(image);
 }
-
-// function drawAngle(ctx: OffscreenCanvasRenderingContext2D, angleDeg: number, diameter: number, darkMode: boolean) {
-//   const radio = Math.round(diameter / 2);
-//   ctx.font = "20px 'Noto Sans'";
-//   ctx.fillStyle = darkMode ? "oklch(0.904 0.104 18 / 0.9)" : "oklch(0.334 0.244 18 / 0.8)";
-//   const textSize = ctx.measureText(angleDeg.toFixed(0) + "°");
-//   const posicion = angleDeg >= 90 && angleDeg <= 270 ? -10 : 5 + textSize.fontBoundingBoxAscent;
-//   ctx.fillText(angleDeg.toFixed(0) + "°", 4 + radio - textSize.width / 2, radio + posicion);
-// }
 
 const gridRadioSizeRatio = 0.84;
 const arrowRadioSizeRatio = 0.85;

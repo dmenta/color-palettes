@@ -9,9 +9,7 @@ import { computed, Directive, HostBinding, HostListener, input, signal } from "@
 })
 export class SliderSlimDirective {
   controlPressed = signal(false);
-
   accent = input(false);
-
   showTrack = input(true);
 
   step = input(1, {

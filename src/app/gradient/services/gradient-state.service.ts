@@ -2,7 +2,6 @@ import { computed, effect, inject, Injectable, Signal, signal } from "@angular/c
 import { StorageService } from "../../core/service/storage.service";
 import { defaultGradientState } from "../models/default-gradient-state";
 import { GradientStateValues } from "../models/gradient-state-values";
-import { GradientOrientation } from "../models/orientations";
 import { ColorValues } from "../../color/model/colors.model";
 import { bezierPoints, Handlers } from "../models/bezier-curve";
 import { GradientDefinition, gradientFromPoints } from "../models/gradient-points";
@@ -15,8 +14,6 @@ export class GradientStateService {
   private store = inject(StorageService);
 
   private initialState = this.store.get<GradientStateValues>("gradient-state") ?? defaultGradientState;
-
-  orientation = signal<GradientOrientation>(this.initialState.orientation);
 
   angleDegrees = signal<number>(this.initialState.angle);
 
@@ -43,17 +40,12 @@ export class GradientStateService {
         end: this.endRGBColor(),
       },
       handlers: this.handlers(),
-      orientation: this.orientation(),
       angle: this.angleDegrees(),
     };
   });
 
   constructor() {
     effect(() => this.store.save("gradient-state", this.currentState()));
-  }
-
-  onOrientationChange(orientation: GradientOrientation) {
-    this.orientation.set(orientation);
   }
 
   onAngleDegreesChange(angle: number) {
