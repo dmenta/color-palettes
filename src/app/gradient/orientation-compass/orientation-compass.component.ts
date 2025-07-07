@@ -25,7 +25,7 @@ export class OrientationCompassComponent {
   private readonly maxMovement = 12; // Maximum movement in degrees when not holding control
   private mouseMoveSubscription: Subscription | null = null;
   private removeDocumentClickListenerFn: (() => void) | null = null;
-  private touchStartSubscription: Subscription | null = null;
+  private touchMoveSubscription: Subscription | null = null;
   private removeDocumentTouchEndListenerFn: (() => void) | null = null;
 
   private state = inject(GradientStateService);
@@ -77,7 +77,7 @@ export class OrientationCompassComponent {
         this.state.onAngleDegreesChange(angle);
       });
 
-    this.mouseMoveSubscription = fromEvent(document, "touchmove")
+    this.touchMoveSubscription = fromEvent(document, "touchmove")
       .pipe(
         filter(() => this.handler()),
         debounceTime(1),
@@ -139,6 +139,7 @@ export class OrientationCompassComponent {
   private stopTracking() {
     if (this.handler() !== null) {
       this.removeDocumentClickListenerFn?.();
+      this.removeDocumentTouchEndListenerFn?.();
 
       this.handler.set(false);
     }
@@ -187,6 +188,11 @@ export class OrientationCompassComponent {
 
   private setListeners() {
     this.removeDocumentClickListenerFn = this.renderer.listen("document", "mouseup", () => {
+      if (this.handler()) {
+        this.stopTracking();
+      }
+    });
+    this.removeDocumentClickListenerFn = this.renderer.listen("document", "touchend", () => {
       if (this.handler()) {
         this.stopTracking();
       }
@@ -246,7 +252,9 @@ export class OrientationCompassComponent {
 
   ngOnDestroy() {
     this.removeDocumentClickListenerFn?.();
+    this.removeDocumentTouchEndListenerFn?.();
 
     this.mouseMoveSubscription?.unsubscribe();
+    this.touchMoveSubscription?.unsubscribe();
   }
 }
