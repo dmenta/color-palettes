@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
+import { ChangeDetectionStrategy, Component, HostListener, inject } from "@angular/core";
 import { ColorSelectorComponent } from "../../color/components/color-sample/color-selector/color-selector.component";
 import { ColorValues } from "../../color/model/colors.model";
 import { GradientStateService } from "../services/gradient-state.service";
@@ -14,6 +14,12 @@ import { GradientStateService } from "../services/gradient-state.service";
 })
 export class GradientColorsComponent {
   state = inject(GradientStateService);
+
+  @HostListener("document:keydown.control.shift.y", ["$event"])
+  handleSwapShortcut(event: KeyboardEvent) {
+    event.preventDefault();
+    this.swap();
+  }
 
   swap() {
     const startColor = this.state.startRGBColor();
