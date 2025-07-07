@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, HostListener, inject } from "@angular/core";
 import { CopyService } from "../../core/service/copy.service";
 import { GradientStateService } from "../services/gradient-state.service";
+import { gradientToImage, gradientToSVG } from "../models/gradient-points";
 
 @Component({
   selector: "zz-gradient-actions",
@@ -31,67 +32,11 @@ export class GradientActionsComponent {
     this.copyService.copy(this.state.gradient().gradient, "Gradient  copied!");
   }
 
+  saveAsImage() {
+    gradientToImage(this.state.gradient().rgbStops, this.state.angleDegrees());
+  }
+
   saveSVG() {
-    const svgContent = this.toSVG();
-    this.onSaveFile(`colorina-gradient-${new Date().valueOf()}`, "svg", svgContent);
-  }
-
-  public onSaveFile(name: string, extension: string, content: string): void {
-    let fileName = name + "." + extension;
-    let fileContent = content;
-
-    const file = new Blob([fileContent], { type: "image/svg+xml" });
-
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(file);
-    link.download = fileName;
-    link.click();
-    link.remove();
-  }
-
-  toSVG() {
-    const orientation = this.state.orientation();
-    const width = 1920;
-    const height = 1080;
-
-    let x1 = 0;
-    let x2 = 0;
-    let y1 = 0;
-    let y2 = 0;
-
-    if (orientation.includes("right")) {
-      x2 = width;
-    }
-    if (orientation.includes("left")) {
-      x1 = width;
-    }
-
-    if (orientation.includes("bottom")) {
-      y2 = height;
-    }
-
-    if (orientation.includes("top")) {
-      y1 = height;
-    }
-
-    const pasos = this.state
-      .gradient()
-      .rgbStops.map(
-        (p) => `        <stop offset="${(p.offset / 100).toFixed(3)}" style="stop-color:${p.color};stop-opacity:1"/>`
-      )
-      .join("\n");
-
-    return `<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg width="100%" height="100%" viewBox="0 0 ${width} ${height}" version="1.1" xmlns="http://www.w3.org/2000/svg"
-     xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/"
-      style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
-    <rect x="0" y="0" width="${width}" height="${height}" style="fill:url(#_Linear1);"/>
-    <defs>
-        <linearGradient id="_Linear1" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" gradientUnits="userSpaceOnUse" >
-${pasos}
-        </linearGradient>
-    </defs>
-</svg>`;
+    gradientToSVG(this.state.gradient().rgbStops, this.state.orientation().includes("right") ? 0 : 90);
   }
 }

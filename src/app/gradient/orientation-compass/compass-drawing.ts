@@ -14,7 +14,7 @@ export function drawCompass(
 
   drawGrid(offCtx, diameter, darkMode);
 
-  drawAngle(offCtx, angleDeg, diameter, darkMode);
+  // drawAngle(offCtx, angleDeg, diameter, darkMode);
 
   drawArrow(offCtx, angleDeg, diameter, active, darkMode);
 
@@ -22,16 +22,14 @@ export function drawCompass(
   ctx.transferFromImageBitmap(image);
 }
 
-function drawAngle(ctx: OffscreenCanvasRenderingContext2D, angleDeg: number, diameter: number, darkMode: boolean) {
-  const radio = Math.round(diameter / 2);
-
-  ctx.font = "20px 'Noto Sans'";
-  ctx.fillStyle = darkMode ? "oklch(0.904 0.104 18 / 0.9)" : "oklch(0.334 0.244 18 / 0.8)";
-
-  const textSize = ctx.measureText(angleDeg.toFixed(0) + "°");
-  const posicion = angleDeg >= 90 && angleDeg <= 270 ? -10 : 5 + textSize.fontBoundingBoxAscent;
-  ctx.fillText(angleDeg.toFixed(0) + "°", 4 + radio - textSize.width / 2, radio + posicion);
-}
+// function drawAngle(ctx: OffscreenCanvasRenderingContext2D, angleDeg: number, diameter: number, darkMode: boolean) {
+//   const radio = Math.round(diameter / 2);
+//   ctx.font = "20px 'Noto Sans'";
+//   ctx.fillStyle = darkMode ? "oklch(0.904 0.104 18 / 0.9)" : "oklch(0.334 0.244 18 / 0.8)";
+//   const textSize = ctx.measureText(angleDeg.toFixed(0) + "°");
+//   const posicion = angleDeg >= 90 && angleDeg <= 270 ? -10 : 5 + textSize.fontBoundingBoxAscent;
+//   ctx.fillText(angleDeg.toFixed(0) + "°", 4 + radio - textSize.width / 2, radio + posicion);
+// }
 
 const gridRadioSizeRatio = 0.84;
 const arrowRadioSizeRatio = 0.85;
@@ -44,19 +42,22 @@ function drawGrid(ctx: OffscreenCanvasRenderingContext2D, diameter: number, dark
   ctx.lineWidth = 0.5;
   ctx.fillStyle = "#80808040";
   ctx.fill();
+  ctx.setLineDash([]);
+  ctx.strokeStyle = "transparent";
 
   const size = Math.round(gridRadioSizeRatio * radio);
 
   const colors = gridColors(darkMode);
   ctx.beginPath();
   ctx.arc(radio, radio, size, 0, Math.PI * 2);
+  ctx.moveTo(radio, radio);
   ctx.strokeStyle = colors.border;
   ctx.lineWidth = 0.5;
   ctx.stroke();
 
   ctx.setLineDash([2, 2]);
+  ctx.arc(radio, radio, size * 0.2, 0, Math.PI * 2);
   ctx.strokeStyle = "#8080890";
-  ctx.arc(radio, radio, size * 0.5, 0, Math.PI * 2);
   ctx.stroke();
 
   ctx.strokeStyle = colors.lines;
@@ -66,8 +67,8 @@ function drawGrid(ctx: OffscreenCanvasRenderingContext2D, diameter: number, dark
     const seno = Math.sin(angle) * size;
     const x0 = coseno + radio;
     const y0 = seno + radio;
-    const x1 = coseno * 0.5 + radio;
-    const y1 = seno * 0.5 + radio;
+    const x1 = coseno * 0.8 + radio;
+    const y1 = seno * 0.8 + radio;
 
     ctx.beginPath();
     ctx.moveTo(x0, y0);
@@ -90,7 +91,7 @@ const arrowWide = 5;
 const arrowLength = 14;
 const arrowOverflow = 8;
 const arrowInset = -3;
-function drawArrow(
+export function drawArrow(
   ctx: OffscreenCanvasRenderingContext2D,
   angleDegress: number,
   diameter: number,
@@ -145,6 +146,7 @@ function drawArrow(
   ctx.stroke();
 
   ctx.shadowColor = "transparent";
+
   ctx.setTransform(1, 0, 0, 1, 0, 0);
 }
 

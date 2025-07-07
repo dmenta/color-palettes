@@ -21,6 +21,7 @@ import { debounceTime, distinctUntilChanged, filter, fromEvent, map, Subscriptio
   templateUrl: "./orientation-compass.component.html",
 })
 export class OrientationCompassComponent {
+  private readonly maxMovement = 12; // Maximum movement in degrees when not holding control
   private mouseMoveSubscription: Subscription | null = null;
 
   private removeDocumentClickListenerFn: (() => void) | null = null;
@@ -34,23 +35,23 @@ export class OrientationCompassComponent {
   handler = signal(false);
   size = input(100);
   darkMode = input(false);
-  controlPressed = signal(false);
+  shiftPressed = signal(false);
 
   @ViewChild("canvas") canvas?: ElementRef<HTMLCanvasElement>;
   canvasContext: ImageBitmapRenderingContext | null = null;
 
-  @HostListener("window:keydown.control", ["$event"])
+  @HostListener("window:keydown.shift", ["$event"])
   onControlKeyDown(event: KeyboardEvent) {
-    if (!this.controlPressed()) {
-      this.controlPressed.set(true);
+    if (!this.shiftPressed()) {
+      this.shiftPressed.set(true);
       event.preventDefault();
     }
   }
 
-  @HostListener("window:keyup.control", ["$event"])
+  @HostListener("window:keyup.shift", ["$event"])
   onControlKeyUp(event: KeyboardEvent) {
-    if (this.controlPressed()) {
-      this.controlPressed.set(false);
+    if (this.shiftPressed()) {
+      this.shiftPressed.set(false);
       event.preventDefault();
     }
   }
@@ -67,12 +68,11 @@ export class OrientationCompassComponent {
         filter(() => this.handler()),
         debounceTime(1),
         map((event) => this.angleDegreesFromPoint(this.pointFromEvent(event as MouseEvent))),
-        map((angle) => (this.controlPressed() ? Math.round(angle / 45) * 45 : angle)),
+        map((angle) => (this.shiftPressed() ? Math.round(angle / 45) * 45 : angle)),
         distinctUntilChanged()
       )
       .subscribe((angle) => {
         this.state.onAngleDegreesChange(angle);
-        console.log("Angle updated:", angle);
       });
 
     this.dibujar(this.state.angleDegrees());
@@ -121,27 +121,33 @@ export class OrientationCompassComponent {
     const deltaX = (point.x - radio) / radio;
     const deltaY = (point.y - radio) / radio;
 
-    if (Math.abs(deltaX) < 0.3 && Math.abs(deltaY) < 0.3) {
+    if (Math.abs(deltaX) < 0.1 && Math.abs(deltaY) < 0.1) {
       return this.state.angleDegrees();
     }
 
     const angle = Math.atan2(deltaX, deltaY);
-    const angleDegrees = Math.round((angle * 180) / Math.PI);
+    let angleDegrees = Math.round((angle * 180) / Math.PI);
+    if (angleDegrees < 0) {
+      angleDegrees += 360;
+    }
 
     let newAngle = angleDegrees;
 
-    if (!this.controlPressed()) {
+    if (!this.shiftPressed()) {
       const currentAngle = this.state.angleDegrees();
-      let distancia = Math.abs(currentAngle - angleDegrees);
-      if (Math.abs(distancia) > 180) {
-        distancia = 360 - Math.abs(distancia);
-        newAngle = Math.min(currentAngle, angleDegrees) - distancia / 15;
-      } else {
-        newAngle = Math.min(currentAngle, angleDegrees) + distancia / 15;
-      }
+      const movement = Math.min(this.maxMovement, Math.abs(currentAngle - angleDegrees));
+      let distancia =
+        currentAngle - angleDegrees > 180
+          ? movement
+          : currentAngle - angleDegrees < -180
+          ? -movement
+          : currentAngle < angleDegrees
+          ? movement
+          : -movement;
+      newAngle = currentAngle + distancia;
     }
 
-    return newAngle < 0 ? newAngle + 360 : newAngle > 360 ? newAngle - 360 : newAngle;
+    return newAngle < 0 ? newAngle + 360 : newAngle >= 360 ? newAngle - 360 : newAngle;
   }
 
   private setListeners() {
@@ -162,12 +168,6 @@ export class OrientationCompassComponent {
       }
     });
   }
-
-  /*
-  220 a 360 first
-0 a 15 first
-15 a 180 last
-180 a 220 mid*/
 
   private dibujar(
     angleDegrees: number,
