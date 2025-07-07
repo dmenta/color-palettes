@@ -14,7 +14,7 @@ import {
 import { Handler, Handlers, Point, pointsMatch } from "../models/bezier-curve";
 import { drawBezierPanel, pointFromCanvas, pointToCanvas } from "./bezier-panel-drawing";
 import { GradientStateService } from "../services/gradient-state.service";
-import { debounceTime, filter, fromEvent, map, Subscription } from "rxjs";
+import { debounceTime, filter, fromEvent, map, Subscription, tap } from "rxjs";
 
 @Component({
   selector: "zz-bezier-panel",
@@ -25,8 +25,8 @@ import { debounceTime, filter, fromEvent, map, Subscription } from "rxjs";
 export class BezierPanelComponent implements AfterViewInit, OnDestroy {
   private mouseMoveSubscription: Subscription | null = null;
   private mouseMoveDocumentSubscription: Subscription | null = null;
+  private touchMoveSubscription: Subscription | null = null;
   private touchStartSubscription: Subscription | null = null;
-  private touchStartDocumentSubscription: Subscription | null = null;
   private removeDocumentClickListenerFn: (() => void) | null = null;
   private removeDocumentTouchEndListenerFn: (() => void) | null = null;
 
@@ -68,23 +68,27 @@ export class BezierPanelComponent implements AfterViewInit, OnDestroy {
         this.onMouseMove(event);
       });
 
-    this.touchStartSubscription = fromEvent(this.canvas!.nativeElement, "touchmove")
+    this.touchMoveSubscription = fromEvent(document, "touchmove", { passive: false })
       .pipe(
+        filter(() => this.currentHandler() !== null),
+        tap((event) => event.preventDefault()),
         debounceTime(1),
-        map((event) => event as MouseEvent)
+        tap((event) => event.preventDefault()),
+        map((event) => event as TouchEvent)
       )
       .subscribe((event) => {
         this.onMouseMove(event);
       });
 
-    this.touchStartDocumentSubscription = fromEvent(document, "touchmove")
+    this.touchStartSubscription = fromEvent(this.canvas?.nativeElement!, "touchstart", { passive: false })
       .pipe(
-        filter(() => this.currentHandler() !== null),
+        filter(() => this.currentHandler() === null),
+        tap((event) => event.preventDefault()),
         debounceTime(1),
         map((event) => event as TouchEvent)
       )
       .subscribe((event) => {
-        this.onMouseMove(event);
+        this.onTouchStart(event);
       });
 
     this.canvas!.nativeElement.oncontextlost = (event: Event) => {
@@ -245,7 +249,7 @@ export class BezierPanelComponent implements AfterViewInit, OnDestroy {
 
     this.mouseMoveSubscription?.unsubscribe();
     this.mouseMoveDocumentSubscription?.unsubscribe();
+    this.touchMoveSubscription?.unsubscribe();
     this.touchStartSubscription?.unsubscribe();
-    this.touchStartDocumentSubscription?.unsubscribe();
   }
 }

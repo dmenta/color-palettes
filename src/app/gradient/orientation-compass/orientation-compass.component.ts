@@ -24,8 +24,9 @@ import { debounceTime, distinctUntilChanged, filter, fromEvent, map, Subscriptio
 export class OrientationCompassComponent {
   private readonly maxMovement = 12; // Maximum movement in degrees when not holding control
   private mouseMoveSubscription: Subscription | null = null;
-  private removeDocumentClickListenerFn: (() => void) | null = null;
   private touchMoveSubscription: Subscription | null = null;
+  private touchStartSubscription: Subscription | null = null;
+  private removeDocumentClickListenerFn: (() => void) | null = null;
   private removeDocumentTouchEndListenerFn: (() => void) | null = null;
 
   private state = inject(GradientStateService);
@@ -68,7 +69,6 @@ export class OrientationCompassComponent {
       .pipe(
         filter(() => this.handler()),
         debounceTime(1),
-        tap((ev) => console.log("Mouse moved", this.pointFromEvent(ev as MouseEvent))),
         map((event) => this.angleDegreesFromPoint(this.pointFromEvent(event as MouseEvent))),
         map((angle) => (this.shiftPressed() ? Math.round(angle / 45) * 45 : angle)),
         distinctUntilChanged()
@@ -77,12 +77,24 @@ export class OrientationCompassComponent {
         this.state.onAngleDegreesChange(angle);
       });
 
-    this.touchMoveSubscription = fromEvent(document, "touchmove")
+    this.touchStartSubscription = fromEvent(this.canvas?.nativeElement!, "touchstart", { passive: false })
+      .pipe(
+        filter(() => !this.handler()),
+        tap((event) => event.preventDefault()),
+        debounceTime(1),
+        map((event) => this.pointFromEvent(event as TouchEvent)),
+        filter((point) => !this.checkPreset(point))
+      )
+      .subscribe(() => {
+        this.setHandlerSelected();
+      });
+
+    this.touchMoveSubscription = fromEvent(document, "touchmove", { passive: false })
       .pipe(
         filter(() => this.handler()),
+        tap((event) => event.preventDefault()),
         debounceTime(1),
-        tap((ev) => console.log("Mouse moved", this.pointFromEvent(ev as MouseEvent))),
-        map((event) => this.angleDegreesFromPoint(this.pointFromEvent(event as MouseEvent))),
+        map((event) => this.angleDegreesFromPoint(this.pointFromEvent(event as TouchEvent))),
         map((angle) => (this.shiftPressed() ? Math.round(angle / 45) * 45 : angle)),
         distinctUntilChanged()
       )
@@ -111,12 +123,6 @@ export class OrientationCompassComponent {
   }
 
   onMouseDown(event: MouseEvent): void {
-    if (!this.checkPreset(this.pointFromEvent(event))) {
-      this.setHandlerSelected();
-    }
-  }
-
-  onTouchStart(event: TouchEvent) {
     if (!this.checkPreset(this.pointFromEvent(event))) {
       this.setHandlerSelected();
     }
@@ -240,7 +246,7 @@ export class OrientationCompassComponent {
       const touch = event.touches[0];
       return {
         x: touch!.clientX - rect.left - padding,
-        y: touch!.clientY - rect.top - padding,
+        y: size - (touch!.clientY - rect.top - padding),
       };
     } else {
       return {
@@ -256,5 +262,6 @@ export class OrientationCompassComponent {
 
     this.mouseMoveSubscription?.unsubscribe();
     this.touchMoveSubscription?.unsubscribe();
+    this.touchStartSubscription?.unsubscribe();
   }
 }
