@@ -52,17 +52,18 @@ function drawGrid(ctx: OffscreenCanvasRenderingContext2D, diameter: number, dark
   ctx.arc(radio, radio, size, 0, Math.PI * 2);
   ctx.moveTo(radio, radio);
   ctx.strokeStyle = colors.border;
-  ctx.lineWidth = 0.5;
+  ctx.lineWidth = 1;
   ctx.stroke();
 
+  ctx.beginPath();
   ctx.setLineDash([2, 2]);
-  ctx.arc(radio, radio, size * 0.2, 0, Math.PI * 2);
-  ctx.strokeStyle = "#8080890";
+  ctx.arc(radio, radio, Math.round(size * 0.2), 0, Math.PI * 2);
+  ctx.strokeStyle = colors.lines;
   ctx.stroke();
 
   ctx.strokeStyle = colors.lines;
-  for (let i = 0; i <= 11; i++) {
-    const angle = ((Math.PI * 2) / 12) * i;
+  for (let i = 0; i <= 7; i++) {
+    const angle = ((Math.PI * 2) / 8) * i;
     const coseno = Math.cos(angle) * size;
     const seno = Math.sin(angle) * size;
     const x0 = coseno + radio;
@@ -75,6 +76,11 @@ function drawGrid(ctx: OffscreenCanvasRenderingContext2D, diameter: number, dark
     ctx.lineTo(x1, y1);
     ctx.lineWidth = 0.5;
     ctx.stroke();
+
+    ctx.beginPath();
+    ctx.arc(x0, y0, 3, 0, Math.PI * 2);
+    ctx.fillStyle = colors.border;
+    ctx.fill();
   }
 
   ctx.setLineDash([]);
@@ -83,7 +89,7 @@ function drawGrid(ctx: OffscreenCanvasRenderingContext2D, diameter: number, dark
 function gridColors(darkMode: boolean): { lines: string; border: string } {
   return {
     lines: !darkMode ? "#606060" : "#cccccc",
-    border: !darkMode ? "#404040" : "#DDDDDD",
+    border: !darkMode ? "#303030" : "#bbbbbb",
   };
 }
 
@@ -152,7 +158,7 @@ export function drawArrow(
 
 function arrowColors(darkMode: boolean): { lines: string; tip: string; toe: string } {
   return {
-    lines: !darkMode ? "#606060" : "#cccccc",
+    lines: !darkMode ? "#202020" : "#cccccc",
     tip: !darkMode ? "oklch(0.634 0.254 18)" : "oklch(0.355 0.146 29)",
     toe: !darkMode ? "#d0d0d0" : "gray",
   };

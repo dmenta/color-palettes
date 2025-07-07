@@ -92,8 +92,78 @@ export function gradientToImage(stops: GradientStop[], angleDegrees: number = 0)
     return;
   }
 
-  const calcSizeX = canvas.width / 2;
-  const calcSizeY = canvas.height / 2;
+  const { x1, y1, x2, y2 } = gradientOrientation(canvas.width, canvas.height, angleDegrees);
+
+  const gradient = ctx.createLinearGradient(x1, y1, x2, y2);
+
+  for (let i = 0; i < stops.length; i++) {
+    const stop = stops[i]!;
+    gradient.addColorStop(stop.offset / 100, stop.color);
+  }
+
+  ctx.fillStyle = gradient;
+  ctx.beginPath();
+  ctx.rect(0, 0, 1920, 1080);
+  ctx.fill();
+
+  const createEl = document.createElement("a");
+  const url = canvas.toDataURL("image/png", 1);
+  createEl.href = url;
+  createEl.download = `colorina-gradient-${new Date().valueOf() - baseDate}.png`;
+  createEl.click();
+  createEl.remove();
+}
+
+export function gradientToSVG(stops: GradientStop[], angleDegrees: number = 0): void {
+  let fileContent = toSVG(stops, angleDegrees);
+
+  const file = new Blob([fileContent], { type: "image/svg+xml" });
+
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(file);
+  link.download = `colorina-gradient-${new Date().valueOf() - baseDate}.svg`;
+  link.click();
+  link.remove();
+}
+
+function toSVG(stops: GradientStop[], angleDegrees: number = 0) {
+  const width = 1920;
+  const height = 1080;
+
+  const maxSize = Math.max(width, height);
+  const minSize = Math.min(width, height);
+  const fullHypotenusa = Math.sqrt(width * width + height * height);
+  let { x1: _x1, y1: _y1, x2: _x2, y2: _y2, hypotenusa } = gradientOrientation(width, height, angleDegrees);
+  hypotenusa = Math.abs(hypotenusa);
+  const origenX = (maxSize - hypotenusa) / 2;
+  const origenY = (minSize - fullHypotenusa) / 2;
+
+  const pasos = stops
+    .map((p) => `        <stop offset="${(p.offset / 100).toFixed(3)}" style="stop-color:${p.color};stop-opacity:1"/>`)
+    .join("\n");
+
+  return `<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 ${width} ${height}" version="1.1" xmlns="http://www.w3.org/2000/svg"
+     xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/"
+      style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+
+    <rect x="${origenX}" y="${origenY}" width="${hypotenusa}" height="${fullHypotenusa}"  style=" transform-origin: center center; transform: rotate(${
+    angleDegrees - 90
+  }deg); fill:url(#_Linear1);"/>
+    <rect x="0" y="0" width="${width}" height="${height}" stroke="black" fill="none" />
+
+  <defs>
+        <linearGradient id="_Linear1" x1="${origenX}" y1="0" x2="${hypotenusa}" y2="0" gradientUnits="userSpaceOnUse" >
+${pasos}
+        </linearGradient>
+    </defs>
+</svg>`;
+}
+
+function gradientOrientation(width: number, height: number, angleDegrees: number) {
+  const calcSizeX = width / 2;
+  const calcSizeY = height / 2;
 
   const seno = Math.sin(((angleDegrees + 90) * Math.PI * 2) / 360);
   const coseno = Math.cos(((angleDegrees + 90) * Math.PI * 2) / 360);
@@ -116,69 +186,16 @@ export function gradientToImage(stops: GradientStop[], angleDegrees: number = 0)
   } else if (deltaX > calcSizeX) {
     deltaX = Math.min(deltaX, calcSizeX + maxX);
   }
+  const realHypotenusa = Math.sqrt(deltaX * deltaX + deltaY * deltaY) * 2;
+  console.log("realHypotenusa", realHypotenusa, "hypotenusa", hypotenusa);
 
-  const gradient = ctx.createLinearGradient(
-    calcSizeX + deltaX,
-    calcSizeY + deltaY,
-    calcSizeX - deltaX,
-    calcSizeY - deltaY
-  );
-
-  for (let i = 0; i < stops.length; i++) {
-    const stop = stops[i]!;
-    gradient.addColorStop(stop.offset / 100, stop.color);
-  }
-
-  ctx.fillStyle = gradient;
-  ctx.beginPath();
-  ctx.rect(0, 0, 1920, 1080);
-  ctx.fill();
-
-  const createEl = document.createElement("a");
-  const url = canvas.toDataURL("image/png", 1);
-  createEl.href = url;
-  createEl.download = `colorina-gradient-${new Date().valueOf() - baseDate}.png`;
-  createEl.click();
-  createEl.remove();
-}
-
-export function gradientToSVG(stops: GradientStop[], _angleDegrees: number = 0): void {
-  let fileContent = toSVG(stops, _angleDegrees);
-
-  const file = new Blob([fileContent], { type: "image/svg+xml" });
-
-  const link = document.createElement("a");
-  link.href = URL.createObjectURL(file);
-  link.download = `colorina-gradient-${new Date().valueOf() - baseDate}.svg`;
-  link.click();
-  link.remove();
-}
-
-function toSVG(stops: GradientStop[], _angleDegrees: number = 0) {
-  const width = 1920;
-  const height = 1080;
-
-  let x1 = 0;
-  let x2 = 1920;
-  let y1 = 0;
-  let y2 = 0;
-
-  const pasos = stops
-    .map((p) => `        <stop offset="${(p.offset / 100).toFixed(3)}" style="stop-color:${p.color};stop-opacity:1"/>`)
-    .join("\n");
-
-  return `<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg width="100%" height="100%" viewBox="0 0 ${width} ${height}" version="1.1" xmlns="http://www.w3.org/2000/svg"
-     xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/"
-      style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
-    <rect x="0" y="0" width="${width}" height="${height}" style="fill:url(#_Linear1);"/>
-    <defs>
-        <linearGradient id="_Linear1" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" gradientUnits="userSpaceOnUse" >
-${pasos}
-        </linearGradient>
-    </defs>
-</svg>`;
+  return {
+    x1: calcSizeX + deltaX,
+    y1: calcSizeY + deltaY,
+    x2: calcSizeX - deltaX,
+    y2: calcSizeY - deltaY,
+    hypotenusa: realHypotenusa,
+  };
 }
 
 export type GradientDefinition = {

@@ -15,6 +15,13 @@ import { GradientStateService } from "../services/gradient-state.service";
 export class GradientColorsComponent {
   state = inject(GradientStateService);
 
+  swap() {
+    const startColor = this.state.startRGBColor();
+    const endColor = this.state.endRGBColor();
+    this.state.onStartColorChange(endColor);
+    this.state.onEndColorChange(startColor);
+  }
+
   onColorEndChange(rgb: ColorValues) {
     this.state.onEndColorChange(rgb);
   }

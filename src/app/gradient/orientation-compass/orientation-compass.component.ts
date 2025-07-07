@@ -9,11 +9,10 @@ import {
   signal,
   ViewChild,
 } from "@angular/core";
-import { pointFromCanvas } from "../bezier-panel/bezier-panel-drawing";
-import { Point } from "../models/bezier-curve";
+import { Point, pointsMatch } from "../models/bezier-curve";
 import { GradientStateService } from "../services/gradient-state.service";
 import { drawCompass } from "./compass-drawing";
-import { debounceTime, distinctUntilChanged, filter, fromEvent, map, Subscription } from "rxjs";
+import { debounceTime, distinctUntilChanged, filter, fromEvent, map, Subscription, tap } from "rxjs";
 
 @Component({
   selector: "zz-orientation-compass",
@@ -25,10 +24,6 @@ export class OrientationCompassComponent {
   private mouseMoveSubscription: Subscription | null = null;
 
   private removeDocumentClickListenerFn: (() => void) | null = null;
-  private removeMouseLeaveListenerFn: (() => void) | null = null;
-  private removeMouseEnterListenerFn: (() => void) | null = null;
-
-  private lastTimeoutId: number | null = null;
 
   private state = inject(GradientStateService);
 
@@ -39,9 +34,10 @@ export class OrientationCompassComponent {
 
   @ViewChild("canvas") canvas?: ElementRef<HTMLCanvasElement>;
   canvasContext: ImageBitmapRenderingContext | null = null;
+  presetAngles: { angle: number; point: Point }[] = [];
 
   @HostListener("window:keydown.shift", ["$event"])
-  onControlKeyDown(event: KeyboardEvent) {
+  onShiftKeyDown(event: KeyboardEvent) {
     if (!this.shiftPressed()) {
       this.shiftPressed.set(true);
       event.preventDefault();
@@ -49,7 +45,7 @@ export class OrientationCompassComponent {
   }
 
   @HostListener("window:keyup.shift", ["$event"])
-  onControlKeyUp(event: KeyboardEvent) {
+  onShiftKeyUp(event: KeyboardEvent) {
     if (this.shiftPressed()) {
       this.shiftPressed.set(false);
       event.preventDefault();
@@ -63,10 +59,11 @@ export class OrientationCompassComponent {
   }
 
   ngAfterViewInit() {
-    this.mouseMoveSubscription = fromEvent(this.canvas!.nativeElement, "mousemove")
+    this.mouseMoveSubscription = fromEvent(document, "mousemove")
       .pipe(
         filter(() => this.handler()),
         debounceTime(1),
+        tap((ev) => console.log("Mouse moved", this.pointFromEvent(ev as MouseEvent))),
         map((event) => this.angleDegreesFromPoint(this.pointFromEvent(event as MouseEvent))),
         map((angle) => (this.shiftPressed() ? Math.round(angle / 45) * 45 : angle)),
         distinctUntilChanged()
@@ -74,6 +71,18 @@ export class OrientationCompassComponent {
       .subscribe((angle) => {
         this.state.onAngleDegreesChange(angle);
       });
+
+    const radius = Math.round((this.size() * 0.84) / 2);
+    const center = Math.round(this.size() / 2);
+    const is45 = radius * 0.7071;
+    this.presetAngles.push({ angle: 0, point: { x: center, y: center + radius } });
+    this.presetAngles.push({ angle: 45, point: { x: center + is45, y: center + is45 } });
+    this.presetAngles.push({ angle: 90, point: { x: center + radius, y: center } });
+    this.presetAngles.push({ angle: 135, point: { x: center + is45, y: center - is45 } });
+    this.presetAngles.push({ angle: 180, point: { x: center, y: center - radius } });
+    this.presetAngles.push({ angle: 225, point: { x: center - is45, y: center - is45 } });
+    this.presetAngles.push({ angle: 270, point: { x: center - radius, y: center } });
+    this.presetAngles.push({ angle: 315, point: { x: center - is45, y: center + is45 } });
 
     this.dibujar(this.state.angleDegrees());
   }
@@ -83,29 +92,30 @@ export class OrientationCompassComponent {
   }
 
   onMouseDown(_event: MouseEvent): void {
-    this.setHandlerSelected();
-  }
-
-  private setStopTimeout() {
-    this.clearStopTimeout();
-    this.lastTimeoutId = window.setTimeout(() => this.stopTracking(), 1000);
-  }
-
-  private clearStopTimeout() {
-    if (this.lastTimeoutId) {
-      window.clearTimeout(this.lastTimeoutId);
-      this.lastTimeoutId = null;
+    if (!this.checkPreset(this.pointFromEvent(_event))) {
+      this.setHandlerSelected();
     }
+  }
+
+  private checkPreset(point: Point) {
+    for (const preset of this.presetAngles) {
+      if (pointsMatch(preset.point, point, 7)) {
+        if (preset.angle !== this.state.angleDegrees()) {
+          this.state.onAngleDegreesChange(preset.angle);
+          return true;
+        } else {
+          return false;
+        }
+      }
+    }
+    return false;
   }
 
   private stopTracking() {
     if (this.handler() !== null) {
       this.removeDocumentClickListenerFn?.();
-      this.removeMouseLeaveListenerFn?.();
-      this.removeMouseEnterListenerFn?.();
 
       this.handler.set(false);
-      this.clearStopTimeout();
     }
   }
 
@@ -156,17 +166,6 @@ export class OrientationCompassComponent {
         this.stopTracking();
       }
     });
-    this.removeMouseLeaveListenerFn = this.renderer.listen(this.canvas!.nativeElement, "mouseleave", () => {
-      if (this.handler() === null) {
-        return;
-      }
-      this.setStopTimeout();
-    });
-    this.removeMouseEnterListenerFn = this.renderer.listen(this.canvas!.nativeElement, "mouseenter", () => {
-      if (this.handler() !== null) {
-        this.clearStopTimeout();
-      }
-    });
   }
 
   private dibujar(
@@ -203,15 +202,14 @@ export class OrientationCompassComponent {
     const rect = el.getBoundingClientRect();
     const size = rect.bottom - rect.top - canvasPadding;
 
-    return pointFromCanvas({ x: event.clientX - rect.left - padding, y: event.clientY - rect.top - padding }, size);
+    return {
+      x: event.clientX - rect.left - padding,
+      y: size - (event.clientY - rect.top - padding),
+    };
   }
 
   ngOnDestroy() {
     this.removeDocumentClickListenerFn?.();
-    this.removeMouseLeaveListenerFn?.();
-    this.removeMouseEnterListenerFn?.();
-
-    this.clearStopTimeout();
 
     this.mouseMoveSubscription?.unsubscribe();
   }

@@ -14,7 +14,7 @@ import {
 import { Handler, Handlers, Point, pointsMatch } from "../models/bezier-curve";
 import { drawBezierPanel, pointFromCanvas, pointToCanvas } from "./bezier-panel-drawing";
 import { GradientStateService } from "../services/gradient-state.service";
-import { debounceTime, fromEvent, map, Subscription } from "rxjs";
+import { debounceTime, filter, fromEvent, map, Subscription } from "rxjs";
 
 @Component({
   selector: "zz-bezier-panel",
@@ -24,10 +24,8 @@ import { debounceTime, fromEvent, map, Subscription } from "rxjs";
 })
 export class BezierPanelComponent implements AfterViewInit, OnDestroy {
   private mouseMoveSubscription: Subscription | null = null;
+  private mouseMoveDocumentSubscription: Subscription | null = null;
   private removeDocumentClickListenerFn: (() => void) | null = null;
-  private removeMouseLeaveListenerFn: (() => void) | null = null;
-  private removeMouseEnterListenerFn: (() => void) | null = null;
-  private lastTimeoutId: number | null = null;
 
   private state = inject(GradientStateService);
 
@@ -50,6 +48,16 @@ export class BezierPanelComponent implements AfterViewInit, OnDestroy {
   ngAfterViewInit() {
     this.mouseMoveSubscription = fromEvent(this.canvas!.nativeElement, "mousemove")
       .pipe(
+        debounceTime(1),
+        map((event) => event as MouseEvent)
+      )
+      .subscribe((event) => {
+        this.onMouseMove(event);
+      });
+
+    this.mouseMoveDocumentSubscription = fromEvent(document, "mousemove")
+      .pipe(
+        filter(() => this.currentHandler() !== null),
         debounceTime(1),
         map((event) => event as MouseEvent)
       )
@@ -95,26 +103,11 @@ export class BezierPanelComponent implements AfterViewInit, OnDestroy {
     this.updateHandlerCoords(point);
   }
 
-  private setStopTimeout() {
-    this.clearStopTimeout();
-    this.lastTimeoutId = window.setTimeout(() => this.stopTracking(), 1000);
-  }
-
-  private clearStopTimeout() {
-    if (this.lastTimeoutId) {
-      window.clearTimeout(this.lastTimeoutId);
-      this.lastTimeoutId = null;
-    }
-  }
-
   private stopTracking() {
     if (this.currentHandler() !== null) {
       this.removeDocumentClickListenerFn?.();
-      this.removeMouseLeaveListenerFn?.();
-      this.removeMouseEnterListenerFn?.();
 
       this.currentHandler.set(null);
-      this.clearStopTimeout();
     }
   }
 
@@ -148,17 +141,6 @@ export class BezierPanelComponent implements AfterViewInit, OnDestroy {
     this.removeDocumentClickListenerFn = this.renderer.listen("document", "mouseup", () => {
       if (this.currentHandler()) {
         this.stopTracking();
-      }
-    });
-    this.removeMouseLeaveListenerFn = this.renderer.listen(this.canvas!.nativeElement, "mouseleave", () => {
-      if (this.currentHandler() === null) {
-        return;
-      }
-      this.setStopTimeout();
-    });
-    this.removeMouseEnterListenerFn = this.renderer.listen(this.canvas!.nativeElement, "mouseenter", () => {
-      if (this.currentHandler() !== null) {
-        this.clearStopTimeout();
       }
     });
   }
@@ -214,10 +196,8 @@ export class BezierPanelComponent implements AfterViewInit, OnDestroy {
 
   ngOnDestroy() {
     this.removeDocumentClickListenerFn?.();
-    this.removeMouseLeaveListenerFn?.();
-    this.removeMouseEnterListenerFn?.();
-    this.clearStopTimeout();
 
     this.mouseMoveSubscription?.unsubscribe();
+    this.mouseMoveDocumentSubscription?.unsubscribe();
   }
 }

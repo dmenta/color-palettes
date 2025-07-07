@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans:wdth,wght@62.5..100,100..900&display=swap&text=ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789:.,-");
+@import url("https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap&text=SVGPNGCOPY");
 @import "tailwindcss";
 
 @theme {
@@ -25,6 +26,9 @@
 
   /* Font Marca */
   --font-museo-moderno: "MuseoModerno", sans-serif;
+
+  --font-button: "Oswald", sans-serif;
+  --font-button--font-variation-settings: "wght" 500;
 
   --font-noto: "Noto Sans", sans-serif;
   --font-noto--font-variation-settings: "wght" 500, "wdth" 85;
@@ -336,6 +340,7 @@
     user-select: none;
     cursor: pointer;
     appearance: none;
+    opacity: 0.9;
 
     @apply transition-all content-center  rounded min-w-fit;
 

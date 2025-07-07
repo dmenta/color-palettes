@@ -4,6 +4,10 @@
     [border]="'border-current/40'"
     class="shadow-md"
     [color]="this.state.startRGBColor()"></zz-color-selector>
+
+  <button title="Swap colors (Ctrl+Shift+Y)" (click)="swap()" class="shadow-md w-5 h-5 -mt-1">
+    <span class="font-icons" class="font-icons text-larger-5 leading-5">swap_horiz</span>
+  </button>
   <zz-color-selector
     (color-change)="onColorEndChange($event)"
     [border]="'border-current/40'"

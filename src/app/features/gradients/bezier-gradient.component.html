@@ -3,18 +3,16 @@
     <zz-gradients-header></zz-gradients-header>
   </div>
   <main
-    class="relative w-screen min-h-[calc(100svh_-_50px)] px-8 pt-4 pb-8 grid items-center justify-center"
+    class="relative w-screen min-h-[calc(100svh_-_50px)] pt-4 pb-8 grid items-center justify-center"
+    [style]="'grid-template-columns: calc(50svw - ' + bezierSize * 0.55 + 'px) ' + bezierSize * 1.1 + 'px 1fr;'"
     [class.text-gris-900]="!this.state.gradient().darkMode"
     [class.text-gris-100]="this.state.gradient().darkMode"
     [style.background]="this.state.gradient().gradient">
-    <div class="w-fit m-auto flex flex-row items-start justify-center">
-      <zz-bezier-panel [size]="bezierSize" [darkMode]="this.state.gradient().darkMode"></zz-bezier-panel>
-      <div class="flex flex-col gap-4 -mr-36">
+    <div class="col-2 w-fit m-auto flex flex-row items-start justify-center gap-4">
+      <zz-bezier-panel class="" [size]="bezierSize" [darkMode]="this.state.gradient().darkMode"></zz-bezier-panel>
+      <div class="flex flex-col items-center gap-4">
         <zz-orientation-compass
           [size]="compassSize"
-          [style.marginInline.px]="-(compassSize / 4)"
-          [style.marginTop.px]="-(compassSize / 4)"
-          [style.marginBottom.px]="-(compassSize / 3)"
           [darkMode]="this.state.gradient().darkMode"></zz-orientation-compass>
         <zz-gradient-colors></zz-gradient-colors>
         <zz-gradient-actions></zz-gradient-actions>

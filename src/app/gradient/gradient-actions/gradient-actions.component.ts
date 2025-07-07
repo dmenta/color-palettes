@@ -37,6 +37,6 @@ export class GradientActionsComponent {
   }
 
   saveSVG() {
-    gradientToSVG(this.state.gradient().rgbStops, this.state.orientation().includes("right") ? 0 : 90);
+    gradientToSVG(this.state.gradient().rgbStops, this.state.angleDegrees());
   }
 }
