@@ -1,6 +1,6 @@
 <div class="flex flex-row items-center justify-center gap-2 w-full">
   <zz-color-selector
-    (color-change)="onColorStartChange($event)"
+    (color-changing)="onColorStartChange($event)"
     [border]="'border-current/40'"
     class="shadow-md"
     [color]="this.state.startRGBColor()"></zz-color-selector>
@@ -9,7 +9,7 @@
     <span class="font-icons" class="font-icons text-larger-5 leading-5">swap_horiz</span>
   </button>
   <zz-color-selector
-    (color-change)="onColorEndChange($event)"
+    (color-changing)="onColorEndChange($event)"
     [border]="'border-current/40'"
     class="shadow-md"
     [color]="this.state.endRGBColor()"></zz-color-selector>

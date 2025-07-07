@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   effect,
   ElementRef,
@@ -18,6 +19,7 @@ import { debounceTime, distinctUntilChanged, filter, fromEvent, map, Subscriptio
   selector: "zz-orientation-compass",
   imports: [],
   templateUrl: "./orientation-compass.component.html",
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OrientationCompassComponent {
   private readonly maxMovement = 12; // Maximum movement in degrees when not holding control

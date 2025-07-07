@@ -13,6 +13,7 @@ import { debounceTime } from "rxjs";
   [&::-webkit-color-swatch]:border-none [&::-webkit-color-swatch-wrapper]:p-0 shadow-md shadow-black/40 border-2
   focus:ring-1 focus:ring-gris-600/100"
       [class]="borderColor()"
+      (change)="onColorChange()"
       [formControl]="colorControl" />
     }`,
   imports: [ReactiveFormsModule],
@@ -42,6 +43,13 @@ export class ColorSelectorComponent implements OnInit {
    * @type {EventEmitter<ColorValues>}
    */
   @Output("color-change") public colorChange = new EventEmitter<ColorValues>();
+
+  /**
+   * Emits the color value when it changes.
+   * @type {EventEmitter<ColorValues>}
+   */
+  @Output("color-changing") public colorChanging = new EventEmitter<ColorValues>();
+
   borderColor = signal("");
 
   constructor() {
@@ -65,7 +73,11 @@ export class ColorSelectorComponent implements OnInit {
     this.colorControl = new FormControl<string>(this.value(), { nonNullable: true });
 
     this.colorControl.valueChanges.pipe(debounceTime(3)).subscribe((value) => {
-      this.colorChange.emit(rgbFromHex(value));
+      this.colorChanging.emit(rgbFromHex(value));
     });
+  }
+
+  onColorChange() {
+    this.colorChange.emit(rgbFromHex(this.colorControl!.value));
   }
 }
