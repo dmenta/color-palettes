@@ -25,6 +25,8 @@ export class OrientationCompassComponent {
   private readonly maxMovement = 12; // Maximum movement in degrees when not holding control
   private mouseMoveSubscription: Subscription | null = null;
   private removeDocumentClickListenerFn: (() => void) | null = null;
+  private touchStartSubscription: Subscription | null = null;
+  private removeDocumentTouchEndListenerFn: (() => void) | null = null;
 
   private state = inject(GradientStateService);
 
@@ -75,6 +77,19 @@ export class OrientationCompassComponent {
         this.state.onAngleDegreesChange(angle);
       });
 
+    this.mouseMoveSubscription = fromEvent(document, "touchmove")
+      .pipe(
+        filter(() => this.handler()),
+        debounceTime(1),
+        tap((ev) => console.log("Mouse moved", this.pointFromEvent(ev as MouseEvent))),
+        map((event) => this.angleDegreesFromPoint(this.pointFromEvent(event as MouseEvent))),
+        map((angle) => (this.shiftPressed() ? Math.round(angle / 45) * 45 : angle)),
+        distinctUntilChanged()
+      )
+      .subscribe((angle) => {
+        this.state.onAngleDegreesChange(angle);
+      });
+
     const radius = Math.round((this.size() * 0.84) / 2);
     const center = Math.round(this.size() / 2);
     const is45 = radius * 0.7071;
@@ -95,8 +110,14 @@ export class OrientationCompassComponent {
     this.state.onAngleDegreesChange(0);
   }
 
-  onMouseDown(_event: MouseEvent): void {
-    if (!this.checkPreset(this.pointFromEvent(_event))) {
+  onMouseDown(event: MouseEvent): void {
+    if (!this.checkPreset(this.pointFromEvent(event))) {
+      this.setHandlerSelected();
+    }
+  }
+
+  onTouchStart(event: TouchEvent) {
+    if (!this.checkPreset(this.pointFromEvent(event))) {
       this.setHandlerSelected();
     }
   }
@@ -192,7 +213,7 @@ export class OrientationCompassComponent {
     });
   }
 
-  private pointFromEvent(event: MouseEvent): Point {
+  private pointFromEvent(event: MouseEvent | TouchEvent): Point {
     const el = this.canvas?.nativeElement;
     if (!el) {
       return { x: 0, y: 0 };
@@ -206,10 +227,21 @@ export class OrientationCompassComponent {
     const rect = el.getBoundingClientRect();
     const size = rect.bottom - rect.top - canvasPadding;
 
-    return {
-      x: event.clientX - rect.left - padding,
-      y: size - (event.clientY - rect.top - padding),
-    };
+    if (event instanceof TouchEvent) {
+      if (event.touches.length === 0) {
+        return { x: 0, y: 0 };
+      }
+      const touch = event.touches[0];
+      return {
+        x: touch!.clientX - rect.left - padding,
+        y: touch!.clientY - rect.top - padding,
+      };
+    } else {
+      return {
+        x: event.clientX - rect.left - padding,
+        y: size - (event.clientY - rect.top - padding),
+      };
+    }
   }
 
   ngOnDestroy() {

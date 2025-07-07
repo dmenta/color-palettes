@@ -1,6 +1,7 @@
 <div>
   <canvas
     id="canvas"
+    (touchstart)="onTouchStart($event)"
     (mousedown)="onMouseDown($event)"
     (dblclick)="onDoubleClick($event)"
     #canvas
