@@ -25,5 +25,5 @@ import { OrientationCompassComponent } from "../../gradient/orientation-compass/
 export class BezierGradientComponent {
   state = inject(GradientStateService);
   bezierSize = 300;
-  compassSize = 100;
+  compassSize = 120;
 }

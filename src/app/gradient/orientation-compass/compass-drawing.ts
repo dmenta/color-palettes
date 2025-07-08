@@ -2,6 +2,9 @@ export function drawCompass(
   ctx: ImageBitmapRenderingContext,
   angleDeg: number,
   diameter: number = 100,
+  gridRadioSizeRatio: number = 0.84,
+  presetSizeRatio: number = 0.9,
+  presetHover: number | null = null,
   active: boolean = false,
   darkMode: boolean = false
 ) {
@@ -12,24 +15,29 @@ export function drawCompass(
     return;
   }
 
-  drawGrid(offCtx, diameter, darkMode);
+  drawGrid(offCtx, diameter, gridRadioSizeRatio, presetSizeRatio, presetHover, angleDeg, darkMode);
 
-  drawArrow(offCtx, angleDeg, diameter, active, darkMode);
+  drawArrow(offCtx, angleDeg, diameter, gridRadioSizeRatio, active, darkMode);
 
   const image = offscreenCanvas.transferToImageBitmap();
   ctx.transferFromImageBitmap(image);
 }
 
-const gridRadioSizeRatio = 0.84;
-const arrowRadioSizeRatio = 0.85;
-
-function drawGrid(ctx: OffscreenCanvasRenderingContext2D, diameter: number, darkMode: boolean) {
+function drawGrid(
+  ctx: OffscreenCanvasRenderingContext2D,
+  diameter: number,
+  gridRadioSizeRatio: number = 0.84,
+  presetSizeRatio: number = 0.9,
+  presetHover: number | null = null,
+  angleDeg: number = 0,
+  darkMode: boolean
+) {
   const radio = Math.round(diameter / 2);
 
   ctx.beginPath();
-  ctx.arc(radio, radio, radio, 0, Math.PI * 2);
-  ctx.lineWidth = 0.5;
-  ctx.fillStyle = "#80808040";
+  ctx.arc(radio, radio, Math.round(radio * gridRadioSizeRatio), 0, Math.PI * 2);
+  ctx.lineWidth = 1;
+  ctx.fillStyle = "#7A736E33";
   ctx.fill();
   ctx.setLineDash([]);
   ctx.strokeStyle = "transparent";
@@ -45,57 +53,77 @@ function drawGrid(ctx: OffscreenCanvasRenderingContext2D, diameter: number, dark
   ctx.stroke();
 
   ctx.beginPath();
-  ctx.setLineDash([2, 2]);
   ctx.arc(radio, radio, Math.round(size * 0.2), 0, Math.PI * 2);
+  ctx.lineWidth = 1;
   ctx.strokeStyle = colors.lines;
   ctx.stroke();
 
   ctx.strokeStyle = colors.lines;
   for (let i = 0; i <= 7; i++) {
     const angle = ((Math.PI * 2) / 8) * i;
-    const coseno = Math.cos(angle) * size;
-    const seno = Math.sin(angle) * size;
-    const x0 = coseno + radio;
-    const y0 = seno + radio;
-    const x1 = coseno * 0.8 + radio;
-    const y1 = seno * 0.8 + radio;
+    const cosenoBase = Math.cos(angle);
+    const senoBase = Math.sin(angle);
+    const deltaX = cosenoBase * size * 1.1;
+    const deltaY = senoBase * size * 1.1;
+    const x0 = Math.round(deltaX + radio);
+    const y0 = Math.round(deltaY + radio);
+    const x1 = Math.round(deltaX * 0.75 + radio);
+    const y1 = Math.round(deltaY * 0.75 + radio);
 
     ctx.beginPath();
     ctx.moveTo(x0, y0);
     ctx.lineTo(x1, y1);
-    ctx.lineWidth = 0.5;
+    ctx.lineWidth = 1;
     ctx.stroke();
 
+    const currAngleDeg = ((i + 2) % 8) * 45;
+    const markActive = angleDeg === currAngleDeg;
+    const markHover = !markActive && presetHover !== null && presetHover === currAngleDeg;
+    const color = markActive ? colors.activePreset : markHover ? colors.presetHover : colors.preset;
     ctx.beginPath();
-    ctx.arc(x0, y0, 3, 0, Math.PI * 2);
-    ctx.fillStyle = colors.border;
+    ctx.arc(
+      Math.round(cosenoBase * radio * presetSizeRatio + radio),
+      Math.round(senoBase * radio * presetSizeRatio + radio),
+      4,
+      0,
+      Math.PI * 2
+    );
+    ctx.fillStyle = color;
     ctx.fill();
   }
-
-  ctx.setLineDash([]);
 }
 
-function gridColors(darkMode: boolean): { lines: string; border: string } {
+function gridColors(darkMode: boolean): {
+  lines: string;
+  border: string;
+  preset: string;
+  presetHover: string;
+  activePreset: string;
+} {
   return {
-    lines: !darkMode ? "#606060" : "#cccccc",
-    border: !darkMode ? "#303030" : "#bbbbbb",
+    lines: !darkMode ? "#606060" : "#909090",
+    border: !darkMode ? "#505050" : "#a0a0a0",
+    preset: !darkMode ? "#777777" : "#888888",
+    presetHover: !darkMode ? "#333333" : "#C0C0C0",
+    activePreset: !darkMode ? "#000000" : "#ffffff",
   };
 }
 
 const arrowWide = 5;
 const arrowLength = 14;
-const arrowOverflow = 8;
+const arrowOverflow = 4;
 const arrowInset = -3;
 export function drawArrow(
   ctx: OffscreenCanvasRenderingContext2D,
   angleDegress: number,
   diameter: number,
+  gridRadioSizeRatio: number = 0.84,
   active: boolean,
   darkMode: boolean
 ) {
   const colors = arrowColors(darkMode);
   const radio = Math.round(diameter / 2);
-  const size = Math.round(arrowRadioSizeRatio * radio);
+  const size = Math.round(gridRadioSizeRatio * radio * 0.95);
 
   ctx.translate(radio, radio);
   ctx.rotate(((angleDegress - 180) * Math.PI) / 180);

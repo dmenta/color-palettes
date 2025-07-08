@@ -14,7 +14,7 @@ import {
 import { Handler, Handlers, Point, pointsMatch } from "../models/bezier-curve";
 import { drawBezierPanel, pointFromCanvas, pointToCanvas } from "./bezier-panel-drawing";
 import { GradientStateService } from "../services/gradient-state.service";
-import { debounceTime, filter, fromEvent, map, Subscription, tap } from "rxjs";
+import { debounceTime, filter, fromEvent, map, merge, Subscription, tap } from "rxjs";
 
 @Component({
   selector: "zz-bezier-panel",
@@ -24,9 +24,8 @@ import { debounceTime, filter, fromEvent, map, Subscription, tap } from "rxjs";
 })
 export class BezierPanelComponent implements AfterViewInit, OnDestroy {
   private mouseMoveSubscription: Subscription | null = null;
-  private mouseMoveDocumentSubscription: Subscription | null = null;
-  private touchMoveSubscription: Subscription | null = null;
-  private touchStartSubscription: Subscription | null = null;
+  private moveSubscription: Subscription | null = null;
+  private startSubscription: Subscription | null = null;
   private removeDocumentClickListenerFn: (() => void) | null = null;
   private removeDocumentTouchEndListenerFn: (() => void) | null = null;
 
@@ -51,49 +50,46 @@ export class BezierPanelComponent implements AfterViewInit, OnDestroy {
   ngAfterViewInit() {
     this.mouseMoveSubscription = fromEvent(this.canvas!.nativeElement, "mousemove")
       .pipe(
-        debounceTime(1),
+        filter(() => this.currentHandler() === null),
+        debounceTime(5),
         map((event) => event as MouseEvent)
       )
       .subscribe((event) => {
         this.onMouseMove(event);
       });
 
-    this.mouseMoveDocumentSubscription = fromEvent(document, "mousemove")
-      .pipe(
-        filter(() => this.currentHandler() !== null),
-        debounceTime(1),
-        map((event) => event as TouchEvent)
-      )
-      .subscribe((event) => {
-        this.onMouseMove(event);
-      });
-
-    this.touchMoveSubscription = fromEvent(document, "touchmove", { passive: false })
+    this.moveSubscription = merge(
+      fromEvent(document, "mousemove"),
+      fromEvent(document, "touchmove", { passive: false })
+    )
       .pipe(
         filter(() => this.currentHandler() !== null),
         tap((event) => event.preventDefault()),
         debounceTime(1),
-        tap((event) => event.preventDefault()),
-        map((event) => event as TouchEvent)
+        map((event) => event as MouseEvent | TouchEvent)
       )
       .subscribe((event) => {
-        this.onMouseMove(event);
+        this.onMoveHandler(event);
       });
 
-    this.touchStartSubscription = fromEvent(this.canvas?.nativeElement!, "touchstart", { passive: false })
+    this.startSubscription = merge(
+      fromEvent(this.canvas?.nativeElement!, "mousedown"),
+      fromEvent(this.canvas?.nativeElement!, "touchstart", { passive: false })
+    )
       .pipe(
         filter(() => this.currentHandler() === null),
         tap((event) => event.preventDefault()),
         debounceTime(1),
-        map((event) => event as TouchEvent)
+        map((event) => event as MouseEvent | TouchEvent)
       )
       .subscribe((event) => {
-        this.onTouchStart(event);
+        this.onGrabHandler(event);
       });
 
     this.canvas!.nativeElement.oncontextlost = (event: Event) => {
       console.warn("Context lost", event);
     };
+
     this.dibujar(this.handlersToCanvas(this.state.handlers()));
   }
 
@@ -105,7 +101,7 @@ export class BezierPanelComponent implements AfterViewInit, OnDestroy {
     this.state.onHandlersChange({ ...this.state.handlers(), [overHandler]: { x: 50, y: 50 } });
   }
 
-  onTouchStart(event: TouchEvent) {
+  onGrabHandler(event: TouchEvent | MouseEvent) {
     const point = this.pointFromEvent(event);
     const over = this.isOverHandler(point);
     if (over !== null) {
@@ -113,33 +109,27 @@ export class BezierPanelComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  onMouseDown(_event: MouseEvent): void {
+  onMoveHandler(event: MouseEvent | TouchEvent): void {
+    const point = this.pointFromEvent(event);
+
+    this.updateHandlerCoords(point);
+  }
+
+  onMouseMove(event: MouseEvent): void {
+    const point = this.pointFromEvent(event);
     const overHandler = this.overHandler();
-    if (overHandler === null) {
+    const isOverHandler = this.isOverHandler(point);
+    if (overHandler === isOverHandler) {
       return;
     }
 
-    this.setHandlerSelected(overHandler);
-  }
-
-  onMouseMove(event: MouseEvent | TouchEvent): void {
-    const point = this.pointFromEvent(event);
-    if (!this.currentHandler()) {
-      const overHandler = this.overHandler();
-      const isOverHandler = this.isOverHandler(point);
-      if (overHandler === isOverHandler) {
-        return;
-      } else {
-        this.overHandler.set(isOverHandler);
-      }
-    }
-
-    this.updateHandlerCoords(point);
+    this.overHandler.set(isOverHandler);
   }
 
   private stopTracking() {
     if (this.currentHandler() !== null) {
       this.removeDocumentClickListenerFn?.();
+      this.removeDocumentTouchEndListenerFn?.();
 
       this.currentHandler.set(null);
     }
@@ -172,15 +162,9 @@ export class BezierPanelComponent implements AfterViewInit, OnDestroy {
   }
 
   private setListeners() {
-    this.removeDocumentClickListenerFn = this.renderer.listen("document", "mouseup", () => {
-      if (this.currentHandler()) {
-        this.stopTracking();
-      }
-    });
-    this.removeDocumentTouchEndListenerFn = this.renderer.listen("document", "touchend", () => {
-      if (this.currentHandler()) {
-        this.stopTracking();
-      }
+    this.removeDocumentClickListenerFn = this.renderer.listen("document", "mouseup", () => this.stopTracking());
+    this.removeDocumentTouchEndListenerFn = this.renderer.listen("document", "touchend", () => this.stopTracking(), {
+      passive: true,
     });
   }
 
@@ -248,8 +232,7 @@ export class BezierPanelComponent implements AfterViewInit, OnDestroy {
     this.removeDocumentTouchEndListenerFn?.();
 
     this.mouseMoveSubscription?.unsubscribe();
-    this.mouseMoveDocumentSubscription?.unsubscribe();
-    this.touchMoveSubscription?.unsubscribe();
-    this.touchStartSubscription?.unsubscribe();
+    this.moveSubscription?.unsubscribe();
+    this.startSubscription?.unsubscribe();
   }
 }

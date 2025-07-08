@@ -29,6 +29,37 @@ export function bezierPoints(coords: Handlers) {
   return values;
 }
 
+export function pointFromEvent(event: MouseEvent | TouchEvent): Point {
+  const el = event.target as HTMLElement;
+  if (!el) {
+    return { x: 0, y: 0 };
+  }
+
+  const style = window.getComputedStyle(el);
+
+  const padding = parseFloat(style.paddingLeft.replace("px", "")) || 0;
+  const canvasPadding = padding * 2;
+
+  const rect = el.getBoundingClientRect();
+  const size = rect.bottom - rect.top - canvasPadding;
+
+  if (event instanceof TouchEvent) {
+    if (event.touches.length === 0) {
+      return { x: 0, y: 0 };
+    }
+    const touch = event.touches[0];
+    return {
+      x: touch!.clientX - rect.left - padding,
+      y: size - (touch!.clientY - rect.top - padding),
+    };
+  } else {
+    return {
+      x: event.clientX - rect.left - padding,
+      y: size - (event.clientY - rect.top - padding),
+    };
+  }
+}
+
 export type Handlers = {
   h1: Point;
   h2: Point;
@@ -41,6 +72,6 @@ export type Point = {
 
 export type Handler = keyof Handlers;
 
-export function pointsMatch(a: Point, b: Point, tolerance: number = 6) {
+export function pointsMatch(a: Point, b: Point, tolerance: number = 9) {
   return b.x + tolerance > a.x && b.x - tolerance < a.x && b.y + tolerance > a.y && b.y - tolerance < a.y;
 }

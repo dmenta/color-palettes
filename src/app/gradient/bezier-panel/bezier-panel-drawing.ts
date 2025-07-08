@@ -15,26 +15,17 @@ export function drawBezierPanel(
   const handlersColors = handlerColors(darkMode);
   const colorCurve = curveColor(darkMode);
 
-  drawHandlerLine(offCtx, { x: size, y: 0 }, coords.h2, handlersColors.line);
+  console.log("Drawing Bezier Panel", coords, size, active, darkMode);
 
-  drawHandler(offCtx, coords.h2, handlersColors.h2);
-
-  drawHandlerLine(offCtx, { x: 0, y: size }, coords.h1, handlersColors.line);
-
-  drawHandler(offCtx, coords.h1, handlersColors.h1);
-
-  if (active === "h1") {
-    drawHandlerActive(offCtx, coords.h1, handlersColors.h1, handlersColors.shadow);
-  } else if (active === "h2") {
-    drawHandlerActive(offCtx, coords.h2, handlersColors.h2, handlersColors.shadow);
-  }
+  drawHandler(offCtx, { x: size, y: 0 }, coords.h2, handlersColors, "h2", active === "h2");
+  drawHandler(offCtx, { x: 0, y: size }, coords.h1, handlersColors, "h1", active === "h1");
 
   offCtx.beginPath();
   offCtx.moveTo(0, size);
   offCtx.strokeStyle = colorCurve;
 
   offCtx.bezierCurveTo(coords.h1.x, coords.h1.y, coords.h2.x, coords.h2.y, size, 0);
-  offCtx.lineWidth = 2;
+  offCtx.lineWidth = active !== null ? 3 : 2;
   offCtx.stroke();
 
   const bitmapOne = offscreen.transferToImageBitmap();
@@ -71,42 +62,67 @@ function drawGrid(ctx: OffscreenCanvasRenderingContext2D, size: number, darkMode
   ctx.setLineDash([]);
 }
 
-function drawHandler(ctx: OffscreenCanvasRenderingContext2D, point: Point, color: string) {
+function drawHandler(
+  ctx: OffscreenCanvasRenderingContext2D,
+  start: Point,
+  end: Point,
+  colors: HandlerColors,
+  name: "h1" | "h2" = "h1",
+  active: boolean
+) {
+  drawHandlerLine(ctx, start, end, colors, active);
+
   ctx.beginPath();
-  ctx.arc(point.x, point.y, 7, 0, Math.PI * 2);
-  ctx.fillStyle = color;
+  ctx.arc(end.x, end.y, 7, 0, Math.PI * 2);
+  ctx.fillStyle = colors[name];
   ctx.fill();
+  if (active) {
+    drawHandlerActive(ctx, end, colors, name);
+  }
 }
 
-function drawHandlerActive(ctx: OffscreenCanvasRenderingContext2D, point: Point, color: string, shadowColor: string) {
+function drawHandlerActive(
+  ctx: OffscreenCanvasRenderingContext2D,
+  point: Point,
+  colors: HandlerColors,
+  name: "h1" | "h2" = "h1"
+) {
   // Shadow
-  ctx.shadowColor = shadowColor;
+  ctx.shadowColor = colors.shadow;
   ctx.shadowBlur = 7;
   ctx.shadowOffsetX = 5;
   ctx.shadowOffsetY = 5;
 
   ctx.beginPath();
   ctx.arc(point.x, point.y, 10, 0, Math.PI * 2);
-  ctx.strokeStyle = color;
+  ctx.strokeStyle = colors[name];
   ctx.lineWidth = 2;
   ctx.stroke();
 
   ctx.shadowColor = "transparent"; // Reset shadow
 }
 
-function drawHandlerLine(ctx: OffscreenCanvasRenderingContext2D, start: Point, end: Point, color: string) {
+function drawHandlerLine(
+  ctx: OffscreenCanvasRenderingContext2D,
+  start: Point,
+  end: Point,
+  colors: HandlerColors,
+  active: boolean
+) {
   ctx.beginPath();
+  ctx.lineWidth = active ? 1.5 : 1;
   ctx.moveTo(start.x, start.y);
   ctx.lineTo(end.x, end.y);
-  ctx.strokeStyle = color;
+  ctx.strokeStyle = active ? colors.activeline : colors.line;
   ctx.stroke();
 }
 
-function handlerColors(darkMode: boolean): { h1: string; h2: string; line: string; shadow: string } {
+function handlerColors(darkMode: boolean): HandlerColors {
   return {
     h1: !darkMode ? "oklch(0.355 0.146 29)" : "oklch(0.634 0.254 18)",
     h2: !darkMode ? "oklch(0.377 0.1 247)" : "oklch(0.858 0.146 197)",
     line: !darkMode ? "#305030" : "#E0FFE0",
+    activeline: !darkMode ? "#008000" : "#80FF80",
     shadow: !darkMode ? "#202020" : "#000000",
   };
 }
@@ -137,3 +153,11 @@ export function pointToCanvas(point: Point, size: number): Point {
     y: size - Math.max(0, Math.min(point.y, size)) * ratio,
   };
 }
+
+type HandlerColors = {
+  h1: string;
+  h2: string;
+  line: string;
+  activeline: string;
+  shadow: string;
+};

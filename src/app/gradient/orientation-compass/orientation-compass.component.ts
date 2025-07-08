@@ -13,7 +13,7 @@ import {
 import { Point, pointsMatch } from "../models/bezier-curve";
 import { GradientStateService } from "../services/gradient-state.service";
 import { drawCompass } from "./compass-drawing";
-import { debounceTime, distinctUntilChanged, filter, fromEvent, map, Subscription, tap } from "rxjs";
+import { debounceTime, distinctUntilChanged, filter, fromEvent, map, merge, Subscription, tap } from "rxjs";
 
 @Component({
   selector: "zz-orientation-compass",
@@ -23,9 +23,11 @@ import { debounceTime, distinctUntilChanged, filter, fromEvent, map, Subscriptio
 })
 export class OrientationCompassComponent {
   private readonly maxMovement = 12; // Maximum movement in degrees when not holding control
-  private mouseMoveSubscription: Subscription | null = null;
-  private touchMoveSubscription: Subscription | null = null;
-  private touchStartSubscription: Subscription | null = null;
+  private readonly radioSizeRatio = 0.7; // Ratio for the size of the compass grid
+  private readonly presetSizeRatio = 0.9; // Ratio for the size of the compass grid
+  private canvasMoveSubscription: Subscription | null = null;
+  private moveSubscription: Subscription | null = null;
+  private grabHandlerSubscription: Subscription | null = null;
   private removeDocumentClickListenerFn: (() => void) | null = null;
   private removeDocumentTouchEndListenerFn: (() => void) | null = null;
 
@@ -37,6 +39,8 @@ export class OrientationCompassComponent {
   private canvasContext: ImageBitmapRenderingContext | null = null;
 
   handler = signal(false);
+  overPreset = signal<number | null>(null);
+  inside = signal(false);
   size = input(100);
   darkMode = input(false);
 
@@ -65,44 +69,13 @@ export class OrientationCompassComponent {
   }
 
   ngAfterViewInit() {
-    this.mouseMoveSubscription = fromEvent(document, "mousemove")
-      .pipe(
-        filter(() => this.handler()),
-        debounceTime(1),
-        map((event) => this.angleDegreesFromPoint(this.pointFromEvent(event as MouseEvent))),
-        map((angle) => (this.shiftPressed() ? Math.round(angle / 45) * 45 : angle)),
-        distinctUntilChanged()
-      )
-      .subscribe((angle) => {
-        this.state.onAngleDegreesChange(angle);
-      });
+    this.createPresetAngles();
+    this.subcribeToEvents();
 
-    this.touchStartSubscription = fromEvent(this.canvas?.nativeElement!, "touchstart", { passive: false })
-      .pipe(
-        filter(() => !this.handler()),
-        tap((event) => event.preventDefault()),
-        debounceTime(1),
-        map((event) => this.pointFromEvent(event as TouchEvent)),
-        filter((point) => !this.checkPreset(point))
-      )
-      .subscribe(() => {
-        this.setHandlerSelected();
-      });
-
-    this.touchMoveSubscription = fromEvent(document, "touchmove", { passive: false })
-      .pipe(
-        filter(() => this.handler()),
-        tap((event) => event.preventDefault()),
-        debounceTime(1),
-        map((event) => this.angleDegreesFromPoint(this.pointFromEvent(event as TouchEvent))),
-        map((angle) => (this.shiftPressed() ? Math.round(angle / 45) * 45 : angle)),
-        distinctUntilChanged()
-      )
-      .subscribe((angle) => {
-        this.state.onAngleDegreesChange(angle);
-      });
-
-    const radius = Math.round((this.size() * 0.84) / 2);
+    this.dibujar(this.state.angleDegrees());
+  }
+  private createPresetAngles() {
+    const radius = Math.round((this.size() * this.presetSizeRatio) / 2);
     const center = Math.round(this.size() / 2);
     const is45 = radius * 0.7071;
 
@@ -114,32 +87,121 @@ export class OrientationCompassComponent {
     this.presetAngles.push({ angle: 225, point: { x: center - is45, y: center - is45 } });
     this.presetAngles.push({ angle: 270, point: { x: center - radius, y: center } });
     this.presetAngles.push({ angle: 315, point: { x: center - is45, y: center + is45 } });
+  }
 
-    this.dibujar(this.state.angleDegrees());
+  private subcribeToEvents() {
+    this.moveSubscription = merge(
+      fromEvent(document, "mousemove"),
+      fromEvent(document, "touchmove", { passive: false })
+    )
+      .pipe(
+        filter(() => this.handler()),
+        tap((event) => event.preventDefault()),
+        debounceTime(1),
+        map((event) => this.angleDegreesFromPoint(this.pointFromEvent(event as MouseEvent | TouchEvent))),
+        map((angleDegrees) => this.calculateAngleMovement(angleDegrees)),
+        distinctUntilChanged()
+      )
+      .subscribe((angle) => {
+        this.state.onAngleDegreesChange(angle);
+      });
+
+    const movement = fromEvent(this.canvas?.nativeElement!, "mousemove").pipe(
+      filter(() => !this.handler()),
+      tap((event) => event.preventDefault()),
+      debounceTime(1),
+      map((event) => {
+        const point = this.pointFromEvent(event as MouseEvent | TouchEvent);
+        const insideRadio = Math.round((this.size() / 2) * this.radioSizeRatio);
+
+        const inside = this.isInsideCircle(
+          insideRadio,
+          { x: point.x - this.size() / 2, y: point.y - this.size() / 2 },
+          3
+        );
+        if (inside) {
+          return { inside: true, preset: null };
+        } else {
+          const overPreset = this.isOverPreset(point);
+          return { inside: false, preset: overPreset };
+        }
+      })
+    );
+
+    this.canvasMoveSubscription = merge(
+      movement,
+      fromEvent(this.canvas?.nativeElement!, "mouseleave").pipe(
+        tap((event) => event.preventDefault()),
+        map(() => ({ inside: false, preset: null }))
+      )
+    )
+      .pipe(distinctUntilChanged((prev, curr) => prev.inside === curr.inside && prev.preset === curr.preset))
+      .subscribe((status) => {
+        this.inside.set(status.inside);
+        this.overPreset.set(status.preset);
+      });
+
+    this.grabHandlerSubscription = merge(
+      fromEvent(this.canvas?.nativeElement!, "mousedown"),
+      fromEvent(this.canvas?.nativeElement!, "touchstart", { passive: false })
+    )
+      .pipe(
+        filter(() => !this.handler() && (this.inside() || this.overPreset() !== null)),
+        tap((event) => event.preventDefault()),
+        debounceTime(1),
+        map((event) => this.pointFromEvent(event as MouseEvent | TouchEvent))
+      )
+      .subscribe((point) => {
+        this.onGrabHandler(point);
+      });
+  }
+
+  /**
+   *
+   * @param radio
+   * @param point
+   * @param tolerance
+   * @returns a boolean indicating if the point is inside the circle defined by the radio and center at (0,0).
+   * The tolerance is used to allow a small margin of error when checking if the point is inside the circle.
+   * The point is considered inside the circle if the distance from the center to the point is less than or equal to the radio minus the tolerance.
+   */
+  private isInsideCircle(radio: number, point: Point, tolerance: number = 3): boolean {
+    const realRadio = Math.round(radio);
+    const deltaX = Math.abs(point.x);
+    const deltaY = Math.abs(point.y);
+    const hypotenuse = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+    const inside = hypotenuse - tolerance <= realRadio;
+
+    return inside;
   }
 
   onDoubleClick(_event: MouseEvent) {
     this.state.onAngleDegreesChange(0);
   }
 
-  onMouseDown(event: MouseEvent): void {
-    if (!this.checkPreset(this.pointFromEvent(event))) {
-      this.setHandlerSelected();
+  onGrabHandler(point: Point): void {
+    const presetAngle = this.isOverPreset(point);
+    if (presetAngle !== null) {
+      this.state.onAngleDegreesChange(presetAngle);
+      return;
     }
+    this.setHandlerSelected();
   }
 
-  private checkPreset(point: Point) {
+  private isOverPreset(point: Point): number | null {
+    if (this.inside()) {
+      return null;
+    }
     for (const preset of this.presetAngles) {
-      if (pointsMatch(preset.point, point, 7)) {
+      if (pointsMatch(preset.point, point, 10)) {
         if (preset.angle !== this.state.angleDegrees()) {
-          this.state.onAngleDegreesChange(preset.angle);
-          return true;
+          return preset.angle;
         } else {
-          return false;
+          return null;
         }
       }
     }
-    return false;
+    return null;
   }
 
   private stopTracking() {
@@ -173,35 +235,35 @@ export class OrientationCompassComponent {
       angleDegrees += 360;
     }
 
-    let newAngle = angleDegrees;
+    return angleDegrees;
+  }
 
-    if (!this.shiftPressed()) {
-      const currentAngle = this.state.angleDegrees();
-      const movement = Math.min(this.maxMovement, Math.abs(currentAngle - angleDegrees));
-      let distancia =
-        currentAngle - angleDegrees > 180
-          ? movement
-          : currentAngle - angleDegrees < -180
-          ? -movement
-          : currentAngle < angleDegrees
-          ? movement
-          : -movement;
-      newAngle = currentAngle + distancia;
+  private calculateAngleMovement(newAngleDegrees: number): number {
+    if (this.shiftPressed()) {
+      return Math.round(newAngleDegrees / 45) * 45;
     }
+    const currentAngle = this.state.angleDegrees();
+    const movement = Math.min(this.maxMovement, Math.abs(currentAngle - newAngleDegrees));
+    let distancia =
+      currentAngle - newAngleDegrees > 180
+        ? movement
+        : currentAngle - newAngleDegrees < -180
+        ? -movement
+        : currentAngle < newAngleDegrees
+        ? movement
+        : -movement;
 
-    return newAngle < 0 ? newAngle + 360 : newAngle >= 360 ? newAngle - 360 : newAngle;
+    return this.ensureAngleInRange(currentAngle + distancia);
+  }
+
+  private ensureAngleInRange(angleInDegrees: number): number {
+    return angleInDegrees < 0 ? angleInDegrees + 360 : angleInDegrees >= 360 ? angleInDegrees - 360 : angleInDegrees;
   }
 
   private setListeners() {
-    this.removeDocumentClickListenerFn = this.renderer.listen("document", "mouseup", () => {
-      if (this.handler()) {
-        this.stopTracking();
-      }
-    });
-    this.removeDocumentClickListenerFn = this.renderer.listen("document", "touchend", () => {
-      if (this.handler()) {
-        this.stopTracking();
-      }
+    this.removeDocumentClickListenerFn = this.renderer.listen("document", "mouseup", () => this.stopTracking());
+    this.removeDocumentClickListenerFn = this.renderer.listen("document", "touchend", () => this.stopTracking(), {
+      passive: true,
     });
   }
 
@@ -209,7 +271,8 @@ export class OrientationCompassComponent {
     angleDegrees: number,
     active: boolean = false,
     size: number = this.size(),
-    darkMode: boolean = this.darkMode()
+    darkMode: boolean = this.darkMode(),
+    overPreset: number | null = this.overPreset()
   ) {
     if (!this.canvas) {
       return;
@@ -221,7 +284,7 @@ export class OrientationCompassComponent {
     const ctx = this.canvasContext!;
 
     requestAnimationFrame(() => {
-      drawCompass(ctx, angleDegrees, size, active, darkMode);
+      drawCompass(ctx, angleDegrees, size, this.radioSizeRatio, this.presetSizeRatio, overPreset, active, darkMode);
     });
   }
 
@@ -260,8 +323,8 @@ export class OrientationCompassComponent {
     this.removeDocumentClickListenerFn?.();
     this.removeDocumentTouchEndListenerFn?.();
 
-    this.mouseMoveSubscription?.unsubscribe();
-    this.touchMoveSubscription?.unsubscribe();
-    this.touchStartSubscription?.unsubscribe();
+    this.canvasMoveSubscription?.unsubscribe();
+    this.moveSubscription?.unsubscribe();
+    this.grabHandlerSubscription?.unsubscribe();
   }
 }
