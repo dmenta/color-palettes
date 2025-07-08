@@ -16,8 +16,6 @@ export function drawBezierPanel(
   const handlersColors = bezierHandleColors(darkMode);
   const colorCurve = bezierCurveColor(darkMode);
 
-  console.log("Drawing Bezier Panel", coords, size, active, darkMode);
-
   drawHandler(offCtx, { x: size, y: 0 }, coords.h2, handlersColors, "h2", active === "h2");
   drawHandler(offCtx, { x: 0, y: size }, coords.h1, handlersColors, "h1", active === "h1");
 

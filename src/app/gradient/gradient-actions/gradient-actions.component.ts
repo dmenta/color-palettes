@@ -33,10 +33,23 @@ export class GradientActionsComponent {
   }
 
   saveAsImage() {
-    gradientToImage(this.state.gradient().rgbStops, this.state.angleDegrees());
+    gradientToImage(this.state.gradient().rgbStops, this.state.angleDegrees(), this.displayDimensions());
   }
 
   saveSVG() {
     gradientToSVG(this.state.gradient().rgbStops, this.state.angleDegrees());
+  }
+
+  private displayDimensions() {
+    const isTouchDevice = "ontouchstart" in document.documentElement;
+    if (!isTouchDevice) {
+      return { width: 1920, height: 1080 };
+    }
+
+    const width = window.innerWidth ?? document.documentElement.clientWidth ?? 1920;
+    const height = screen.height ?? window.innerHeight ?? 1080;
+    const ratio = window.devicePixelRatio || 1;
+
+    return { width: Math.floor(width * ratio), height: Math.floor(height * ratio) };
   }
 }

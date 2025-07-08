@@ -47,6 +47,14 @@ export class BezierPanelComponent implements AfterViewInit, OnDestroy {
     });
   }
 
+  private requestFullscreen() {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch(() => {
+        console.debug("Error attempting to enable full-screen mode");
+      });
+    }
+  }
+
   ngAfterViewInit() {
     this.mouseMoveSubscription = fromEvent(this.canvas!.nativeElement, "mousemove")
       .pipe(
@@ -73,14 +81,21 @@ export class BezierPanelComponent implements AfterViewInit, OnDestroy {
       });
 
     this.startSubscription = merge(
-      fromEvent(this.canvas?.nativeElement!, "mousedown"),
-      fromEvent(this.canvas?.nativeElement!, "touchstart", { passive: false })
+      fromEvent(this.canvas?.nativeElement!, "mousedown").pipe(map((ev) => ev as MouseEvent)),
+      fromEvent(this.canvas?.nativeElement!, "touchstart", { passive: false }).pipe(
+        tap(() => this.requestFullscreen()),
+        map((event) => {
+          const point = this.pointFromEvent(event as TouchEvent);
+          const over = this.isOverHandler(point);
+          return over !== null ? event : null;
+        }),
+        filter((event): event is TouchEvent => event !== null),
+        tap((event) => event.preventDefault())
+      )
     )
       .pipe(
         filter(() => this.currentHandler() === null),
-        tap((event) => event.preventDefault()),
-        debounceTime(1),
-        map((event) => event as MouseEvent | TouchEvent)
+        debounceTime(1)
       )
       .subscribe((event) => {
         this.onGrabHandler(event);
@@ -153,9 +168,9 @@ export class BezierPanelComponent implements AfterViewInit, OnDestroy {
   private isOverHandler(point: Point): Handler | null {
     const coords = this.state.handlers();
 
-    if (pointsMatch(point, coords.h1)) {
+    if (pointsMatch(point, coords.h1, 12)) {
       return "h1";
-    } else if (pointsMatch(point, coords.h2)) {
+    } else if (pointsMatch(point, coords.h2, 12)) {
       return "h2";
     }
     return null;

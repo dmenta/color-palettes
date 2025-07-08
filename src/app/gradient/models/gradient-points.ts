@@ -75,10 +75,14 @@ function indiceValorMedio(valores: Point[]): number {
 
 const baseDate = new Date(2025, 0, 1).valueOf();
 
-export function gradientToImage(stops: GradientStop[], angleDegrees: number = 0) {
+export function gradientToImage(
+  stops: GradientStop[],
+  angleDegrees: number = 0,
+  dimensions: { width: number; height: number } = { width: 1920, height: 1080 }
+) {
   const canvas = document.createElement("canvas");
-  canvas.width = 1920;
-  canvas.height = 1080;
+  canvas.width = dimensions.width;
+  canvas.height = dimensions.height;
   const ctx = canvas.getContext("2d");
   if (!ctx) {
     console.error("No se pudo obtener el contexto del canvas");
@@ -96,7 +100,7 @@ export function gradientToImage(stops: GradientStop[], angleDegrees: number = 0)
 
   ctx.fillStyle = gradient;
   ctx.beginPath();
-  ctx.rect(0, 0, 1920, 1080);
+  ctx.rect(0, 0, canvas.width, canvas.height);
   ctx.fill();
 
   const createEl = document.createElement("a");
@@ -180,7 +184,6 @@ function gradientOrientation(width: number, height: number, angleDegrees: number
     deltaX = Math.min(deltaX, calcSizeX + maxX);
   }
   const realHypotenusa = Math.sqrt(deltaX * deltaX + deltaY * deltaY) * 2;
-  console.log("realHypotenusa", realHypotenusa, "hypotenusa", hypotenusa);
 
   return {
     x1: calcSizeX + deltaX,
