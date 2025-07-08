@@ -1,3 +1,5 @@
+import { compassArrowColors, compassGridColors } from "./compass-colors";
+
 export function drawCompass(
   ctx: ImageBitmapRenderingContext,
   angleDeg: number,
@@ -44,7 +46,7 @@ function drawGrid(
 
   const size = Math.round(gridRadioSizeRatio * radio);
 
-  const colors = gridColors(darkMode);
+  const colors = compassGridColors(darkMode);
   ctx.beginPath();
   ctx.arc(radio, radio, size, 0, Math.PI * 2);
   ctx.moveTo(radio, radio);
@@ -93,26 +95,11 @@ function drawGrid(
   }
 }
 
-function gridColors(darkMode: boolean): {
-  lines: string;
-  border: string;
-  preset: string;
-  presetHover: string;
-  activePreset: string;
-} {
-  return {
-    lines: !darkMode ? "#606060" : "#909090",
-    border: !darkMode ? "#505050" : "#a0a0a0",
-    preset: !darkMode ? "#777777" : "#888888",
-    presetHover: !darkMode ? "#333333" : "#C0C0C0",
-    activePreset: !darkMode ? "#000000" : "#ffffff",
-  };
-}
-
 const arrowWide = 5;
 const arrowLength = 14;
 const arrowOverflow = 4;
 const arrowInset = -3;
+
 export function drawArrow(
   ctx: OffscreenCanvasRenderingContext2D,
   angleDegress: number,
@@ -121,7 +108,7 @@ export function drawArrow(
   active: boolean,
   darkMode: boolean
 ) {
-  const colors = arrowColors(darkMode);
+  const colors = compassArrowColors(darkMode);
   const radio = Math.round(diameter / 2);
   const size = Math.round(gridRadioSizeRatio * radio * 0.95);
 
@@ -171,12 +158,4 @@ export function drawArrow(
   ctx.shadowColor = "transparent";
 
   ctx.setTransform(1, 0, 0, 1, 0, 0);
-}
-
-function arrowColors(darkMode: boolean): { lines: string; tip: string; toe: string } {
-  return {
-    lines: !darkMode ? "#202020" : "#cccccc",
-    tip: !darkMode ? "oklch(0.634 0.254 18)" : "oklch(0.355 0.146 29)",
-    toe: !darkMode ? "#d0d0d0" : "gray",
-  };
 }

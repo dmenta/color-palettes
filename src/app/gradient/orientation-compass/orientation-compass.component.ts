@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   effect,
   ElementRef,
   HostListener,
@@ -10,10 +11,11 @@ import {
   signal,
   ViewChild,
 } from "@angular/core";
-import { Point, pointsMatch } from "../models/bezier-curve";
+import { Point, pointFromEvent, pointsMatch } from "../models/bezier-curve";
 import { GradientStateService } from "../services/gradient-state.service";
 import { drawCompass } from "./compass-drawing";
 import { debounceTime, distinctUntilChanged, filter, fromEvent, map, merge, Subscription, tap } from "rxjs";
+import { ensureAngleInRange, isInsideCircle } from "./circle-operations";
 
 @Component({
   selector: "zz-orientation-compass",
@@ -33,6 +35,8 @@ export class OrientationCompassComponent {
 
   private state = inject(GradientStateService);
 
+  private anglesInDegrees = computed(() => this.state.angleDegrees());
+
   private presetAngles: { angle: number; point: Point }[] = [];
 
   private shiftPressed = signal(false);
@@ -44,7 +48,13 @@ export class OrientationCompassComponent {
   size = input(100);
   darkMode = input(false);
 
+  radius = computed(() => Math.round(this.size() / 2));
+
   @ViewChild("canvas") canvas?: ElementRef<HTMLCanvasElement>;
+
+  get canvasElement(): HTMLCanvasElement {
+    return this.canvas?.nativeElement!;
+  }
 
   @HostListener("window:keydown.shift", ["$event"])
   onShiftKeyDown(event: KeyboardEvent) {
@@ -64,7 +74,7 @@ export class OrientationCompassComponent {
 
   constructor(private renderer: Renderer2) {
     effect(() => {
-      this.dibujar(this.state.angleDegrees(), this.handler(), this.size(), this.darkMode());
+      this.dibujar(this.anglesInDegrees(), this.handler(), this.size(), this.darkMode());
     });
   }
 
@@ -72,33 +82,19 @@ export class OrientationCompassComponent {
     this.createPresetAngles();
     this.subcribeToEvents();
 
-    this.dibujar(this.state.angleDegrees());
-  }
-  private createPresetAngles() {
-    const radius = Math.round((this.size() * this.presetSizeRatio) / 2);
-    const center = Math.round(this.size() / 2);
-    const is45 = radius * 0.7071;
-
-    this.presetAngles.push({ angle: 0, point: { x: center, y: center + radius } });
-    this.presetAngles.push({ angle: 45, point: { x: center + is45, y: center + is45 } });
-    this.presetAngles.push({ angle: 90, point: { x: center + radius, y: center } });
-    this.presetAngles.push({ angle: 135, point: { x: center + is45, y: center - is45 } });
-    this.presetAngles.push({ angle: 180, point: { x: center, y: center - radius } });
-    this.presetAngles.push({ angle: 225, point: { x: center - is45, y: center - is45 } });
-    this.presetAngles.push({ angle: 270, point: { x: center - radius, y: center } });
-    this.presetAngles.push({ angle: 315, point: { x: center - is45, y: center + is45 } });
+    this.dibujar(this.anglesInDegrees());
   }
 
   private subcribeToEvents() {
     this.moveSubscription = merge(
-      fromEvent(document, "mousemove"),
-      fromEvent(document, "touchmove", { passive: false })
+      fromEvent(document, "mousemove").pipe(map((event) => event as MouseEvent)),
+      fromEvent(document, "touchmove", { passive: false }).pipe(map((event) => event as TouchEvent))
     )
       .pipe(
         filter(() => this.handler()),
         tap((event) => event.preventDefault()),
         debounceTime(1),
-        map((event) => this.angleDegreesFromPoint(this.pointFromEvent(event as MouseEvent | TouchEvent))),
+        map((event) => this.angleDegreesFromPoint(pointFromEvent(event, this.canvasElement))),
         map((angleDegrees) => this.calculateAngleMovement(angleDegrees)),
         distinctUntilChanged()
       )
@@ -106,19 +102,17 @@ export class OrientationCompassComponent {
         this.state.onAngleDegreesChange(angle);
       });
 
-    const movement = fromEvent(this.canvas?.nativeElement!, "mousemove").pipe(
+    const movement = fromEvent(this.canvasElement, "mousemove").pipe(
+      map((event) => event as MouseEvent),
       filter(() => !this.handler()),
       tap((event) => event.preventDefault()),
       debounceTime(1),
       map((event) => {
-        const point = this.pointFromEvent(event as MouseEvent | TouchEvent);
-        const insideRadio = Math.round((this.size() / 2) * this.radioSizeRatio);
+        const radio = this.radius();
+        const point = pointFromEvent(event, this.canvasElement);
+        const insideRadio = Math.round(radio * this.radioSizeRatio);
 
-        const inside = this.isInsideCircle(
-          insideRadio,
-          { x: point.x - this.size() / 2, y: point.y - this.size() / 2 },
-          3
-        );
+        const inside = isInsideCircle(insideRadio, { x: point.x - radio, y: point.y - radio }, 3);
         if (inside) {
           return { inside: true, preset: null };
         } else {
@@ -130,7 +124,7 @@ export class OrientationCompassComponent {
 
     this.canvasMoveSubscription = merge(
       movement,
-      fromEvent(this.canvas?.nativeElement!, "mouseleave").pipe(
+      fromEvent(this.canvasElement, "mouseleave").pipe(
         tap((event) => event.preventDefault()),
         map(() => ({ inside: false, preset: null }))
       )
@@ -142,37 +136,21 @@ export class OrientationCompassComponent {
       });
 
     this.grabHandlerSubscription = merge(
-      fromEvent(this.canvas?.nativeElement!, "mousedown"),
-      fromEvent(this.canvas?.nativeElement!, "touchstart", { passive: false })
+      fromEvent(this.canvasElement, "mousedown").pipe(
+        filter(() => this.inside() || this.overPreset() !== null),
+        map((event) => event as MouseEvent)
+      ),
+      fromEvent(this.canvasElement, "touchstart", { passive: false }).pipe(map((event) => event as TouchEvent))
     )
       .pipe(
-        filter(() => !this.handler() && (this.inside() || this.overPreset() !== null)),
+        filter(() => !this.handler()),
         tap((event) => event.preventDefault()),
         debounceTime(1),
-        map((event) => this.pointFromEvent(event as MouseEvent | TouchEvent))
+        map((event) => pointFromEvent(event, this.canvasElement))
       )
       .subscribe((point) => {
         this.onGrabHandler(point);
       });
-  }
-
-  /**
-   *
-   * @param radio
-   * @param point
-   * @param tolerance
-   * @returns a boolean indicating if the point is inside the circle defined by the radio and center at (0,0).
-   * The tolerance is used to allow a small margin of error when checking if the point is inside the circle.
-   * The point is considered inside the circle if the distance from the center to the point is less than or equal to the radio minus the tolerance.
-   */
-  private isInsideCircle(radio: number, point: Point, tolerance: number = 3): boolean {
-    const realRadio = Math.round(radio);
-    const deltaX = Math.abs(point.x);
-    const deltaY = Math.abs(point.y);
-    const hypotenuse = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-    const inside = hypotenuse - tolerance <= realRadio;
-
-    return inside;
   }
 
   onDoubleClick(_event: MouseEvent) {
@@ -194,7 +172,7 @@ export class OrientationCompassComponent {
     }
     for (const preset of this.presetAngles) {
       if (pointsMatch(preset.point, point, 10)) {
-        if (preset.angle !== this.state.angleDegrees()) {
+        if (preset.angle !== this.anglesInDegrees()) {
           return preset.angle;
         } else {
           return null;
@@ -220,13 +198,13 @@ export class OrientationCompassComponent {
   }
 
   private angleDegreesFromPoint(point: Point) {
-    const radio = Math.round(this.size() / 2);
+    const radio = this.radius();
 
     const deltaX = (point.x - radio) / radio;
     const deltaY = (point.y - radio) / radio;
 
     if (Math.abs(deltaX) < 0.1 && Math.abs(deltaY) < 0.1) {
-      return this.state.angleDegrees();
+      return this.anglesInDegrees();
     }
 
     const angle = Math.atan2(deltaX, deltaY);
@@ -242,7 +220,7 @@ export class OrientationCompassComponent {
     if (this.shiftPressed()) {
       return Math.round(newAngleDegrees / 45) * 45;
     }
-    const currentAngle = this.state.angleDegrees();
+    const currentAngle = this.anglesInDegrees();
     const movement = Math.min(this.maxMovement, Math.abs(currentAngle - newAngleDegrees));
     let distancia =
       currentAngle - newAngleDegrees > 180
@@ -253,11 +231,7 @@ export class OrientationCompassComponent {
         ? movement
         : -movement;
 
-    return this.ensureAngleInRange(currentAngle + distancia);
-  }
-
-  private ensureAngleInRange(angleInDegrees: number): number {
-    return angleInDegrees < 0 ? angleInDegrees + 360 : angleInDegrees >= 360 ? angleInDegrees - 360 : angleInDegrees;
+    return ensureAngleInRange(currentAngle + distancia);
   }
 
   private setListeners() {
@@ -265,6 +239,21 @@ export class OrientationCompassComponent {
     this.removeDocumentClickListenerFn = this.renderer.listen("document", "touchend", () => this.stopTracking(), {
       passive: true,
     });
+  }
+
+  private createPresetAngles() {
+    const radius = Math.round((this.size() * this.presetSizeRatio) / 2);
+    const center = Math.round(this.size() / 2);
+    const is45 = radius * 0.7071;
+
+    this.presetAngles.push({ angle: 0, point: { x: center, y: center + radius } });
+    this.presetAngles.push({ angle: 45, point: { x: center + is45, y: center + is45 } });
+    this.presetAngles.push({ angle: 90, point: { x: center + radius, y: center } });
+    this.presetAngles.push({ angle: 135, point: { x: center + is45, y: center - is45 } });
+    this.presetAngles.push({ angle: 180, point: { x: center, y: center - radius } });
+    this.presetAngles.push({ angle: 225, point: { x: center - is45, y: center - is45 } });
+    this.presetAngles.push({ angle: 270, point: { x: center - radius, y: center } });
+    this.presetAngles.push({ angle: 315, point: { x: center - is45, y: center + is45 } });
   }
 
   private dibujar(
@@ -278,7 +267,7 @@ export class OrientationCompassComponent {
       return;
     }
     if (this.canvasContext === null) {
-      this.canvasContext = this.canvas.nativeElement.getContext("bitmaprenderer");
+      this.canvasContext = this.canvasElement.getContext("bitmaprenderer");
     }
 
     const ctx = this.canvasContext!;
@@ -286,37 +275,6 @@ export class OrientationCompassComponent {
     requestAnimationFrame(() => {
       drawCompass(ctx, angleDegrees, size, this.radioSizeRatio, this.presetSizeRatio, overPreset, active, darkMode);
     });
-  }
-
-  private pointFromEvent(event: MouseEvent | TouchEvent): Point {
-    const el = this.canvas?.nativeElement;
-    if (!el) {
-      return { x: 0, y: 0 };
-    }
-
-    const style = window.getComputedStyle(el);
-
-    const padding = parseFloat(style.paddingLeft.replace("px", "")) || 0;
-    const canvasPadding = padding * 2;
-
-    const rect = el.getBoundingClientRect();
-    const size = rect.bottom - rect.top - canvasPadding;
-
-    if (event instanceof TouchEvent) {
-      if (event.touches.length === 0) {
-        return { x: 0, y: 0 };
-      }
-      const touch = event.touches[0];
-      return {
-        x: touch!.clientX - rect.left - padding,
-        y: size - (touch!.clientY - rect.top - padding),
-      };
-    } else {
-      return {
-        x: event.clientX - rect.left - padding,
-        y: size - (event.clientY - rect.top - padding),
-      };
-    }
   }
 
   ngOnDestroy() {

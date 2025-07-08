@@ -29,8 +29,7 @@ export function bezierPoints(coords: Handlers) {
   return values;
 }
 
-export function pointFromEvent(event: MouseEvent | TouchEvent): Point {
-  const el = event.target as HTMLElement;
+export function pointFromEvent(event: MouseEvent | TouchEvent, el: HTMLElement): Point {
   if (!el) {
     return { x: 0, y: 0 };
   }
