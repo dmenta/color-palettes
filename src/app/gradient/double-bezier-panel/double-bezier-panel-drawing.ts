@@ -8,7 +8,6 @@ import { DoubleHandler, DoubleHandlers } from "../models/double-handlers.model";
 export class doubleBezierDrawing {
   private readonly ctx: Context2D;
   private readonly start: Point;
-  // private center: Point;
   private readonly end: Point;
   private readonly vertices: { h1: Point; h2: Point; h3: Point; h4: Point };
   private readonly canvas: OffscreenCanvas;
@@ -27,7 +26,6 @@ export class doubleBezierDrawing {
     this.ctx = context as Context2D;
 
     this.start = redondeo.point({ x: 0, y: this.size });
-    // this.center = redondeo.point({ x: this.size / 2, y: this.size / 2 });
     this.end = redondeo.point({ x: this.size, y: 0 });
 
     this.vertices = {
@@ -48,8 +46,6 @@ export class doubleBezierDrawing {
   }
 
   public oppositeHandler(center: Point, moving: Point, opposite: Point) {
-    console.debug(center, moving, opposite);
-
     let deltaY = center.y - moving.y;
     let deltaX = center.x - moving.x;
 
@@ -72,7 +68,7 @@ export class doubleBezierDrawing {
     this.vertices.h3 = center;
 
     const coords = this.handlersToCanvas(rawCoords);
-    console.log(coords, center);
+
     this.drawGrid(darkMode);
 
     const semiactivo = active === "h2" ? "h3" : active === "h3" ? "h2" : null;
