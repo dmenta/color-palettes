@@ -12,10 +12,10 @@ import {
   ViewChild,
 } from "@angular/core";
 import { Point, pointFromEvent, pointsMatch } from "../models/bezier-curve";
-import { GradientStateService } from "../services/gradient-state.service";
 import { drawCompass } from "./compass-drawing";
 import { debounceTime, distinctUntilChanged, filter, fromEvent, map, merge, Subscription, tap } from "rxjs";
 import { ensureAngleInRange, isInsideCircle } from "./circle-operations";
+import { GRADIENT_STATE_TOKEN, GradientOrientationState } from "../services/gradient-state.model";
 
 @Component({
   selector: "zz-orientation-compass",
@@ -33,7 +33,7 @@ export class OrientationCompassComponent {
   private removeDocumentClickListenerFn: (() => void) | null = null;
   private removeDocumentTouchEndListenerFn: (() => void) | null = null;
 
-  private state = inject(GradientStateService);
+  private state: GradientOrientationState = inject(GRADIENT_STATE_TOKEN);
 
   private anglesInDegrees = computed(() => this.state.angleDegrees());
 

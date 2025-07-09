@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, HostListener, inject } from "@angular/core";
 import { CopyService } from "../../core/service/copy.service";
-import { GradientStateService } from "../services/gradient-state.service";
 import { gradientToImage, gradientToSVG } from "../models/gradient-points";
+import { GRADIENT_STATE_TOKEN, GradientState } from "../services/gradient-state.model";
 
 @Component({
   selector: "zz-gradient-actions",
@@ -14,7 +14,7 @@ import { gradientToImage, gradientToSVG } from "../models/gradient-points";
 })
 export class GradientActionsComponent {
   copyService = inject(CopyService);
-  state = inject(GradientStateService);
+  state: GradientState = inject(GRADIENT_STATE_TOKEN);
 
   @HostListener("document:keydown.control.shift.c", ["$event"])
   handleCopyShortcut(event: KeyboardEvent) {

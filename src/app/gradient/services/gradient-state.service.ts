@@ -6,11 +6,13 @@ import { ColorValues } from "../../color/model/colors.model";
 import { bezierPoints, Handlers } from "../models/bezier-curve";
 import { GradientDefinition, gradientFromPoints } from "../models/gradient-points";
 import { toOklch } from "../../color/model/color";
+import { virtualSize } from "../bezier-panel/bezier-panel-drawing";
+import { GradientState } from "./gradient-state.model";
 
 @Injectable({
   providedIn: "root",
 })
-export class GradientStateService {
+export class GradientStateService implements GradientState {
   private store = inject(StorageService);
 
   private initialState = this.store.get<GradientStateValues>("gradient-state") ?? defaultGradientState;
@@ -24,7 +26,7 @@ export class GradientStateService {
 
   private startOklch = computed(() => toOklch(this.rgbText(this.startRGBColor())));
   private endOklch = computed(() => toOklch(this.rgbText(this.endRGBColor())));
-  private points = computed(() => bezierPoints(this.handlers()));
+  private points = computed(() => bezierPoints(this.handlers(), virtualSize));
 
   startColor = computed(() => this.oklchText(this.startOklch()));
   endColor = computed(() => this.oklchText(this.endOklch()));

@@ -12,9 +12,9 @@ import {
   ViewChild,
 } from "@angular/core";
 import { Handler, Handlers, Point, pointsMatch } from "../models/bezier-curve";
-import { drawBezierPanel, pointFromCanvas, pointToCanvas } from "./bezier-panel-drawing";
-import { GradientStateService } from "../services/gradient-state.service";
+import { drawBezierPanel, handlerRadius, pointFromCanvas, pointToCanvas, virtualSize } from "./bezier-panel-drawing";
 import { debounceTime, filter, fromEvent, map, merge, Subscription, tap } from "rxjs";
+import { GRADIENT_STATE_TOKEN, GradientHandlersState } from "../services/gradient-state.model";
 
 @Component({
   selector: "zz-bezier-panel",
@@ -29,7 +29,7 @@ export class BezierPanelComponent implements AfterViewInit, OnDestroy {
   private removeDocumentClickListenerFn: (() => void) | null = null;
   private removeDocumentTouchEndListenerFn: (() => void) | null = null;
 
-  private state = inject(GradientStateService);
+  private state: GradientHandlersState = inject(GRADIENT_STATE_TOKEN);
 
   overHandler = signal<Handler | null>(null);
   currentHandler = signal<Handler | null>(null);
@@ -104,7 +104,10 @@ export class BezierPanelComponent implements AfterViewInit, OnDestroy {
     if (overHandler === null) {
       return;
     }
-    this.state.onHandlersChange({ ...this.state.handlers(), [overHandler]: { x: 50, y: 50 } });
+    this.state.onHandlersChange({
+      ...this.state.handlers(),
+      [overHandler]: { x: virtualSize / 2, y: virtualSize / 2 },
+    });
   }
 
   onGrabHandler(event: TouchEvent | MouseEvent) {
@@ -158,10 +161,11 @@ export class BezierPanelComponent implements AfterViewInit, OnDestroy {
 
   private isOverHandler(point: Point): Handler | null {
     const coords = this.state.handlers();
+    const tolerancia = 2 * (handlerRadius / this.size()) * virtualSize;
 
-    if (pointsMatch(point, coords.h1, 12)) {
+    if (pointsMatch(point, coords.h1, tolerancia)) {
       return "h1";
-    } else if (pointsMatch(point, coords.h2, 12)) {
+    } else if (pointsMatch(point, coords.h2, tolerancia)) {
       return "h2";
     }
     return null;
@@ -182,6 +186,7 @@ export class BezierPanelComponent implements AfterViewInit, OnDestroy {
   ) {
     if (!this.canvas) {
       return;
+    } else {
     }
     if (this.canvasContext === null) {
       this.canvasContext = this.canvas.nativeElement.getContext("bitmaprenderer");

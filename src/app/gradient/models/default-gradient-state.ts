@@ -7,8 +7,8 @@ export const defaultGradientState: GradientStateValues = {
     end: [7, 10, 95] as ColorValues,
   },
   handlers: {
-    h1: { x: 3.4, y: 60 },
-    h2: { x: 20, y: 96.8 },
+    h1: { x: 6.8, y: 120 },
+    h2: { x: 40, y: 193.6 },
   },
   angle: 0,
 };

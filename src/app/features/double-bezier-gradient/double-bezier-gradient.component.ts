@@ -6,8 +6,9 @@ import { NotificationComponent } from "../../core/components/notification/notifi
 import { GradientColorsComponent } from "../../gradient/gradient-colors/gradient-colors.component";
 import { GradientHeaderComponent } from "../../gradient/header/gradient-header.component";
 import { OrientationCompassComponent } from "../../gradient/orientation-compass/orientation-compass.component";
-import { GradientStateService } from "../../gradient/services/gradient-state.service";
 import { DoubleBezierPanelComponent } from "../../gradient/double-bezier-panel/double-bezier-panel.component";
+import { DoubleGradientStateService } from "../../gradient/services/double-gradient-state.service";
+import { GRADIENT_STATE_TOKEN } from "../../gradient/services/gradient-state.model";
 
 @Component({
   selector: "zz-double-bezier-gradient",
@@ -22,9 +23,10 @@ import { DoubleBezierPanelComponent } from "../../gradient/double-bezier-panel/d
   ],
   templateUrl: "./double-bezier-gradient.component.html",
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [{ provide: GRADIENT_STATE_TOKEN, useExisting: DoubleGradientStateService }],
 })
 export class DoubleBezierGradientComponent {
-  state = inject(GradientStateService);
+  state = inject(DoubleGradientStateService);
   bezierSize = 280;
   compassSize = 130;
 

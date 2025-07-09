@@ -1,12 +1,14 @@
-export function bezierPoints(coords: Handlers) {
+import { redondear } from "../bezier-panel/bezier-panel-drawing";
+
+export function bezierPoints(coords: Handlers, virtualSize: number) {
   // P = (1−t)3P1 + 3(1−t)2tP2 +3(1−t)t2P3 + t3P4
   const x0 = 0;
-  const x1 = coords.h1.x;
-  const x2 = coords.h2.x;
+  const x1 = redondear((coords.h1.x / virtualSize) * 100);
+  const x2 = redondear((coords.h2.x / virtualSize) * 100);
   const x3 = 100;
   const y0 = 0;
-  const y1 = coords.h1.y;
-  const y2 = coords.h2.y;
+  const y1 = redondear((coords.h1.y / virtualSize) * 100);
+  const y2 = redondear((coords.h2.y / virtualSize) * 100);
   const y3 = 100;
   const values: Point[] = [];
   for (let t = 0; t <= 1; t += 0.05) {

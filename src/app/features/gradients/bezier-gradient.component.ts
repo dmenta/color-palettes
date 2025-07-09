@@ -8,6 +8,7 @@ import { GradientActionsComponent } from "../../gradient/gradient-actions/gradie
 import { GradientStateService } from "../../gradient/services/gradient-state.service";
 import { OrientationCompassComponent } from "../../gradient/orientation-compass/orientation-compass.component";
 import { fromEvent } from "rxjs";
+import { GRADIENT_STATE_TOKEN } from "../../gradient/services/gradient-state.model";
 
 @Component({
   selector: "zz-test-col",
@@ -22,6 +23,7 @@ import { fromEvent } from "rxjs";
   ],
   templateUrl: "./bezier-gradient.component.html",
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [{ provide: GRADIENT_STATE_TOKEN, useExisting: GradientStateService }],
 })
 export class BezierGradientComponent {
   state = inject(GradientStateService);

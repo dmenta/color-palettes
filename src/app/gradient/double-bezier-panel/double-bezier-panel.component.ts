@@ -15,7 +15,13 @@ import { Point, pointsMatch } from "../models/bezier-curve";
 import { debounceTime, filter, fromEvent, map, merge, Subscription, tap } from "rxjs";
 import { DoubleGradientStateService } from "../services/double-gradient-state.service";
 import { DoubleHandler, DoubleHandlers } from "./double-bezier-curve";
-import { drawDoubleBezierPanel, pointFromCanvas, pointToCanvas, virtualSize } from "./double-bezier-panel-drawing";
+import {
+  drawDoubleBezierPanel,
+  handlerRadius,
+  pointFromCanvas,
+  pointToCanvas,
+  virtualSize,
+} from "./double-bezier-panel-drawing";
 
 @Component({
   selector: "zz-double-bezier-panel",
@@ -106,9 +112,15 @@ export class DoubleBezierPanelComponent implements AfterViewInit, OnDestroy {
       return;
     }
     if (overHandler === "h3" || overHandler === "h4") {
-      this.state.onHandlersChange({ ...this.state.handlers(), [overHandler]: { x: 150, y: 150 } });
+      this.state.onHandlersChange({
+        ...this.state.handlers(),
+        [overHandler]: { x: virtualSize * 0.75, y: virtualSize * 0.75 },
+      });
     } else {
-      this.state.onHandlersChange({ ...this.state.handlers(), [overHandler]: { x: 50, y: 50 } });
+      this.state.onHandlersChange({
+        ...this.state.handlers(),
+        [overHandler]: { x: virtualSize * 0.25, y: virtualSize * 0.25 },
+      });
     }
   }
 
@@ -190,14 +202,16 @@ export class DoubleBezierPanelComponent implements AfterViewInit, OnDestroy {
   private isOverHandler(point: Point): DoubleHandler | null {
     const coords = this.state.handlers();
 
-    if (pointsMatch(point, coords.h1, (12 / 200) * virtualSize)) {
+    const tolerancia = 2 * (handlerRadius / this.size()) * virtualSize;
+
+    if (pointsMatch(point, coords.h1, tolerancia)) {
       return "h1";
-    } else if (pointsMatch(point, coords.h2, (12 / 200) * virtualSize)) {
+    } else if (pointsMatch(point, coords.h2, tolerancia)) {
       return "h2";
     }
-    if (pointsMatch(point, coords.h3, (12 / 200) * virtualSize)) {
+    if (pointsMatch(point, coords.h3, tolerancia)) {
       return "h3";
-    } else if (pointsMatch(point, coords.h4, (12 / 200) * virtualSize)) {
+    } else if (pointsMatch(point, coords.h4, tolerancia)) {
       return "h4";
     }
     return null;

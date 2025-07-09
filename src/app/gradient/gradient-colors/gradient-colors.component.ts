@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, HostListener, inject } from "@angular/core";
 import { ColorSelectorComponent } from "../../color/components/color-sample/color-selector/color-selector.component";
 import { ColorValues } from "../../color/model/colors.model";
-import { GradientStateService } from "../services/gradient-state.service";
+import { GRADIENT_STATE_TOKEN, GradientColorsState } from "../services/gradient-state.model";
 
 @Component({
   selector: "zz-gradient-colors",
@@ -13,7 +13,7 @@ import { GradientStateService } from "../services/gradient-state.service";
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GradientColorsComponent {
-  state = inject(GradientStateService);
+  state: GradientColorsState = inject(GRADIENT_STATE_TOKEN);
 
   @HostListener("document:keydown.control.shift.y", ["$event"])
   handleSwapShortcut(event: KeyboardEvent) {

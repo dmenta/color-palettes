@@ -2,16 +2,18 @@ import { computed, effect, inject, Injectable, Signal, signal } from "@angular/c
 import { StorageService } from "../../core/service/storage.service";
 import { DoubleGradientStateValues } from "../models/gradient-state-values";
 import { ColorValues } from "../../color/model/colors.model";
-import { bezierPoints, Point } from "../models/bezier-curve";
+import { Point } from "../models/bezier-curve";
 import { GradientDefinition, gradientFromPoints } from "../models/gradient-points";
 import { toOklch } from "../../color/model/color";
 import { defaultDoubleGradientState } from "../models/default-gradient-state";
-import { DoubleHandlers } from "../double-bezier-panel/double-bezier-curve";
+import { doubleBezierPoints, DoubleHandlers } from "../double-bezier-panel/double-bezier-curve";
+import { virtualSize } from "../double-bezier-panel/double-bezier-panel-drawing";
+import { GradientHandlers, GradientState } from "./gradient-state.model";
 
 @Injectable({
   providedIn: "root",
 })
-export class DoubleGradientStateService {
+export class DoubleGradientStateService implements GradientState {
   private store = inject(StorageService);
 
   private initialState =
@@ -28,7 +30,7 @@ export class DoubleGradientStateService {
 
   private startOklch = computed(() => toOklch(this.rgbText(this.startRGBColor())));
   private endOklch = computed(() => toOklch(this.rgbText(this.endRGBColor())));
-  private points = computed(() => bezierPoints(this.handlers()));
+  points = computed(() => doubleBezierPoints(this.handlers(), virtualSize));
 
   startColor = computed(() => this.oklchText(this.startOklch()));
   endColor = computed(() => this.oklchText(this.endOklch()));
@@ -73,8 +75,8 @@ export class DoubleGradientStateService {
     this.center.set(point);
   }
 
-  onHandlersChange(handlers: DoubleHandlers) {
-    this.handlers.set({ ...handlers });
+  onHandlersChange(handlers: GradientHandlers) {
+    this.handlers.set({ ...(handlers as DoubleHandlers) });
   }
 
   private rgbText(rgb: ColorValues): string {

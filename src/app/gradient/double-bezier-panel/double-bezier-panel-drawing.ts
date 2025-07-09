@@ -9,7 +9,7 @@ import { DoubleHandler, DoubleHandlers } from "./double-bezier-curve";
 
 const widthFactor = 1;
 const activeHandlerRadius = 10;
-const handlerRadius = 7;
+export const handlerRadius = 7;
 export const virtualSize = 2000;
 const activeHandlerShadowBlur = 7;
 const activeHandlerShadowOffset = 5;
@@ -24,6 +24,8 @@ export function drawDoubleBezierPanel(
 ) {
   const offscreen = new OffscreenCanvas(size, size);
   const offCtx = offscreen.getContext("2d")!;
+  offCtx.imageSmoothingQuality = "high";
+  offCtx.imageSmoothingEnabled = true;
 
   drawGrid(offCtx, size, darkMode);
 
@@ -60,7 +62,7 @@ export function drawDoubleBezierPanel(
   ctx.transferFromImageBitmap(bitmapOne);
 }
 
-function drawGrid(ctx: OffscreenCanvasRenderingContext2D, size: number, darkMode: boolean) {
+function drawGrid(ctx: Context2D, size: number, darkMode: boolean) {
   const colors = doubleBezierGridColors(darkMode);
 
   const ratio = size / virtualSize;
@@ -92,7 +94,7 @@ function drawGrid(ctx: OffscreenCanvasRenderingContext2D, size: number, darkMode
 }
 
 function drawHandler(
-  ctx: OffscreenCanvasRenderingContext2D,
+  ctx: Context2D,
   start: Point,
   end: Point,
   colors: DoubleHandlerColors,
@@ -109,12 +111,7 @@ function drawHandler(
     drawHandlerActive(ctx, end, colors, name);
   }
 }
-function drawHandlerActive(
-  ctx: OffscreenCanvasRenderingContext2D,
-  point: Point,
-  colors: DoubleHandlerColors,
-  name: DoubleHandler
-) {
+function drawHandlerActive(ctx: Context2D, point: Point, colors: DoubleHandlerColors, name: DoubleHandler) {
   // Shadow
   ctx.shadowColor = colors.shadow;
   ctx.shadowBlur = activeHandlerShadowBlur;
@@ -130,13 +127,7 @@ function drawHandlerActive(
   ctx.shadowColor = "transparent"; // Reset shadow
 }
 
-function drawHandlerLine(
-  ctx: OffscreenCanvasRenderingContext2D,
-  start: Point,
-  end: Point,
-  colors: DoubleHandlerColors,
-  active: boolean
-) {
+function drawHandlerLine(ctx: Context2D, start: Point, end: Point, colors: DoubleHandlerColors, active: boolean) {
   ctx.beginPath();
   ctx.lineWidth = redondear(widthFactor * (active ? 1.5 : 1));
   ctx.moveTo(start.x, start.y);
@@ -169,5 +160,13 @@ export function redondearPoint(point: Point): Point {
 }
 
 export function redondear(value: number): number {
-  return Math.round(value * 4) / 4;
+  return Math.round(value);
 }
+
+interface Context2D
+  extends CanvasPath,
+    CanvasPathDrawingStyles,
+    CanvasDrawPath,
+    CanvasDrawImage,
+    CanvasShadowStyles,
+    CanvasFillStrokeStyles {}
