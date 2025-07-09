@@ -6,7 +6,8 @@ import { Point } from "../models/point.model";
 export const bezierCurve = {
   points: (
     coords: Handlers,
-    size: number,
+    sizeX: number,
+    sizeY: number,
     handlersOffset: number = 0,
     outputScale: number = 1,
     ouputOffset: number = 0,
@@ -14,12 +15,12 @@ export const bezierCurve = {
   ) => {
     steps = Math.max(1, steps);
     const x0 = 0;
-    const x1 = redondeo.value((coords.h1.x / size) * 100) + handlersOffset;
-    const x2 = redondeo.value((coords.h2.x / size) * 100) + handlersOffset;
+    const x1 = redondeo.value((coords.h1.x / sizeX) * 100) + handlersOffset;
+    const x2 = redondeo.value((coords.h2.x / sizeX) * 100) + handlersOffset;
     const x3 = 100;
     const y0 = 0;
-    const y1 = redondeo.value((coords.h1.y / size) * 100) + handlersOffset;
-    const y2 = redondeo.value((coords.h2.y / size) * 100) + handlersOffset;
+    const y1 = redondeo.value((coords.h1.y / sizeY) * 100) + handlersOffset;
+    const y2 = redondeo.value((coords.h2.y / sizeY) * 100) + handlersOffset;
     const y3 = 100;
     const values: Point[] = [];
     for (let t = 0; t <= steps; t += 1) {
@@ -45,7 +46,11 @@ export const bezierCurve = {
 
   doublePoints: (coords: DoubleHandlers, virtualSize: number) => {
     return bezierCurve
-      .points({ h1: coords.h1, h2: coords.h2 }, virtualSize / 2, 0, 0.5, 0, 10)
-      .concat(bezierCurve.points({ h1: coords.h3!, h2: coords.h4! }, virtualSize / 2, -100, 0.5, 50, 10).slice(1));
+      .points({ h1: coords.h1, h2: coords.h2 }, virtualSize / 2, virtualSize / 2, 0, 0.5, 0, 10)
+      .concat(
+        bezierCurve
+          .points({ h1: coords.h3!, h2: coords.h4! }, virtualSize / 2, virtualSize / 2, -100, 0.5, 50, 10)
+          .slice(1)
+      );
   },
 };

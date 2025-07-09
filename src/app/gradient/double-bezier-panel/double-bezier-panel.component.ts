@@ -18,7 +18,7 @@ import { DoubleBezierColors } from "./double-bezier.draw-colors";
 import { DoubleHandler, DoubleHandlers } from "../models/double-handlers.model";
 import { Point, pointsMatch } from "../models/point.model";
 import { domCommon, redondeo } from "../common/common-funcs";
-import { GRADIENT_STATE_TOKEN } from "../services/gradient-state.model";
+import { DoubleGradientState, GRADIENT_STATE_TOKEN } from "../services/gradient-state.model";
 
 @Component({
   selector: "zz-double-bezier-panel",
@@ -33,7 +33,7 @@ export class DoubleBezierPanelComponent implements AfterViewInit, OnDestroy {
   private removeDocumentClickListenerFn: (() => void) | null = null;
   private removeDocumentTouchEndListenerFn: (() => void) | null = null;
 
-  private state = inject(GRADIENT_STATE_TOKEN);
+  private state: DoubleGradientState = inject(GRADIENT_STATE_TOKEN);
 
   overHandler = signal<DoubleHandler | null>(null);
   currentHandler = signal<DoubleHandler | null>(null);
@@ -184,29 +184,17 @@ export class DoubleBezierPanelComponent implements AfterViewInit, OnDestroy {
     if (handler === "h1" || handler === "h4") {
       this.state.onHandlersChange({ ...this.state.handlers(), [handler]: point });
     } else {
-      const halfVirtualSize = doubleGradientConfig.virtualSize / 2;
-      let deltaY = halfVirtualSize - point.y;
-      let deltaX = halfVirtualSize - point.x;
-
-      deltaY = Math.abs(deltaY) < 0.25 ? Math.sign(deltaY) * 0.25 : deltaY;
-      deltaX = Math.abs(deltaX) < 0.25 ? Math.sign(deltaX) * 0.25 : deltaX;
-
-      const hMoving = Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
-
-      const opposite = handler === "h2" ? "h3" : "h2";
-
-      const hOpposite = Math.sqrt(
-        Math.pow(this.state.handlers()[opposite]!.x - halfVirtualSize, 2) +
-          Math.pow(this.state.handlers()[opposite]!.y - halfVirtualSize, 2)
-      );
-
-      const normalizedX = -Math.round((deltaX / hMoving) * hOpposite);
-      const normalizedY = -Math.round((deltaY / hMoving) * hOpposite);
+      const oppositeHandler = handler === "h2" ? "h3" : "h2";
+      const opposite = this.doubleBezier?.oppositeHandler(
+        this.state.center(),
+        point,
+        this.state.handlers()[oppositeHandler]!
+      )!;
 
       this.state.onHandlersChange({
         ...this.state.handlers(),
         [handler]: { x: Math.round(point.x), y: Math.round(point.y) },
-        [opposite]: { x: halfVirtualSize - normalizedX, y: halfVirtualSize - normalizedY },
+        [oppositeHandler]: { x: opposite.x, y: opposite.y },
       });
     }
   }
@@ -246,7 +234,7 @@ export class DoubleBezierPanelComponent implements AfterViewInit, OnDestroy {
 
     const dibujador = this.doubleBezier;
     requestAnimationFrame(() => {
-      dibujador.draw(coords as DoubleHandlers, active, mode);
+      dibujador.draw(coords as DoubleHandlers, active, mode, this.state.center());
     });
   }
 

@@ -8,7 +8,7 @@ import { DoubleHandler, DoubleHandlers } from "../models/double-handlers.model";
 export class doubleBezierDrawing {
   private readonly ctx: Context2D;
   private readonly start: Point;
-  private readonly center: Point;
+  // private center: Point;
   private readonly end: Point;
   private readonly vertices: { h1: Point; h2: Point; h3: Point; h4: Point };
   private readonly canvas: OffscreenCanvas;
@@ -27,13 +27,13 @@ export class doubleBezierDrawing {
     this.ctx = context as Context2D;
 
     this.start = redondeo.point({ x: 0, y: this.size });
-    this.center = redondeo.point({ x: this.size / 2, y: this.size / 2 });
+    // this.center = redondeo.point({ x: this.size / 2, y: this.size / 2 });
     this.end = redondeo.point({ x: this.size, y: 0 });
 
     this.vertices = {
       h1: this.start,
-      h2: this.center,
-      h3: this.center,
+      h2: this.start,
+      h3: this.end,
       h4: this.end,
     };
   }
@@ -47,8 +47,32 @@ export class doubleBezierDrawing {
     } as DoubleHandlers;
   }
 
-  public draw(rawCoords: DoubleHandlers, active: DoubleHandler | null, darkMode: boolean) {
+  public oppositeHandler(center: Point, moving: Point, opposite: Point) {
+    console.debug(center, moving, opposite);
+
+    let deltaY = center.y - moving.y;
+    let deltaX = center.x - moving.x;
+
+    deltaY = Math.abs(deltaY) < 0.25 ? Math.sign(deltaY) * 0.25 : deltaY;
+    deltaX = Math.abs(deltaX) < 0.25 ? Math.sign(deltaX) * 0.25 : deltaX;
+
+    const hMoving = Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
+
+    const hOpposite = Math.sqrt(Math.pow(opposite.x - center.x, 2) + Math.pow(opposite.y - center.y, 2));
+
+    return redondeo.point({
+      x: center.x + (deltaX / hMoving) * hOpposite,
+      y: center.y + (deltaY / hMoving) * hOpposite,
+    });
+  }
+
+  public draw(rawCoords: DoubleHandlers, active: DoubleHandler | null, darkMode: boolean, centerRaw: Point) {
+    const center = this.pointToCanvas(centerRaw);
+    this.vertices.h2 = center;
+    this.vertices.h3 = center;
+
     const coords = this.handlersToCanvas(rawCoords);
+    console.log(coords, center);
     this.drawGrid(darkMode);
 
     const semiactivo = active === "h2" ? "h3" : active === "h3" ? "h2" : null;
@@ -77,8 +101,8 @@ export class doubleBezierDrawing {
       semiactivo === cuarto
     );
 
-    this.drawBezier(this.start, this.center, coords.h1, coords.h2, darkMode, active !== null);
-    this.drawBezier(this.center, this.end, coords.h3!, coords.h4!, darkMode, active !== null);
+    this.drawBezier(this.start, center, coords.h1, coords.h2, darkMode, active !== null);
+    this.drawBezier(center, this.end, coords.h3!, coords.h4!, darkMode, active !== null);
 
     const bitmapOne = this.canvas.transferToImageBitmap();
     this.imageContext.transferFromImageBitmap(bitmapOne);

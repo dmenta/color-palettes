@@ -19,7 +19,7 @@ export const defaultDoubleGradientState: DoubleGradientStateValues = {
     center: [249, 147, 52] as ColorValues,
     end: [7, 10, 95] as ColorValues,
   },
-  center: { x: 0, y: 0 },
+  center: { x: 800, y: 1300 },
   handlers: {
     h1: { x: 250, y: 200 },
     h2: { x: 350, y: 400 },

@@ -27,7 +27,7 @@ export class GradientStateService implements GradientState {
 
   private startOklch = computed(() => toOklch(this.rgbText(this.startRGBColor())));
   private endOklch = computed(() => toOklch(this.rgbText(this.endRGBColor())));
-  private points = computed(() => bezierCurve.points(this.handlers(), virtualSize));
+  private points = computed(() => bezierCurve.points(this.handlers(), virtualSize, virtualSize));
 
   startColor = computed(() => this.oklchText(this.startOklch()));
   endColor = computed(() => this.oklchText(this.endOklch()));

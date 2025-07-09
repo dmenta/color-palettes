@@ -5,7 +5,7 @@ import { ColorValues } from "../../color/model/colors.model";
 import { GradientDefinition, gradientFromPoints } from "../models/gradient-stops";
 import { toOklch } from "../../color/model/color";
 import { defaultDoubleGradientState } from "../models/default-gradient-state";
-import { GradientState } from "./gradient-state.model";
+import { DoubleGradientState } from "./gradient-state.model";
 import { doubleGradientConfig } from "../double-bezier-panel/double-bezier-config";
 import { Point } from "../models/point.model";
 import { bezierCurve } from "../common/bezier-curve";
@@ -14,7 +14,7 @@ import { DoubleHandlers } from "../models/double-handlers.model";
 @Injectable({
   providedIn: "root",
 })
-export class DoubleGradientStateService implements GradientState {
+export class DoubleGradientStateService implements DoubleGradientState {
   private store = inject(StorageService);
 
   private initialState =
