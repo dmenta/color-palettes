@@ -2,7 +2,7 @@ import { Routes } from "@angular/router";
 
 export const routes: Routes = [
   {
-    path: "palettes",
+    path: "",
     title: "Colorina - Palettes",
     loadComponent: () => import("./features/palettes/palettes.component").then((m) => m.PalettesComponent),
   },
@@ -17,7 +17,7 @@ export const routes: Routes = [
   },
 
   {
-    path: "",
+    path: "gradient3",
     title: "Colorina - Double Gradients",
     loadComponent: () =>
       import("./features/double-bezier-gradient/double-bezier-gradient.component").then(

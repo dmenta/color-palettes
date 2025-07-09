@@ -49,7 +49,7 @@ export class PaletteStoreService {
       return;
     }
 
-    this.saved.update((palettes) => [paletteInfo, ...palettes].slice(0, 10));
+    this.saved.update((palettes) => [paletteInfo, ...palettes].slice(0, 100));
     this.store.save("saved-palettes", this.saved());
 
     this.notificationService.success("Palette saved!");
