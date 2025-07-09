@@ -8,7 +8,7 @@ import { toOklch } from "../../color/model/color";
 import { virtualSize } from "../bezier-panel/bezier-panel-drawing";
 import { GradientState } from "./gradient-state.model";
 import { bezierCurve } from "../common/bezier-curve";
-import { Handlers } from "../models/handlers.model";
+import { DoubleHandlers } from "../models/double-handlers.model";
 
 @Injectable({
   providedIn: "root",
@@ -63,7 +63,7 @@ export class GradientStateService implements GradientState {
     this.endRGBColor.set(color);
   }
 
-  onHandlersChange(handlers: Handlers) {
+  onHandlersChange(handlers: DoubleHandlers) {
     this.handlers.set({ ...handlers });
   }
 

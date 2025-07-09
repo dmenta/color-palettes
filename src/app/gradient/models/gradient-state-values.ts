@@ -1,6 +1,5 @@
 import { ColorValues } from "../../color/model/colors.model";
 import { DoubleHandlers } from "./double-handlers.model";
-import { Handlers } from "./handlers.model";
 import { Point } from "./point.model";
 
 export type GradientStateValues = {
@@ -8,7 +7,7 @@ export type GradientStateValues = {
     start: ColorValues;
     end: ColorValues;
   };
-  handlers: Handlers;
+  handlers: DoubleHandlers;
   angle: number;
 };
 

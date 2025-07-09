@@ -11,12 +11,12 @@ import {
   signal,
   ViewChild,
 } from "@angular/core";
-import { pointFromEvent } from "../models/orientacion-curve";
 import { drawCompass } from "./compass-drawing";
 import { debounceTime, distinctUntilChanged, filter, fromEvent, map, merge, Subscription, tap } from "rxjs";
 import { ensureAngleInRange, isInsideCircle } from "./circle-operations";
 import { GRADIENT_STATE_TOKEN, GradientOrientationState } from "../services/gradient-state.model";
 import { Point, pointsMatch } from "../models/point.model";
+import { domCommon } from "../common/common-funcs";
 
 @Component({
   selector: "zz-orientation-compass",
@@ -52,6 +52,7 @@ export class OrientationCompassComponent {
   radius = computed(() => Math.round(this.size() / 2));
 
   @ViewChild("canvas") canvas?: ElementRef<HTMLCanvasElement>;
+  canvasRealSize: number = 0;
 
   get canvasElement(): HTMLCanvasElement {
     return this.canvas?.nativeElement!;
@@ -83,6 +84,8 @@ export class OrientationCompassComponent {
     this.createPresetAngles();
     this.subcribeToEvents();
 
+    this.canvasRealSize = this.realSize();
+
     this.dibujar(this.anglesInDegrees());
   }
 
@@ -95,7 +98,7 @@ export class OrientationCompassComponent {
         filter(() => this.handler()),
         tap((event) => event.preventDefault()),
         debounceTime(1),
-        map((event) => this.angleDegreesFromPoint(pointFromEvent(event, this.canvasElement))),
+        map((event) => this.angleDegreesFromPoint(this.pointFromEvent(event))),
         map((angleDegrees) => this.calculateAngleMovement(angleDegrees)),
         distinctUntilChanged()
       )
@@ -110,7 +113,7 @@ export class OrientationCompassComponent {
       debounceTime(1),
       map((event) => {
         const radio = this.radius();
-        const point = pointFromEvent(event, this.canvasElement);
+        const point = this.pointFromEvent(event);
         const insideRadio = Math.round(radio * this.radioSizeRatio);
 
         const inside = isInsideCircle(insideRadio, { x: point.x - radio, y: point.y - radio }, 3);
@@ -147,7 +150,7 @@ export class OrientationCompassComponent {
         filter(() => !this.handler()),
         tap((event) => event.preventDefault()),
         debounceTime(1),
-        map((event) => pointFromEvent(event, this.canvasElement))
+        map((event) => this.pointFromEvent(event))
       )
       .subscribe((point) => {
         this.onGrabHandler(point);
@@ -276,6 +279,21 @@ export class OrientationCompassComponent {
     requestAnimationFrame(() => {
       drawCompass(ctx, angleDegrees, size, this.radioSizeRatio, this.presetSizeRatio, overPreset, active, darkMode);
     });
+  }
+
+  private pointFromEvent(event: MouseEvent | TouchEvent): Point {
+    const canvasPoint = domCommon.pointFromEvent(this.canvasElement, event);
+
+    return { x: canvasPoint.x, y: this.canvasRealSize - canvasPoint.y };
+  }
+  private realSize(): number {
+    const el = this.canvasElement;
+    const style = window.getComputedStyle(el);
+    const padding = parseFloat(style.paddingBottom.replace("px", "")) || 0;
+    const canvasPadding = 2 * padding;
+    const rect = el.getBoundingClientRect();
+
+    return rect.bottom - rect.top - canvasPadding;
   }
 
   ngOnDestroy() {

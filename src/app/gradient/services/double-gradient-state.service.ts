@@ -5,7 +5,7 @@ import { ColorValues } from "../../color/model/colors.model";
 import { GradientDefinition, gradientFromPoints } from "../models/gradient-stops";
 import { toOklch } from "../../color/model/color";
 import { defaultDoubleGradientState } from "../models/default-gradient-state";
-import { GradientHandlers, GradientState } from "./gradient-state.model";
+import { GradientState } from "./gradient-state.model";
 import { doubleGradientConfig } from "../double-bezier-panel/double-bezier-config";
 import { Point } from "../models/point.model";
 import { bezierCurve } from "../common/bezier-curve";
@@ -76,7 +76,7 @@ export class DoubleGradientStateService implements GradientState {
     this.center.set(point);
   }
 
-  onHandlersChange(handlers: GradientHandlers) {
+  onHandlersChange(handlers: DoubleHandlers) {
     this.handlers.set({ ...(handlers as DoubleHandlers) });
   }
 

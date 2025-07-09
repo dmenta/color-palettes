@@ -42,8 +42,8 @@ export class doubleBezierDrawing {
     return {
       h1: this.pointToCanvas(handlers.h1),
       h2: this.pointToCanvas(handlers.h2),
-      h3: this.pointToCanvas(handlers.h3),
-      h4: this.pointToCanvas(handlers.h4),
+      h3: this.pointToCanvas(handlers.h3!),
+      h4: this.pointToCanvas(handlers.h4!),
     } as DoubleHandlers;
   }
 
@@ -68,17 +68,17 @@ export class doubleBezierDrawing {
     const cuarto = active === "h4" ? "h4" : "h3";
     const tercero = cuarto === "h4" ? "h3" : "h4";
 
-    this.drawHandler(this.vertices[tercero], coords[tercero], this.colors.handler(tercero, darkMode), false);
+    this.drawHandler(this.vertices[tercero], coords[tercero]!, this.colors.handler(tercero, darkMode), false);
     this.drawHandler(
       this.vertices[cuarto],
-      coords[cuarto],
+      coords[cuarto]!,
       this.colors.handler(cuarto, darkMode),
       active === cuarto,
       semiactivo === cuarto
     );
 
     this.drawBezier(this.start, this.center, coords.h1, coords.h2, darkMode, active !== null);
-    this.drawBezier(this.center, this.end, coords.h3, coords.h4, darkMode, active !== null);
+    this.drawBezier(this.center, this.end, coords.h3!, coords.h4!, darkMode, active !== null);
 
     const bitmapOne = this.canvas.transferToImageBitmap();
     this.imageContext.transferFromImageBitmap(bitmapOne);

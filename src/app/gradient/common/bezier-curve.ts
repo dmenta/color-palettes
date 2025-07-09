@@ -46,6 +46,6 @@ export const bezierCurve = {
   doublePoints: (coords: DoubleHandlers, virtualSize: number) => {
     return bezierCurve
       .points({ h1: coords.h1, h2: coords.h2 }, virtualSize / 2, 0, 0.5)
-      .concat(bezierCurve.points({ h1: coords.h3, h2: coords.h4 }, virtualSize / 2, -100, 0.5, 50).slice(1));
+      .concat(bezierCurve.points({ h1: coords.h3!, h2: coords.h4! }, virtualSize / 2, -100, 0.5, 50).slice(1));
   },
 };

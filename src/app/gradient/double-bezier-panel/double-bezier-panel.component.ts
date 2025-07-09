@@ -12,12 +12,13 @@ import {
   ViewChild,
 } from "@angular/core";
 import { debounceTime, filter, fromEvent, map, merge, Subscription, tap } from "rxjs";
-import { DoubleGradientStateService } from "../services/double-gradient-state.service";
 import { doubleBezierDrawing } from "./double-bezier-panel-drawing";
 import { doubleGradientConfig } from "./double-bezier-config";
 import { DoubleBezierColors } from "./double-bezier.draw-colors";
 import { DoubleHandler, DoubleHandlers } from "../models/double-handlers.model";
 import { Point, pointsMatch } from "../models/point.model";
+import { domCommon } from "../common/common-funcs";
+import { GRADIENT_STATE_TOKEN } from "../services/gradient-state.model";
 
 @Component({
   selector: "zz-double-bezier-panel",
@@ -32,7 +33,7 @@ export class DoubleBezierPanelComponent implements AfterViewInit, OnDestroy {
   private removeDocumentClickListenerFn: (() => void) | null = null;
   private removeDocumentTouchEndListenerFn: (() => void) | null = null;
 
-  private state = inject(DoubleGradientStateService);
+  private state = inject(GRADIENT_STATE_TOKEN);
 
   overHandler = signal<DoubleHandler | null>(null);
   currentHandler = signal<DoubleHandler | null>(null);
@@ -185,8 +186,8 @@ export class DoubleBezierPanelComponent implements AfterViewInit, OnDestroy {
       const opposite = handler === "h2" ? "h3" : "h2";
 
       const hOpposite = Math.sqrt(
-        Math.pow(this.state.handlers()[opposite].x - halfVirtualSize, 2) +
-          Math.pow(this.state.handlers()[opposite].y - halfVirtualSize, 2)
+        Math.pow(this.state.handlers()[opposite]!.x - halfVirtualSize, 2) +
+          Math.pow(this.state.handlers()[opposite]!.y - halfVirtualSize, 2)
       );
 
       const normalizedX = -Math.round((deltaX / hMoving) * hOpposite);
@@ -209,7 +210,7 @@ export class DoubleBezierPanelComponent implements AfterViewInit, OnDestroy {
     for (let i = 1; i <= 8; i++) {
       for (let j = 0; j < handlersKeys.length; j++) {
         const handlerKey = handlersKeys[j]!;
-        if (pointsMatch(point, coords[handlerKey], toleranciaBase * i)) {
+        if (pointsMatch(point, coords[handlerKey]!, toleranciaBase * i)) {
           return handlerKey;
         }
       }
@@ -235,45 +236,16 @@ export class DoubleBezierPanelComponent implements AfterViewInit, OnDestroy {
 
     const dibujador = this.doubleBezier;
     requestAnimationFrame(() => {
-      dibujador.draw(coords, active, mode);
+      dibujador.draw(coords as DoubleHandlers, active, mode);
     });
   }
 
   private pointFromEvent(event: MouseEvent | TouchEvent): Point {
-    const canvasPoint = this.canvasPointFromEvent(event);
     if (!this.doubleBezier) {
       return { x: 0, y: 0 };
     }
+    const canvasPoint = domCommon.pointFromEvent(this.canvas!.nativeElement, event);
     return this.doubleBezier!.pointFromCanvas(canvasPoint);
-  }
-
-  private canvasPointFromEvent(event: MouseEvent | TouchEvent): Point {
-    const el = this.canvas?.nativeElement;
-    if (!el) {
-      return { x: 0, y: 0 };
-    }
-
-    const style = window.getComputedStyle(el);
-
-    const padingLeft = parseFloat(style.paddingLeft.replace("px", "")) || 0;
-    const padingTop = parseFloat(style.paddingTop.replace("px", "")) || 0;
-
-    const rect = el.getBoundingClientRect();
-    if (event instanceof TouchEvent) {
-      if (event.touches.length === 0) {
-        return { x: 0, y: 0 };
-      }
-      const touch = event.touches[0];
-      return {
-        x: touch!.clientX - rect.left - padingLeft,
-        y: touch!.clientY - rect.top - padingTop,
-      };
-    } else {
-      return {
-        x: event.clientX - rect.left - padingLeft,
-        y: event.clientY - rect.top - padingTop,
-      };
-    }
   }
 
   ngOnDestroy() {

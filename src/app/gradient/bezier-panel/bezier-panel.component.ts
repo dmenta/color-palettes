@@ -16,6 +16,7 @@ import { debounceTime, filter, fromEvent, map, merge, Subscription, tap } from "
 import { GRADIENT_STATE_TOKEN, GradientHandlersState } from "../services/gradient-state.model";
 import { Handler, Handlers } from "../models/handlers.model";
 import { Point, pointsMatch } from "../models/point.model";
+import { domCommon } from "../common/common-funcs";
 
 @Component({
   selector: "zz-bezier-panel",
@@ -39,6 +40,7 @@ export class BezierPanelComponent implements AfterViewInit, OnDestroy {
 
   @ViewChild("canvas") canvas?: ElementRef<HTMLCanvasElement>;
   canvasContext: ImageBitmapRenderingContext | null = null;
+  private canvasRealSize = 0;
 
   constructor(private renderer: Renderer2) {
     effect(() => {
@@ -96,6 +98,8 @@ export class BezierPanelComponent implements AfterViewInit, OnDestroy {
     this.canvas!.nativeElement.oncontextlost = (event: Event) => {
       console.warn("Context lost", event);
     };
+
+    this.canvasRealSize = this.realSize();
 
     this.dibujar(this.handlersToCanvas(this.state.handlers()));
   }
@@ -210,35 +214,19 @@ export class BezierPanelComponent implements AfterViewInit, OnDestroy {
   }
 
   private pointFromEvent(event: MouseEvent | TouchEvent): Point {
-    const el = this.canvas?.nativeElement;
-    if (!el) {
-      return { x: 0, y: 0 };
-    }
+    const canvasPoint = domCommon.pointFromEvent(this.canvas!.nativeElement, event);
 
+    return pointFromCanvas(canvasPoint, this.canvasRealSize);
+  }
+
+  private realSize(): number {
+    const el = this.canvas?.nativeElement!;
     const style = window.getComputedStyle(el);
-
-    const padingLeft = parseFloat(style.paddingLeft.replace("px", "")) || 0;
-    const padingTop = parseFloat(style.paddingTop.replace("px", "")) || 0;
-    const paddingBottom = parseFloat(style.paddingBottom.replace("px", "")) || 0;
-    const canvasPadding = paddingBottom + padingTop;
-
+    const padding = parseFloat(style.paddingBottom.replace("px", "")) || 0;
+    const canvasPadding = 2 * padding;
     const rect = el.getBoundingClientRect();
-    const size = rect.bottom - rect.top - canvasPadding;
-    if (event instanceof TouchEvent) {
-      if (event.touches.length === 0) {
-        return { x: 0, y: 0 };
-      }
-      const touch = event.touches[0];
-      return pointFromCanvas(
-        { x: touch!.clientX - rect.left - padingLeft, y: touch!.clientY - rect.top - padingTop },
-        size
-      );
-    } else {
-      return pointFromCanvas(
-        { x: event.clientX - rect.left - padingLeft, y: event.clientY - rect.top - padingTop },
-        size
-      );
-    }
+
+    return rect.bottom - rect.top - canvasPadding;
   }
 
   ngOnDestroy() {
