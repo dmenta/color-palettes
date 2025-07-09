@@ -16,6 +16,7 @@ import { debounceTime, filter, fromEvent, map, merge, Subscription, tap } from "
 import { DoubleGradientStateService } from "../services/double-gradient-state.service";
 import { DoubleHandler, DoubleHandlers } from "./double-bezier-curve";
 import { doubleBezierDrawing } from "./double-bezier-panel-drawing";
+import { doubleBezierColorConfig } from "./double-bezier.draw-colors";
 
 @Component({
   selector: "zz-double-bezier-panel",
@@ -38,26 +39,19 @@ export class DoubleBezierPanelComponent implements AfterViewInit, OnDestroy {
   darkMode = input(false);
 
   @ViewChild("canvas") canvas?: ElementRef<HTMLCanvasElement>;
-  doubleBezier: doubleBezierDrawing | null = null;
+  private doubleBezier: doubleBezierDrawing | null = null;
 
   constructor(private renderer: Renderer2) {
     effect(() => {
-      const handlers = this.state.handlers();
-      if (!this.doubleBezier) {
-        console.warn("DoubleBezierDrawing not initialized yet");
-        return;
-      }
-
-      const coords = this.handlersToCanvas(handlers);
-
-      this.dibujar(coords, this.currentHandler(), this.darkMode());
+      this.dibujar(this.state.handlers(), this.currentHandler(), this.darkMode());
     });
   }
 
   ngAfterViewInit() {
     this.doubleBezier = new doubleBezierDrawing(
       this.canvas!.nativeElement.getContext("bitmaprenderer") as ImageBitmapRenderingContext,
-      this.size()
+      this.size(),
+      doubleBezierColorConfig
     );
 
     this.mouseMoveSubscription = fromEvent(this.canvas!.nativeElement, "mousemove")
@@ -108,7 +102,7 @@ export class DoubleBezierPanelComponent implements AfterViewInit, OnDestroy {
       console.warn("Context lost", event);
     };
 
-    this.dibujar(this.handlersToCanvas(this.state.handlers()));
+    this.dibujar(this.state.handlers());
   }
 
   onDoubleClick(_event: MouseEvent) {
@@ -129,7 +123,7 @@ export class DoubleBezierPanelComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  onGrabHandler(event: TouchEvent | MouseEvent) {
+  private onGrabHandler(event: TouchEvent | MouseEvent) {
     const point = this.pointFromEvent(event);
     const over = this.isOverHandler(point);
     if (over !== null) {
@@ -137,13 +131,13 @@ export class DoubleBezierPanelComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  onMoveHandler(event: MouseEvent | TouchEvent): void {
+  private onMoveHandler(event: MouseEvent | TouchEvent): void {
     const point = this.pointFromEvent(event);
 
     this.updateHandlerCoords(point);
   }
 
-  onMouseMove(event: MouseEvent): void {
+  private onMouseMove(event: MouseEvent): void {
     const point = this.pointFromEvent(event);
     const overHandler = this.overHandler();
     const isOverHandler = this.isOverHandler(point);
@@ -243,16 +237,15 @@ export class DoubleBezierPanelComponent implements AfterViewInit, OnDestroy {
     });
   }
 
-  private handlersToCanvas(handlers: DoubleHandlers): DoubleHandlers {
-    return {
-      h1: this.doubleBezier!.pointToCanvas(handlers.h1),
-      h2: this.doubleBezier!.pointToCanvas(handlers.h2),
-      h3: this.doubleBezier!.pointToCanvas(handlers.h3),
-      h4: this.doubleBezier!.pointToCanvas(handlers.h4),
-    } as DoubleHandlers;
+  private pointFromEvent(event: MouseEvent | TouchEvent): Point {
+    const canvasPoint = this.canvasPointFromEvent(event);
+    if (!this.doubleBezier) {
+      return { x: 0, y: 0 };
+    }
+    return this.doubleBezier!.pointFromCanvas(canvasPoint);
   }
 
-  private pointFromEvent(event: MouseEvent | TouchEvent): Point {
+  private canvasPointFromEvent(event: MouseEvent | TouchEvent): Point {
     const el = this.canvas?.nativeElement;
     if (!el) {
       return { x: 0, y: 0 };
@@ -269,15 +262,15 @@ export class DoubleBezierPanelComponent implements AfterViewInit, OnDestroy {
         return { x: 0, y: 0 };
       }
       const touch = event.touches[0];
-      return this.doubleBezier!.pointFromCanvas({
+      return {
         x: touch!.clientX - rect.left - padingLeft,
         y: touch!.clientY - rect.top - padingTop,
-      });
+      };
     } else {
-      return this.doubleBezier!.pointFromCanvas({
+      return {
         x: event.clientX - rect.left - padingLeft,
         y: event.clientY - rect.top - padingTop,
-      });
+      };
     }
   }
 

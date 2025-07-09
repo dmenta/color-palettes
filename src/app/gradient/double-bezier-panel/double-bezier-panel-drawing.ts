@@ -1,5 +1,5 @@
 import { Point } from "../models/bezier-curve";
-import { DoubleBezierGridColors, DoubleHandlerColors } from "./double-bezier.draw-colors";
+import { DoubleBezierColorConfig, DoubleBezierGridColors, DoubleHandlerColors } from "./double-bezier.draw-colors";
 import { DoubleHandler, DoubleHandlers } from "./double-bezier-curve";
 
 interface Context2D
@@ -20,14 +20,17 @@ export class doubleBezierDrawing {
   private readonly gridLines = 20;
 
   private readonly ctx: Context2D;
-  private readonly firstOrigin: Point;
-  private readonly firstEnd: Point;
-  private readonly secondOrigin: Point;
-  private readonly secondEnd: Point;
+  private readonly start: Point;
+  private readonly center: Point;
+  private readonly end: Point;
   private readonly vertices: { h1: Point; h2: Point; h3: Point; h4: Point };
   private readonly canvas: OffscreenCanvas;
 
-  constructor(private imageContext: ImageBitmapRenderingContext, public size: number) {
+  constructor(
+    private imageContext: ImageBitmapRenderingContext,
+    public size: number,
+    private colors: DoubleBezierColorConfig
+  ) {
     this.canvas = new OffscreenCanvas(size, size);
     const context = this.canvas.getContext("2d")!;
     context.imageSmoothingQuality = "high";
@@ -35,20 +38,29 @@ export class doubleBezierDrawing {
 
     this.ctx = context as Context2D;
 
-    this.firstOrigin = this.redondearPoint({ x: 0, y: this.size });
-    this.firstEnd = this.redondearPoint({ x: this.size / 2, y: this.size / 2 });
-    this.secondOrigin = this.redondearPoint({ x: this.size / 2, y: this.size / 2 });
-    this.secondEnd = this.redondearPoint({ x: this.size, y: 0 });
+    this.start = this.redondearPoint({ x: 0, y: this.size });
+    this.center = this.redondearPoint({ x: this.size / 2, y: this.size / 2 });
+    this.end = this.redondearPoint({ x: this.size, y: 0 });
 
     this.vertices = {
-      h1: this.firstOrigin,
-      h2: this.firstEnd,
-      h3: this.secondOrigin,
-      h4: this.secondEnd,
+      h1: this.start,
+      h2: this.center,
+      h3: this.center,
+      h4: this.end,
     };
   }
 
-  public draw(coords: DoubleHandlers, active: DoubleHandler | null, darkMode: boolean) {
+  private handlersToCanvas(handlers: DoubleHandlers): DoubleHandlers {
+    return {
+      h1: this.pointToCanvas(handlers.h1),
+      h2: this.pointToCanvas(handlers.h2),
+      h3: this.pointToCanvas(handlers.h3),
+      h4: this.pointToCanvas(handlers.h4),
+    } as DoubleHandlers;
+  }
+
+  public draw(rawCoords: DoubleHandlers, active: DoubleHandler | null, darkMode: boolean) {
+    const coords = this.handlersToCanvas(rawCoords);
     this.drawGrid(darkMode);
 
     const handlersColors = this.doubleBezierHandlerColors(darkMode);
@@ -68,8 +80,6 @@ export class doubleBezierDrawing {
       semiactivo === segundo
     );
 
-    this.drawBezier(this.firstOrigin, this.firstEnd, coords.h1, coords.h2, darkMode, active !== null);
-
     const cuarto = active === "h4" ? "h4" : "h3";
     const tercero = cuarto === "h4" ? "h3" : "h4";
 
@@ -83,7 +93,8 @@ export class doubleBezierDrawing {
       semiactivo === cuarto
     );
 
-    this.drawBezier(this.secondOrigin, this.secondEnd, coords.h3, coords.h4, darkMode, active !== null);
+    this.drawBezier(this.start, this.center, coords.h1, coords.h2, darkMode, active !== null);
+    this.drawBezier(this.center, this.end, coords.h3, coords.h4, darkMode, active !== null);
 
     const bitmapOne = this.canvas.transferToImageBitmap();
     this.imageContext.transferFromImageBitmap(bitmapOne);
@@ -181,26 +192,15 @@ export class doubleBezierDrawing {
   }
 
   private doubleBezierHandlerColors(darkMode: boolean): DoubleHandlerColors {
-    return {
-      h1: !darkMode ? "oklch(0.355 0.146 29)" : "oklch(0.634 0.254 18)",
-      h2: !darkMode ? "oklch(0.377 0.1 247)" : "oklch(0.858 0.146 197)",
-      h3: !darkMode ? "oklch(0.355 0.146 29)" : "oklch(0.634 0.254 18)",
-      h4: !darkMode ? "oklch(0.377 0.1 247)" : "oklch(0.858 0.146 197)",
-      line: !darkMode ? "#305030" : "#E0FFE0",
-      activeline: !darkMode ? "#008000" : "#80FF80",
-      shadow: !darkMode ? "#202020" : "#202020",
-    };
+    return darkMode ? this.colors.handlerColors.dark : this.colors.handlerColors.light;
   }
 
   private doubleBezierCurveColor(darkMode: boolean): string {
-    return !darkMode ? "#303030" : "#D0D0D0";
+    return darkMode ? this.colors.curveColor.dark : this.colors.curveColor.light;
   }
 
   private doubleBezierGridColors(darkMode: boolean): DoubleBezierGridColors {
-    return {
-      lines: !darkMode ? "#606060" : "#C0C0C0",
-      border: !darkMode ? "#101010" : "#F0F0F0",
-    };
+    return darkMode ? this.colors.gridColors.dark : this.colors.gridColors.light;
   }
 
   public pointFromCanvas(point: Point): Point {
