@@ -2,8 +2,8 @@ import { Handler, Handlers, Point } from "../models/bezier-curve";
 import { bezierCurveColor, bezierGridColors, bezierHandleColors, HandlerColors } from "./bezier.draw-colors";
 
 const widthFactor = 1;
-const activeHandlerRadius = 10;
-export const handlerRadius = 7;
+const activeHandlerRadius = 18;
+export const handlerRadius = 10;
 export const virtualSize = 2000;
 const activeHandlerShadowBlur = 7;
 const activeHandlerShadowOffset = 5;
@@ -27,16 +27,24 @@ export function drawBezierPanel(
   const handlersColors = bezierHandleColors(darkMode);
   const colorCurve = bezierCurveColor(darkMode);
 
-  const firstOrigin = redondearPoint({ x: 0, y: size });
-  const firstEnd = redondearPoint({ x: size, y: 0 });
+  const origin = redondearPoint({ x: 0, y: size });
+  const end = redondearPoint({ x: size, y: 0 });
 
-  drawHandler(offCtx, firstEnd, coords.h2, handlersColors, "h2", active === "h2");
-  drawHandler(offCtx, firstOrigin, coords.h1, handlersColors, "h1", active === "h1");
+  const vertice = {
+    h1: origin,
+    h2: end,
+  };
+
+  const ultimo = active ?? "h1";
+  const primero = ultimo === "h2" ? "h1" : "h2";
+
+  drawHandler(offCtx, vertice[primero], coords[primero], handlersColors, primero, false);
+  drawHandler(offCtx, vertice[ultimo], coords[ultimo], handlersColors, ultimo, active === ultimo);
 
   offCtx.beginPath();
-  offCtx.moveTo(firstOrigin.x, firstOrigin.y);
+  offCtx.moveTo(origin.x, origin.y);
   offCtx.strokeStyle = colorCurve;
-  offCtx.bezierCurveTo(coords.h1.x, coords.h1.y, coords.h2.x, coords.h2.y, firstEnd.x, firstEnd.y);
+  offCtx.bezierCurveTo(coords.h1.x, coords.h1.y, coords.h2.x, coords.h2.y, end.x, end.y);
   offCtx.lineWidth = widthFactor * (active !== null ? 3 : 2);
   offCtx.stroke();
 

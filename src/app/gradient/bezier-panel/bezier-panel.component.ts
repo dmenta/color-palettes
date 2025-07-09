@@ -161,12 +161,14 @@ export class BezierPanelComponent implements AfterViewInit, OnDestroy {
 
   private isOverHandler(point: Point): Handler | null {
     const coords = this.state.handlers();
-    const tolerancia = 2 * (handlerRadius / this.size()) * virtualSize;
+    const toleranciaBase = (handlerRadius / this.size()) * virtualSize;
 
-    if (pointsMatch(point, coords.h1, tolerancia)) {
-      return "h1";
-    } else if (pointsMatch(point, coords.h2, tolerancia)) {
-      return "h2";
+    for (let i = 1; i <= 8; i++) {
+      if (pointsMatch(point, coords.h1, toleranciaBase * i)) {
+        return "h1";
+      } else if (pointsMatch(point, coords.h2, toleranciaBase * i)) {
+        return "h2";
+      }
     }
     return null;
   }

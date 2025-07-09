@@ -1,4 +1,3 @@
-import { redondear } from "./double-bezier-panel-drawing";
 export function doubleBezierPoints(coords: DoubleHandlers, virtualSize: number) {
   return firstbezierPoints(coords, virtualSize).concat(secondBezierPoints(coords, virtualSize));
 }
@@ -114,4 +113,7 @@ export function pointsMatch(a: Point, b: Point, tolerance: number = 9) {
 
 function redondearBezier(value: number): number {
   return Math.round(value * 100) / 100;
+}
+function redondear(value: number): number {
+  return Math.round(value);
 }

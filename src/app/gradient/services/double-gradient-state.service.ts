@@ -7,8 +7,8 @@ import { GradientDefinition, gradientFromPoints } from "../models/gradient-point
 import { toOklch } from "../../color/model/color";
 import { defaultDoubleGradientState } from "../models/default-gradient-state";
 import { doubleBezierPoints, DoubleHandlers } from "../double-bezier-panel/double-bezier-curve";
-import { virtualSize } from "../double-bezier-panel/double-bezier-panel-drawing";
 import { GradientHandlers, GradientState } from "./gradient-state.model";
+import { doubleBezierDrawing } from "../double-bezier-panel/double-bezier-panel-drawing";
 
 @Injectable({
   providedIn: "root",
@@ -30,7 +30,7 @@ export class DoubleGradientStateService implements GradientState {
 
   private startOklch = computed(() => toOklch(this.rgbText(this.startRGBColor())));
   private endOklch = computed(() => toOklch(this.rgbText(this.endRGBColor())));
-  points = computed(() => doubleBezierPoints(this.handlers(), virtualSize));
+  points = computed(() => doubleBezierPoints(this.handlers(), doubleBezierDrawing.virtualSize));
 
   startColor = computed(() => this.oklchText(this.startOklch()));
   endColor = computed(() => this.oklchText(this.endOklch()));

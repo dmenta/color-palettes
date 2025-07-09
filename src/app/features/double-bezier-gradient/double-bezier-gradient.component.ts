@@ -31,7 +31,7 @@ export class DoubleBezierGradientComponent {
   compassSize = 130;
 
   ngOnInit() {
-    fromEvent(document, "touchstart", { passive: true, once: true }).subscribe(() => {
+    fromEvent(document, "touchstart", { passive: true }).subscribe(() => {
       this.requestFullscreen();
     });
   }

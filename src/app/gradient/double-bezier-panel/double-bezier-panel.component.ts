@@ -15,13 +15,7 @@ import { Point, pointsMatch } from "../models/bezier-curve";
 import { debounceTime, filter, fromEvent, map, merge, Subscription, tap } from "rxjs";
 import { DoubleGradientStateService } from "../services/double-gradient-state.service";
 import { DoubleHandler, DoubleHandlers } from "./double-bezier-curve";
-import {
-  drawDoubleBezierPanel,
-  handlerRadius,
-  pointFromCanvas,
-  pointToCanvas,
-  virtualSize,
-} from "./double-bezier-panel-drawing";
+import { doubleBezierDrawing } from "./double-bezier-panel-drawing";
 
 @Component({
   selector: "zz-double-bezier-panel",
@@ -44,17 +38,28 @@ export class DoubleBezierPanelComponent implements AfterViewInit, OnDestroy {
   darkMode = input(false);
 
   @ViewChild("canvas") canvas?: ElementRef<HTMLCanvasElement>;
-  canvasContext: ImageBitmapRenderingContext | null = null;
+  doubleBezier: doubleBezierDrawing | null = null;
 
   constructor(private renderer: Renderer2) {
     effect(() => {
-      const coords = this.handlersToCanvas(this.state.handlers());
+      const handlers = this.state.handlers();
+      if (!this.doubleBezier) {
+        console.warn("DoubleBezierDrawing not initialized yet");
+        return;
+      }
 
-      this.dibujar(coords, this.currentHandler(), this.size(), this.darkMode());
+      const coords = this.handlersToCanvas(handlers);
+
+      this.dibujar(coords, this.currentHandler(), this.darkMode());
     });
   }
 
   ngAfterViewInit() {
+    this.doubleBezier = new doubleBezierDrawing(
+      this.canvas!.nativeElement.getContext("bitmaprenderer") as ImageBitmapRenderingContext,
+      this.size()
+    );
+
     this.mouseMoveSubscription = fromEvent(this.canvas!.nativeElement, "mousemove")
       .pipe(
         filter(() => this.currentHandler() === null),
@@ -114,12 +119,12 @@ export class DoubleBezierPanelComponent implements AfterViewInit, OnDestroy {
     if (overHandler === "h3" || overHandler === "h4") {
       this.state.onHandlersChange({
         ...this.state.handlers(),
-        [overHandler]: { x: virtualSize * 0.75, y: virtualSize * 0.75 },
+        [overHandler]: { x: doubleBezierDrawing.virtualSize * 0.75, y: doubleBezierDrawing.virtualSize * 0.75 },
       });
     } else {
       this.state.onHandlersChange({
         ...this.state.handlers(),
-        [overHandler]: { x: virtualSize * 0.25, y: virtualSize * 0.25 },
+        [overHandler]: { x: doubleBezierDrawing.virtualSize * 0.25, y: doubleBezierDrawing.virtualSize * 0.25 },
       });
     }
   }
@@ -172,7 +177,7 @@ export class DoubleBezierPanelComponent implements AfterViewInit, OnDestroy {
     if (handler === "h1" || handler === "h4") {
       this.state.onHandlersChange({ ...this.state.handlers(), [handler]: point });
     } else {
-      const halfVirtualSize = virtualSize / 2;
+      const halfVirtualSize = doubleBezierDrawing.virtualSize / 2;
       let deltaY = halfVirtualSize - point.y;
       let deltaX = halfVirtualSize - point.x;
 
@@ -201,18 +206,17 @@ export class DoubleBezierPanelComponent implements AfterViewInit, OnDestroy {
 
   private isOverHandler(point: Point): DoubleHandler | null {
     const coords = this.state.handlers();
+    const handlersKeys: DoubleHandler[] = ["h1", "h2", "h3", "h4"];
 
-    const tolerancia = 2 * (handlerRadius / this.size()) * virtualSize;
+    const toleranciaBase = (doubleBezierDrawing.handlerRadius / this.size()) * doubleBezierDrawing.virtualSize;
 
-    if (pointsMatch(point, coords.h1, tolerancia)) {
-      return "h1";
-    } else if (pointsMatch(point, coords.h2, tolerancia)) {
-      return "h2";
-    }
-    if (pointsMatch(point, coords.h3, tolerancia)) {
-      return "h3";
-    } else if (pointsMatch(point, coords.h4, tolerancia)) {
-      return "h4";
+    for (let i = 1; i <= 8; i++) {
+      for (let j = 0; j < handlersKeys.length; j++) {
+        const handlerKey = handlersKeys[j]!;
+        if (pointsMatch(point, coords[handlerKey], toleranciaBase * i)) {
+          return handlerKey;
+        }
+      }
     }
     return null;
   }
@@ -227,29 +231,24 @@ export class DoubleBezierPanelComponent implements AfterViewInit, OnDestroy {
   private dibujar(
     coords: DoubleHandlers,
     active: DoubleHandler | null = this.currentHandler(),
-    size: number = this.size(),
     mode: boolean = this.darkMode()
   ) {
-    if (!this.canvas) {
+    if (!this.doubleBezier) {
       return;
     }
-    if (this.canvasContext === null) {
-      this.canvasContext = this.canvas.nativeElement.getContext("bitmaprenderer");
-    }
 
-    const ctx = this.canvasContext!;
-
+    const dibujador = this.doubleBezier;
     requestAnimationFrame(() => {
-      drawDoubleBezierPanel(ctx, coords, size, active, mode);
+      dibujador.draw(coords, active, mode);
     });
   }
 
   private handlersToCanvas(handlers: DoubleHandlers): DoubleHandlers {
     return {
-      h1: pointToCanvas(handlers.h1, this.size()),
-      h2: pointToCanvas(handlers.h2, this.size()),
-      h3: pointToCanvas(handlers.h3, this.size()),
-      h4: pointToCanvas(handlers.h4, this.size()),
+      h1: this.doubleBezier!.pointToCanvas(handlers.h1),
+      h2: this.doubleBezier!.pointToCanvas(handlers.h2),
+      h3: this.doubleBezier!.pointToCanvas(handlers.h3),
+      h4: this.doubleBezier!.pointToCanvas(handlers.h4),
     } as DoubleHandlers;
   }
 
@@ -263,25 +262,22 @@ export class DoubleBezierPanelComponent implements AfterViewInit, OnDestroy {
 
     const padingLeft = parseFloat(style.paddingLeft.replace("px", "")) || 0;
     const padingTop = parseFloat(style.paddingTop.replace("px", "")) || 0;
-    const paddingBottom = parseFloat(style.paddingBottom.replace("px", "")) || 0;
-    const canvasPadding = paddingBottom + padingTop;
 
     const rect = el.getBoundingClientRect();
-    const size = rect.bottom - rect.top - canvasPadding;
     if (event instanceof TouchEvent) {
       if (event.touches.length === 0) {
         return { x: 0, y: 0 };
       }
       const touch = event.touches[0];
-      return pointFromCanvas(
-        { x: touch!.clientX - rect.left - padingLeft, y: touch!.clientY - rect.top - padingTop },
-        size
-      );
+      return this.doubleBezier!.pointFromCanvas({
+        x: touch!.clientX - rect.left - padingLeft,
+        y: touch!.clientY - rect.top - padingTop,
+      });
     } else {
-      return pointFromCanvas(
-        { x: event.clientX - rect.left - padingLeft, y: event.clientY - rect.top - padingTop },
-        size
-      );
+      return this.doubleBezier!.pointFromCanvas({
+        x: event.clientX - rect.left - padingLeft,
+        y: event.clientY - rect.top - padingTop,
+      });
     }
   }
 

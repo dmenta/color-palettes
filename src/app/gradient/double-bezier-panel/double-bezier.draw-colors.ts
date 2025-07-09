@@ -6,7 +6,7 @@ export function doubleBezierHandleColors(darkMode: boolean): DoubleHandlerColors
     h4: !darkMode ? "oklch(0.377 0.1 247)" : "oklch(0.858 0.146 197)",
     line: !darkMode ? "#305030" : "#E0FFE0",
     activeline: !darkMode ? "#008000" : "#80FF80",
-    shadow: !darkMode ? "#202020" : "#000000",
+    shadow: !darkMode ? "#202020" : "#202020",
   };
 }
 
