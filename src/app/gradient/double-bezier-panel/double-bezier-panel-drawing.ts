@@ -1,4 +1,4 @@
-import { DoubleBezierColors, DoubleHandlerColors } from "./double-bezier.draw-colors";
+import { DoubleBezierCenterColors, DoubleBezierColors, DoubleHandlerColors } from "./double-bezier.draw-colors";
 import { redondeo } from "../common/common-funcs";
 import { Context2D } from "../models/context-2d";
 import { DoubleGradientConfig } from "./double-bezier-config";
@@ -62,7 +62,7 @@ export class doubleBezierDrawing {
     });
   }
 
-  public draw(rawCoords: DoubleHandlers, active: DoubleHandler | null, darkMode: boolean, centerRaw: Point) {
+  public draw(rawCoords: DoubleHandlers, active: ActiveHandler, darkMode: boolean, centerRaw: Point) {
     const center = this.pointToCanvas(centerRaw);
     this.vertices.h2 = center;
     this.vertices.h3 = center;
@@ -99,6 +99,8 @@ export class doubleBezierDrawing {
 
     this.drawBezier(this.start, center, coords.h1, coords.h2, darkMode, active !== null);
     this.drawBezier(center, this.end, coords.h3!, coords.h4!, darkMode, active !== null);
+
+    this.drawCenterHandler(center, this.colors.center(darkMode), active === "center");
 
     const bitmapOne = this.canvas.transferToImageBitmap();
     this.imageContext.transferFromImageBitmap(bitmapOne);
@@ -146,6 +148,44 @@ export class doubleBezierDrawing {
       this.ctx.stroke();
     }
     this.ctx.setLineDash([]);
+  }
+
+  private drawCenterHandler(center: Point, colors: DoubleBezierCenterColors, active: boolean) {
+    if (active) {
+      this.ctx.shadowColor = colors.shadow;
+      this.ctx.shadowBlur = this.config.activeHandlerShadowBlur;
+      this.ctx.shadowOffsetX = this.config.activeHandlerShadowOffset;
+      this.ctx.shadowOffsetY = this.config.activeHandlerShadowOffset;
+
+      if (active) {
+        this.drawCenterHandlerActive(center, colors);
+      }
+    }
+
+    this.ctx.beginPath();
+    this.ctx.fillStyle = active ? colors.active : colors.main;
+    this.ctx.fillRect(
+      redondeo.value(center.x - this.config.handlerRadius),
+      redondeo.value(center.y - this.config.handlerRadius),
+      redondeo.value(this.config.handlerRadius * 2),
+      redondeo.value(this.config.handlerRadius * 2)
+    );
+
+    this.ctx.shadowColor = "transparent"; // Reset shadow
+  }
+
+  private drawCenterHandlerActive(point: Point, colors: DoubleBezierCenterColors) {
+    const size = this.config.handlerRadius * 3;
+    this.ctx.beginPath();
+    this.ctx.rect(
+      redondeo.value(point.x - size / 2),
+      redondeo.value(point.y - size / 2),
+      redondeo.value(size),
+      redondeo.value(size)
+    );
+    this.ctx.strokeStyle = colors.activeBorder;
+    this.ctx.lineWidth = redondeo.value(this.config.widthFactor * 2);
+    this.ctx.stroke();
   }
 
   private drawHandler(
@@ -210,3 +250,5 @@ export class doubleBezierDrawing {
     });
   }
 }
+
+export type ActiveHandler = DoubleHandler | "center" | null;

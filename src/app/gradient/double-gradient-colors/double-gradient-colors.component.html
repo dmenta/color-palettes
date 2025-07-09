@@ -1,0 +1,19 @@
+<div class="flex flex-row items-center justify-center gap-2 w-full">
+  <zz-color-selector
+    (color-changing)="onColorStartChange($event)"
+    [border]="'border-current/40'"
+    class="shadow-md"
+    [color]="this.state.startRGBColor()"></zz-color-selector>
+
+  <zz-color-selector
+    (color-changing)="onColorCenterChange($event)"
+    [border]="'border-current/40'"
+    class="shadow-md"
+    [color]="this.state.centerRGBColor()"></zz-color-selector>
+
+  <zz-color-selector
+    (color-changing)="onColorEndChange($event)"
+    [border]="'border-current/40'"
+    class="shadow-md"
+    [color]="this.state.endRGBColor()"></zz-color-selector>
+</div>

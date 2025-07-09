@@ -12,7 +12,7 @@ import {
   ViewChild,
 } from "@angular/core";
 import { debounceTime, filter, fromEvent, map, merge, Subscription, tap } from "rxjs";
-import { doubleBezierDrawing } from "./double-bezier-panel-drawing";
+import { ActiveHandler, doubleBezierDrawing } from "./double-bezier-panel-drawing";
 import { doubleGradientConfig } from "./double-bezier-config";
 import { DoubleBezierColors } from "./double-bezier.draw-colors";
 import { DoubleHandler, DoubleHandlers } from "../models/double-handlers.model";
@@ -35,8 +35,8 @@ export class DoubleBezierPanelComponent implements AfterViewInit, OnDestroy {
 
   private state: DoubleGradientState = inject(GRADIENT_STATE_TOKEN);
 
-  overHandler = signal<DoubleHandler | null>(null);
-  currentHandler = signal<DoubleHandler | null>(null);
+  overHandler = signal<ActiveHandler>(null);
+  currentHandler = signal<ActiveHandler>(null);
   size = input(200);
   darkMode = input(false);
 
@@ -45,7 +45,7 @@ export class DoubleBezierPanelComponent implements AfterViewInit, OnDestroy {
 
   constructor(private renderer: Renderer2) {
     effect(() => {
-      this.dibujar(this.state.handlers(), this.currentHandler(), this.darkMode());
+      this.dibujar(this.state.handlers(), this.state.center(), this.currentHandler(), this.darkMode());
     });
   }
 
@@ -110,7 +110,7 @@ export class DoubleBezierPanelComponent implements AfterViewInit, OnDestroy {
 
   onDoubleClick(_event: MouseEvent) {
     const overHandler = this.overHandler();
-    if (overHandler === null) {
+    if (overHandler === null || overHandler === "center") {
       return;
     }
 
@@ -170,7 +170,7 @@ export class DoubleBezierPanelComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  private setHandlerSelected(handler: DoubleHandler) {
+  private setHandlerSelected(handler: ActiveHandler) {
     this.setListeners();
 
     this.currentHandler.set(handler);
@@ -179,6 +179,20 @@ export class DoubleBezierPanelComponent implements AfterViewInit, OnDestroy {
   private updateHandlerCoords(point: Point): void {
     const handler = this.currentHandler();
     if (handler === null) {
+      return;
+    }
+
+    if (handler === "center") {
+      const deltaX = point.x - this.state.center().x;
+      const deltaY = point.y - this.state.center().y;
+      const h2 = this.state.handlers().h2!;
+      const h3 = this.state.handlers().h3!;
+      const newH2 = redondeo.point({ x: h2.x + deltaX, y: h2.y + deltaY });
+      const newH3 = redondeo.point({ x: h3.x + deltaX, y: h3.y + deltaY });
+
+      this.state.onCenterChange(redondeo.point(point));
+
+      this.state.onHandlersChange({ ...this.state.handlers(), h2: newH2, h3: newH3 });
       return;
     }
     if (handler === "h1" || handler === "h4") {
@@ -199,13 +213,16 @@ export class DoubleBezierPanelComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  private isOverHandler(point: Point): DoubleHandler | null {
+  private isOverHandler(point: Point): ActiveHandler {
     const coords = this.state.handlers();
     const handlersKeys: DoubleHandler[] = ["h1", "h2", "h3", "h4"];
 
     const toleranciaBase = (doubleGradientConfig.handlerRadius / this.size()) * doubleGradientConfig.virtualSize;
 
     for (let i = 1; i <= 8; i++) {
+      if (pointsMatch(point, this.state.center(), toleranciaBase * i)) {
+        return "center";
+      }
       for (let j = 0; j < handlersKeys.length; j++) {
         const handlerKey = handlersKeys[j]!;
         if (pointsMatch(point, coords[handlerKey]!, toleranciaBase * i)) {
@@ -225,7 +242,8 @@ export class DoubleBezierPanelComponent implements AfterViewInit, OnDestroy {
 
   private dibujar(
     coords: DoubleHandlers,
-    active: DoubleHandler | null = this.currentHandler(),
+    center: Point = this.state.center(),
+    active: DoubleHandler | "center" | null = this.currentHandler(),
     mode: boolean = this.darkMode()
   ) {
     if (!this.doubleBezier) {
@@ -234,7 +252,7 @@ export class DoubleBezierPanelComponent implements AfterViewInit, OnDestroy {
 
     const dibujador = this.doubleBezier;
     requestAnimationFrame(() => {
-      dibujador.draw(coords as DoubleHandlers, active, mode, this.state.center());
+      dibujador.draw(coords as DoubleHandlers, active, mode, center);
     });
   }
 

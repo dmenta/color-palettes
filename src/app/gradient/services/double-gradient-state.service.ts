@@ -35,6 +35,8 @@ export class DoubleGradientStateService implements DoubleGradientState {
   points = computed(() => bezierCurve.doublePoints(this.handlers(), this.center(), doubleGradientConfig.virtualSize));
 
   startColor = computed(() => this.oklchText(this.startOklch()));
+  centerColor = computed(() => this.oklchText(this.centerOklch()));
+
   endColor = computed(() => this.oklchText(this.endOklch()));
 
   gradient: Signal<GradientDefinition> = computed(() =>

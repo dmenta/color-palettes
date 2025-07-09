@@ -48,7 +48,7 @@ export function doubleGradientStops(
   return {
     stops: [...first.stops.slice(0, -1), ...second.stops.slice(1)], // Avoid duplicating the center stop
     gradient: gradientString([...first.stops.slice(0, -1), ...second.stops.slice(1)], angleDegrees, "oklch"),
-    darkMode: first.darkMode || second.darkMode,
+    darkMode: toContrast(first.stops.slice(-3, -2)[0]!.color) === "white",
     gradientRGB: gradientString([...first.rgbStops.slice(0, -1), ...second.rgbStops.slice(1)], angleDegrees, "srgb"),
     rgbStops: [...first.rgbStops.slice(0, -1), ...second.rgbStops.slice(1)],
   };

@@ -23,6 +23,11 @@ export interface GradientColorsState {
   onEndColorChange: (color: ColorValues) => void;
 }
 
+export interface DoubleGradientColorsState extends GradientColorsState {
+  centerRGBColor: Signal<ColorValues>;
+  centerColor: Signal<string>;
+  onCenterColorChange: (color: ColorValues) => void;
+}
 export interface GradientHandlersState {
   handlers: Signal<Handlers>;
   onHandlersChange: (handlers: Handlers) => void;
@@ -32,11 +37,9 @@ export interface GradientState extends GradientOrientationState, GradientColorsS
   gradient: Signal<GradientDefinition>;
 }
 
-export interface DoubleGradientState extends GradientState {
+export interface DoubleGradientState extends GradientState, DoubleGradientColorsState {
   center: Signal<Point>;
-  centerRGBColor: Signal<ColorValues>;
   onCenterChange: (point: Point) => void;
-  onCenterColorChange: (color: ColorValues) => void;
   handlers: Signal<DoubleHandlers>;
   onHandlersChange: (handlers: DoubleHandlers) => void;
 }

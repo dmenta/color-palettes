@@ -22,6 +22,21 @@ const doubleBezierCurveColor: { light: string; dark: string } = {
   dark: "#D0D0D0",
 };
 
+const doubleBezierCenterColors: { light: DoubleBezierCenterColors; dark: DoubleBezierCenterColors } = {
+  light: {
+    main: "#606060",
+    active: "#202020",
+    activeBorder: "#FF5000",
+    shadow: "#404040",
+  } as DoubleBezierCenterColors,
+  dark: {
+    main: "#A0A0A0",
+    active: "#b0b0b0",
+    activeBorder: "#C0CC00",
+    shadow: "#202020",
+  } as DoubleBezierCenterColors,
+};
+
 const doubleBezierGridColors: { light: DoubleBezierGridColors; dark: DoubleBezierGridColors } = {
   light: {
     lines: "#606060",
@@ -37,12 +52,14 @@ const doubleBezierColorConfig = {
   handlerColors: doubleBezierHandlerColors,
   curveColor: doubleBezierCurveColor,
   gridColors: doubleBezierGridColors,
+  centerColors: doubleBezierCenterColors,
 };
 
 type DoubleBezierColorConfig = {
   handlerColors: typeof doubleBezierHandlerColors;
   curveColor: typeof doubleBezierCurveColor;
   gridColors: typeof doubleBezierGridColors;
+  centerColors: typeof doubleBezierCenterColors;
 };
 
 type DoubleHandlersColors = {
@@ -63,6 +80,13 @@ type DoubleBezierGridColors = {
   border: string;
 };
 
+export type DoubleBezierCenterColors = {
+  main: string;
+  active: string;
+  activeBorder: string;
+  shadow: string;
+};
+
 export class DoubleBezierColors {
   private colors: DoubleBezierColorConfig = doubleBezierColorConfig;
 
@@ -80,5 +104,9 @@ export class DoubleBezierColors {
 
   public grid(darkMode: boolean): DoubleBezierGridColors {
     return darkMode ? this.colors.gridColors.dark : this.colors.gridColors.light;
+  }
+
+  public center(darkMode: boolean): DoubleBezierCenterColors {
+    return darkMode ? this.colors.centerColors.dark : this.colors.centerColors.light;
   }
 }
