@@ -1,4 +1,6 @@
+import { redondeo } from "../common/common-funcs";
 import { Handler, Handlers, Point } from "../models/bezier-curve";
+import { Context2D } from "../models/context-2d";
 import { bezierCurveColor, bezierGridColors, bezierHandleColors, HandlerColors } from "./bezier.draw-colors";
 
 const widthFactor = 1;
@@ -27,8 +29,8 @@ export function drawBezierPanel(
   const handlersColors = bezierHandleColors(darkMode);
   const colorCurve = bezierCurveColor(darkMode);
 
-  const origin = redondearPoint({ x: 0, y: size });
-  const end = redondearPoint({ x: size, y: 0 });
+  const origin = redondeo.point({ x: 0, y: size });
+  const end = redondeo.point({ x: size, y: 0 });
 
   const vertice = {
     h1: origin,
@@ -58,9 +60,9 @@ function drawGrid(ctx: Context2D, size: number, darkMode: boolean) {
   const ratio = size / virtualSize;
 
   ctx.beginPath();
-  ctx.rect(0, 0, redondear(ratio * virtualSize), redondear(ratio * virtualSize));
+  ctx.rect(0, 0, redondeo.value(ratio * virtualSize), redondeo.value(ratio * virtualSize));
   ctx.strokeStyle = colors.border;
-  ctx.lineWidth = redondear(widthFactor * 1);
+  ctx.lineWidth = redondeo.value(widthFactor * 1);
   ctx.stroke();
 
   ctx.strokeStyle = colors.lines;
@@ -71,15 +73,15 @@ function drawGrid(ctx: Context2D, size: number, darkMode: boolean) {
 
   for (let i = virtualSize / gridLines; i < virtualSize; i += gridSpacing) {
     ctx.beginPath();
-    ctx.moveTo(0, redondear(i * ratio));
-    ctx.lineTo(size, redondear(i * ratio));
-    ctx.lineWidth = redondear(widthFactor * 0.5);
+    ctx.moveTo(0, redondeo.value(i * ratio));
+    ctx.lineTo(size, redondeo.value(i * ratio));
+    ctx.lineWidth = redondeo.value(widthFactor * 0.5);
     ctx.stroke();
 
     ctx.beginPath();
-    ctx.moveTo(redondear(i * ratio), 0);
-    ctx.lineTo(redondear(i * ratio), size);
-    ctx.lineWidth = redondear(widthFactor * 0.5);
+    ctx.moveTo(redondeo.value(i * ratio), 0);
+    ctx.lineTo(redondeo.value(i * ratio), size);
+    ctx.lineWidth = redondeo.value(widthFactor * 0.5);
     ctx.stroke();
   }
   ctx.setLineDash([]);
@@ -106,7 +108,7 @@ function drawHandlerActive(ctx: Context2D, point: Point, colors: HandlerColors, 
   ctx.beginPath();
   ctx.arc(point.x, point.y, activeHandlerRadius, 0, Math.PI * 2);
   ctx.strokeStyle = colors[name];
-  ctx.lineWidth = redondear(widthFactor * 2);
+  ctx.lineWidth = redondeo.value(widthFactor * 2);
   ctx.stroke();
 
   ctx.shadowColor = "transparent"; // Reset shadow
@@ -114,7 +116,7 @@ function drawHandlerActive(ctx: Context2D, point: Point, colors: HandlerColors, 
 
 function drawHandlerLine(ctx: Context2D, start: Point, end: Point, colors: HandlerColors, active: boolean) {
   ctx.beginPath();
-  ctx.lineWidth = redondear(widthFactor * (active ? 1.5 : 1));
+  ctx.lineWidth = redondeo.value(widthFactor * (active ? 1.5 : 1));
   ctx.moveTo(start.x, start.y);
   ctx.lineTo(end.x, end.y);
   ctx.strokeStyle = active ? colors.activeline : colors.line;
@@ -123,34 +125,16 @@ function drawHandlerLine(ctx: Context2D, start: Point, end: Point, colors: Handl
 
 export function pointFromCanvas(point: Point, size: number): Point {
   const ratio = virtualSize / size;
-  return redondearPoint({
-    x: redondear(Math.max(0, Math.min(point.x, size)) * ratio),
-    y: redondear(Math.max(0, Math.min(size - point.y, size)) * ratio),
+  return redondeo.point({
+    x: redondeo.value(Math.max(0, Math.min(point.x, size)) * ratio),
+    y: redondeo.value(Math.max(0, Math.min(size - point.y, size)) * ratio),
   });
 }
 
 export function pointToCanvas(point: Point, size: number): Point {
   const ratio = size / virtualSize;
-  return redondearPoint({
+  return redondeo.point({
     x: Math.max(0, Math.min(point.x, virtualSize)) * ratio,
     y: size - Math.max(0, Math.min(point.y, virtualSize)) * ratio,
   });
 }
-
-export function redondearPoint(point: Point): Point {
-  return {
-    x: redondear(point.x),
-    y: redondear(point.y),
-  };
-}
-
-export function redondear(value: number): number {
-  return Math.round(value);
-}
-interface Context2D
-  extends CanvasPath,
-    CanvasPathDrawingStyles,
-    CanvasDrawPath,
-    CanvasDrawImage,
-    CanvasShadowStyles,
-    CanvasFillStrokeStyles {}

@@ -1,22 +1,20 @@
-const doubleBezierHandlerColors: { light: DoubleHandlerColors; dark: DoubleHandlerColors } = {
+import { DoubleHandler } from "./double-bezier-curve";
+
+const doubleBezierHandlerColors: { light: DoubleHandlersColors; dark: DoubleHandlersColors } = {
   light: {
-    h1: "oklch(0.355 0.146 29)",
-    h2: "oklch(0.377 0.1 247)",
-    h3: "oklch(0.355 0.146 29)",
-    h4: "oklch(0.377 0.1 247)",
-    line: "#305030",
-    activeline: "#008000",
-    shadow: "#202020",
-  } as DoubleHandlerColors,
+    h1: { main: "oklch(0.355 0.146 29)" },
+    h2: { main: "oklch(0.377 0.1 247)" },
+    h3: { main: "oklch(0.355 0.146 29)" },
+    h4: { main: "oklch(0.377 0.1 247)" },
+    common: { line: "#305030", activeline: "#008000", shadow: "#202020" },
+  } as DoubleHandlersColors,
   dark: {
-    h1: "oklch(0.634 0.254 18)",
-    h2: "oklch(0.858 0.146 197)",
-    h3: "oklch(0.634 0.254 18)",
-    h4: "oklch(0.858 0.146 197)",
-    line: "#E0FFE0",
-    activeline: "#80FF80",
-    shadow: "#202020",
-  } as DoubleHandlerColors,
+    h1: { main: "oklch(0.634 0.254 18)" },
+    h2: { main: "oklch(0.858 0.146 197)" },
+    h3: { main: "oklch(0.634 0.254 18)" },
+    h4: { main: "oklch(0.858 0.146 197)" },
+    common: { line: "#E0FFE0", activeline: "#80FF80", shadow: "#202020" },
+  } as DoubleHandlersColors,
 };
 
 const doubleBezierCurveColor: { light: string; dark: string } = {
@@ -35,28 +33,52 @@ const doubleBezierGridColors: { light: DoubleBezierGridColors; dark: DoubleBezie
   } as DoubleBezierGridColors,
 };
 
-export const doubleBezierColorConfig = {
+const doubleBezierColorConfig = {
   handlerColors: doubleBezierHandlerColors,
   curveColor: doubleBezierCurveColor,
   gridColors: doubleBezierGridColors,
 };
 
-export type DoubleBezierColorConfig = {
+type DoubleBezierColorConfig = {
   handlerColors: typeof doubleBezierHandlerColors;
   curveColor: typeof doubleBezierCurveColor;
   gridColors: typeof doubleBezierGridColors;
 };
-export type DoubleHandlerColors = {
-  h1: string;
-  h2: string;
-  h3: string;
-  h4: string;
-  line: string;
-  activeline: string;
-  shadow: string;
+
+type DoubleHandlersColors = {
+  h1: { main: string };
+  h2: { main: string };
+  h3: { main: string };
+  h4: { main: string };
+  common: { line: string; activeline: string; shadow: string };
 };
 
-export type DoubleBezierGridColors = {
+export type DoubleHandlerColors = {
+  main: string;
+  common: { line: string; activeline: string; shadow: string };
+};
+
+type DoubleBezierGridColors = {
   lines: string;
   border: string;
 };
+
+export class DoubleBezierColors {
+  private colors: DoubleBezierColorConfig = doubleBezierColorConfig;
+
+  public handler(handler: DoubleHandler, darkMode: boolean): DoubleHandlerColors {
+    const handlerColors = darkMode ? this.colors.handlerColors.dark : this.colors.handlerColors.light;
+    return {
+      main: handlerColors[handler].main,
+      common: handlerColors.common,
+    };
+  }
+
+  public curve(darkMode: boolean): string {
+    return darkMode ? this.colors.curveColor.dark : this.colors.curveColor.light;
+  }
+
+  public grid(darkMode: boolean): DoubleBezierGridColors {
+    return darkMode ? this.colors.gridColors.dark : this.colors.gridColors.light;
+  }
+}

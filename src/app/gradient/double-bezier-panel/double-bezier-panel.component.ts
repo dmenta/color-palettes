@@ -16,7 +16,8 @@ import { debounceTime, filter, fromEvent, map, merge, Subscription, tap } from "
 import { DoubleGradientStateService } from "../services/double-gradient-state.service";
 import { DoubleHandler, DoubleHandlers } from "./double-bezier-curve";
 import { doubleBezierDrawing } from "./double-bezier-panel-drawing";
-import { doubleBezierColorConfig } from "./double-bezier.draw-colors";
+import { doubleGradientConfig } from "./double-bezier-config";
+import { DoubleBezierColors } from "./double-bezier.draw-colors";
 
 @Component({
   selector: "zz-double-bezier-panel",
@@ -51,7 +52,8 @@ export class DoubleBezierPanelComponent implements AfterViewInit, OnDestroy {
     this.doubleBezier = new doubleBezierDrawing(
       this.canvas!.nativeElement.getContext("bitmaprenderer") as ImageBitmapRenderingContext,
       this.size(),
-      doubleBezierColorConfig
+      new DoubleBezierColors(),
+      doubleGradientConfig
     );
 
     this.mouseMoveSubscription = fromEvent(this.canvas!.nativeElement, "mousemove")
@@ -113,12 +115,12 @@ export class DoubleBezierPanelComponent implements AfterViewInit, OnDestroy {
     if (overHandler === "h3" || overHandler === "h4") {
       this.state.onHandlersChange({
         ...this.state.handlers(),
-        [overHandler]: { x: doubleBezierDrawing.virtualSize * 0.75, y: doubleBezierDrawing.virtualSize * 0.75 },
+        [overHandler]: { x: doubleGradientConfig.virtualSize * 0.75, y: doubleGradientConfig.virtualSize * 0.75 },
       });
     } else {
       this.state.onHandlersChange({
         ...this.state.handlers(),
-        [overHandler]: { x: doubleBezierDrawing.virtualSize * 0.25, y: doubleBezierDrawing.virtualSize * 0.25 },
+        [overHandler]: { x: doubleGradientConfig.virtualSize * 0.25, y: doubleGradientConfig.virtualSize * 0.25 },
       });
     }
   }
@@ -171,7 +173,7 @@ export class DoubleBezierPanelComponent implements AfterViewInit, OnDestroy {
     if (handler === "h1" || handler === "h4") {
       this.state.onHandlersChange({ ...this.state.handlers(), [handler]: point });
     } else {
-      const halfVirtualSize = doubleBezierDrawing.virtualSize / 2;
+      const halfVirtualSize = doubleGradientConfig.virtualSize / 2;
       let deltaY = halfVirtualSize - point.y;
       let deltaX = halfVirtualSize - point.x;
 
@@ -202,7 +204,7 @@ export class DoubleBezierPanelComponent implements AfterViewInit, OnDestroy {
     const coords = this.state.handlers();
     const handlersKeys: DoubleHandler[] = ["h1", "h2", "h3", "h4"];
 
-    const toleranciaBase = (doubleBezierDrawing.handlerRadius / this.size()) * doubleBezierDrawing.virtualSize;
+    const toleranciaBase = (doubleGradientConfig.handlerRadius / this.size()) * doubleGradientConfig.virtualSize;
 
     for (let i = 1; i <= 8; i++) {
       for (let j = 0; j < handlersKeys.length; j++) {
