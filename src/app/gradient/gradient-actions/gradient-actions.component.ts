@@ -30,6 +30,13 @@ export class GradientActionsComponent {
 
   copy() {
     this.copyService.copy(this.state.gradient().gradient, "Gradient  copied!");
+    // this.copyService.copy(
+    //   (this.state as any)
+    //     .points()
+    //     .map((p: Point) => `${p.x.toLocaleString("es-AR")}\t${p.y.toLocaleString("es-AR")}`)
+    //     .join("\r\n"),
+    //   "Points copied!"
+    // );
   }
 
   saveAsImage() {

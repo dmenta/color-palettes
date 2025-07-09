@@ -34,6 +34,26 @@ export function gradientFromPoints(start: ColorValues, end: ColorValues, valores
   } as GradientDefinition;
 }
 
+export function doubleGradientStops(
+  start: ColorValues,
+  center: ColorValues,
+  end: ColorValues,
+  valores: Point[],
+  angleDegrees: number = 0
+) {
+  const halves = Math.floor(valores.length / 2);
+  const first = gradientFromPoints(start, center, valores.slice(0, halves), angleDegrees);
+  const second = gradientFromPoints(center, end, valores.slice(halves), angleDegrees);
+
+  return {
+    stops: [...first.stops.slice(0, -1), ...second.stops.slice(1)], // Avoid duplicating the center stop
+    gradient: gradientString([...first.stops.slice(0, -1), ...second.stops.slice(1)], angleDegrees, "oklch"),
+    darkMode: first.darkMode || second.darkMode,
+    gradientRGB: gradientString([...first.rgbStops.slice(0, -1), ...second.rgbStops.slice(1)], angleDegrees, "srgb"),
+    rgbStops: [...first.rgbStops.slice(0, -1), ...second.rgbStops.slice(1)],
+  };
+}
+
 function chromaVariation(start: ColorValues, end: ColorValues) {
   return { range: end[1]! - start[1]!, delta: start[1]! };
 }
@@ -67,9 +87,9 @@ function indiceValorMedio(valores: Point[]): number {
     .sort((a, b) => a - b);
 
   if (50 - menores[0]! < mayores[0]! - 50) {
-    return menores.length - 1;
+    return Math.min(valores.length - 1, menores.length - 1);
   } else {
-    return menores.length;
+    return Math.min(valores.length - 1, menores.length);
   }
 }
 

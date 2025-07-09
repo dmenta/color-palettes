@@ -2,7 +2,7 @@ import { computed, effect, inject, Injectable, Signal, signal } from "@angular/c
 import { StorageService } from "../../core/service/storage.service";
 import { DoubleGradientStateValues } from "../models/gradient-state-values";
 import { ColorValues } from "../../color/model/colors.model";
-import { GradientDefinition, gradientFromPoints } from "../models/gradient-stops";
+import { doubleGradientStops, GradientDefinition } from "../models/gradient-stops";
 import { toOklch } from "../../color/model/color";
 import { defaultDoubleGradientState } from "../models/default-gradient-state";
 import { DoubleGradientState } from "./gradient-state.model";
@@ -30,6 +30,7 @@ export class DoubleGradientStateService implements DoubleGradientState {
   handlers = signal(this.initialState.handlers);
 
   private startOklch = computed(() => toOklch(this.rgbText(this.startRGBColor())));
+  private centerOklch = computed(() => toOklch(this.rgbText(this.centerRGBColor())));
   private endOklch = computed(() => toOklch(this.rgbText(this.endRGBColor())));
   points = computed(() => bezierCurve.doublePoints(this.handlers(), this.center(), doubleGradientConfig.virtualSize));
 
@@ -37,7 +38,7 @@ export class DoubleGradientStateService implements DoubleGradientState {
   endColor = computed(() => this.oklchText(this.endOklch()));
 
   gradient: Signal<GradientDefinition> = computed(() =>
-    gradientFromPoints(this.startOklch(), this.endOklch(), this.points!(), this.angleDegrees())
+    doubleGradientStops(this.startOklch(), this.centerOklch(), this.endOklch(), this.points!(), this.angleDegrees())
   );
 
   private readonly currentState = computed(() => {

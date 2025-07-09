@@ -19,12 +19,12 @@ export const bezierCurve = {
     steps = Math.max(1, steps);
 
     const x0 = 0;
-    const x1 = redondeo.value((coords.h1.x / sizeX) * 100) + handlersOffsetX;
-    const x2 = redondeo.value((coords.h2.x / sizeX) * 100) + handlersOffsetX;
+    const x1 = redondeo.value(((coords.h1.x + handlersOffsetX) / sizeX) * 100);
+    const x2 = redondeo.value(((coords.h2.x + handlersOffsetX) / sizeX) * 100);
     const x3 = 100;
     const y0 = 0;
-    const y1 = redondeo.value((coords.h1.y / sizeY) * 100) + handlersOffsetY;
-    const y2 = redondeo.value((coords.h2.y / sizeY) * 100) + handlersOffsetY;
+    const y1 = redondeo.value(((coords.h1.y + handlersOffsetY) / sizeY) * 100);
+    const y2 = redondeo.value(((coords.h2.y + handlersOffsetY) / sizeY) * 100);
     const y3 = 100;
     const values: Point[] = [];
     for (let t = 0; t <= steps; t += 1) {
@@ -53,25 +53,30 @@ export const bezierCurve = {
     const virtualCenterY = redondeo.value(center.y);
 
     const scaleAX = virtualCenterX / virtualSize;
-    const scaleAY = virtualCenterY / virtualSize;
-
+    // const scaleAY = virtualCenterY / virtualSize;
+    console.log(
+      "datos",
+      { h1: coords.h3!, h2: coords.h4! },
+      virtualSize - virtualCenterX,
+      virtualSize - virtualCenterY,
+      -virtualCenterX,
+      -virtualCenterY
+    );
     return bezierCurve
-      .points({ h1: coords.h1, h2: coords.h2 }, virtualCenterX, virtualCenterY, 0, 0, scaleAX, scaleAY, 0, 0, 10)
+      .points({ h1: coords.h1, h2: coords.h2 }, virtualCenterX, virtualCenterY, 0, 0, scaleAX, 1, 0, 0, 10)
       .concat(
-        bezierCurve
-          .points(
-            { h1: coords.h3!, h2: coords.h4! },
-            virtualSize - virtualCenterX,
-            virtualSize - virtualCenterY,
-            ((virtualCenterX - virtualSize) / virtualSize) * 100,
-            ((virtualCenterY - virtualSize) / virtualSize) * 100,
-            1 - scaleAX,
-            1 - scaleAY,
-            (virtualCenterX / virtualSize) * 100,
-            (virtualCenterY / virtualSize) * 100,
-            10
-          )
-          .slice(1)
+        bezierCurve.points(
+          { h1: coords.h3!, h2: coords.h4! },
+          virtualSize - virtualCenterX,
+          virtualSize - virtualCenterY,
+          -virtualCenterX,
+          -virtualCenterY,
+          1 - scaleAX,
+          1,
+          (virtualCenterX / virtualSize) * 100,
+          0,
+          10
+        )
       );
   },
 };
