@@ -17,7 +17,7 @@ import { doubleGradientConfig } from "./double-bezier-config";
 import { DoubleBezierColors } from "./double-bezier.draw-colors";
 import { DoubleHandler, DoubleHandlers } from "../models/double-handlers.model";
 import { Point, pointsMatch } from "../models/point.model";
-import { domCommon } from "../common/common-funcs";
+import { domCommon, redondeo } from "../common/common-funcs";
 import { GRADIENT_STATE_TOKEN } from "../services/gradient-state.model";
 
 @Component({
@@ -113,15 +113,25 @@ export class DoubleBezierPanelComponent implements AfterViewInit, OnDestroy {
     if (overHandler === null) {
       return;
     }
+
+    const multiplierBase = {
+      h1: 1,
+      h2: 2,
+      h3: 4,
+      h4: 5,
+    };
+
+    const multipler = redondeo.value((multiplierBase[overHandler] / 6) * doubleGradientConfig.virtualSize);
+
     if (overHandler === "h3" || overHandler === "h4") {
       this.state.onHandlersChange({
         ...this.state.handlers(),
-        [overHandler]: { x: doubleGradientConfig.virtualSize * 0.75, y: doubleGradientConfig.virtualSize * 0.75 },
+        [overHandler]: { x: multipler, y: multipler },
       });
     } else {
       this.state.onHandlersChange({
         ...this.state.handlers(),
-        [overHandler]: { x: doubleGradientConfig.virtualSize * 0.25, y: doubleGradientConfig.virtualSize * 0.25 },
+        [overHandler]: { x: multipler, y: multipler },
       });
     }
   }

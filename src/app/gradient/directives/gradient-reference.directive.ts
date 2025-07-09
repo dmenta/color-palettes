@@ -1,5 +1,5 @@
 import { Directive, inject } from "@angular/core";
-import { GradientStateService } from "../services/gradient-state.service";
+import { GRADIENT_STATE_TOKEN } from "../services/gradient-state.model";
 
 @Directive({
   selector: "[zz-gradient-reference]",
@@ -9,5 +9,5 @@ import { GradientStateService } from "../services/gradient-state.service";
   },
 })
 export class GradientReferenceDirective {
-  state = inject(GradientStateService);
+  state = inject(GRADIENT_STATE_TOKEN);
 }

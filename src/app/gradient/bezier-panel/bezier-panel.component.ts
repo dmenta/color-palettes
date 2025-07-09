@@ -16,7 +16,7 @@ import { debounceTime, filter, fromEvent, map, merge, Subscription, tap } from "
 import { GRADIENT_STATE_TOKEN, GradientHandlersState } from "../services/gradient-state.model";
 import { Handler, Handlers } from "../models/handlers.model";
 import { Point, pointsMatch } from "../models/point.model";
-import { domCommon } from "../common/common-funcs";
+import { domCommon, redondeo } from "../common/common-funcs";
 
 @Component({
   selector: "zz-bezier-panel",
@@ -109,9 +109,10 @@ export class BezierPanelComponent implements AfterViewInit, OnDestroy {
     if (overHandler === null) {
       return;
     }
+    const multiplier = redondeo.value(((overHandler === "h1" ? 1 : 2) / 3) * virtualSize);
     this.state.onHandlersChange({
       ...this.state.handlers(),
-      [overHandler]: { x: virtualSize / 2, y: virtualSize / 2 },
+      [overHandler]: { x: multiplier, y: multiplier },
     });
   }
 

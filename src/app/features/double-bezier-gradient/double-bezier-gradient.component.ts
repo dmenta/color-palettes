@@ -26,7 +26,7 @@ import { GRADIENT_STATE_TOKEN } from "../../gradient/services/gradient-state.mod
   providers: [{ provide: GRADIENT_STATE_TOKEN, useExisting: DoubleGradientStateService }],
 })
 export class DoubleBezierGradientComponent {
-  state = inject(DoubleGradientStateService);
+  state = inject(GRADIENT_STATE_TOKEN);
   bezierSize = 280;
   compassSize = 130;
 
