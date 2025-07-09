@@ -11,28 +11,29 @@ import {
   signal,
   ViewChild,
 } from "@angular/core";
-import { Handler, Handlers, Point, pointsMatch } from "../models/bezier-curve";
-import { drawBezierPanel, pointFromCanvas, pointToCanvas } from "./bezier-panel-drawing";
-import { GradientStateService } from "../services/gradient-state.service";
+import { Point, pointsMatch } from "../models/bezier-curve";
 import { debounceTime, filter, fromEvent, map, merge, Subscription, tap } from "rxjs";
+import { DoubleGradientStateService } from "../services/double-gradient-state.service";
+import { DoubleHandler, DoubleHandlers } from "./double-bezier-curve";
+import { drawDoubleBezierPanel, pointFromCanvas, pointToCanvas, virtualSize } from "./double-bezier-panel-drawing";
 
 @Component({
-  selector: "zz-bezier-panel",
+  selector: "zz-double-bezier-panel",
   imports: [],
-  templateUrl: "./bezier-panel.component.html",
+  templateUrl: "./double-bezier-panel.component.html",
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BezierPanelComponent implements AfterViewInit, OnDestroy {
+export class DoubleBezierPanelComponent implements AfterViewInit, OnDestroy {
   private mouseMoveSubscription: Subscription | null = null;
   private moveSubscription: Subscription | null = null;
   private startSubscription: Subscription | null = null;
   private removeDocumentClickListenerFn: (() => void) | null = null;
   private removeDocumentTouchEndListenerFn: (() => void) | null = null;
 
-  private state = inject(GradientStateService);
+  private state = inject(DoubleGradientStateService);
 
-  overHandler = signal<Handler | null>(null);
-  currentHandler = signal<Handler | null>(null);
+  overHandler = signal<DoubleHandler | null>(null);
+  currentHandler = signal<DoubleHandler | null>(null);
   size = input(200);
   darkMode = input(false);
 
@@ -104,7 +105,11 @@ export class BezierPanelComponent implements AfterViewInit, OnDestroy {
     if (overHandler === null) {
       return;
     }
-    this.state.onHandlersChange({ ...this.state.handlers(), [overHandler]: { x: 50, y: 50 } });
+    if (overHandler === "h3" || overHandler === "h4") {
+      this.state.onHandlersChange({ ...this.state.handlers(), [overHandler]: { x: 150, y: 150 } });
+    } else {
+      this.state.onHandlersChange({ ...this.state.handlers(), [overHandler]: { x: 50, y: 50 } });
+    }
   }
 
   onGrabHandler(event: TouchEvent | MouseEvent) {
@@ -141,7 +146,7 @@ export class BezierPanelComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  private setHandlerSelected(handler: Handler) {
+  private setHandlerSelected(handler: DoubleHandler) {
     this.setListeners();
 
     this.currentHandler.set(handler);
@@ -152,17 +157,48 @@ export class BezierPanelComponent implements AfterViewInit, OnDestroy {
     if (handler === null) {
       return;
     }
+    if (handler === "h1" || handler === "h4") {
+      this.state.onHandlersChange({ ...this.state.handlers(), [handler]: point });
+    } else {
+      const halfVirtualSize = virtualSize / 2;
+      let deltaY = halfVirtualSize - point.y;
+      let deltaX = halfVirtualSize - point.x;
 
-    this.state.onHandlersChange({ ...this.state.handlers(), [handler]: point });
+      deltaY = Math.abs(deltaY) < 0.25 ? Math.sign(deltaY) * 0.25 : deltaY;
+      deltaX = Math.abs(deltaX) < 0.25 ? Math.sign(deltaX) * 0.25 : deltaX;
+
+      const hMoving = Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
+
+      const opposite = handler === "h2" ? "h3" : "h2";
+
+      const hOpposite = Math.sqrt(
+        Math.pow(this.state.handlers()[opposite].x - halfVirtualSize, 2) +
+          Math.pow(this.state.handlers()[opposite].y - halfVirtualSize, 2)
+      );
+
+      const normalizedX = -Math.round((deltaX / hMoving) * hOpposite);
+      const normalizedY = -Math.round((deltaY / hMoving) * hOpposite);
+
+      this.state.onHandlersChange({
+        ...this.state.handlers(),
+        [handler]: { x: Math.round(point.x), y: Math.round(point.y) },
+        [opposite]: { x: halfVirtualSize - normalizedX, y: halfVirtualSize - normalizedY },
+      });
+    }
   }
 
-  private isOverHandler(point: Point): Handler | null {
+  private isOverHandler(point: Point): DoubleHandler | null {
     const coords = this.state.handlers();
 
-    if (pointsMatch(point, coords.h1, 12)) {
+    if (pointsMatch(point, coords.h1, (12 / 200) * virtualSize)) {
       return "h1";
-    } else if (pointsMatch(point, coords.h2, 12)) {
+    } else if (pointsMatch(point, coords.h2, (12 / 200) * virtualSize)) {
       return "h2";
+    }
+    if (pointsMatch(point, coords.h3, (12 / 200) * virtualSize)) {
+      return "h3";
+    } else if (pointsMatch(point, coords.h4, (12 / 200) * virtualSize)) {
+      return "h4";
     }
     return null;
   }
@@ -175,8 +211,8 @@ export class BezierPanelComponent implements AfterViewInit, OnDestroy {
   }
 
   private dibujar(
-    coords: Handlers,
-    active: Handler | null = this.currentHandler(),
+    coords: DoubleHandlers,
+    active: DoubleHandler | null = this.currentHandler(),
     size: number = this.size(),
     mode: boolean = this.darkMode()
   ) {
@@ -190,15 +226,17 @@ export class BezierPanelComponent implements AfterViewInit, OnDestroy {
     const ctx = this.canvasContext!;
 
     requestAnimationFrame(() => {
-      drawBezierPanel(ctx, coords, size, active, mode);
+      drawDoubleBezierPanel(ctx, coords, size, active, mode);
     });
   }
 
-  private handlersToCanvas(handlers: Handlers): Handlers {
+  private handlersToCanvas(handlers: DoubleHandlers): DoubleHandlers {
     return {
       h1: pointToCanvas(handlers.h1, this.size()),
       h2: pointToCanvas(handlers.h2, this.size()),
-    } as Handlers;
+      h3: pointToCanvas(handlers.h3, this.size()),
+      h4: pointToCanvas(handlers.h4, this.size()),
+    } as DoubleHandlers;
   }
 
   private pointFromEvent(event: MouseEvent | TouchEvent): Point {

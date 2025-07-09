@@ -10,10 +10,19 @@ export const routes: Routes = [
   { path: "palettes", redirectTo: "", pathMatch: "full" },
 
   {
-    path: "",
+    path: "gradients",
     title: "Colorina - Gradients",
     loadComponent: () =>
       import("./features/gradients/bezier-gradient.component").then((m) => m.BezierGradientComponent),
+  },
+
+  {
+    path: "",
+    title: "Colorina - Double Gradients",
+    loadComponent: () =>
+      import("./features/double-bezier-gradient/double-bezier-gradient.component").then(
+        (m) => m.DoubleBezierGradientComponent
+      ),
   },
 
   { path: "**", redirectTo: "" },

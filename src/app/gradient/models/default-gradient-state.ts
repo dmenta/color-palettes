@@ -1,5 +1,5 @@
 import { ColorValues } from "../../color/model/colors.model";
-import { GradientStateValues } from "./gradient-state-values";
+import { DoubleGradientStateValues, GradientStateValues } from "./gradient-state-values";
 
 export const defaultGradientState: GradientStateValues = {
   colors: {
@@ -9,6 +9,22 @@ export const defaultGradientState: GradientStateValues = {
   handlers: {
     h1: { x: 3.4, y: 60 },
     h2: { x: 20, y: 96.8 },
+  },
+  angle: 0,
+};
+
+export const defaultDoubleGradientState: DoubleGradientStateValues = {
+  colors: {
+    start: [249, 147, 52] as ColorValues,
+    center: [249, 147, 52] as ColorValues,
+    end: [7, 10, 95] as ColorValues,
+  },
+  center: { x: 0, y: 0 },
+  handlers: {
+    h1: { x: 250, y: 200 },
+    h2: { x: 350, y: 400 },
+    h3: { x: 1200, y: 1200 },
+    h4: { x: 1700, y: 1700 },
   },
   angle: 0,
 };

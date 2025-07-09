@@ -1,0 +1,12 @@
+<div>
+  <canvas
+    id="canvas"
+    (dblclick)="onDoubleClick($event)"
+    #canvas
+    [width]="size()"
+    [class.cursor-grab]="overHandler() !== null"
+    [class.cursor-grabbing]="currentHandler() !== null"
+    [height]="size()"
+    [style.padding.px]="size() / 20"
+    class="bg-gris-500/20 rounded-lg"></canvas>
+</div>
