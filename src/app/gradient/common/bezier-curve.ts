@@ -25,17 +25,14 @@ export const bezierCurve = {
     for (let t = 0; t <= steps; t += 1) {
       const tNorm = t / steps;
       const tInvert = (steps - t) / steps;
-      const x =
-        Math.pow(tInvert, 3) * x0 +
-        3 * Math.pow(tInvert, 2) * tNorm * x1 +
-        3 * tInvert * Math.pow(tNorm, 2) * x2 +
-        Math.pow(tNorm, 3) * x3;
 
-      const y =
-        Math.pow(tInvert, 3) * y0 +
-        3 * Math.pow(tInvert, 2) * tNorm * y1 +
-        3 * (1 - tNorm) * Math.pow(tNorm, 2) * y2 +
-        Math.pow(tNorm, 3) * y3;
+      const factorVal0 = Math.pow(tInvert, 3);
+      const factorVal1 = 3 * Math.pow(tInvert, 2) * tNorm;
+      const factorVal2 = 3 * tInvert * Math.pow(tNorm, 2);
+      const factorVal3 = Math.pow(tNorm, 3);
+
+      const x = factorVal0 * x0 + factorVal1 * x1 + factorVal2 * x2 + factorVal3 * x3;
+      const y = factorVal0 * y0 + factorVal1 * y1 + factorVal2 * y2 + factorVal3 * y3;
 
       values.push({
         x: redondeo.bezierCoord(x * outputScale) + ouputOffset,
