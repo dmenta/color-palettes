@@ -11,10 +11,11 @@ import {
   signal,
   ViewChild,
 } from "@angular/core";
-import { Handler, Handlers, Point, pointsMatch } from "../models/bezier-curve";
 import { drawBezierPanel, handlerRadius, pointFromCanvas, pointToCanvas, virtualSize } from "./bezier-panel-drawing";
 import { debounceTime, filter, fromEvent, map, merge, Subscription, tap } from "rxjs";
 import { GRADIENT_STATE_TOKEN, GradientHandlersState } from "../services/gradient-state.model";
+import { Handler, Handlers } from "../models/handlers.model";
+import { Point, pointsMatch } from "../models/point.model";
 
 @Component({
   selector: "zz-bezier-panel",

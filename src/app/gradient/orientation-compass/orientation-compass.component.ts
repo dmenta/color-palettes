@@ -11,11 +11,12 @@ import {
   signal,
   ViewChild,
 } from "@angular/core";
-import { Point, pointFromEvent, pointsMatch } from "../models/bezier-curve";
+import { pointFromEvent } from "../models/orientacion-curve";
 import { drawCompass } from "./compass-drawing";
 import { debounceTime, distinctUntilChanged, filter, fromEvent, map, merge, Subscription, tap } from "rxjs";
 import { ensureAngleInRange, isInsideCircle } from "./circle-operations";
 import { GRADIENT_STATE_TOKEN, GradientOrientationState } from "../services/gradient-state.model";
+import { Point, pointsMatch } from "../models/point.model";
 
 @Component({
   selector: "zz-orientation-compass",

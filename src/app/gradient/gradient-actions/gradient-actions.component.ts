@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, HostListener, inject } from "@angular/core";
 import { CopyService } from "../../core/service/copy.service";
-import { gradientToImage, gradientToSVG } from "../models/gradient-points";
+import { gradientToImage, gradientToSVG } from "../models/gradient-stops";
 import { GRADIENT_STATE_TOKEN, GradientState } from "../services/gradient-state.model";
 
 @Component({

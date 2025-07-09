@@ -1,18 +1,9 @@
-import { Point } from "../double-bezier-panel/double-bezier-curve";
+import { Point } from "../models/point.model";
 
 export const redondeo = {
-  point: (point: Point): Point => {
-    return {
-      x: redondeo.value(point.x),
-      y: redondeo.value(point.y),
-    };
-  },
+  value: (value: number) => Math.round(value),
 
-  value: (value: number): number => {
-    return Math.round(value);
-  },
+  point: (point: Point) => ({ x: redondeo.value(point.x), y: redondeo.value(point.y) }),
 
-  bezierCoord: (value: number): number => {
-    return Math.round(value * 100) / 100;
-  },
+  bezierCoord: (value: number): number => Math.round(value * 100) / 100,
 };

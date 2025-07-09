@@ -1,6 +1,6 @@
 import { toContrast, toRgb } from "../../color/model/color";
 import { ColorValues } from "../../color/model/colors.model";
-import { Point } from "./bezier-curve";
+import { Point } from "./point.model";
 
 export function gradientFromPoints(start: ColorValues, end: ColorValues, valores: Point[], angleDegrees: number = 0) {
   const lVariation = lightnessVariation(start, end);

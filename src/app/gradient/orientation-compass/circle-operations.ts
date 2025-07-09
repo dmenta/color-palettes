@@ -1,4 +1,4 @@
-import { Point } from "../models/bezier-curve";
+import { Point } from "../models/point.model";
 
 /**
  *

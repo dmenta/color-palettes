@@ -1,4 +1,4 @@
-import { DoubleHandler } from "./double-bezier-curve";
+import { DoubleHandler } from "../models/double-handlers.model";
 
 const doubleBezierHandlerColors: { light: DoubleHandlersColors; dark: DoubleHandlersColors } = {
   light: {

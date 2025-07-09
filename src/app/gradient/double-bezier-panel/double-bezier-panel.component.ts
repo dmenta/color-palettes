@@ -11,13 +11,13 @@ import {
   signal,
   ViewChild,
 } from "@angular/core";
-import { Point, pointsMatch } from "../models/bezier-curve";
 import { debounceTime, filter, fromEvent, map, merge, Subscription, tap } from "rxjs";
 import { DoubleGradientStateService } from "../services/double-gradient-state.service";
-import { DoubleHandler, DoubleHandlers } from "./double-bezier-curve";
 import { doubleBezierDrawing } from "./double-bezier-panel-drawing";
 import { doubleGradientConfig } from "./double-bezier-config";
 import { DoubleBezierColors } from "./double-bezier.draw-colors";
+import { DoubleHandler, DoubleHandlers } from "../models/double-handlers.model";
+import { Point, pointsMatch } from "../models/point.model";
 
 @Component({
   selector: "zz-double-bezier-panel",

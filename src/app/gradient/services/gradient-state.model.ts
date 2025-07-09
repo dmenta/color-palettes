@@ -1,8 +1,8 @@
 import { InjectionToken, Signal } from "@angular/core";
 import { ColorValues } from "../../color/model/colors.model";
-import { DoubleHandlers } from "../double-bezier-panel/double-bezier-curve";
-import { Handlers } from "../models/bezier-curve";
-import { GradientDefinition } from "../models/gradient-points";
+import { GradientDefinition } from "../models/gradient-stops";
+import { Handlers } from "../models/handlers.model";
+import { DoubleHandlers } from "../models/double-handlers.model";
 
 export const GRADIENT_STATE_TOKEN = new InjectionToken<GradientState>("GRADIENT_STATE");
 export interface GradientOrientationState {

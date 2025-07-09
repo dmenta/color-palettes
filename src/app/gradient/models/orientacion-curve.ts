@@ -1,4 +1,4 @@
-import { Point } from "../models/point.model";
+import { Point } from "./point.model";
 
 export function pointFromEvent(event: MouseEvent | TouchEvent, el: HTMLElement): Point {
   if (!el) {

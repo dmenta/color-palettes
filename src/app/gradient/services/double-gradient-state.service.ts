@@ -2,13 +2,14 @@ import { computed, effect, inject, Injectable, Signal, signal } from "@angular/c
 import { StorageService } from "../../core/service/storage.service";
 import { DoubleGradientStateValues } from "../models/gradient-state-values";
 import { ColorValues } from "../../color/model/colors.model";
-import { Point } from "../models/bezier-curve";
-import { GradientDefinition, gradientFromPoints } from "../models/gradient-points";
+import { GradientDefinition, gradientFromPoints } from "../models/gradient-stops";
 import { toOklch } from "../../color/model/color";
 import { defaultDoubleGradientState } from "../models/default-gradient-state";
-import { doubleBezierPoints, DoubleHandlers } from "../double-bezier-panel/double-bezier-curve";
 import { GradientHandlers, GradientState } from "./gradient-state.model";
 import { doubleGradientConfig } from "../double-bezier-panel/double-bezier-config";
+import { Point } from "../models/point.model";
+import { bezierCurve } from "../common/bezier-curve";
+import { DoubleHandlers } from "../models/double-handlers.model";
 
 @Injectable({
   providedIn: "root",
@@ -30,7 +31,7 @@ export class DoubleGradientStateService implements GradientState {
 
   private startOklch = computed(() => toOklch(this.rgbText(this.startRGBColor())));
   private endOklch = computed(() => toOklch(this.rgbText(this.endRGBColor())));
-  points = computed(() => doubleBezierPoints(this.handlers(), doubleGradientConfig.virtualSize));
+  points = computed(() => bezierCurve.doublePoints(this.handlers(), doubleGradientConfig.virtualSize));
 
   startColor = computed(() => this.oklchText(this.startOklch()));
   endColor = computed(() => this.oklchText(this.endOklch()));

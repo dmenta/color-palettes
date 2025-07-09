@@ -1,6 +1,7 @@
 import { ColorValues } from "../../color/model/colors.model";
-import { DoubleHandlers } from "../double-bezier-panel/double-bezier-curve";
-import { Handlers, Point } from "./bezier-curve";
+import { DoubleHandlers } from "./double-handlers.model";
+import { Handlers } from "./handlers.model";
+import { Point } from "./point.model";
 
 export type GradientStateValues = {
   colors: {

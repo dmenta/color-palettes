@@ -1,9 +1,9 @@
-import { Point } from "../models/bezier-curve";
 import { DoubleBezierColors, DoubleHandlerColors } from "./double-bezier.draw-colors";
-import { DoubleHandler, DoubleHandlers } from "./double-bezier-curve";
 import { redondeo } from "../common/common-funcs";
 import { Context2D } from "../models/context-2d";
 import { DoubleGradientConfig } from "./double-bezier-config";
+import { Point } from "../models/point.model";
+import { DoubleHandler, DoubleHandlers } from "../models/double-handlers.model";
 
 export class doubleBezierDrawing {
   private readonly ctx: Context2D;
