@@ -175,7 +175,7 @@ export class OrientationCompassComponent {
       return null;
     }
     for (const preset of this.presetAngles) {
-      if (pointsMatch(preset.point, point, 10)) {
+      if (pointsMatch(preset.point, point, 14)) {
         if (preset.angle !== this.anglesInDegrees()) {
           return preset.angle;
         } else {
@@ -277,7 +277,7 @@ export class OrientationCompassComponent {
     const ctx = this.canvasContext!;
 
     requestAnimationFrame(() => {
-      drawCompass(ctx, angleDegrees, size, this.radioSizeRatio, this.presetSizeRatio, overPreset, active, darkMode);
+      drawCompass(ctx, angleDegrees, size, overPreset, active, darkMode);
     });
   }
 

@@ -1,11 +1,14 @@
+import { redondeo } from "../common/common-funcs";
 import { compassArrowColors, compassGridColors } from "./compass-colors";
+
+export const virtualSize = 2000;
+export const gridRadioSizeRatio: number = 0.7;
+export const presetSizeRatio: number = 0.9;
 
 export function drawCompass(
   ctx: ImageBitmapRenderingContext,
   angleDeg: number,
   diameter: number = 100,
-  gridRadioSizeRatio: number = 0.84,
-  presetSizeRatio: number = 0.9,
   presetHover: number | null = null,
   active: boolean = false,
   darkMode: boolean = false
@@ -17,9 +20,34 @@ export function drawCompass(
     return;
   }
 
-  drawGrid(offCtx, diameter, gridRadioSizeRatio, presetSizeRatio, presetHover, angleDeg, darkMode);
+  const ratio = diameter / virtualSize;
+  const radio = virtualSize / 2;
 
-  drawArrow(offCtx, angleDeg, diameter, gridRadioSizeRatio, active, darkMode);
+  const parametros = {
+    diameter,
+    ratio: ratio,
+    radio: virtualSize / 2,
+    gridRadio: gridRadioSizeRatio * radio,
+    center: redondeo.value(ratio * radio),
+    presetSize: presetSizeRatio * radio,
+    virtualSize,
+  };
+
+  const size = parametros.gridRadio * 0.95;
+  const arrowOverflowValue = (arrowOverflow / parametros.diameter) * parametros.virtualSize;
+
+  const paramsArrow = {
+    size,
+    arrowInsetValue: (arrowInset / parametros.diameter) * parametros.virtualSize,
+    arrowOverflowValue: arrowOverflowValue,
+    arrowWideValue: (arrowWide / parametros.diameter) * parametros.virtualSize,
+    arrowTipBase: size - (arrowLength / parametros.diameter) * parametros.virtualSize + arrowOverflowValue,
+    arrowTip: size + arrowOverflowValue,
+  };
+
+  drawGrid(offCtx, parametros, presetHover, angleDeg, darkMode);
+
+  drawArrow(offCtx, angleDeg, parametros, paramsArrow, active, darkMode);
 
   const image = offscreenCanvas.transferToImageBitmap();
   ctx.transferFromImageBitmap(image);
@@ -27,35 +55,47 @@ export function drawCompass(
 
 function drawGrid(
   ctx: OffscreenCanvasRenderingContext2D,
-  diameter: number,
-  gridRadioSizeRatio: number = 0.84,
-  presetSizeRatio: number = 0.9,
+  parametros: ParametrosCompass,
   presetHover: number | null = null,
   angleDeg: number = 0,
   darkMode: boolean
 ) {
-  const radio = Math.round(diameter / 2);
-
   ctx.beginPath();
-  ctx.arc(radio, radio, Math.round(radio * gridRadioSizeRatio), 0, Math.PI * 2);
+  ctx.arc(
+    parametros.center,
+    parametros.center,
+    redondeo.value(parametros.ratio * parametros.gridRadio),
+    0,
+    Math.PI * 2
+  );
   ctx.lineWidth = 1;
   ctx.fillStyle = "#7A736E33";
   ctx.fill();
   ctx.setLineDash([]);
   ctx.strokeStyle = "transparent";
 
-  const size = Math.round(gridRadioSizeRatio * radio);
-
   const colors = compassGridColors(darkMode);
   ctx.beginPath();
-  ctx.arc(radio, radio, size, 0, Math.PI * 2);
-  ctx.moveTo(radio, radio);
+  ctx.arc(
+    parametros.center,
+    parametros.center,
+    redondeo.value(parametros.ratio * parametros.gridRadio),
+    0,
+    Math.PI * 2
+  );
+  ctx.moveTo(parametros.center, parametros.center);
   ctx.strokeStyle = colors.border;
   ctx.lineWidth = 1;
   ctx.stroke();
 
   ctx.beginPath();
-  ctx.arc(radio, radio, Math.round(size * 0.2), 0, Math.PI * 2);
+  ctx.arc(
+    parametros.center,
+    parametros.center,
+    redondeo.value(parametros.ratio * parametros.gridRadio * 0.2),
+    0,
+    Math.PI * 2
+  );
   ctx.lineWidth = 1;
   ctx.strokeStyle = colors.lines;
   ctx.stroke();
@@ -65,16 +105,16 @@ function drawGrid(
     const angle = ((Math.PI * 2) / 8) * i;
     const cosenoBase = Math.cos(angle);
     const senoBase = Math.sin(angle);
-    const deltaX = cosenoBase * size * 1.1;
-    const deltaY = senoBase * size * 1.1;
-    const x0 = Math.round(deltaX + radio);
-    const y0 = Math.round(deltaY + radio);
-    const x1 = Math.round(deltaX * 0.75 + radio);
-    const y1 = Math.round(deltaY * 0.75 + radio);
+    const deltaX = parametros.gridRadio * cosenoBase * 1.1;
+    const deltaY = parametros.gridRadio * senoBase * 1.1;
+    const x0 = deltaX + parametros.radio;
+    const y0 = deltaY + parametros.radio;
+    const x1 = deltaX * 0.75 + parametros.radio;
+    const y1 = deltaY * 0.75 + parametros.radio;
 
     ctx.beginPath();
-    ctx.moveTo(x0, y0);
-    ctx.lineTo(x1, y1);
+    ctx.moveTo(redondeo.value(parametros.ratio * x0), redondeo.value(parametros.ratio * y0));
+    ctx.lineTo(redondeo.value(parametros.ratio * x1), redondeo.value(parametros.ratio * y1));
     ctx.lineWidth = 1;
     ctx.stroke();
 
@@ -82,10 +122,14 @@ function drawGrid(
     const markActive = angleDeg === currAngleDeg;
     const markHover = !markActive && presetHover !== null && presetHover === currAngleDeg;
     const color = markActive ? colors.activePreset : markHover ? colors.presetHover : colors.preset;
+
+    const presetCenterX = cosenoBase * parametros.presetSize + parametros.radio;
+    const presetCenterY = senoBase * parametros.presetSize + parametros.radio;
+
     ctx.beginPath();
     ctx.arc(
-      Math.round(cosenoBase * radio * presetSizeRatio + radio),
-      Math.round(senoBase * radio * presetSizeRatio + radio),
+      redondeo.value(parametros.ratio * presetCenterX),
+      redondeo.value(parametros.ratio * presetCenterY),
       4,
       0,
       Math.PI * 2
@@ -103,18 +147,15 @@ const arrowInset = -3;
 export function drawArrow(
   ctx: OffscreenCanvasRenderingContext2D,
   angleDegress: number,
-  diameter: number,
-  gridRadioSizeRatio: number = 0.84,
+  parametros: ParametrosCompass,
+  paramsArrow: ParametrosArrow,
   active: boolean,
   darkMode: boolean
 ) {
   const colors = compassArrowColors(darkMode);
-  const radio = Math.round(diameter / 2);
-  const size = Math.round(gridRadioSizeRatio * radio * 0.95);
 
-  ctx.translate(radio, radio);
+  ctx.translate(parametros.center, parametros.center);
   ctx.rotate(((angleDegress - 180) * Math.PI) / 180);
-  const y0 = size;
 
   if (active) {
     ctx.shadowColor = !darkMode ? "#606060" : "#303030";
@@ -124,7 +165,7 @@ export function drawArrow(
   }
 
   ctx.beginPath();
-  ctx.moveTo(0, y0);
+  ctx.moveTo(0, redondeo.value(parametros.ratio * paramsArrow.size));
   ctx.lineTo(0, 0);
   ctx.strokeStyle = colors.lines;
   ctx.lineWidth = 2;
@@ -142,10 +183,16 @@ export function drawArrow(
   ctx.stroke();
 
   ctx.beginPath();
-  ctx.moveTo(0, size + arrowOverflow);
-  ctx.lineTo(-arrowWide, size - arrowLength + arrowOverflow);
-  ctx.lineTo(0, size - arrowLength + arrowOverflow + arrowInset);
-  ctx.lineTo(arrowWide, size - arrowLength + arrowOverflow);
+  ctx.moveTo(0, redondeo.value(parametros.ratio * paramsArrow.arrowTip));
+  ctx.lineTo(
+    redondeo.value(parametros.ratio * -paramsArrow.arrowWideValue),
+    redondeo.value(parametros.ratio * paramsArrow.arrowTipBase)
+  );
+  ctx.lineTo(0, redondeo.value(parametros.ratio * (paramsArrow.arrowTipBase + paramsArrow.arrowInsetValue)));
+  ctx.lineTo(
+    redondeo.value(parametros.ratio * paramsArrow.arrowWideValue),
+    redondeo.value(parametros.ratio * paramsArrow.arrowTipBase)
+  );
   ctx.fillStyle = colors.tip;
   ctx.closePath();
   ctx.fill();
@@ -159,3 +206,22 @@ export function drawArrow(
 
   ctx.setTransform(1, 0, 0, 1, 0, 0);
 }
+
+type ParametrosCompass = {
+  diameter: number;
+  ratio: number;
+  radio: number;
+  gridRadio: number;
+  center: number;
+  presetSize: number;
+  virtualSize: number;
+};
+
+type ParametrosArrow = {
+  size: number;
+  arrowInsetValue: number;
+  arrowOverflowValue: number;
+  arrowWideValue: number;
+  arrowTipBase: number;
+  arrowTip: number;
+};
