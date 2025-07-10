@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, HostListener, inject } from "@angul
 import { CopyService } from "../../core/service/copy.service";
 import { gradientToImage, gradientToSVG } from "../models/gradient-stops";
 import { GRADIENT_STATE_TOKEN, GradientState } from "../services/gradient-state.model";
+import { rgbToHex } from "../../color/model/color";
 
 @Component({
   selector: "zz-gradient-actions",
@@ -40,7 +41,13 @@ export class GradientActionsComponent {
   }
 
   saveAsImage() {
-    gradientToImage(this.state.gradient().rgbStops, this.state.angleDegrees(), this.displayDimensions());
+    const start = this.state.startRGBColor();
+    const end = this.state.endRGBColor();
+    const angleDegrees = this.state.angleDegrees();
+    const name = `${rgbToHex(start)}_${rgbToHex(end)}_${angleDegrees}deg_${this.displayDimensions().width}x${
+      this.displayDimensions().height
+    }`;
+    gradientToImage(this.state.gradient().rgbStops, this.state.angleDegrees(), this.displayDimensions(), name);
   }
 
   saveSVG() {

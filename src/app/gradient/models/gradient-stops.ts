@@ -98,8 +98,10 @@ const baseDate = new Date(2025, 0, 1).valueOf();
 export function gradientToImage(
   stops: GradientStop[],
   angleDegrees: number = 0,
-  dimensions: { width: number; height: number } = { width: 1920, height: 1080 }
+  dimensions: { width: number; height: number } = { width: 1920, height: 1080 },
+  name: string = ""
 ) {
+  name = encodeURI(name.trim());
   const canvas = document.createElement("canvas");
   canvas.width = dimensions.width;
   canvas.height = dimensions.height;
@@ -126,7 +128,7 @@ export function gradientToImage(
   const createEl = document.createElement("a");
   const url = canvas.toDataURL("image/png", 1);
   createEl.href = url;
-  createEl.download = `colorina-gradient-${new Date().valueOf() - baseDate}.png`;
+  createEl.download = `colorina-gradient-${name}${name.length > 0 ? "-" : ""}${new Date().valueOf() - baseDate}.png`;
   createEl.click();
   createEl.remove();
 }
