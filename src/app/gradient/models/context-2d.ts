@@ -5,4 +5,6 @@ export interface Context2D
     CanvasDrawPath,
     CanvasDrawImage,
     CanvasShadowStyles,
+    CanvasState,
+    CanvasTransform,
     CanvasFillStrokeStyles {}

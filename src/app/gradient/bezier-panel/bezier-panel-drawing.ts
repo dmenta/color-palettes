@@ -33,23 +33,24 @@ export function drawBezierPanel(
   const origin = redondeo.point({ x: 0, y: size });
   const end = redondeo.point({ x: size, y: 0 });
 
-  const vertice = {
-    h1: origin,
-    h2: end,
-  };
+  if (active !== "h2") {
+    drawHandler(offCtx, end, coords.h2, handlersColors, "h2");
+  }
+  if (active !== "h1") {
+    drawHandler(offCtx, origin, coords.h1, handlersColors, "h1");
+  }
+  if (active !== null) {
+    drawActiveHandlerSlim(offCtx, active === "h1" ? origin : end, coords[active], handlersColors, active);
+  }
 
-  const ultimo = active ?? "h1";
-  const primero = ultimo === "h2" ? "h1" : "h2";
-
-  drawHandler(offCtx, vertice[primero], coords[primero], handlersColors, primero, false);
-  drawHandler(offCtx, vertice[ultimo], coords[ultimo], handlersColors, ultimo, active === ultimo);
-
+  offCtx.save();
   offCtx.beginPath();
   offCtx.moveTo(origin.x, origin.y);
   offCtx.strokeStyle = colorCurve;
   offCtx.bezierCurveTo(coords.h1.x, coords.h1.y, coords.h2.x, coords.h2.y, end.x, end.y);
   offCtx.lineWidth = widthFactor * (active !== null ? 3 : 2);
   offCtx.stroke();
+  offCtx.restore();
 
   const bitmapOne = offscreen.transferToImageBitmap();
   (ctx as ImageBitmapRenderingContext).transferFromImageBitmap(bitmapOne);
@@ -59,69 +60,75 @@ function drawGrid(ctx: Context2D, size: number, darkMode: boolean) {
   const colors = bezierGridColors(darkMode);
 
   const ratio = size / virtualSize;
+  const gridSpacing = virtualSize / gridLines;
 
+  ctx.save();
+  ctx.beginPath();
+
+  for (let i = 1; i < gridLines; i++) {
+    const posicion = redondeo.value(i * gridSpacing * ratio);
+    ctx.moveTo(0, posicion);
+    ctx.lineTo(size, posicion);
+    ctx.moveTo(posicion, 0);
+    ctx.lineTo(posicion, size);
+  }
+
+  ctx.setLineDash([1, 3]);
+  ctx.strokeStyle = colors.lines;
+  ctx.lineWidth = redondeo.value(widthFactor * 0.5);
+  ctx.stroke();
+  ctx.restore();
+
+  ctx.save();
   ctx.beginPath();
   ctx.rect(0, 0, redondeo.value(ratio * virtualSize), redondeo.value(ratio * virtualSize));
   ctx.strokeStyle = colors.border;
   ctx.lineWidth = redondeo.value(widthFactor * 1);
   ctx.stroke();
-
-  ctx.strokeStyle = colors.lines;
-
-  ctx.setLineDash([1, 3]);
-
-  const gridSpacing = virtualSize / gridLines;
-
-  for (let i = virtualSize / gridLines; i < virtualSize; i += gridSpacing) {
-    ctx.beginPath();
-    ctx.moveTo(0, redondeo.value(i * ratio));
-    ctx.lineTo(size, redondeo.value(i * ratio));
-    ctx.lineWidth = redondeo.value(widthFactor * 0.5);
-    ctx.stroke();
-
-    ctx.beginPath();
-    ctx.moveTo(redondeo.value(i * ratio), 0);
-    ctx.lineTo(redondeo.value(i * ratio), size);
-    ctx.lineWidth = redondeo.value(widthFactor * 0.5);
-    ctx.stroke();
-  }
-  ctx.setLineDash([]);
+  ctx.restore();
 }
 
-function drawHandler(ctx: Context2D, start: Point, end: Point, colors: HandlerColors, name: Handler, active: boolean) {
-  drawHandlerLine(ctx, start, end, colors, active);
+function drawHandler(ctx: Context2D, start: Point, end: Point, colors: HandlerColors, name: Handler) {
+  ctx.save();
+  ctx.beginPath();
+  ctx.lineWidth = redondeo.value(widthFactor);
+  ctx.moveTo(start.x, start.y);
+  ctx.lineTo(end.x, end.y);
+  ctx.strokeStyle = colors.line;
+  ctx.stroke();
 
   ctx.beginPath();
   ctx.arc(end.x, end.y, handlerRadius, 0, Math.PI * 2);
   ctx.fillStyle = colors[name];
   ctx.fill();
-  if (active) {
-    drawHandlerActive(ctx, end, colors, name);
-  }
+  ctx.restore();
 }
-function drawHandlerActive(ctx: Context2D, point: Point, colors: HandlerColors, name: Handler) {
-  // Shadow
+
+function drawActiveHandlerSlim(ctx: Context2D, origin: Point, point: Point, colors: HandlerColors, name: Handler) {
+  ctx.save();
   ctx.shadowColor = colors.shadow;
   ctx.shadowBlur = activeHandlerShadowBlur;
   ctx.shadowOffsetX = activeHandlerShadowOffset;
   ctx.shadowOffsetY = activeHandlerShadowOffset;
 
+  ctx.save();
   ctx.beginPath();
-  ctx.arc(point.x, point.y, activeHandlerRadius, 0, Math.PI * 2);
-  ctx.strokeStyle = colors[name];
-  ctx.lineWidth = redondeo.value(widthFactor * 2);
+  ctx.lineWidth = redondeo.value(widthFactor * 1.5);
+  ctx.moveTo(origin.x, origin.y);
+  ctx.lineTo(point.x, point.y);
+  ctx.strokeStyle = colors.activeline;
   ctx.stroke();
+  ctx.restore();
 
-  ctx.shadowColor = "transparent"; // Reset shadow
-}
+  ctx.translate(point.x, point.y);
 
-function drawHandlerLine(ctx: Context2D, start: Point, end: Point, colors: HandlerColors, active: boolean) {
   ctx.beginPath();
-  ctx.lineWidth = redondeo.value(widthFactor * (active ? 1.5 : 1));
-  ctx.moveTo(start.x, start.y);
-  ctx.lineTo(end.x, end.y);
-  ctx.strokeStyle = active ? colors.activeline : colors.line;
-  ctx.stroke();
+  ctx.arc(0, 0, handlerRadius, 0, Math.PI * 2); // Outer circle
+  ctx.arc(0, 0, activeHandlerRadius, 0, Math.PI * 2, true); // Outer circle
+  ctx.arc(0, 0, activeHandlerRadius - redondeo.value(widthFactor * 2), 0, Math.PI * 2); // Outer circle
+  ctx.fillStyle = colors[name];
+  ctx.fill("evenodd");
+  ctx.restore();
 }
 
 export function pointFromCanvas(point: Point, size: number): Point {

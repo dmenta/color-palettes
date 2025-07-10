@@ -45,7 +45,7 @@ export function drawCompass(
     arrowTip: size + arrowOverflowValue,
   };
 
-  drawGrid(offCtx, parametros, presetHover, angleDeg, darkMode);
+  drawGridSlim(offCtx, parametros, presetHover, angleDeg, darkMode);
 
   drawArrow(offCtx, angleDeg, parametros, paramsArrow, active, darkMode);
 
@@ -53,13 +53,28 @@ export function drawCompass(
   ctx.transferFromImageBitmap(image);
 }
 
-function drawGrid(
+function drawGridSlim(
   ctx: OffscreenCanvasRenderingContext2D,
   parametros: ParametrosCompass,
   presetHover: number | null = null,
   angleDeg: number = 0,
   darkMode: boolean
 ) {
+  const centerX = parametros.center;
+  const centerY = parametros.center;
+  const radius = parametros.gridRadio * parametros.ratio;
+  const steps = 8;
+  const step = (Math.PI * 2) / steps;
+  const rimOffset = -1;
+  const innerCircleRadius = radius * 0.2;
+  const presetRadius = 4;
+  const ticksWidth = 1;
+  const tickOffset = ticksWidth / 2;
+  const ticksInner = parametros.gridRadio * 0.85 * parametros.ratio;
+  const ticksLenght = 13;
+  const presetCenter = parametros.presetSize * parametros.ratio;
+
+  ctx.save();
   ctx.beginPath();
   ctx.arc(
     parametros.center,
@@ -71,71 +86,52 @@ function drawGrid(
   ctx.lineWidth = 1;
   ctx.fillStyle = "#7A736E33";
   ctx.fill();
-  ctx.setLineDash([]);
-  ctx.strokeStyle = "transparent";
+  ctx.restore();
 
+  ctx.save();
+  ctx.translate(centerX, centerY);
+
+  ctx.beginPath();
+
+  ctx.arc(0, 0, radius, 0, Math.PI * 2);
+  ctx.arc(0, 0, radius - rimOffset, 0, Math.PI * 2, true);
+  ctx.arc(0, 0, innerCircleRadius, 0, Math.PI * 2);
+  ctx.arc(0, 0, innerCircleRadius - rimOffset, 0, Math.PI * 2, true);
+
+  for (let i = 0; i < steps; i++) {
+    ctx.rotate(step);
+
+    ctx.moveTo(Math.round(ticksInner), tickOffset);
+    ctx.rect(Math.round(ticksInner), -tickOffset, ticksLenght, ticksWidth);
+
+    ctx.moveTo(presetCenter, 0);
+    ctx.arc(presetCenter, 0, presetRadius, 0, Math.PI * 2);
+  }
   const colors = compassGridColors(darkMode);
-  ctx.beginPath();
-  ctx.arc(
-    parametros.center,
-    parametros.center,
-    redondeo.value(parametros.ratio * parametros.gridRadio),
-    0,
-    Math.PI * 2
-  );
-  ctx.moveTo(parametros.center, parametros.center);
-  ctx.strokeStyle = colors.border;
-  ctx.lineWidth = 1;
-  ctx.stroke();
+  ctx.fillStyle = colors.lines;
+  ctx.fill();
+  ctx.restore();
 
-  ctx.beginPath();
-  ctx.arc(
-    parametros.center,
-    parametros.center,
-    redondeo.value(parametros.ratio * parametros.gridRadio * 0.2),
-    0,
-    Math.PI * 2
-  );
-  ctx.lineWidth = 1;
-  ctx.strokeStyle = colors.lines;
-  ctx.stroke();
-
-  ctx.strokeStyle = colors.lines;
-  for (let i = 0; i <= 7; i++) {
-    const angle = ((Math.PI * 2) / 8) * i;
-    const cosenoBase = Math.cos(angle);
-    const senoBase = Math.sin(angle);
-    const deltaX = parametros.gridRadio * cosenoBase * 1.1;
-    const deltaY = parametros.gridRadio * senoBase * 1.1;
-    const x0 = deltaX + parametros.radio;
-    const y0 = deltaY + parametros.radio;
-    const x1 = deltaX * 0.75 + parametros.radio;
-    const y1 = deltaY * 0.75 + parametros.radio;
-
+  if (presetHover !== null) {
+    ctx.save();
+    ctx.translate(centerX, centerY);
+    ctx.rotate(((Math.PI * 2) / 8) * ((presetHover - 90) / 45));
     ctx.beginPath();
-    ctx.moveTo(redondeo.value(parametros.ratio * x0), redondeo.value(parametros.ratio * y0));
-    ctx.lineTo(redondeo.value(parametros.ratio * x1), redondeo.value(parametros.ratio * y1));
-    ctx.lineWidth = 1;
-    ctx.stroke();
-
-    const currAngleDeg = ((i + 2) % 8) * 45;
-    const markActive = angleDeg === currAngleDeg;
-    const markHover = !markActive && presetHover !== null && presetHover === currAngleDeg;
-    const color = markActive ? colors.activePreset : markHover ? colors.presetHover : colors.preset;
-
-    const presetCenterX = cosenoBase * parametros.presetSize + parametros.radio;
-    const presetCenterY = senoBase * parametros.presetSize + parametros.radio;
-
-    ctx.beginPath();
-    ctx.arc(
-      redondeo.value(parametros.ratio * presetCenterX),
-      redondeo.value(parametros.ratio * presetCenterY),
-      4,
-      0,
-      Math.PI * 2
-    );
-    ctx.fillStyle = color;
+    ctx.arc(presetCenter, 0, presetRadius, 0, Math.PI * 2);
+    ctx.fillStyle = colors.presetHover;
     ctx.fill();
+    ctx.restore();
+  }
+  const isPreset = (angleDeg + 90) % 45 === 0;
+  if (isPreset) {
+    ctx.save();
+    ctx.translate(centerX, centerY);
+    ctx.rotate(((Math.PI * 2) / 8) * ((angleDeg - 90) / 45));
+    ctx.beginPath();
+    ctx.arc(presetCenter, 0, presetRadius, 0, Math.PI * 2);
+    ctx.fillStyle = colors.activePreset;
+    ctx.fill();
+    ctx.restore();
   }
 }
 
@@ -153,6 +149,8 @@ export function drawArrow(
   darkMode: boolean
 ) {
   const colors = compassArrowColors(darkMode);
+
+  ctx.save();
 
   ctx.translate(parametros.center, parametros.center);
   ctx.rotate(((angleDegress - 180) * Math.PI) / 180);
@@ -202,9 +200,7 @@ export function drawArrow(
   ctx.lineJoin = "round";
   ctx.stroke();
 
-  ctx.shadowColor = "transparent";
-
-  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.restore();
 }
 
 type ParametrosCompass = {

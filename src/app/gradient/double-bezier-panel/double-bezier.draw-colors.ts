@@ -25,14 +25,12 @@ const doubleBezierCurveColor: { light: string; dark: string } = {
 const doubleBezierCenterColors: { light: DoubleBezierCenterColors; dark: DoubleBezierCenterColors } = {
   light: {
     main: "#606060",
-    active: "#202020",
-    activeBorder: "#FF5000",
+    active: "#FF5000",
     shadow: "#404040",
   } as DoubleBezierCenterColors,
   dark: {
     main: "#A0A0A0",
-    active: "#b0b0b0",
-    activeBorder: "#C0CC00",
+    active: "#90F900",
     shadow: "#202020",
   } as DoubleBezierCenterColors,
 };
@@ -83,7 +81,6 @@ type DoubleBezierGridColors = {
 export type DoubleBezierCenterColors = {
   main: string;
   active: string;
-  activeBorder: string;
   shadow: string;
 };
 
