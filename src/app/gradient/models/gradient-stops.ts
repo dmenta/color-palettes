@@ -133,14 +133,16 @@ export function gradientToImage(
   createEl.remove();
 }
 
-export function gradientToSVG(stops: GradientStop[], angleDegrees: number = 0): void {
+export function gradientToSVG(stops: GradientStop[], angleDegrees: number = 0, name: string = ""): void {
+  name = encodeURI(name.trim());
+
   let fileContent = toSVG(stops, angleDegrees);
 
   const file = new Blob([fileContent], { type: "image/svg+xml" });
 
   const link = document.createElement("a");
   link.href = URL.createObjectURL(file);
-  link.download = `colorina-gradient-${new Date().valueOf() - baseDate}.svg`;
+  link.download = `colorina-gradient-${name}${name.length > 0 ? "-" : ""}${new Date().valueOf() - baseDate}.svg`;
   link.click();
   link.remove();
 }

@@ -51,7 +51,14 @@ export class GradientActionsComponent {
   }
 
   saveSVG() {
-    gradientToSVG(this.state.gradient().rgbStops, this.state.angleDegrees());
+    const start = this.state.startRGBColor();
+    const end = this.state.endRGBColor();
+    const angleDegrees = this.state.angleDegrees();
+    const name = `${rgbToHex(start)}_${rgbToHex(end)}_${angleDegrees}deg_${this.displayDimensions().width}x${
+      this.displayDimensions().height
+    }`;
+
+    gradientToSVG(this.state.gradient().rgbStops, this.state.angleDegrees(), name);
   }
 
   private displayDimensions() {
