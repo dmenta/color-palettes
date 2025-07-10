@@ -7,6 +7,7 @@ import { DoubleHandler, DoubleHandlers } from "../models/double-handlers.model";
 
 export class doubleBezierDrawing {
   private readonly handlersKeys = ["h4", "h3", "h2", "h1"] as const;
+  private readonly keysCentrales: string[] = ["h3", "h2", "center"];
   private readonly ctx: Context2D;
   private readonly start: Point;
   private readonly end: Point;
@@ -70,36 +71,54 @@ export class doubleBezierDrawing {
 
     const coords = this.handlersToCanvas(rawCoords);
 
-    this.drawGridSlim(darkMode);
+    const hayActivo = active !== null;
+    const activoCentro = active === "center" || active === "h2" || active === "h3";
 
-    const semiactivo = active === "h2" ? "h3" : active === "h3" ? "h2" : null;
+    this.ctx.save();
+    this.ctx.globalCompositeOperation = "source-over";
 
-    for (const key of this.handlersKeys) {
-      if (key === active || key === semiactivo) {
-        continue;
-      }
+    for (const key of this.handlersKeys.filter((k) => (activoCentro ? !this.keysCentrales.includes(k) : true))) {
       this.drawHandler(this.vertices[key], coords[key]!, this.colors.handler(key, darkMode));
     }
+    this.ctx.restore();
 
-    this.drawBezier(this.start, center, coords.h1, coords.h2, darkMode, active !== null);
-    this.drawBezier(center, this.end, coords.h3!, coords.h4!, darkMode, active !== null);
+    this.ctx.save();
+    if (!hayActivo) {
+      this.ctx.globalCompositeOperation = "destination-over";
+    }
+    this.drawBezier(this.start, center, coords.h1, coords.h2, darkMode, hayActivo);
+    this.drawBezier(center, this.end, coords.h3!, coords.h4!, darkMode, hayActivo);
+    this.ctx.restore();
 
-    if (active !== null && active !== "center") {
-      this.drawActiveHandlerSlim(this.vertices[active], coords[active]!, this.colors.handler(active, darkMode));
-      if (semiactivo) {
+    if (activoCentro) {
+      if (active === "center") {
+        this.drawSemiActiveHandlerSlim(this.vertices.h2, coords.h2!, this.colors.handler("h2", darkMode));
+        this.drawSemiActiveHandlerSlim(this.vertices.h3, coords.h3!, this.colors.handler("h3", darkMode));
+
+        this.drawCenterHandlerActive(center, this.colors.center(darkMode));
+      } else {
+        const semiactive = active === "h2" ? "h3" : "h2";
+        this.drawActiveHandlerSlim(this.vertices[active], coords[active]!, this.colors.handler(active, darkMode));
         this.drawSemiActiveHandlerSlim(
-          this.vertices[semiactivo],
-          coords[semiactivo]!,
-          this.colors.handler(semiactivo, darkMode)
+          this.vertices[semiactive],
+          coords[semiactive]!,
+          this.colors.handler(semiactive, darkMode)
         );
+
+        this.drawSemiActiveCenterHandler(center, this.colors.center(darkMode));
+      }
+    } else {
+      this.drawCenterHandler(center, this.colors.center(darkMode), false);
+
+      if (hayActivo) {
+        this.drawActiveHandlerSlim(this.vertices[active], coords[active]!, this.colors.handler(active, darkMode));
       }
     }
 
-    if (active === "center") {
-      this.drawCenterHandlerActive(center, this.colors.center(darkMode));
-    } else {
-      this.drawCenterHandler(center, this.colors.center(darkMode), false);
-    }
+    this.ctx.save();
+    this.ctx.globalCompositeOperation = "destination-over";
+    this.drawGridSlim(darkMode);
+    this.ctx.restore();
 
     const bitmapOne = this.canvas.transferToImageBitmap();
     this.imageContext.transferFromImageBitmap(bitmapOne);
@@ -167,6 +186,32 @@ export class doubleBezierDrawing {
     this.ctx.restore();
   }
 
+  private drawSemiActiveCenterHandler(center: Point, colors: DoubleBezierCenterColors) {
+    this.ctx.save();
+
+    this.ctx.shadowColor = colors.shadow;
+    this.ctx.shadowBlur = this.config.activeHandlerShadowBlur;
+    this.ctx.shadowOffsetX = this.config.activeHandlerShadowOffset;
+    this.ctx.shadowOffsetY = this.config.activeHandlerShadowOffset;
+
+    const centerSize = redondeo.value(this.config.handlerRadius * 2);
+
+    this.ctx.translate(center.x, center.y);
+
+    this.ctx.beginPath();
+
+    this.ctx.rect(
+      redondeo.value(-this.config.handlerRadius),
+      redondeo.value(-this.config.handlerRadius),
+      centerSize,
+      centerSize
+    );
+
+    this.ctx.fillStyle = colors.main;
+    this.ctx.fill();
+
+    this.ctx.restore();
+  }
   private drawCenterHandlerActive(center: Point, colors: DoubleBezierCenterColors) {
     this.ctx.save();
 

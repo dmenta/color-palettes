@@ -25,35 +25,61 @@ export function drawBezierPanel(
   offCtx.imageSmoothingQuality = "high";
   offCtx.imageSmoothingEnabled = true;
 
-  drawGrid(offCtx, size, darkMode);
-
-  const handlersColors = bezierHandleColors(darkMode);
-  const colorCurve = bezierCurveColor(darkMode);
-
   const origin = redondeo.point({ x: 0, y: size });
   const end = redondeo.point({ x: size, y: 0 });
 
+  const handlersColors = bezierHandleColors(darkMode);
+
+  offCtx.save();
+
+  offCtx.globalCompositeOperation = "destination-over";
   if (active !== "h2") {
     drawHandler(offCtx, end, coords.h2, handlersColors, "h2");
   }
   if (active !== "h1") {
     drawHandler(offCtx, origin, coords.h1, handlersColors, "h1");
   }
+  offCtx.restore();
+
+  offCtx.save();
+  if (active === null) {
+    offCtx.globalCompositeOperation = "destination-over";
+  }
+
+  drawBezierCurve(offCtx, origin, end, coords, active !== null, darkMode);
+  offCtx.restore();
+
   if (active !== null) {
     drawActiveHandlerSlim(offCtx, active === "h1" ? origin : end, coords[active], handlersColors, active);
   }
 
   offCtx.save();
-  offCtx.beginPath();
-  offCtx.moveTo(origin.x, origin.y);
-  offCtx.strokeStyle = colorCurve;
-  offCtx.bezierCurveTo(coords.h1.x, coords.h1.y, coords.h2.x, coords.h2.y, end.x, end.y);
-  offCtx.lineWidth = widthFactor * (active !== null ? 3 : 2);
-  offCtx.stroke();
+  offCtx.globalCompositeOperation = "destination-over";
+  drawGrid(offCtx, size, darkMode);
+
   offCtx.restore();
 
   const bitmapOne = offscreen.transferToImageBitmap();
   (ctx as ImageBitmapRenderingContext).transferFromImageBitmap(bitmapOne);
+}
+
+function drawBezierCurve(
+  ctx: Context2D,
+  origin: Point,
+  end: Point,
+  coords: Handlers,
+  active: boolean,
+  darkMode: boolean
+) {
+  const colorCurve = bezierCurveColor(darkMode);
+  ctx.save();
+  ctx.beginPath();
+  ctx.moveTo(origin.x, origin.y);
+  ctx.strokeStyle = colorCurve;
+  ctx.bezierCurveTo(coords.h1.x, coords.h1.y, coords.h2.x, coords.h2.y, end.x, end.y);
+  ctx.lineWidth = widthFactor * (active !== null ? 3 : 2);
+  ctx.stroke();
+  ctx.restore();
 }
 
 function drawGrid(ctx: Context2D, size: number, darkMode: boolean) {
@@ -91,16 +117,17 @@ function drawGrid(ctx: Context2D, size: number, darkMode: boolean) {
 function drawHandler(ctx: Context2D, start: Point, end: Point, colors: HandlerColors, name: Handler) {
   ctx.save();
   ctx.beginPath();
+  ctx.arc(end.x, end.y, handlerRadius, 0, Math.PI * 2);
+  ctx.fillStyle = colors[name];
+  ctx.fill();
+
+  ctx.beginPath();
   ctx.lineWidth = redondeo.value(widthFactor);
   ctx.moveTo(start.x, start.y);
   ctx.lineTo(end.x, end.y);
   ctx.strokeStyle = colors.line;
   ctx.stroke();
 
-  ctx.beginPath();
-  ctx.arc(end.x, end.y, handlerRadius, 0, Math.PI * 2);
-  ctx.fillStyle = colors[name];
-  ctx.fill();
   ctx.restore();
 }
 
