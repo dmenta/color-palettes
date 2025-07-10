@@ -53,15 +53,7 @@ export const bezierCurve = {
     const virtualCenterY = redondeo.value(center.y);
 
     const scaleAX = virtualCenterX / virtualSize;
-    // const scaleAY = virtualCenterY / virtualSize;
-    console.log(
-      "datos",
-      { h1: coords.h3!, h2: coords.h4! },
-      virtualSize - virtualCenterX,
-      virtualSize - virtualCenterY,
-      -virtualCenterX,
-      -virtualCenterY
-    );
+
     return bezierCurve
       .points({ h1: coords.h1, h2: coords.h2 }, virtualCenterX, virtualCenterY, 0, 0, scaleAX, 1, 0, 0, 10)
       .concat(

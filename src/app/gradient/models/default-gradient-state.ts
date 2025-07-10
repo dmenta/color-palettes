@@ -15,16 +15,11 @@ export const defaultGradientState: GradientStateValues = {
 
 export const defaultDoubleGradientState: DoubleGradientStateValues = {
   colors: {
-    start: [249, 147, 52] as ColorValues,
-    center: [255, 0, 0] as ColorValues,
-    end: [7, 10, 95] as ColorValues,
+    start: [14, 10, 99],
+    center: [255, 22, 0],
+    end: [250, 145, 48],
   },
-  center: { x: 1000, y: 1000 },
-  handlers: {
-    h1: { x: 333, y: 333 },
-    h2: { x: 666, y: 666 },
-    h3: { x: 1333, y: 1333 },
-    h4: { x: 1666, y: 1666 },
-  },
-  angle: 0,
+  center: { x: 979, y: 999 },
+  handlers: { h1: { x: 150, y: 456 }, h2: { x: 579, y: 856 }, h3: { x: 1408, y: 896 }, h4: { x: 1957, y: 1456 } },
+  angle: 143,
 };
