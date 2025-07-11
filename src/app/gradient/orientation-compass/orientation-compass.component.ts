@@ -11,12 +11,12 @@ import {
   signal,
   ViewChild,
 } from "@angular/core";
-import { drawCompass } from "./compass-drawing";
 import { debounceTime, distinctUntilChanged, filter, fromEvent, map, merge, Subscription, tap } from "rxjs";
 import { ensureAngleInRange, isInsideCircle } from "./circle-operations";
 import { GRADIENT_STATE_TOKEN, GradientOrientationState } from "../services/gradient-state.model";
 import { Point, pointsMatch } from "../models/point.model";
 import { domCommon } from "../common/common-funcs";
+import { compassDrawing } from "./orientation-drawing";
 
 @Component({
   selector: "zz-orientation-compass",
@@ -41,7 +41,7 @@ export class OrientationCompassComponent {
   private presetAngles: { angle: number; point: Point }[] = [];
 
   private shiftPressed = signal(false);
-  private canvasContext: ImageBitmapRenderingContext | null = null;
+  private drawing: compassDrawing | null = null;
 
   handler = signal(false);
   overPreset = signal<number | null>(null);
@@ -76,13 +76,19 @@ export class OrientationCompassComponent {
 
   constructor(private renderer: Renderer2) {
     effect(() => {
-      this.dibujar(this.anglesInDegrees(), this.handler(), this.size(), this.darkMode());
+      this.dibujar(this.anglesInDegrees(), this.handler(), this.darkMode(), this.overPreset());
     });
   }
 
   ngAfterViewInit() {
     this.createPresetAngles();
     this.subcribeToEvents();
+
+    this.drawing = new compassDrawing(
+      this.canvas!.nativeElement.getContext("bitmaprenderer") as ImageBitmapRenderingContext,
+      this.size(),
+      { x: this.size() / 2, y: this.size() / 2 }
+    );
 
     this.canvasRealSize = this.realSize();
 
@@ -263,21 +269,17 @@ export class OrientationCompassComponent {
   private dibujar(
     angleDegrees: number,
     active: boolean = false,
-    size: number = this.size(),
+
     darkMode: boolean = this.darkMode(),
     overPreset: number | null = this.overPreset()
   ) {
-    if (!this.canvas) {
+    if (!this.drawing) {
       return;
     }
-    if (this.canvasContext === null) {
-      this.canvasContext = this.canvasElement.getContext("bitmaprenderer");
-    }
-
-    const ctx = this.canvasContext!;
+    const compass = this.drawing;
 
     requestAnimationFrame(() => {
-      drawCompass(ctx, angleDegrees, size, overPreset, active, darkMode);
+      compass.draw(overPreset, angleDegrees, active, darkMode);
     });
   }
 

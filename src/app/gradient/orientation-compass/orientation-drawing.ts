@@ -17,14 +17,17 @@ export class compassDrawing {
   };
 
   private readonly arrowProportions = {
-    size: 34,
-    bodyWitdh: 1,
-    toeSize: 5,
-    toeCenter: 3,
-    tipLenght: 14,
-    inset: -3,
-    overflow: 4,
-    wide: 5,
+    bodyWitdh: 3,
+    bodyLenght: 48,
+    toeSize: 4,
+    toeAxis: 1,
+    tipLenght: 32,
+    tipWide: 18,
+    tipAxis: 6,
+    innerTipBase: 3,
+    innerTipLenght: 23,
+    innerTipWide: 12,
+    innerTipAxis: 2,
   };
 
   private readonly ctx: Context2D;
@@ -52,13 +55,13 @@ export class compassDrawing {
   public draw(
     presetHover: number | null = null,
     angleDegrees: number = 0,
-    _active: boolean = false,
+    active: boolean = false,
     darkMode: boolean = false
   ) {
     this.drawGridSlim(darkMode);
     this.drawPresetHover(presetHover, darkMode);
     this.drawPresetActive(angleDegrees, darkMode);
-    this.drawArrow(angleDegrees, _active, darkMode);
+    this.drawArrow(angleDegrees, active, darkMode);
 
     const image = this.canvas.transferToImageBitmap();
     this.imageContext.transferFromImageBitmap(image);
@@ -71,9 +74,9 @@ export class compassDrawing {
     this.ctx.save();
 
     this.ctx.translate(this.center.x, this.center.y);
-    this.ctx.rotate(((angleDegress - 90) * Math.PI) / 180);
-    this.ctx.save();
+    this.ctx.rotate(((angleDegress - 180) * Math.PI) / 180);
 
+    this.ctx.save();
     if (active) {
       this.ctx.shadowColor = darkMode ? "#000000" : "#303030";
       this.ctx.shadowBlur = 7;
@@ -83,17 +86,13 @@ export class compassDrawing {
 
     this.ctx.fillStyle = colors.lines;
     this.ctx.fill(body);
-    this.ctx.strokeStyle = colors.lines;
-    this.ctx.lineWidth = 2;
-    this.ctx.lineCap = "butt";
-    this.ctx.lineJoin = "round";
-    this.ctx.stroke(body);
     this.ctx.restore();
+
+    this.ctx.fillStyle = colors.tip;
+    this.ctx.fill(tip);
 
     this.ctx.fillStyle = colors.toe;
     this.ctx.fill(toe);
-    this.ctx.fillStyle = colors.tip;
-    this.ctx.fill(tip);
 
     this.ctx.restore();
   }
@@ -201,33 +200,33 @@ export class compassDrawing {
   }
 
   private createArrowPaths() {
-    const size = redondeo.value((this.arrowProportions.size * this.diameter) / 100);
-    const width = redondeo.value((this.arrowProportions.bodyWitdh * this.diameter) / 100);
-    const arrowInsetValue = redondeo.value((this.arrowProportions.inset * this.diameter) / 100);
-    const arrowOverflowValue = redondeo.value((this.arrowProportions.overflow * this.diameter) / 100);
-    const arrowWideValue = redondeo.value((this.arrowProportions.wide * this.diameter) / 100);
-    const arrowTipBase = redondeo.value(
-      size - (this.arrowProportions.tipLenght * this.diameter) / 100 + arrowOverflowValue
-    );
-    const arrowTip = redondeo.value(size + arrowOverflowValue);
+    const radius = this.diameter / 2;
+    const halfBodyWidth = redondeo.value((this.arrowProportions.bodyWitdh * radius) / 2 / 100);
+    const bodyLenght = redondeo.value((this.arrowProportions.bodyLenght * radius) / 100);
+    const tipLenght = redondeo.value((this.arrowProportions.tipLenght * radius) / 100);
+    const tipAxis = redondeo.value((this.arrowProportions.tipAxis * radius) / 100);
+    const tipHalfWide = redondeo.value((this.arrowProportions.tipWide * radius) / 2 / 100);
+
+    const innerTipLenght = redondeo.value((this.arrowProportions.innerTipLenght * radius) / 100);
+    const innerTipAxis = redondeo.value((this.arrowProportions.innerTipAxis * radius) / 100);
+    const innerTipBase = redondeo.value((this.arrowProportions.innerTipBase * radius) / 100);
+    const innerTipHalfWide = redondeo.value((this.arrowProportions.innerTipWide * radius) / 2 / 100);
 
     const body = new Path2D();
-    body.rect(-(width / 2), 0, width, size);
+    body.rect(-halfBodyWidth, 0, halfBodyWidth * 2, bodyLenght);
     body.arc(0, 0, this.arrowProportions.toeSize, 0, Math.PI * 2);
 
-    body.moveTo(0, arrowTip);
-    body.lineTo(arrowWideValue, arrowTipBase);
-    body.lineTo(0, arrowTipBase + arrowInsetValue);
-    body.lineTo(-arrowWideValue, arrowTipBase);
-    body.moveTo(0, size);
-    body.lineTo(0, 0);
+    body.moveTo(0, bodyLenght);
+    body.lineTo(tipHalfWide, bodyLenght + tipAxis);
+    body.lineTo(0, bodyLenght + tipLenght);
+    body.lineTo(-tipHalfWide, bodyLenght + tipAxis);
     body.closePath();
 
     const tip = new Path2D();
-    tip.moveTo(0, arrowTip - arrowOverflowValue / 2);
-    tip.lineTo(arrowWideValue / 2, arrowTipBase);
-    tip.lineTo(0, arrowTipBase + arrowInsetValue);
-    tip.lineTo(-arrowWideValue / 2, arrowTipBase);
+    tip.moveTo(0, bodyLenght + innerTipBase);
+    tip.lineTo(innerTipHalfWide, bodyLenght + tipAxis + innerTipAxis);
+    tip.lineTo(0, bodyLenght + innerTipLenght);
+    tip.lineTo(-innerTipHalfWide, bodyLenght + tipAxis + innerTipAxis);
     tip.closePath();
 
     const toe = new Path2D();

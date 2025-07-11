@@ -1,9 +1,9 @@
 export function compassGridColors(darkMode: boolean): CompassGridColors {
   return {
     lines: !darkMode ? "#606060" : "#909090",
-    border: !darkMode ? "#505050" : "#a0a0a0",
-    preset: !darkMode ? "#777777" : "#888888",
-    presetHover: !darkMode ? "#333333" : "#C0C0C0",
+    border: !darkMode ? "#505050" : "#a9a9a9",
+    preset: !darkMode ? "#999999" : "#888888",
+    presetHover: !darkMode ? "#444444" : "#C0C0C0",
     activePreset: !darkMode ? "#000000" : "#ffffff",
   };
 }
