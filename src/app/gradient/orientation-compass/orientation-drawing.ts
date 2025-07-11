@@ -19,7 +19,7 @@ export class compassDrawing {
   private readonly arrowProportions = {
     bodyWitdh: 3,
     bodyLenght: 48,
-    toeSize: 4,
+    toeSize: 4.5,
     toeAxis: 1,
     tipLenght: 32,
     tipWide: 18,
@@ -47,6 +47,7 @@ export class compassDrawing {
     context.imageSmoothingEnabled = true;
 
     this.ctx = context as Context2D;
+    this.ctx.translate(this.center.x, this.center.y);
 
     this.gridPaths = this.createGridPaths();
     this.arrowPaths = this.createArrowPaths();
@@ -72,8 +73,6 @@ export class compassDrawing {
     const colors = compassArrowColors(darkMode);
 
     this.ctx.save();
-
-    this.ctx.translate(this.center.x, this.center.y);
     this.ctx.rotate(((angleDegress - 180) * Math.PI) / 180);
 
     this.ctx.save();
@@ -90,19 +89,15 @@ export class compassDrawing {
 
     this.ctx.fillStyle = colors.tip;
     this.ctx.fill(tip);
+    this.ctx.restore();
 
     this.ctx.fillStyle = colors.toe;
     this.ctx.fill(toe);
-
-    this.ctx.restore();
   }
 
   private drawGridSlim(darkMode: boolean) {
     const { mark, preset } = this.gridPaths;
     const colors = compassGridColors(darkMode);
-
-    this.ctx.save();
-    this.ctx.translate(this.center.x, this.center.y);
 
     this.ctx.fillStyle = "#7A736E33";
     this.ctx.fill(this.gridPaths.back);
@@ -124,8 +119,6 @@ export class compassDrawing {
 
     this.ctx.fillStyle = colors.border;
     this.ctx.fill(this.gridPaths.rim);
-
-    this.ctx.restore();
   }
 
   private drawPresetHover(presetHover: number | null, darkMode: boolean) {
@@ -134,7 +127,6 @@ export class compassDrawing {
 
     if (presetHover !== null) {
       this.ctx.save();
-      this.ctx.translate(this.center.x, this.center.y);
       this.ctx.rotate(((Math.PI * 2) / 8) * ((presetHover - 90) / 45));
       this.ctx.fillStyle = colors.presetHover;
       this.ctx.fill(preset);
@@ -150,7 +142,6 @@ export class compassDrawing {
 
     if (isPreset) {
       this.ctx.save();
-      this.ctx.translate(this.center.x, this.center.y);
       this.ctx.rotate(((Math.PI * 2) / 8) * ((angleDeg - 90) / 45));
       this.ctx.fillStyle = colors.activePreset;
       this.ctx.fill(preset);
@@ -229,8 +220,10 @@ export class compassDrawing {
     tip.lineTo(-innerTipHalfWide, bodyLenght + tipAxis + innerTipAxis);
     tip.closePath();
 
+    const toeRadius = redondeo.value((this.arrowProportions.toeSize * radius) / 100);
+
     const toe = new Path2D();
-    toe.arc(0, 0, 3, 0, Math.PI * 2);
+    toe.arc(0, 0, toeRadius, 0, Math.PI * 2);
     toe.closePath();
 
     return {
