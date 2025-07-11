@@ -40,8 +40,8 @@ export const bezierCurve = {
       const y = factorVal0 * y0 + factorVal1 * y1 + factorVal2 * y2 + factorVal3 * y3;
 
       values.push({
-        x: redondeo.bezierCoord(x * outputScaleX) + ouputOffsetX,
-        y: redondeo.bezierCoord(y * outputScaleY) + ouputOffsetY,
+        x: redondeo.bezierCoord(x * outputScaleX + ouputOffsetX),
+        y: redondeo.bezierCoord(y * outputScaleY + ouputOffsetY),
       });
     }
 
