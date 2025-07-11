@@ -8,5 +8,6 @@
     [class.cursor-grabbing]="currentHandler() !== null"
     [height]="size()"
     [style.padding.px]="size() / 20"
-    class="bg-gris-500/20 rounded-lg"></canvas>
+    class="rounded-lg"
+    [style.background]="state.controlGradient()"></canvas>
 </div>

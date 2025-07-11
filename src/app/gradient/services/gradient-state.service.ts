@@ -3,7 +3,7 @@ import { StorageService } from "../../core/service/storage.service";
 import { defaultGradientState } from "../models/default-gradient-state";
 import { GradientStateValues } from "../models/gradient-state-values";
 import { ColorValues } from "../../color/model/colors.model";
-import { GradientDefinition, gradientFromPoints } from "../models/gradient-stops";
+import { GradientDefinition, gradientFromPoints, gradientString } from "../models/gradient-stops";
 import { toOklch } from "../../color/model/color";
 import { virtualSize } from "../bezier-panel/bezier-panel-drawing";
 import { GradientState } from "./gradient-state.model";
@@ -35,6 +35,8 @@ export class GradientStateService implements GradientState {
   gradient: Signal<GradientDefinition> = computed(() =>
     gradientFromPoints(this.startOklch(), this.endOklch(), this.points!(), this.angleDegrees())
   );
+
+  controlGradient: Signal<string> = computed(() => gradientString(this.gradient().stops, 90, "oklch"));
 
   private readonly currentState = computed(() => {
     return {

@@ -13,10 +13,10 @@ import {
 } from "@angular/core";
 import { drawBezierPanel, handlerRadius, pointFromCanvas, pointToCanvas, virtualSize } from "./bezier-panel-drawing";
 import { debounceTime, filter, fromEvent, map, merge, Subscription, tap } from "rxjs";
-import { GRADIENT_STATE_TOKEN, GradientHandlersState } from "../services/gradient-state.model";
 import { Handler, Handlers } from "../models/handlers.model";
 import { Point, pointsMatch } from "../models/point.model";
 import { domCommon, redondeo } from "../common/common-funcs";
+import { GradientStateService } from "../services/gradient-state.service";
 
 @Component({
   selector: "zz-bezier-panel",
@@ -31,7 +31,7 @@ export class BezierPanelComponent implements AfterViewInit, OnDestroy {
   private removeDocumentClickListenerFn: (() => void) | null = null;
   private removeDocumentTouchEndListenerFn: (() => void) | null = null;
 
-  private state: GradientHandlersState = inject(GRADIENT_STATE_TOKEN);
+  state: GradientStateService = inject(GradientStateService);
 
   overHandler = signal<Handler | null>(null);
   currentHandler = signal<Handler | null>(null);
