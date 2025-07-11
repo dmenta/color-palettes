@@ -5,10 +5,10 @@ import { fromEvent } from "rxjs";
 import { NotificationComponent } from "../../core/components/notification/notification.component";
 import { GradientHeaderComponent } from "../../gradient/header/gradient-header.component";
 import { OrientationCompassComponent } from "../../gradient/orientation-compass/orientation-compass.component";
-import { DoubleBezierPanelComponent } from "../../gradient/double-bezier-panel/double-bezier-panel.component";
-import { DoubleGradientStateService } from "../../gradient/services/double-gradient-state.service";
-import { GRADIENT_STATE_TOKEN } from "../../gradient/services/gradient-state.model";
-import { DoubleGradientColorsComponent } from "../../gradient/double-gradient-colors/double-gradient-colors.component";
+import { DoubleBezierPanelComponent } from "../../gradient/double/double-bezier-panel/double-bezier-panel.component";
+import { DoubleGradientColorsComponent } from "../../gradient/double/double-gradient-colors/double-gradient-colors.component";
+import { GRADIENT_STATE_TOKEN } from "../../gradient/models/gradient-state.model";
+import { DoubleGradientStateService } from "../../gradient/double/services/double-gradient-state.service";
 
 @Component({
   selector: "zz-double-bezier-gradient",
@@ -31,7 +31,7 @@ export class DoubleBezierGradientComponent {
   bezierSize = 280;
   compassSize = 130;
 
-  ngOnInit() {
+  ngAfterViewInit() {
     fromEvent(document, "touchstart", { passive: true }).subscribe(() => {
       this.requestFullscreen();
     });
@@ -40,7 +40,7 @@ export class DoubleBezierGradientComponent {
   private requestFullscreen() {
     if (!document.fullscreenElement) {
       document.documentElement.requestFullscreen().catch(() => {
-        console.debug("Error attempting to enable full-screen mode");
+        console.info("Error attempting to enable full-screen mode");
       });
     }
   }

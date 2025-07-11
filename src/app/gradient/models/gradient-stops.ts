@@ -106,8 +106,8 @@ export function gradientToImage(
   canvas.width = dimensions.width;
   canvas.height = dimensions.height;
   const ctx = canvas.getContext("2d");
+
   if (!ctx) {
-    console.error("No se pudo obtener el contexto del canvas");
     return;
   }
 

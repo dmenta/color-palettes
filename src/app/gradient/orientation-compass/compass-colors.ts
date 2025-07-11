@@ -16,7 +16,7 @@ export function compassArrowColors(darkMode: boolean): CompassArrowColors {
   };
 }
 
-export type CompassGridColors = {
+type CompassGridColors = {
   lines: string;
   border: string;
   preset: string;
@@ -24,7 +24,7 @@ export type CompassGridColors = {
   activePreset: string;
 };
 
-export type CompassArrowColors = {
+type CompassArrowColors = {
   lines: string;
   tip: string;
   toe: string;

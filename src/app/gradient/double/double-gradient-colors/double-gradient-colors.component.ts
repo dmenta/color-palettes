@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
-import { ColorSelectorComponent } from "../../color/components/color-sample/color-selector/color-selector.component";
-import { ColorValues } from "../../color/model/colors.model";
-import { DoubleGradientColorsState, GRADIENT_STATE_TOKEN } from "../services/gradient-state.model";
+import { ColorSelectorComponent } from "../../../color/components/color-sample/color-selector/color-selector.component";
+import { ColorValues } from "../../../color/model/colors.model";
+import { DoubleGradientColorsState, GRADIENT_STATE_TOKEN } from "../../models/gradient-state.model";
 
 @Component({
   selector: "zz-double-gradient-colors",

@@ -1,9 +1,9 @@
-import { DoubleBezierCenterColors, DoubleBezierColors, DoubleHandlerColors } from "./double-bezier.draw-colors";
-import { redondeo } from "../common/common-funcs";
-import { Context2D } from "../models/context-2d";
+import { redondeo } from "../../common/common-funcs";
+import { Context2D } from "../../models/context-2d";
+import { Point } from "../../models/point.model";
+import { DoubleHandlers, DoubleHandler } from "../models/double-handlers.model";
 import { DoubleGradientConfig } from "./double-bezier-config";
-import { Point } from "../models/point.model";
-import { DoubleHandler, DoubleHandlers } from "../models/double-handlers.model";
+import { DoubleBezierCenterColors, DoubleBezierColors, DoubleHandlerColors } from "./double-bezier.draw-colors";
 
 export class doubleBezierDrawing {
   private readonly handlersKeys = ["h4", "h3", "h2", "h1"] as const;

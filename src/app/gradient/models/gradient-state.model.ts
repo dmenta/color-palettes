@@ -1,7 +1,7 @@
 import { InjectionToken, Signal } from "@angular/core";
 import { ColorValues } from "../../color/model/colors.model";
 import { GradientDefinition } from "../models/gradient-stops";
-import { DoubleHandlers } from "../models/double-handlers.model";
+import { DoubleHandlers } from "../double/models/double-handlers.model";
 import { Point } from "../models/point.model";
 import { Handlers } from "../models/handlers.model";
 

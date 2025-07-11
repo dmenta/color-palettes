@@ -13,10 +13,10 @@ import {
 } from "@angular/core";
 import { debounceTime, distinctUntilChanged, filter, fromEvent, map, merge, Subscription, tap } from "rxjs";
 import { ensureAngleInRange, isInsideCircle } from "./circle-operations";
-import { GRADIENT_STATE_TOKEN, GradientOrientationState } from "../services/gradient-state.model";
 import { Point, pointsMatch } from "../models/point.model";
 import { domCommon } from "../common/common-funcs";
 import { compassDrawing } from "./orientation-drawing";
+import { GRADIENT_STATE_TOKEN, GradientOrientationState } from "../models/gradient-state.model";
 
 @Component({
   selector: "zz-orientation-compass",

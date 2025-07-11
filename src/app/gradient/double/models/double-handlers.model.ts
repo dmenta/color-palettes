@@ -1,5 +1,5 @@
-import { Handlers } from "./handlers.model";
-import { Point } from "./point.model";
+import { Handlers } from "../../models/handlers.model";
+import { Point } from "../../models/point.model";
 
 export type DoubleHandlers = Handlers & {
   h3?: Point;

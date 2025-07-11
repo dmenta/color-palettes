@@ -1,14 +1,14 @@
 import { computed, effect, inject, Injectable, Signal, signal } from "@angular/core";
 import { StorageService } from "../../../core/service/storage.service";
-import { defaultGradientState } from "../../models/default-gradient-state";
-import { GradientStateValues } from "../../models/gradient-state-values";
+import { defaultGradientState } from "../models/default-gradient-state";
+import { GradientStateValues } from "../models/gradient-state-values";
 import { ColorValues } from "../../../color/model/colors.model";
 import { GradientDefinition, gradientFromPoints, gradientString } from "../../models/gradient-stops";
 import { toOklch } from "../../../color/model/color";
 import { virtualSize } from "../bezier-panel/bezier-panel-drawing";
-import { GradientState } from "./gradient-state.model";
 import { bezierCurve } from "../../common/bezier-curve";
-import { DoubleHandlers } from "../../models/double-handlers.model";
+import { DoubleHandlers } from "../../double/models/double-handlers.model";
+import { GradientState } from "../../models/gradient-state.model";
 
 @Injectable({
   providedIn: "root",

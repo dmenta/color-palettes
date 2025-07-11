@@ -15,10 +15,10 @@ import { debounceTime, filter, fromEvent, map, merge, Subscription, tap } from "
 import { ActiveHandler, doubleBezierDrawing } from "./double-bezier-panel-drawing";
 import { doubleGradientConfig } from "./double-bezier-config";
 import { DoubleBezierColors } from "./double-bezier.draw-colors";
+import { DoubleGradientState, GRADIENT_STATE_TOKEN } from "../../models/gradient-state.model";
+import { domCommon, redondeo } from "../../common/common-funcs";
+import { Point, pointsMatch } from "../../models/point.model";
 import { DoubleHandler, DoubleHandlers } from "../models/double-handlers.model";
-import { Point, pointsMatch } from "../models/point.model";
-import { domCommon, redondeo } from "../common/common-funcs";
-import { DoubleGradientState, GRADIENT_STATE_TOKEN } from "../services/gradient-state.model";
 
 @Component({
   selector: "zz-double-bezier-panel",
@@ -100,10 +100,6 @@ export class DoubleBezierPanelComponent implements AfterViewInit, OnDestroy {
       .subscribe((event) => {
         this.onGrabHandler(event);
       });
-
-    this.canvas!.nativeElement.oncontextlost = (event: Event) => {
-      console.warn("Context lost", event);
-    };
 
     this.dibujar(this.state.handlers());
   }

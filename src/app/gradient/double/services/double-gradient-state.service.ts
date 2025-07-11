@@ -1,14 +1,14 @@
 import { computed, effect, inject, Injectable, Signal, signal } from "@angular/core";
-import { StorageService } from "../../core/service/storage.service";
-import { DoubleGradientStateValues } from "../models/gradient-state-values";
-import { ColorValues } from "../../color/model/colors.model";
-import { doubleGradientStops, GradientDefinition } from "../models/gradient-stops";
-import { toOklch } from "../../color/model/color";
-import { defaultDoubleGradientState } from "../models/default-gradient-state";
-import { DoubleGradientState } from "./gradient-state.model";
 import { doubleGradientConfig } from "../double-bezier-panel/double-bezier-config";
-import { Point } from "../models/point.model";
-import { bezierCurve } from "../common/bezier-curve";
+import { DoubleGradientState } from "../../models/gradient-state.model";
+import { StorageService } from "../../../core/service/storage.service";
+import { DoubleGradientStateValues } from "../models/gradient-state-values";
+import { defaultDoubleGradientState } from "../models/default-gradient-state";
+import { Point } from "../../models/point.model";
+import { toOklch } from "../../../color/model/color";
+import { bezierCurve } from "../../common/bezier-curve";
+import { doubleGradientStops, GradientDefinition } from "../../models/gradient-stops";
+import { ColorValues } from "../../../color/model/colors.model";
 import { DoubleHandlers } from "../models/double-handlers.model";
 
 @Injectable({

@@ -13,9 +13,9 @@ import {
 } from "@angular/core";
 import { drawBezierPanel, handlerRadius, pointFromCanvas, pointToCanvas, virtualSize } from "./bezier-panel-drawing";
 import { debounceTime, filter, fromEvent, map, merge, Subscription, tap } from "rxjs";
-import { Handler, Handlers } from "../models/handlers.model";
-import { Point, pointsMatch } from "../models/point.model";
-import { domCommon, redondeo } from "../common/common-funcs";
+import { Handler, Handlers } from "../../models/handlers.model";
+import { Point, pointsMatch } from "../../models/point.model";
+import { domCommon, redondeo } from "../../common/common-funcs";
 import { GradientStateService } from "../services/gradient-state.service";
 
 @Component({
@@ -94,10 +94,6 @@ export class BezierPanelComponent implements AfterViewInit, OnDestroy {
       .subscribe((event) => {
         this.onGrabHandler(event);
       });
-
-    this.canvas!.nativeElement.oncontextlost = (event: Event) => {
-      console.warn("Context lost", event);
-    };
 
     this.canvasRealSize = this.realSize();
 

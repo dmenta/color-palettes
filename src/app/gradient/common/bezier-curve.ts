@@ -1,5 +1,5 @@
 import { redondeo } from "../common/common-funcs";
-import { DoubleHandlers } from "../models/double-handlers.model";
+import { DoubleHandlers } from "../double/models/double-handlers.model";
 import { Handlers } from "../models/handlers.model";
 import { Point } from "../models/point.model";
 
