@@ -1,6 +1,6 @@
 <div class="bg-application w-screen h-screen overflow-x-hidden">
   <div class="sticky bg-application z-20 top-0 left-0 right-0 shadow-md dark:shadow-black/60">
-    <zz-palettes-header></zz-palettes-header>
+    <zz-header (toggleDrawer)="drawerOpen.set(!drawerOpen())"> <zz-palette-selector></zz-palette-selector> </zz-header>
   </div>
   <main
     class="grid grid-rows-[minmax(min-content,200px)_auto] grid-cols-[200px_auto] lg:grid-cols-[200px_auto_200px] gap-4 px-6 pt-2 m-auto max-w-[1600px] w-screen">

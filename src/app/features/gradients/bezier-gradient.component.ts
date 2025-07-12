@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import { NotificationComponent } from "../../core/components/notification/notification.component";
-import { GradientHeaderComponent } from "../../gradient/common/components/header/gradient-header.component";
 import { ReactiveFormsModule } from "@angular/forms";
 import { GradientStateService } from "../../gradient/simple/services/gradient-state.service";
 import { fromEvent } from "rxjs";
@@ -9,17 +8,18 @@ import { BezierPanelComponent } from "../../gradient/simple/bezier-panel/bezier-
 import { GRADIENT_COLORS_TOKEN, GRADIENT_ORIENTATION_TOKEN } from "../../gradient/common/models/gradient-state.model";
 import { GradientActionsComponent } from "../../gradient/common/components/gradient-actions/gradient-actions.component";
 import { OrientationCompassComponent } from "../../gradient/common/components/orientation-compass/orientation-compass.component";
+import { HeaderComponent } from "../../core/components/header/header.component";
 
 @Component({
   selector: "zz-test-col",
   imports: [
     NotificationComponent,
-    GradientHeaderComponent,
     ReactiveFormsModule,
     GradientColorsComponent,
     BezierPanelComponent,
     GradientActionsComponent,
     OrientationCompassComponent,
+    HeaderComponent,
   ],
   templateUrl: "./bezier-gradient.component.html",
   changeDetection: ChangeDetectionStrategy.OnPush,

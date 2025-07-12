@@ -1,0 +1,21 @@
+<header
+  [class.grid-rows-2]="hasProjectedContent"
+  [class.h-[50px]]="!hasProjectedContent"
+  class="sm:h-[50px] max-w-[1600px] grid sm:grid-rows-1 justify-center sm:grid-cols-[min-content_auto_min-content] sm:justify-between items-center gap-4 px-6 m-auto">
+  <h1 class="col-1 row-1 sm:mt-0 text-2xl opacity-90" [class.mt-2]="hasProjectedContent">
+    <a href="/" class="text-inherit no-underline">
+      <zz-marca [format]="'horizontal'"></zz-marca>
+    </a>
+  </h1>
+  <div
+    class="relative z-50 sm:col-2 row-2 sm:row-1 flex justify-center"
+    [class.hidden]="!hasProjectedContent"
+    #contentWrapper>
+    <ng-content> </ng-content>
+  </div>
+  <div class="col-3 row-1 flex items-center gap-4" [class.hidden]="hasProjectedContent">
+    <a class="text-smaller opacity-85 hover:opacity-100" href="palettes">Palettes</a>
+    <zz-dark-mode-toggle></zz-dark-mode-toggle>
+  </div>
+  <button class="hidden icon-button">sync_disabled</button>
+</header>

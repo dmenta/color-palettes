@@ -12,7 +12,7 @@
   @if(store.saved().length>0){
   <div
     [class.collapsable-collapsed]="!open()"
-    class="collapsable absolute top-10 left-0 z-32 rounded shadow-md/50 shadow-black max-h-96 overflow-y-auto">
+    class="collapsable absolute top-8 left-0 z-48 rounded shadow-md/50 shadow-black max-h-96 overflow-y-auto">
     <zz-palette-list
       [active]="open()"
       (paletteSelected)="state.loadPalette($event)"

@@ -1,5 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
-import { PalettesHeaderComponent } from "../../color/components/header/palettes-header.component";
+import { ChangeDetectionStrategy, Component, inject, signal } from "@angular/core";
 import { ColorMenuComponent } from "../../color/components/color-menu/color-menu.component";
 import { ColorSampleComponent } from "../../color/components/color-sample/color-sample.component";
 import { ColorRangeSelectorComponent } from "../../color/components/color-range-selector/color-range-selector.component";
@@ -8,17 +7,20 @@ import { ColorPaletteComponent } from "../../color/components/color-palette/colo
 import { PaletteStoreService } from "../../color/services/palette-store.service";
 import { NotificationComponent } from "../../core/components/notification/notification.component";
 import { PaletteMenuComponent } from "../../color/components/palette-menu/palette-menu.component";
+import { PaletteSelectorComponent } from "../../color/components/palette-drop/palette-selector/palette-selector.component";
+import { HeaderComponent } from "../../core/components/header/header.component";
 
 @Component({
   selector: "zz-palettes",
   imports: [
-    PalettesHeaderComponent,
     ColorMenuComponent,
     ColorSampleComponent,
     ColorRangeSelectorComponent,
     ColorPaletteComponent,
     NotificationComponent,
     PaletteMenuComponent,
+    PaletteSelectorComponent,
+    HeaderComponent,
   ],
   templateUrl: "./palettes.component.html",
   host: {
@@ -27,6 +29,7 @@ import { PaletteMenuComponent } from "../../color/components/palette-menu/palett
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PalettesComponent {
+  drawerOpen = signal(false);
   state = inject(ColorStateService);
   store = inject(PaletteStoreService);
 }

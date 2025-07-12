@@ -64,6 +64,6 @@ export class PaletteListComponent {
   private focusItem() {
     setTimeout(() => {
       this.items.toArray()[this.focusedIndex]!.nativeElement.focus();
-    });
+    }, 100);
   }
 }
