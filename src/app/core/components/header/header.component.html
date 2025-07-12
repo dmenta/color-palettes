@@ -1,21 +1,17 @@
 <header
-  [class.grid-rows-2]="hasProjectedContent()"
   [class.h-[50px]]="!hasProjectedContent()"
-  class="sm:h-[50px] max-w-[1600px] grid sm:grid-rows-1 justify-center sm:grid-cols-[min-content_auto_min-content] sm:justify-between items-center gap-4 px-6 m-auto">
-  <h1 class="col-1 row-1 sm:mt-0 text-2xl opacity-90" [class.mt-2]="hasProjectedContent()">
-    <a href="/" class="text-inherit no-underline">
-      <zz-marca [format]="'horizontal'"></zz-marca>
+  class="sm:h-[50px] max-w-[1600px] grid grid-rows-1 grid-cols-[min-content_auto_min-content] justify-between items-center gap-4 px-6 p-1 m-auto">
+  <h1 class="col-1 text-2xl opacity-90">
+    <a
+      routerLink="/palettes"
+      routerLinkActive="pointer-events-none cursor-default active"
+      class="text-inherit no-underline">
+      <zz-marca [class.hidden]="hasProjectedContent()" class="sm:inline-block" [format]="'horizontal'"></zz-marca>
+      <zz-marca [class.hidden]="!hasProjectedContent()" class="sm:hidden" [format]="'half'"></zz-marca>
     </a>
   </h1>
-  <div
-    class="relative z-50 sm:col-2 row-2 sm:row-1 flex justify-center"
-    [class.hidden]="!hasProjectedContent()"
-    #contentWrapper>
+  <div class="relative z-50 flex justify-center" [class.hidden]="!hasProjectedContent()" #contentWrapper>
     <ng-content> </ng-content>
   </div>
-  <div class="col-3 row-1 sm:flex items-center gap-4" [class.hidden]="hasProjectedContent()">
-    <a class="text-smaller opacity-85 hover:opacity-100" href="palettes">Palettes</a>
-    <zz-dark-mode-toggle></zz-dark-mode-toggle>
-  </div>
-  <button class="hidden icon-button">sync_disabled</button>
+  <zz-menu class="col-3 flex items-center"></zz-menu>
 </header>

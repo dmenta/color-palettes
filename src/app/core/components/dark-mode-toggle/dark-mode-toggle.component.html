@@ -1,6 +1,6 @@
 <button
-  zz-icon-toggle-button
-  falseIcon="dark_mode"
-  trueIcon="light_mode"
+  class="flex items-center gap-2 pr-2 w-full max-w-full"
   [value]="darkModeService.darkMode()"
-  (toggle)="darkModeService.setDarkMode($event)"></button>
+  (click)="onClick($event)">
+  <span class="icon-button">{{ iconName() }}</span> {{ modeText() }}
+</button>

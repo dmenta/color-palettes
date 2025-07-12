@@ -2,12 +2,12 @@ import { Routes } from "@angular/router";
 
 export const routes: Routes = [
   {
-    path: "",
+    path: "palettes",
     title: "Colorina - Palettes",
     loadComponent: () => import("./features/palettes/palettes.component").then((m) => m.PalettesComponent),
   },
 
-  { path: "palettes", redirectTo: "", pathMatch: "full" },
+  { path: "", redirectTo: "/palettes", pathMatch: "full" },
 
   {
     path: "gradients",
