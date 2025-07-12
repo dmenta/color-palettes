@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ElementRef, ViewChild } from "@angular/core";
+import { ChangeDetectionStrategy, Component, ElementRef, signal, ViewChild } from "@angular/core";
 import { DarkModeToggleComponent } from "../dark-mode-toggle/dark-mode-toggle.component";
 import { MarcaComponent } from "../marca/marca.component";
 
@@ -10,9 +10,12 @@ import { MarcaComponent } from "../marca/marca.component";
 })
 export class HeaderComponent {
   @ViewChild("contentWrapper") contentWrapper!: ElementRef;
-  hasProjectedContent: boolean = false;
+  hasProjectedContent = signal<boolean>(false);
 
   ngAfterViewInit() {
-    this.hasProjectedContent = this.contentWrapper.nativeElement.children.length > 0;
+    // Check if there are any child elements (excluding comments/text nodes if preferred)
+    console.log("Content Wrapper Children:", this.contentWrapper.nativeElement.children);
+    this.hasProjectedContent.set(this.contentWrapper.nativeElement.children.length > 0);
+    console.log("Has Projected Content:", this.hasProjectedContent);
   }
 }
