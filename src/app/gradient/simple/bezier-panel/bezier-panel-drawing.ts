@@ -130,13 +130,20 @@ export class BezierPanelDrawing {
     this.ctx.arc(position.x, position.y, this.handlerRadius, 0, Math.PI * 2);
     this.ctx.fillStyle = colors.main;
     this.ctx.fill();
+    this.ctx.restore();
+
+    this.ctx.save();
+    const angle = Math.atan2(position.y - this.vertices[name].y, position.x - this.vertices[name].x) + Math.PI / 2;
+    const hypotenuse = Math.sqrt(
+      Math.pow(position.x - this.vertices[name].x, 2) + Math.pow(position.y - this.vertices[name].y, 2)
+    );
+    this.ctx.translate(position.x, position.y);
+    this.ctx.rotate(angle);
 
     this.ctx.beginPath();
-    this.ctx.lineWidth = redondeo.value(this.widthFactor);
-    this.ctx.moveTo(this.vertices[name].x, this.vertices[name].y);
-    this.ctx.lineTo(position.x, position.y);
-    this.ctx.strokeStyle = colors.common.line;
-    this.ctx.stroke();
+    this.ctx.rect(-0.75, 0, 1.5, hypotenuse);
+    this.ctx.fillStyle = colors.common.line;
+    this.ctx.fill();
 
     this.ctx.restore();
   }
@@ -151,12 +158,17 @@ export class BezierPanelDrawing {
     this.ctx.shadowOffsetY = this.activeHandlerShadowOffset;
 
     this.ctx.save();
+    const angle = Math.atan2(position.y - this.vertices[name].y, position.x - this.vertices[name].x) + Math.PI / 2;
+    const hypotenuse = Math.sqrt(
+      Math.pow(position.x - this.vertices[name].x, 2) + Math.pow(position.y - this.vertices[name].y, 2)
+    );
+    this.ctx.translate(position.x, position.y);
+    this.ctx.rotate(angle);
+
     this.ctx.beginPath();
-    this.ctx.lineWidth = redondeo.value(this.widthFactor * 1.5);
-    this.ctx.moveTo(this.vertices[name].x, this.vertices[name].y);
-    this.ctx.lineTo(position.x, position.y);
-    this.ctx.strokeStyle = colors.common.activeline;
-    this.ctx.stroke();
+    this.ctx.rect(-1, 0, 2, hypotenuse);
+    this.ctx.fillStyle = colors.common.activeline;
+    this.ctx.fill();
     this.ctx.restore();
 
     this.ctx.translate(position.x, position.y);

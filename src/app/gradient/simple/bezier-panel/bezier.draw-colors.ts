@@ -9,7 +9,7 @@ const bezierHandleColors: { light: HandlersColors; dark: HandlersColors } = {
   dark: {
     h1: "oklch(0.634 0.254 18)",
     h2: "oklch(0.858 0.146 197)",
-    common: { line: "#E0FFE0", activeline: "#80FF80", shadow: "#000000" },
+    common: { line: "#d0d0d0", activeline: "#80FF80", shadow: "#000000" },
   },
 };
 
