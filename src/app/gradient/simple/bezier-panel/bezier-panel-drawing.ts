@@ -2,7 +2,7 @@ import { redondeo } from "../../common/common-funcs";
 import { Context2D } from "../../common/models/context-2d";
 import { Handler, Handlers } from "../models/handlers.model";
 import { Point } from "../../common/models/point.model";
-import { bezierCurveColor, bezierGridColors, bezierHandleColors, HandlerColors } from "./bezier.draw-colors";
+import { SimpleBezierColors } from "./bezier.draw-colors";
 
 export const virtualSize = 2000;
 
@@ -20,7 +20,11 @@ export class BezierPanelDrawing {
   private readonly canvas: OffscreenCanvas;
   vertices: { h1: Point; h2: Point };
 
-  constructor(private imageContext: ImageBitmapRenderingContext, public size: number) {
+  constructor(
+    private imageContext: ImageBitmapRenderingContext,
+    public size: number,
+    private colors: SimpleBezierColors
+  ) {
     this.canvas = new OffscreenCanvas(size, size);
     const context = this.canvas.getContext("2d")!;
     context.imageSmoothingQuality = "high";
@@ -45,14 +49,12 @@ export class BezierPanelDrawing {
   }
 
   private drawBezierPanel(coords: Handlers, active: Handler | null, darkMode: boolean) {
-    const handlersColors = bezierHandleColors(darkMode);
-
     this.ctx.save();
 
     this.ctx.globalCompositeOperation = "destination-over";
     for (let item of ["h1", "h2"] as Handler[]) {
       if (item !== active) {
-        this.drawHandler(coords[item], handlersColors, item);
+        this.drawHandler(coords[item], item, darkMode);
       }
     }
 
@@ -67,7 +69,7 @@ export class BezierPanelDrawing {
     this.ctx.restore();
 
     if (active !== null) {
-      this.drawActiveHandlerSlim(coords[active], handlersColors, active);
+      this.drawActiveHandlerSlim(coords[active], active, darkMode);
     }
 
     this.ctx.save();
@@ -78,11 +80,10 @@ export class BezierPanelDrawing {
   }
 
   private drawBezierCurve(coords: Handlers, active: boolean, darkMode: boolean) {
-    const colorCurve = bezierCurveColor(darkMode);
     this.ctx.save();
     this.ctx.beginPath();
     this.ctx.moveTo(this.start.x, this.start.y);
-    this.ctx.strokeStyle = colorCurve;
+    this.ctx.strokeStyle = this.colors.curve(darkMode);
     this.ctx.bezierCurveTo(coords.h1.x, coords.h1.y, coords.h2.x, coords.h2.y, this.end.x, this.end.y);
     this.ctx.lineWidth = this.widthFactor * (active !== null ? 3 : 2);
     this.ctx.stroke();
@@ -90,7 +91,7 @@ export class BezierPanelDrawing {
   }
 
   private drawGrid(darkMode: boolean) {
-    const colors = bezierGridColors(darkMode);
+    const colors = this.colors.grid(darkMode);
 
     const ratio = this.size / virtualSize;
     const gridSpacing = virtualSize / this.gridLines;
@@ -121,26 +122,30 @@ export class BezierPanelDrawing {
     this.ctx.restore();
   }
 
-  private drawHandler(position: Point, colors: HandlerColors, name: Handler) {
+  private drawHandler(position: Point, name: Handler, darkMode: boolean) {
+    const colors = this.colors.handler(name, darkMode);
+
     this.ctx.save();
     this.ctx.beginPath();
     this.ctx.arc(position.x, position.y, this.handlerRadius, 0, Math.PI * 2);
-    this.ctx.fillStyle = colors[name];
+    this.ctx.fillStyle = colors.main;
     this.ctx.fill();
 
     this.ctx.beginPath();
     this.ctx.lineWidth = redondeo.value(this.widthFactor);
     this.ctx.moveTo(this.vertices[name].x, this.vertices[name].y);
     this.ctx.lineTo(position.x, position.y);
-    this.ctx.strokeStyle = colors.line;
+    this.ctx.strokeStyle = colors.common.line;
     this.ctx.stroke();
 
     this.ctx.restore();
   }
 
-  private drawActiveHandlerSlim(position: Point, colors: HandlerColors, name: Handler) {
+  private drawActiveHandlerSlim(position: Point, name: Handler, darkMode: boolean) {
+    const colors = this.colors.handler(name, darkMode);
+
     this.ctx.save();
-    this.ctx.shadowColor = colors.shadow;
+    this.ctx.shadowColor = colors.common.shadow;
     this.ctx.shadowBlur = this.activeHandlerShadowBlur;
     this.ctx.shadowOffsetX = this.activeHandlerShadowOffset;
     this.ctx.shadowOffsetY = this.activeHandlerShadowOffset;
@@ -150,7 +155,7 @@ export class BezierPanelDrawing {
     this.ctx.lineWidth = redondeo.value(this.widthFactor * 1.5);
     this.ctx.moveTo(this.vertices[name].x, this.vertices[name].y);
     this.ctx.lineTo(position.x, position.y);
-    this.ctx.strokeStyle = colors.activeline;
+    this.ctx.strokeStyle = colors.common.activeline;
     this.ctx.stroke();
     this.ctx.restore();
 
@@ -160,7 +165,7 @@ export class BezierPanelDrawing {
     this.ctx.arc(0, 0, this.handlerRadius, 0, Math.PI * 2); // Outer circle
     this.ctx.arc(0, 0, this.activeHandlerRadius, 0, Math.PI * 2, true); // Outer circle
     this.ctx.arc(0, 0, this.activeHandlerRadius - redondeo.value(this.widthFactor * 2), 0, Math.PI * 2); // Outer circle
-    this.ctx.fillStyle = colors[name];
+    this.ctx.fillStyle = colors.main;
     this.ctx.fill("evenodd");
     this.ctx.restore();
   }

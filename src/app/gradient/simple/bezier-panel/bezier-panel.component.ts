@@ -17,6 +17,7 @@ import { Handler, Handlers } from "../models/handlers.model";
 import { Point, pointsMatch } from "../../common/models/point.model";
 import { domCommon, redondeo } from "../../common/common-funcs";
 import { GradientStateService } from "../services/gradient-state.service";
+import { SimpleBezierColors } from "./bezier.draw-colors";
 
 @Component({
   selector: "zz-bezier-panel",
@@ -53,7 +54,11 @@ export class BezierPanelComponent implements AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit() {
-    this.bezierDrawing = new BezierPanelDrawing(this.canvas!.nativeElement.getContext("bitmaprenderer")!, this.size());
+    this.bezierDrawing = new BezierPanelDrawing(
+      this.canvas!.nativeElement.getContext("bitmaprenderer")!,
+      this.size(),
+      new SimpleBezierColors()
+    );
 
     this.mouseMoveSubscription = fromEvent(this.canvas!.nativeElement, "mousemove")
       .pipe(
