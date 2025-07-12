@@ -59,10 +59,13 @@ export class compassDrawing {
 
     this.ctx.fillStyle = colors.lines;
     this.ctx.fill(body);
+    // this.ctx.fill(this.arrowPaths.fullArrow);
     this.ctx.restore();
 
     this.ctx.fillStyle = colors.tip;
-    this.ctx.fill(tip);
+    // this.ctx.fill(tip);
+    this.ctx.fill(this.arrowPaths.tipInner);
+
     this.ctx.restore();
 
     this.ctx.fillStyle = colors.toe;
@@ -207,6 +210,9 @@ class CompassArrowPath {
     tip: { outer: { lenght: 32, wide: 18, axis: 6 }, inner: { base: 3, lenght: 23, wide: 12, axis: 2 } },
   };
 
+  public fullArrow: Path2D;
+  public readonly tipInner: Path2D;
+
   public readonly body: Path2D;
   public readonly tip: Path2D;
   public readonly toe: Path2D;
@@ -216,6 +222,22 @@ class CompassArrowPath {
     this.tip = tip;
     this.toe = toe;
     this.body = body;
+
+    let m = new DOMMatrix();
+    m.a = 1;
+    m.b = 0;
+    m.c = 0;
+    m.d = 1;
+    m.e = -6;
+    m.f = -4;
+
+    this.fullArrow = new Path2D();
+    this.fullArrow.addPath(
+      new Path2D("M7 6v29l5 4-6 16-6-16 5-4V6c-1.2-.4-2-1.7-2-3 0-1.65 1.35-3 3-3s3 1.35 3 3c0 1.3-.85 2.6-2 3"),
+      m
+    );
+    this.tipInner = new Path2D();
+    this.tipInner.addPath(new Path2D("m6 36.951 4 3-4 10-4-10z"), m);
   }
 
   private createArrowPaths(radius: number) {
