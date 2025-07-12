@@ -38,11 +38,21 @@ function gradientToImage(
   ctx.fill();
 
   const createEl = document.createElement("a");
-  const url = canvas.toDataURL("image/png", 1);
-  createEl.href = url;
-  createEl.download = `colorina-gradient-${name}${name.length > 0 ? "-" : ""}${new Date().valueOf() - baseDate}.png`;
-  createEl.click();
-  createEl.remove();
+  canvas.toBlob(
+    (blob) => {
+      if (blob) {
+        const url = URL.createObjectURL(blob);
+        createEl.href = url;
+        createEl.download = `colorina-gradient-${name}${name.length > 0 ? "-" : ""}${
+          new Date().valueOf() - baseDate
+        }.png`;
+        createEl.click();
+        URL.revokeObjectURL(url);
+      }
+    },
+    "image/png",
+    1
+  );
 }
 
 function gradientToSVG(stops: GradientStop[], angleDegrees: number = 0, name: string = "") {
