@@ -1,4 +1,4 @@
-import { CommonModule } from "@angular/common";
+
 import {
   ChangeDetectionStrategy,
   Component,
@@ -17,7 +17,7 @@ import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from "@angular/f
 @Component({
   selector: "zz-select",
   schemas: [NO_ERRORS_SCHEMA],
-  imports: [CommonModule, FormsModule],
+  imports: [FormsModule],
   templateUrl: "./select.component.html",
   providers: [
     {
