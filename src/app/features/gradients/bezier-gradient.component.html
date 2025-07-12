@@ -8,6 +8,7 @@
     [class.text-gris-100]="this.state.gradient().darkMode"
     [style.background]="this.state.gradient().gradient">
     <div>
+      <zz-bezier-panel [size]="bezierSize" [darkMode]="this.state.gradient().darkMode"></zz-bezier-panel>
       <div class="flex items-center gap-4 justify-center">
         <zz-orientation-compass
           class="-ml-1 mt-4"
@@ -18,7 +19,6 @@
           <zz-gradient-actions></zz-gradient-actions>
         </div>
       </div>
-      <zz-bezier-panel [size]="bezierSize" [darkMode]="this.state.gradient().darkMode"></zz-bezier-panel>
     </div>
   </main>
 </div>
