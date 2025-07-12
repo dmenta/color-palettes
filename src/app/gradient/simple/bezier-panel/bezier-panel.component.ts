@@ -13,8 +13,8 @@ import {
 } from "@angular/core";
 import { drawBezierPanel, handlerRadius, pointFromCanvas, pointToCanvas, virtualSize } from "./bezier-panel-drawing";
 import { debounceTime, filter, fromEvent, map, merge, Subscription, tap } from "rxjs";
-import { Handler, Handlers } from "../../models/handlers.model";
-import { Point, pointsMatch } from "../../models/point.model";
+import { Handler, Handlers } from "../models/handlers.model";
+import { Point, pointsMatch } from "../../common/models/point.model";
 import { domCommon, redondeo } from "../../common/common-funcs";
 import { GradientStateService } from "../services/gradient-state.service";
 

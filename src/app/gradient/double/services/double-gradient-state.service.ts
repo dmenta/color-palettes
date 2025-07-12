@@ -1,20 +1,21 @@
 import { computed, effect, inject, Injectable, Signal, signal } from "@angular/core";
 import { doubleGradientConfig } from "../double-bezier-panel/double-bezier-config";
-import { DoubleGradientState } from "../../models/gradient-state.model";
 import { StorageService } from "../../../core/service/storage.service";
 import { DoubleGradientStateValues } from "../models/gradient-state-values";
 import { defaultDoubleGradientState } from "../models/default-gradient-state";
-import { Point } from "../../models/point.model";
+import { Point } from "../../common/models/point.model";
 import { toOklch } from "../../../color/model/color";
 import { bezierCurve } from "../../common/bezier-curve";
-import { doubleGradientStops, GradientDefinition } from "../../models/gradient-stops";
+import { doubleGradientStops } from "../../common/gradient-stops";
 import { ColorValues } from "../../../color/model/colors.model";
 import { DoubleHandlers } from "../models/double-handlers.model";
+import { GradientColors, GradientOrientationState } from "../../common/models/gradient-state.model";
+import { GradientDefinition } from "../../common/models/gradient";
 
 @Injectable({
   providedIn: "root",
 })
-export class DoubleGradientStateService implements DoubleGradientState {
+export class DoubleGradientStateService implements GradientOrientationState, GradientColors {
   private store = inject(StorageService);
 
   private initialState =

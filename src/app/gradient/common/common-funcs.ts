@@ -1,4 +1,4 @@
-import { Point } from "../models/point.model";
+import { Point } from "./models/point.model";
 
 export const redondeo = {
   value: (value: number) => Math.round(value),
@@ -11,6 +11,7 @@ export const redondeo = {
 export const domCommon = {
   pointFromEvent,
 };
+
 function pointFromEvent(element: HTMLElement, event: MouseEvent | TouchEvent): Point {
   if (!element) {
     return { x: 0, y: 0 };

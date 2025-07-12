@@ -1,14 +1,14 @@
 import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
-import { GradientActionsComponent } from "../../gradient/gradient-actions/gradient-actions.component";
 import { ReactiveFormsModule } from "@angular/forms";
 import { fromEvent } from "rxjs";
 import { NotificationComponent } from "../../core/components/notification/notification.component";
-import { GradientHeaderComponent } from "../../gradient/header/gradient-header.component";
-import { OrientationCompassComponent } from "../../gradient/orientation-compass/orientation-compass.component";
+import { GradientHeaderComponent } from "../../gradient/common/components/header/gradient-header.component";
 import { DoubleBezierPanelComponent } from "../../gradient/double/double-bezier-panel/double-bezier-panel.component";
 import { DoubleGradientColorsComponent } from "../../gradient/double/double-gradient-colors/double-gradient-colors.component";
-import { GRADIENT_STATE_TOKEN } from "../../gradient/models/gradient-state.model";
 import { DoubleGradientStateService } from "../../gradient/double/services/double-gradient-state.service";
+import { GRADIENT_COLORS_TOKEN, GRADIENT_ORIENTATION_TOKEN } from "../../gradient/common/models/gradient-state.model";
+import { GradientActionsComponent } from "../../gradient/common/components/gradient-actions/gradient-actions.component";
+import { OrientationCompassComponent } from "../../gradient/common/components/orientation-compass/orientation-compass.component";
 
 @Component({
   selector: "zz-double-bezier-gradient",
@@ -24,10 +24,13 @@ import { DoubleGradientStateService } from "../../gradient/double/services/doubl
   ],
   templateUrl: "./double-bezier-gradient.component.html",
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [{ provide: GRADIENT_STATE_TOKEN, useExisting: DoubleGradientStateService }],
+  providers: [
+    { provide: GRADIENT_ORIENTATION_TOKEN, useExisting: DoubleGradientStateService },
+    { provide: GRADIENT_COLORS_TOKEN, useExisting: DoubleGradientStateService },
+  ],
 })
 export class DoubleBezierGradientComponent {
-  state = inject(GRADIENT_STATE_TOKEN);
+  state = inject(DoubleGradientStateService);
   bezierSize = 280;
   compassSize = 130;
 

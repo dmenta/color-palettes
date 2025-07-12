@@ -1,6 +1,6 @@
 import { redondeo } from "../../common/common-funcs";
-import { Context2D } from "../../models/context-2d";
-import { Point } from "../../models/point.model";
+import { Context2D } from "../../common/models/context-2d";
+import { Point } from "../../common/models/point.model";
 import { DoubleHandlers, DoubleHandler } from "../models/double-handlers.model";
 import { DoubleGradientConfig } from "./double-bezier-config";
 import { DoubleBezierCenterColors, DoubleBezierColors, DoubleHandlerColors } from "./double-bezier.draw-colors";

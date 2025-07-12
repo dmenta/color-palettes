@@ -1,6 +1,6 @@
-import { redondeo } from "../common/common-funcs";
-import { Context2D } from "../models/context-2d";
-import { Point } from "../models/point.model";
+import { Context2D } from "../../models/context-2d";
+import { Point } from "../../models/point.model";
+import { redondeo } from "../../common-funcs";
 import { compassArrowColors, compassGridColors } from "./compass-colors";
 
 export class compassDrawing {

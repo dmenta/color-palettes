@@ -1,19 +1,20 @@
 import { computed, effect, inject, Injectable, Signal, signal } from "@angular/core";
+import { toOklch } from "../../../color/model/color";
+import { ColorValues } from "../../../color/model/colors.model";
 import { StorageService } from "../../../core/service/storage.service";
+import { bezierCurve } from "../../common/bezier-curve";
+import { GradientColors, GradientOrientationState } from "../../common/models/gradient-state.model";
+import { gradientFromPoints, gradientString } from "../../common/gradient-stops";
+import { Handlers } from "../models/handlers.model";
+import { virtualSize } from "../bezier-panel/bezier-panel-drawing";
 import { defaultGradientState } from "../models/default-gradient-state";
 import { GradientStateValues } from "../models/gradient-state-values";
-import { ColorValues } from "../../../color/model/colors.model";
-import { GradientDefinition, gradientFromPoints, gradientString } from "../../models/gradient-stops";
-import { toOklch } from "../../../color/model/color";
-import { virtualSize } from "../bezier-panel/bezier-panel-drawing";
-import { bezierCurve } from "../../common/bezier-curve";
-import { DoubleHandlers } from "../../double/models/double-handlers.model";
-import { GradientState } from "../../models/gradient-state.model";
+import { GradientDefinition } from "../../common/models/gradient";
 
 @Injectable({
   providedIn: "root",
 })
-export class GradientStateService implements GradientState {
+export class GradientStateService implements GradientOrientationState, GradientColors {
   private store = inject(StorageService);
 
   private initialState = this.store.get<GradientStateValues>("gradient-state") ?? defaultGradientState;
@@ -65,7 +66,7 @@ export class GradientStateService implements GradientState {
     this.endRGBColor.set(color);
   }
 
-  onHandlersChange(handlers: DoubleHandlers) {
+  onHandlersChange(handlers: Handlers) {
     this.handlers.set({ ...handlers });
   }
 

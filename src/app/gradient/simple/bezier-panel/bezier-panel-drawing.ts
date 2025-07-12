@@ -1,7 +1,7 @@
 import { redondeo } from "../../common/common-funcs";
-import { Context2D } from "../../models/context-2d";
-import { Handler, Handlers } from "../../models/handlers.model";
-import { Point } from "../../models/point.model";
+import { Context2D } from "../../common/models/context-2d";
+import { Handler, Handlers } from "../models/handlers.model";
+import { Point } from "../../common/models/point.model";
 import { bezierCurveColor, bezierGridColors, bezierHandleColors, HandlerColors } from "./bezier.draw-colors";
 
 const widthFactor = 1;

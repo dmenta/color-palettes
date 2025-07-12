@@ -1,4 +1,4 @@
-import { Point } from "./point.model";
+import { Point } from "../../common/models/point.model";
 
 export type Handlers = {
   h1: Point;

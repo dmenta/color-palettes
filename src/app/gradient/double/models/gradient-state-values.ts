@@ -1,5 +1,5 @@
 import { ColorValues } from "../../../color/model/colors.model";
-import { Point } from "../../models/point.model";
+import { Point } from "../../common/models/point.model";
 import { DoubleHandlers } from "./double-handlers.model";
 
 export type DoubleGradientStateValues = {

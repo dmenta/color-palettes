@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import { ColorSelectorComponent } from "../../../color/components/color-sample/color-selector/color-selector.component";
 import { ColorValues } from "../../../color/model/colors.model";
-import { DoubleGradientColorsState, GRADIENT_STATE_TOKEN } from "../../models/gradient-state.model";
+import { DoubleGradientStateService } from "../services/double-gradient-state.service";
 
 @Component({
   selector: "zz-double-gradient-colors",
@@ -13,7 +13,7 @@ import { DoubleGradientColorsState, GRADIENT_STATE_TOKEN } from "../../models/gr
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DoubleGradientColorsComponent {
-  state: DoubleGradientColorsState = inject(GRADIENT_STATE_TOKEN);
+  state = inject(DoubleGradientStateService);
 
   onColorEndChange(rgb: ColorValues) {
     this.state.onEndColorChange(rgb);

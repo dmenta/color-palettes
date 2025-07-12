@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, HostListener, inject } from "@angular/core";
-import { CopyService } from "../../core/service/copy.service";
-import { gradientToImage, gradientToSVG } from "../models/gradient-stops";
-import { rgbToHex } from "../../color/model/color";
-import { GRADIENT_STATE_TOKEN, GradientState } from "../models/gradient-state.model";
+import { rgbToHex } from "../../../../color/model/color";
+import { CopyService } from "../../../../core/service/copy.service";
+import { GradientColors, GRADIENT_COLORS_TOKEN } from "../../models/gradient-state.model";
+import { gradientTo } from "../../gradient-export";
 
 @Component({
   selector: "zz-gradient-actions",
@@ -15,7 +15,7 @@ import { GRADIENT_STATE_TOKEN, GradientState } from "../models/gradient-state.mo
 })
 export class GradientActionsComponent {
   copyService = inject(CopyService);
-  state: GradientState = inject(GRADIENT_STATE_TOKEN);
+  state: GradientColors = inject(GRADIENT_COLORS_TOKEN);
 
   @HostListener("document:keydown.control.shift.c", ["$event"])
   handleCopyShortcut(event: KeyboardEvent) {
@@ -47,7 +47,7 @@ export class GradientActionsComponent {
     const name = `${rgbToHex(start)}_${rgbToHex(end)}_${angleDegrees}deg_${this.displayDimensions().width}x${
       this.displayDimensions().height
     }`;
-    gradientToImage(this.state.gradient().rgbStops, this.state.angleDegrees(), this.displayDimensions(), name);
+    gradientTo.image(this.state.gradient().rgbStops, this.state.angleDegrees(), this.displayDimensions(), name);
   }
 
   saveSVG() {
@@ -58,7 +58,7 @@ export class GradientActionsComponent {
       this.displayDimensions().height
     }`;
 
-    gradientToSVG(this.state.gradient().rgbStops, this.state.angleDegrees(), name);
+    gradientTo.svg(this.state.gradient().rgbStops, this.state.angleDegrees(), name);
   }
 
   private displayDimensions() {

@@ -15,10 +15,10 @@ import { debounceTime, filter, fromEvent, map, merge, Subscription, tap } from "
 import { ActiveHandler, doubleBezierDrawing } from "./double-bezier-panel-drawing";
 import { doubleGradientConfig } from "./double-bezier-config";
 import { DoubleBezierColors } from "./double-bezier.draw-colors";
-import { DoubleGradientState, GRADIENT_STATE_TOKEN } from "../../models/gradient-state.model";
 import { domCommon, redondeo } from "../../common/common-funcs";
-import { Point, pointsMatch } from "../../models/point.model";
+import { Point, pointsMatch } from "../../common/models/point.model";
 import { DoubleHandler, DoubleHandlers } from "../models/double-handlers.model";
+import { DoubleGradientStateService } from "../services/double-gradient-state.service";
 
 @Component({
   selector: "zz-double-bezier-panel",
@@ -33,7 +33,7 @@ export class DoubleBezierPanelComponent implements AfterViewInit, OnDestroy {
   private removeDocumentClickListenerFn: (() => void) | null = null;
   private removeDocumentTouchEndListenerFn: (() => void) | null = null;
 
-  private state: DoubleGradientState = inject(GRADIENT_STATE_TOKEN);
+  private state = inject(DoubleGradientStateService);
 
   overHandler = signal<ActiveHandler>(null);
   currentHandler = signal<ActiveHandler>(null);
