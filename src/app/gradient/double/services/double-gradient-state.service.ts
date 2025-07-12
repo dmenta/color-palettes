@@ -2,15 +2,15 @@ import { computed, effect, inject, Injectable, Signal, signal } from "@angular/c
 import { doubleGradientConfig } from "../double-bezier-panel/double-bezier-config";
 import { StorageService } from "../../../core/service/storage.service";
 import { DoubleGradientStateValues } from "../models/gradient-state-values";
-import { defaultDoubleGradientState } from "../models/default-gradient-state";
 import { Point } from "../../common/models/point.model";
 import { toOklch } from "../../../color/model/color";
 import { bezierCurve } from "../../common/bezier-curve";
-import { doubleGradientStops } from "../../common/gradient-stops";
+import { doubleGradientStops, gradientString } from "../../common/gradient-stops";
 import { ColorValues } from "../../../color/model/colors.model";
 import { DoubleHandlers } from "../models/double-handlers.model";
 import { GradientColors, GradientOrientationState } from "../../common/models/gradient-state.model";
 import { GradientDefinition } from "../../common/models/gradient";
+import { doubleGradientStates } from "../models/default-gradient-state";
 
 @Injectable({
   providedIn: "root",
@@ -19,7 +19,7 @@ export class DoubleGradientStateService implements GradientOrientationState, Gra
   private store = inject(StorageService);
 
   private initialState =
-    this.store.get<DoubleGradientStateValues>("double-gradient-state") ?? defaultDoubleGradientState;
+    this.store.get<DoubleGradientStateValues>("double-gradient-state") ?? doubleGradientStates.default;
 
   angleDegrees = signal<number>(this.initialState.angle);
 
@@ -43,6 +43,8 @@ export class DoubleGradientStateService implements GradientOrientationState, Gra
   gradient: Signal<GradientDefinition> = computed(() =>
     doubleGradientStops(this.startOklch(), this.centerOklch(), this.endOklch(), this.points!(), this.angleDegrees())
   );
+
+  controlGradient: Signal<string> = computed(() => gradientString(this.gradient().stops, 90, "oklch"));
 
   private readonly currentState = computed(() => {
     return {

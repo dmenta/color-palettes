@@ -11,7 +11,7 @@ import {
   signal,
   ViewChild,
 } from "@angular/core";
-import { drawBezierPanel, handlerRadius, pointFromCanvas, pointToCanvas, virtualSize } from "./bezier-panel-drawing";
+import { BezierPanelDrawing, pointFromCanvas, pointToCanvas, virtualSize } from "./bezier-panel-drawing";
 import { debounceTime, filter, fromEvent, map, merge, Subscription, tap } from "rxjs";
 import { Handler, Handlers } from "../models/handlers.model";
 import { Point, pointsMatch } from "../../common/models/point.model";
@@ -39,7 +39,9 @@ export class BezierPanelComponent implements AfterViewInit, OnDestroy {
   darkMode = input(false);
 
   @ViewChild("canvas") canvas?: ElementRef<HTMLCanvasElement>;
-  canvasContext: ImageBitmapRenderingContext | null = null;
+
+  private bezierDrawing: BezierPanelDrawing | null = null;
+
   private canvasRealSize = 0;
 
   constructor(private renderer: Renderer2) {
@@ -51,6 +53,8 @@ export class BezierPanelComponent implements AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit() {
+    this.bezierDrawing = new BezierPanelDrawing(this.canvas!.nativeElement.getContext("bitmaprenderer")!, this.size());
+
     this.mouseMoveSubscription = fromEvent(this.canvas!.nativeElement, "mousemove")
       .pipe(
         filter(() => this.currentHandler() === null),
@@ -163,7 +167,7 @@ export class BezierPanelComponent implements AfterViewInit, OnDestroy {
 
   private isOverHandler(point: Point): Handler | null {
     const coords = this.state.handlers();
-    const toleranciaBase = (handlerRadius / this.size()) * virtualSize;
+    const toleranciaBase = (this.bezierDrawing!.handlerRadius / this.size()) * virtualSize;
 
     for (let i = 1; i <= 8; i++) {
       if (pointsMatch(point, coords.h1, toleranciaBase * i)) {
@@ -185,21 +189,17 @@ export class BezierPanelComponent implements AfterViewInit, OnDestroy {
   private dibujar(
     coords: Handlers,
     active: Handler | null = this.currentHandler(),
-    size: number = this.size(),
+    _size: number = this.size(),
     mode: boolean = this.darkMode()
   ) {
-    if (!this.canvas) {
+    if (this.bezierDrawing === null) {
       return;
-    } else {
-    }
-    if (this.canvasContext === null) {
-      this.canvasContext = this.canvas.nativeElement.getContext("bitmaprenderer");
     }
 
-    const ctx = this.canvasContext!;
+    const drawing = this.bezierDrawing;
 
     requestAnimationFrame(() => {
-      drawBezierPanel(ctx, coords, size, active, mode);
+      drawing.draw(coords, active, mode);
     });
   }
 

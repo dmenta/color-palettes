@@ -1,12 +1,15 @@
-<div class="flex flex-row items-center justify-center gap-2 w-full">
+<div class="flex flex-row items-center justify-between gap-2 w-full">
   <zz-color-selector
     (color-changing)="onColorStartChange($event)"
     [border]="'border-current/40'"
     class="shadow-md"
     [color]="this.state.startRGBColor()"></zz-color-selector>
 
-  <button title="Swap colors (Ctrl+Shift+Y)" (click)="swap()" class="shadow-md w-5 h-5 -mt-1">
-    <span class="font-icons" class="font-icons text-larger-5 leading-5">swap_horiz</span>
+  <button title="Swap colors (Ctrl+Shift+Y)" (click)="swap()" class="shadow-md">
+    <svg viewBox="0 -960 960 960" fill="currentColor" class="w-6 h-6 -mt-1">
+      <path
+        d="M280-160 80-360l200-200 56 57-103 103h287v80H233l103 103-56 57Zm400-240-56-57 103-103H440v-80h287L624-743l56-57 200 200-200 200Z" />
+    </svg>
   </button>
   <zz-color-selector
     (color-changing)="onColorEndChange($event)"

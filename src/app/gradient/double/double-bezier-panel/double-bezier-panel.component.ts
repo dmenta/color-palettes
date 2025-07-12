@@ -33,7 +33,7 @@ export class DoubleBezierPanelComponent implements AfterViewInit, OnDestroy {
   private removeDocumentClickListenerFn: (() => void) | null = null;
   private removeDocumentTouchEndListenerFn: (() => void) | null = null;
 
-  private state = inject(DoubleGradientStateService);
+  state = inject(DoubleGradientStateService);
 
   overHandler = signal<ActiveHandler>(null);
   currentHandler = signal<ActiveHandler>(null);

@@ -4,158 +4,166 @@ import { Handler, Handlers } from "../models/handlers.model";
 import { Point } from "../../common/models/point.model";
 import { bezierCurveColor, bezierGridColors, bezierHandleColors, HandlerColors } from "./bezier.draw-colors";
 
-const widthFactor = 1;
-const activeHandlerRadius = 18;
-export const handlerRadius = 10;
 export const virtualSize = 2000;
-const activeHandlerShadowBlur = 7;
-const activeHandlerShadowOffset = 5;
-const gridLines = 10;
 
-export function drawBezierPanel(
-  ctx: ImageBitmapRenderingContext,
-  coords: Handlers,
-  size: number,
-  active: Handler | null,
-  darkMode: boolean
-) {
-  const offscreen = new OffscreenCanvas(size, size);
-  const offCtx = offscreen.getContext("2d")!;
+export class BezierPanelDrawing {
+  public readonly handlerRadius = 10;
+  private readonly widthFactor = 1;
+  private readonly activeHandlerRadius = 18;
+  private readonly activeHandlerShadowBlur = 7;
+  private readonly activeHandlerShadowOffset = 5;
+  private readonly gridLines = 10;
 
-  offCtx.imageSmoothingQuality = "high";
-  offCtx.imageSmoothingEnabled = true;
+  private readonly ctx: Context2D;
+  private readonly start: Point;
+  private readonly end: Point;
+  private readonly canvas: OffscreenCanvas;
+  vertices: { h1: Point; h2: Point };
 
-  const origin = redondeo.point({ x: 0, y: size });
-  const end = redondeo.point({ x: size, y: 0 });
+  constructor(private imageContext: ImageBitmapRenderingContext, public size: number) {
+    this.canvas = new OffscreenCanvas(size, size);
+    const context = this.canvas.getContext("2d")!;
+    context.imageSmoothingQuality = "high";
+    context.imageSmoothingEnabled = true;
 
-  const handlersColors = bezierHandleColors(darkMode);
+    this.ctx = context as Context2D;
 
-  offCtx.save();
+    this.start = redondeo.point({ x: 0, y: this.size });
+    this.end = redondeo.point({ x: this.size, y: 0 });
 
-  offCtx.globalCompositeOperation = "destination-over";
-  if (active !== "h2") {
-    drawHandler(offCtx, end, coords.h2, handlersColors, "h2");
-  }
-  if (active !== "h1") {
-    drawHandler(offCtx, origin, coords.h1, handlersColors, "h1");
-  }
-  offCtx.restore();
-
-  offCtx.save();
-  if (active === null) {
-    offCtx.globalCompositeOperation = "destination-over";
+    this.vertices = {
+      h1: this.start,
+      h2: this.end,
+    };
   }
 
-  drawBezierCurve(offCtx, origin, end, coords, active !== null, darkMode);
-  offCtx.restore();
+  draw(coords: Handlers, active: Handler | null, darkMode: boolean) {
+    this.drawBezierPanel(coords, active, darkMode);
 
-  if (active !== null) {
-    drawActiveHandlerSlim(offCtx, active === "h1" ? origin : end, coords[active], handlersColors, active);
+    const bitmapOne = this.canvas.transferToImageBitmap();
+    this.imageContext.transferFromImageBitmap(bitmapOne);
   }
 
-  offCtx.save();
-  offCtx.globalCompositeOperation = "destination-over";
-  drawGrid(offCtx, size, darkMode);
+  private drawBezierPanel(coords: Handlers, active: Handler | null, darkMode: boolean) {
+    const handlersColors = bezierHandleColors(darkMode);
 
-  offCtx.restore();
+    this.ctx.save();
 
-  const bitmapOne = offscreen.transferToImageBitmap();
-  (ctx as ImageBitmapRenderingContext).transferFromImageBitmap(bitmapOne);
-}
+    this.ctx.globalCompositeOperation = "destination-over";
+    for (let item of ["h1", "h2"] as Handler[]) {
+      if (item !== active) {
+        this.drawHandler(coords[item], handlersColors, item);
+      }
+    }
 
-function drawBezierCurve(
-  ctx: Context2D,
-  origin: Point,
-  end: Point,
-  coords: Handlers,
-  active: boolean,
-  darkMode: boolean
-) {
-  const colorCurve = bezierCurveColor(darkMode);
-  ctx.save();
-  ctx.beginPath();
-  ctx.moveTo(origin.x, origin.y);
-  ctx.strokeStyle = colorCurve;
-  ctx.bezierCurveTo(coords.h1.x, coords.h1.y, coords.h2.x, coords.h2.y, end.x, end.y);
-  ctx.lineWidth = widthFactor * (active !== null ? 3 : 2);
-  ctx.stroke();
-  ctx.restore();
-}
+    this.ctx.restore();
 
-function drawGrid(ctx: Context2D, size: number, darkMode: boolean) {
-  const colors = bezierGridColors(darkMode);
+    this.ctx.save();
+    if (active === null) {
+      this.ctx.globalCompositeOperation = "destination-over";
+    }
 
-  const ratio = size / virtualSize;
-  const gridSpacing = virtualSize / gridLines;
+    this.drawBezierCurve(coords, active !== null, darkMode);
+    this.ctx.restore();
 
-  ctx.save();
-  ctx.beginPath();
+    if (active !== null) {
+      this.drawActiveHandlerSlim(coords[active], handlersColors, active);
+    }
 
-  for (let i = 1; i < gridLines; i++) {
-    const posicion = redondeo.value(i * gridSpacing * ratio);
-    ctx.moveTo(0, posicion);
-    ctx.lineTo(size, posicion);
-    ctx.moveTo(posicion, 0);
-    ctx.lineTo(posicion, size);
+    this.ctx.save();
+    this.ctx.globalCompositeOperation = "destination-over";
+    this.drawGrid(darkMode);
+
+    this.ctx.restore();
   }
 
-  ctx.setLineDash([1, 3]);
-  ctx.strokeStyle = colors.lines;
-  ctx.lineWidth = redondeo.value(widthFactor * 0.5);
-  ctx.stroke();
-  ctx.restore();
+  private drawBezierCurve(coords: Handlers, active: boolean, darkMode: boolean) {
+    const colorCurve = bezierCurveColor(darkMode);
+    this.ctx.save();
+    this.ctx.beginPath();
+    this.ctx.moveTo(this.start.x, this.start.y);
+    this.ctx.strokeStyle = colorCurve;
+    this.ctx.bezierCurveTo(coords.h1.x, coords.h1.y, coords.h2.x, coords.h2.y, this.end.x, this.end.y);
+    this.ctx.lineWidth = this.widthFactor * (active !== null ? 3 : 2);
+    this.ctx.stroke();
+    this.ctx.restore();
+  }
 
-  ctx.save();
-  ctx.beginPath();
-  ctx.rect(0, 0, redondeo.value(ratio * virtualSize), redondeo.value(ratio * virtualSize));
-  ctx.strokeStyle = colors.border;
-  ctx.lineWidth = redondeo.value(widthFactor * 1);
-  ctx.stroke();
-  ctx.restore();
-}
+  private drawGrid(darkMode: boolean) {
+    const colors = bezierGridColors(darkMode);
 
-function drawHandler(ctx: Context2D, start: Point, end: Point, colors: HandlerColors, name: Handler) {
-  ctx.save();
-  ctx.beginPath();
-  ctx.arc(end.x, end.y, handlerRadius, 0, Math.PI * 2);
-  ctx.fillStyle = colors[name];
-  ctx.fill();
+    const ratio = this.size / virtualSize;
+    const gridSpacing = virtualSize / this.gridLines;
 
-  ctx.beginPath();
-  ctx.lineWidth = redondeo.value(widthFactor);
-  ctx.moveTo(start.x, start.y);
-  ctx.lineTo(end.x, end.y);
-  ctx.strokeStyle = colors.line;
-  ctx.stroke();
+    this.ctx.save();
+    this.ctx.beginPath();
 
-  ctx.restore();
-}
+    for (let i = 1; i < this.gridLines; i++) {
+      const posicion = redondeo.value(i * gridSpacing * ratio);
+      this.ctx.moveTo(0, posicion);
+      this.ctx.lineTo(this.size, posicion);
+      this.ctx.moveTo(posicion, 0);
+      this.ctx.lineTo(posicion, this.size);
+    }
 
-function drawActiveHandlerSlim(ctx: Context2D, origin: Point, point: Point, colors: HandlerColors, name: Handler) {
-  ctx.save();
-  ctx.shadowColor = colors.shadow;
-  ctx.shadowBlur = activeHandlerShadowBlur;
-  ctx.shadowOffsetX = activeHandlerShadowOffset;
-  ctx.shadowOffsetY = activeHandlerShadowOffset;
+    this.ctx.setLineDash([1, 3]);
+    this.ctx.strokeStyle = colors.lines;
+    this.ctx.lineWidth = redondeo.value(this.widthFactor * 0.5);
+    this.ctx.stroke();
+    this.ctx.restore();
 
-  ctx.save();
-  ctx.beginPath();
-  ctx.lineWidth = redondeo.value(widthFactor * 1.5);
-  ctx.moveTo(origin.x, origin.y);
-  ctx.lineTo(point.x, point.y);
-  ctx.strokeStyle = colors.activeline;
-  ctx.stroke();
-  ctx.restore();
+    this.ctx.save();
+    this.ctx.beginPath();
+    this.ctx.rect(0, 0, redondeo.value(ratio * virtualSize), redondeo.value(ratio * virtualSize));
+    this.ctx.strokeStyle = colors.border;
+    this.ctx.lineWidth = redondeo.value(this.widthFactor * 1);
+    this.ctx.stroke();
+    this.ctx.restore();
+  }
 
-  ctx.translate(point.x, point.y);
+  private drawHandler(position: Point, colors: HandlerColors, name: Handler) {
+    this.ctx.save();
+    this.ctx.beginPath();
+    this.ctx.arc(position.x, position.y, this.handlerRadius, 0, Math.PI * 2);
+    this.ctx.fillStyle = colors[name];
+    this.ctx.fill();
 
-  ctx.beginPath();
-  ctx.arc(0, 0, handlerRadius, 0, Math.PI * 2); // Outer circle
-  ctx.arc(0, 0, activeHandlerRadius, 0, Math.PI * 2, true); // Outer circle
-  ctx.arc(0, 0, activeHandlerRadius - redondeo.value(widthFactor * 2), 0, Math.PI * 2); // Outer circle
-  ctx.fillStyle = colors[name];
-  ctx.fill("evenodd");
-  ctx.restore();
+    this.ctx.beginPath();
+    this.ctx.lineWidth = redondeo.value(this.widthFactor);
+    this.ctx.moveTo(this.vertices[name].x, this.vertices[name].y);
+    this.ctx.lineTo(position.x, position.y);
+    this.ctx.strokeStyle = colors.line;
+    this.ctx.stroke();
+
+    this.ctx.restore();
+  }
+
+  private drawActiveHandlerSlim(position: Point, colors: HandlerColors, name: Handler) {
+    this.ctx.save();
+    this.ctx.shadowColor = colors.shadow;
+    this.ctx.shadowBlur = this.activeHandlerShadowBlur;
+    this.ctx.shadowOffsetX = this.activeHandlerShadowOffset;
+    this.ctx.shadowOffsetY = this.activeHandlerShadowOffset;
+
+    this.ctx.save();
+    this.ctx.beginPath();
+    this.ctx.lineWidth = redondeo.value(this.widthFactor * 1.5);
+    this.ctx.moveTo(this.vertices[name].x, this.vertices[name].y);
+    this.ctx.lineTo(position.x, position.y);
+    this.ctx.strokeStyle = colors.activeline;
+    this.ctx.stroke();
+    this.ctx.restore();
+
+    this.ctx.translate(position.x, position.y);
+
+    this.ctx.beginPath();
+    this.ctx.arc(0, 0, this.handlerRadius, 0, Math.PI * 2); // Outer circle
+    this.ctx.arc(0, 0, this.activeHandlerRadius, 0, Math.PI * 2, true); // Outer circle
+    this.ctx.arc(0, 0, this.activeHandlerRadius - redondeo.value(this.widthFactor * 2), 0, Math.PI * 2); // Outer circle
+    this.ctx.fillStyle = colors[name];
+    this.ctx.fill("evenodd");
+    this.ctx.restore();
+  }
 }
 
 export function pointFromCanvas(point: Point, size: number): Point {
