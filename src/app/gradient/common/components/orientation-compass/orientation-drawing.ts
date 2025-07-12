@@ -43,7 +43,6 @@ export class compassDrawing {
   }
 
   private drawArrow(angleDegress: number, active: boolean, darkMode: boolean) {
-    const { body, tip, toe } = this.arrowPaths;
     const colors = compassArrowColors(darkMode);
 
     this.ctx.save();
@@ -58,18 +57,16 @@ export class compassDrawing {
     }
 
     this.ctx.fillStyle = colors.lines;
-    this.ctx.fill(body);
-    // this.ctx.fill(this.arrowPaths.fullArrow);
+    this.ctx.fill(this.arrowPaths.body);
     this.ctx.restore();
 
     this.ctx.fillStyle = colors.tip;
-    // this.ctx.fill(tip);
-    this.ctx.fill(this.arrowPaths.tipInner);
+    this.ctx.fill(this.arrowPaths.tip);
 
     this.ctx.restore();
 
     this.ctx.fillStyle = colors.toe;
-    this.ctx.fill(toe);
+    this.ctx.fill(this.arrowPaths.toe);
   }
 
   private drawGridSlim(darkMode: boolean) {
@@ -205,13 +202,8 @@ class CompassGridPath {
 
 class CompassArrowPath {
   private readonly arrowProportions = {
-    body: { witdh: 3, lenght: 48 },
-    toe: { size: 4.5, axis: 1 },
-    tip: { outer: { lenght: 32, wide: 18, axis: 6 }, inner: { base: 3, lenght: 23, wide: 12, axis: 2 } },
+    axis: 1,
   };
-
-  public fullArrow: Path2D;
-  public readonly tipInner: Path2D;
 
   public readonly body: Path2D;
   public readonly tip: Path2D;
@@ -222,66 +214,31 @@ class CompassArrowPath {
     this.tip = tip;
     this.toe = toe;
     this.body = body;
-
-    let m = new DOMMatrix();
-    m.a = 1;
-    m.b = 0;
-    m.c = 0;
-    m.d = 1;
-    m.e = -6;
-    m.f = -4;
-
-    this.fullArrow = new Path2D();
-    this.fullArrow.addPath(
-      new Path2D("M7 6v29l5 4-6 16-6-16 5-4V6c-1.2-.4-2-1.7-2-3 0-1.65 1.35-3 3-3s3 1.35 3 3c0 1.3-.85 2.6-2 3"),
-      m
-    );
-    this.tipInner = new Path2D();
-    this.tipInner.addPath(new Path2D("m6 36.951 4 3-4 10-4-10z"), m);
   }
 
   private createArrowPaths(radius: number) {
     const ratios = this.arrowProportions;
 
-    const halfBodyWidth = redondeo.value((ratios.body.witdh * radius) / 2 / 100);
-    const bodyLenght = redondeo.value((ratios.body.lenght * radius) / 100);
+    let m = new DOMMatrix([1, 0, 0, 1, -6, -3]);
 
-    const tipLenght = redondeo.value((ratios.tip.outer.lenght * radius) / 100);
-    const tipAxis = redondeo.value((ratios.tip.outer.axis * radius) / 100);
-    const tipHalfWide = redondeo.value((ratios.tip.outer.wide * radius) / 2 / 100);
+    const fullArrow = new Path2D();
+    fullArrow.addPath(
+      new Path2D("M7 6v29l5 4-6 16-6-16 5-4V6c-1.2-.4-2-1.7-2-3 0-1.65 1.35-3 3-3s3 1.35 3 3c0 1.3-.85 2.6-2 3"),
+      m
+    );
 
-    const innerTipLenght = redondeo.value((ratios.tip.inner.lenght * radius) / 100);
-    const innerTipAxis = redondeo.value((ratios.tip.inner.axis * radius) / 100);
-    const innerTipBase = redondeo.value((ratios.tip.inner.base * radius) / 100);
-    const innerTipHalfWide = redondeo.value((ratios.tip.inner.wide * radius) / 2 / 100);
+    const tipInner = new Path2D();
+    tipInner.addPath(new Path2D("m6 36.951 4 3-4 10-4-10z"), m);
 
-    const toeRadius = redondeo.value((ratios.toe.size * radius) / 100);
-    const toeAxis = redondeo.value((ratios.toe.axis * radius) / 100);
-
-    const body = new Path2D();
-    body.rect(-halfBodyWidth, 0, halfBodyWidth * 2, bodyLenght);
-    body.arc(0, 0, toeRadius, 0, Math.PI * 2);
-
-    body.moveTo(0, bodyLenght);
-    body.lineTo(tipHalfWide, bodyLenght + tipAxis);
-    body.lineTo(0, bodyLenght + tipLenght);
-    body.lineTo(-tipHalfWide, bodyLenght + tipAxis);
-    body.closePath();
-
-    const tip = new Path2D();
-    tip.moveTo(0, bodyLenght + innerTipBase);
-    tip.lineTo(innerTipHalfWide, bodyLenght + tipAxis + innerTipAxis);
-    tip.lineTo(0, bodyLenght + innerTipLenght);
-    tip.lineTo(-innerTipHalfWide, bodyLenght + tipAxis + innerTipAxis);
-    tip.closePath();
+    const toeAxis = redondeo.value((ratios.axis * radius) / 100);
 
     const toe = new Path2D();
     toe.arc(0, 0, toeAxis, 0, Math.PI * 2);
     toe.closePath();
 
     return {
-      body,
-      tip,
+      body: fullArrow,
+      tip: tipInner,
       toe,
     };
   }
